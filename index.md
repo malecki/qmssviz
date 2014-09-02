@@ -1,11 +1,11 @@
 ---
 layout: page
-title: Exploratory Data Analysis and Visualization
-tagline: Viz is modeling. And modeling is software development.
+title: QMSS Data Visualization
+tagline: Fall 2014
 ---
 {% include JB/setup %}
 
 
-### [Viz is modeling. And modeling is software development.](intro.html) ###
+### [Overview, requirements, etc.](intro.html) ###
 
-### [Day-to-day schedule](agenda.html) ###
+### [Schedule, readings, assignments](agenda.html) ###

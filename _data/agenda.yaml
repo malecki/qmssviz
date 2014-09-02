@@ -2,7 +2,7 @@
   during: Overview, principles, goals, objectives.
   after: |
      - Make a Github account if you don't already have one
-     - Fork the repo — your assignments will be in the form of pull requests
+     - Fork the repo — your assignments will be in the form of pull requests 
      - [Git intro](http://skli.se/2012/09/22/introduction-to-git/)
      - [Git workflow for beginners](http://skli.se/2012/10/07/git-workflow-beginner/)
      - [Git branching game!](http://pcottle.github.io/learnGitBranching/)
@@ -13,7 +13,7 @@
     - [Yann LeCun on Data Science](https://plus.google.com/+YannLeCunPhD/posts/i8Xs9AGgCQW)
     - Tufte ch. 1–3
   during: |
-    - Lab: gentle R intro, by Yang
+    - Lab: gentle R intro, by Yang （R Markdown handouts Basics, revised tutorial)
     - Lab: gentle git intro, by Malecki
 
 - date: 2014-09-18

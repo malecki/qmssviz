@@ -109,26 +109,4 @@
 
 
 
-  topic: Type, Typesetting, Typography, and Strings
-  before: |
-    - [Spolsky, The Absolute Minimum Every Software Developer Absolutely, Positively Must Know About Unicode and Character Sets (No Excuses!)](http://www.joelonsoftware.com/articles/Unicode.html)
-    - [Shaw, The (mostly) true story of helvetica and the new york city subway](http://www.aiga.org/the-mostly-true-story-of-helvetica-and-the-new-york-city-subway/) (The [book](http://www.helveticasubway.com) is excellent, by the way, as is the documentary [Helvetica](http://helveticafilm.com))
-    - [Strings – Dive into Python3](http://www.diveintopython3.net/strings.html)
-    - [Shady Characters](http://www.shadycharacters.co.uk) (blog and book both recommended)
-  during: Discuss issues with text, strings, unicode, labels, &c.
-
-
-
-- date: 2014-03-12
-
-- date: 2014-04-14
-  topic: Histograms are totally simple, right?
-  before: |
-    - [Basics of Histograms](http://rforpublichealth.blogspot.com/2012/12/basics-of-histograms.html)
-    - [Histogram package paper](http://cran.r-project.org/web/packages/histogram/histogram.pdf)
-    - [Histogram D3 layout](https://github.com/mbostock/d3/wiki/Histogram-Layout)
-    - [Henry Deng and Hadley Wickham, Density Estimation in R](http://vita.had.co.nz/papers/density-estimation.pdf)
-
-- date: 2014-04-16
-
-
+  

@@ -26,6 +26,7 @@
   during: |
     - [knitr doc](http://yihui.name/knitr/)
     - discuss reproducible research, publishing replication data, versioning, &c
+  due: Homework 1— Rmarkdown, ggplot2, and github
 
 - date: 2014-09-25
   topic: color
@@ -37,13 +38,9 @@
     - Rec: [HCL in R](http://cran.r-project.org/web/packages/colorspace/vignettes/hcl-colors.pdf)
     - Rec: [Quantitative](https://github.com/mbostock/d3/wiki/Quantitative-Scales) and [Ordinal](https://github.com/mbostock/d3/wiki/Ordinal-Scales) scales in D3
     - Rec: [Motley](http://onlinelibrary.wiley.com/doi/10.1002/col.20559/abstract)
-  during: |
-    - discuss some graphs with color issues
-    - discuss color issues for class projects
 
 - date: 2014-10-02
   topic: Data are ugly
-  due: Iteration plan with objective and specific tasks for 3 weeks.
   before: |
     - [Tidy data](http://vita.had.co.nz/papers/tidy-data.pdf)
     - [Research directions in data wrangling](http://idl.cs.washington.edu/papers/data-wrangling)
@@ -60,75 +57,58 @@
     - [Paul Murrell's page](https://www.stat.auckland.ac.nz/~paul/)
     - Rec: [Dynamic Visualizations with D3 and AngularJS](http://www.youtube.com/watch?v=BvAeabvZ61o)
   during: |
+    - R Packaging
     - gglot2 book (SpringerLink)
     - [ggplot2 doc web site](http://ggplot2.org)
     - [ggplot in Python](http://blog.yhathq.com/posts/ggplot-for-python.html)
     - [ggplot2 data contract](http://martinsbioblogg.wordpress.com/2014/02/20/books-and-lessons-about-ggplot2/)
+    - [Building R Extensions](http://cran.r-project.org/doc/manuals/r-release/R-exts.html)
 
 - date: 2014-10-16
   topic: Gentle introduction to D3
   before: |
     - [D3 paper](http://idl.cs.washington.edu/papers/d3)
     - [Murray, Interative data Visualization for the Web](http://proquest.safaribooksonline.com.ezproxy.cul.columbia.edu/book/web-design-and-development/9781449340223) (O'Reilly Safari)
-  during: js, json, svg; tips and tricks
-
+  during: js, json, svg; tips and tricks; lightning talks
 
 - date: 2014-10-23
   topic: Mapping
-  during: R packaging
+  during: "Lab: Choropleths"
+  before: |
+    - [Roth et al., Value-by-Alpha Maps](http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3173776/)
+    - [Bostock, Let’s Make a Map](http://bost.ocks.org/mike/map/)
+    - [Choropleth](http://bl.ocks.org/mbostock/4060606)
+    - [Rmaps](http://rmaps.github.io/)
+    - [Malecki's quick Notes on maps](https://sites.google.com/site/malecki/map-notes)
+  due: Homework 2— R package *or* Shiny app
 
 - date: 2014-10-30
+  topic: Interactivity and Animation
   before: |
     - [The Joy of Stats](http://www.gapminder.org/videos/the-joy-of-stats/)
     - [Google Charts motion chart doc](https://developers.google.com/chart/interactive/docs/gallery/motionchart) and in [R](http://blog.revolutionanalytics.com/2011/01/create-motion-charts-in-r-with-the-googlevis-package.html)
     - [Heer et al, animated transitions](http://idl.cs.washington.edu/papers/animated-transitions/)
 
 - date: 2014-11-06
+  topic: Dealing with text
+  before: |
+    - [Spolsky, The Absolute Minimum Every Software Developer Absolutely, Positively Must Know About Unicode and Character Sets (No Excuses!)](http://www.joelonsoftware.com/articles/Unicode.html)
+    - [Shaw, The (mostly) true story of helvetica and the new york city subway](http://www.aiga.org/the-mostly-true-story-of-helvetica-and-the-new-york-city-subway/) (The [book](http://www.helveticasubway.com) is excellent, by the way, as is the documentary [Helvetica](http://helveticafilm.com))
+    - [Strings – Dive into Python3](http://www.diveintopython3.net/strings.html)
+    - [Shady Characters](http://www.shadycharacters.co.uk) (blog and book both recommended)
+  during: Lab, working with text
 
 - date: 2014-11-13
+  topic: Social/Network Visualization
+  before: |
+    - [Gephi paper](https://www.aaai.org/ocs/index.php/ICWSM/09/paper/view/154)
+    - [Gephi](https://gephi.github.io/)
+  during: "Lab: Gephi/Network viz"
+  due: Homework 3— Interactive data application
 
 - date: 2014-11-20
   topic: Presentations
 
 - date: 2014-12-04
   topic: Presentations
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  topic: Type, Typesetting, Typography, and Strings
-  before: |
-    - [Spolsky, The Absolute Minimum Every Software Developer Absolutely, Positively Must Know About Unicode and Character Sets (No Excuses!)](http://www.joelonsoftware.com/articles/Unicode.html)
-    - [Shaw, The (mostly) true story of helvetica and the new york city subway](http://www.aiga.org/the-mostly-true-story-of-helvetica-and-the-new-york-city-subway/) (The [book](http://www.helveticasubway.com) is excellent, by the way, as is the documentary [Helvetica](http://helveticafilm.com))
-    - [Strings – Dive into Python3](http://www.diveintopython3.net/strings.html)
-    - [Shady Characters](http://www.shadycharacters.co.uk) (blog and book both recommended)
-  during: Discuss issues with text, strings, unicode, labels, &c.
-
-
-
-- date: 2014-03-12
-
-- date: 2014-04-14
-  topic: Histograms are totally simple, right?
-  before: |
-    - [Basics of Histograms](http://rforpublichealth.blogspot.com/2012/12/basics-of-histograms.html)
-    - [Histogram package paper](http://cran.r-project.org/web/packages/histogram/histogram.pdf)
-    - [Histogram D3 layout](https://github.com/mbostock/d3/wiki/Histogram-Layout)
-    - [Henry Deng and Hadley Wickham, Density Estimation in R](http://vita.had.co.nz/papers/density-estimation.pdf)
-
-- date: 2014-04-16
-
 

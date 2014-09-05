@@ -13,6 +13,9 @@ mrOptions <- strsplit("Excel, R, Stata, D3, Gephi, ggplot2,
                       google drive (formerly docs), 
                       OpenRefine (formerly Google refine), 
                       Pair programming", ", ")[[1]]
+## Cheat: enough to be unique, up to the first internal comma
+## that was replaced above with /
+mrOptions <- substr(mrOptions, 1,9)
 
 expandSelections <- function(selected, options){
     sapply(options, grepl, x=selected, fixed=TRUE)

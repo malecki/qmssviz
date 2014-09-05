@@ -1,0 +1,29 @@
+```{r load-expand}
+mrOptions <- strsplit("Excel, R, Stata, D3, Gephi, ggplot2, 
+                      lattice, SQL, git / Github, SPSS, 
+                      shell (terminal / command line), 
+                      regular expressions (grep), 
+                      Rstudio, JSON, Python, Sweave/knitr, 
+                      Processing (language), C/C++, Leaflet, 
+                      CartoDB, GeoJSON, PNaCl, node/npm, go,
+                      ruby, LaTeX, Heroku, Make, Pandas, Julia, 
+                      non-git version control (cvs/svn/hg/bzr), 
+                      XML, Web: html/css/js, vagrant/virtualbox, 
+                      amazon web services (ec2/ s3), dropbox, 
+                      google drive (formerly docs), 
+                      OpenRefine (formerly Google refine), 
+                      Pair programming", ", ")[[1]]
+
+expandSelections <- function(selected, options){
+    sapply(options, grepl, x=selected, fixed=TRUE)
+}
+gridLevels <- c("None", "A little", "Confident", "Expert")
+makeOrderedFactor <- function(col, levels){
+    return (factor(col, levels=levels, labels=levels, ordered=TRUE))
+}
+df <- read.csv("responses-2014-09-05.csv", stringsAsFactors=FALSE)
+df[,5:12] <- lapply(df[,5:12], makeOrderedFactor, levels=gridLevels)
+mrLogical <- t(sapply(df[['Baseline.experience']], expandSelections, 
+                      options=mrOptions))
+df <- cbind(df, mrLogical)
+```

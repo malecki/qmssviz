@@ -1,9 +1,12 @@
 ```{r load-expand}
+library(ggplot2)
+
 mrOptions <- strsplit("Excel, R, Stata, D3, Gephi, ggplot2, lattice, SQL, git / Github, SPSS, shell (terminal / command line), regular expressions (grep), Rstudio, JSON, Python, Sweave/knitr, Processing (language), C/C++, Leaflet, CartoDB, GeoJSON, PNaCl, node/npm, go, ruby, LaTeX, Heroku, Make, Pandas, Julia, non-git version control (cvs/svn/hg/bzr), XML, Web: html/css/js, vagrant/virtualbox, amazon web services (ec2/ s3), dropbox, google drive (formerly docs), OpenRefine (formerly Google refine), Pair programming", ", ")[[1]]
 
 removeParentheses <- function(x){
     gsub("\\(.*\\)$", "", x)
 }
+mrOptions[24] <- "go language"
 mrOptions <- removeParentheses(mrOptions)
 expandSelections <- function(selected, options){
     selected <- removeParentheses(selected)
@@ -18,7 +21,11 @@ df[,5:12] <- lapply(df[,5:12], makeOrderedFactor, levels=gridLevels)
 mrLogical <- t(sapply(df[['Baseline.experience']], expandSelections, 
                       options=mrOptions))
 df <- cbind(df, mrLogical)
-colSums(mrLogical)
-## 'go' still confused by 'google drive'
 
+```
+
+```{r multiresponse-barplot, fig.width=5, fig.height=10}
+plotdf <- data.frame(count=colSums(mrLogical), item=factor(colnames(mrLogical)))
+plotdf$item <- with(plotdf, reorder(item, count))
+ggplot(plotdf, aes(y=count, x=item)) + geom_bar(stat="identity") + coord_flip()
 ```

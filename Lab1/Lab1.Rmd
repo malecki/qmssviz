@@ -146,7 +146,7 @@ It should be your own working directory in "..."; if you are using a R script, y
 
 ```{r}
 # give dataset a name as a R dataframe object 
-demo<-read.csv("/Users/timz/Downloads/Donation-Disease.csv",stringsAsFactors=F)
+demo<-read.csv("Donation-Disease.csv",stringsAsFactors=F)
 ```
 
 

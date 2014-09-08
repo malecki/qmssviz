@@ -3,11 +3,9 @@ title: "R Basics"
 author: "Yang Yang"
 ---
 
-R Basics 
-========================================================
 
 Brief intro of RStudio, an integrated development environment (IDE)
--------------------------
+
 Anything following a # is a comment
 
 ```{r}

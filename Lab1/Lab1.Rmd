@@ -21,14 +21,14 @@ R as a calculator
 
 #### Basic Math
 ```{r}
-1+1
-4/2*3
+1 + 1
+4 / 2 * 3
 ```
 
 
 #### R follows the order of operations PEMDAS Parenthesis Exponents Multiplication Division Addition Subtraction
 ```{r}
-4/(2*3)
+4 / (2*3)
 ```
 
 #### R has built in math functions 
@@ -41,9 +41,9 @@ sqrt(4)
 Assign a variable
 -------------------------
 ```{r}
-a<-1
-b<-2   ## you can also try b=2, which is another way of assigning a variable, but arrow is generally preferred
-c<-a+b 
+a <- 1
+b <- 2   ## you can also try b=2, which is another way of assigning a variable, but arrow is generally preferred
+c <- a + b 
 ```
 
 ```{r}
@@ -53,7 +53,7 @@ c
 
 #### R is case sensitive
 ```{r}
-A<-10
+A <- 10
 ```
 
 ```{r}
@@ -75,36 +75,36 @@ Vectors
 
 #### Create vectors *Note: R is case sensitive*
 ```{r}
-A<-c(1,2,3,4,5)  ##Overwrite an object by assigning it something new
+A <- c(1,2,3,4,5)  ##Overwrite an object by assigning it something new
 A
-B<-1:5; B #Commands are separated either by a ; or by a newline
-C<-c(1,2,4,3,5); C
+B <- 1:5; B #Commands are separated either by a ; or by a newline
+C <- c(1, 2, 4, 3, 5); C 
 ```
 
 
 #### Logical (hints for vector operations)
 ```{r}
-A<2
+A < 2
 
 ##check length
 length(A); length(B)
 
-A==B
-A==C
-A!=5
+A == B
+A == C
+A != 5
 ```
 
 
 #### Vector Operations
 ```{r}
 # add 1 to every element
-A+1
+A + 1
 
 # multiplty 2 to every element
-A*2
+A * 2
 
 # raise every element to second power
-A^2
+A ^ 2
 ```
 
 
@@ -139,7 +139,10 @@ It should be your own working directory in "..."; if you are using a R script, y
 
 ```{r}
 #setwd("/Users/timz/Downloads")
-#demo<-read.csv("Donation-Disease.csv",stringsAsFactors=F)
+demo <- read.csv("Donation-Disease.csv",
+                 stringsAsFactors=F,
+                 arg2=blah,
+                 more args)
 ```
 
 #### read.table and read.csv can read data stored as text files, delimited by nearly everything, e.g. comma delimited and tab delimited. 

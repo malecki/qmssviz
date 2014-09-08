@@ -8,7 +8,6 @@ R Basics
 
 Brief intro of RStudio, an integrated development environment (IDE)
 -------------------------
-
 Anything following a # is a comment
 
 ```{r}
@@ -65,9 +64,7 @@ a    ##remember, R is case sensitive!
 ```{r}
 ls()  # R stores both data and data analysis output as objects. ls() returns a list of all objects in the current session
 rm(a) 
-a
 ```
-
 
 
 Vectors
@@ -141,8 +138,9 @@ It should be your own working directory in "..."; if you are using a R script, y
 #setwd("/Users/timz/Downloads")
 demo <- read.csv("Donation-Disease.csv",
                  stringsAsFactors=F,
-                 arg2=blah,
-                 more args)
+                # arg2=blah,
+                # more args
+                )
 ```
 
 #### read.table and read.csv can read data stored as text files, delimited by nearly everything, e.g. comma delimited and tab delimited. 
@@ -204,19 +202,19 @@ Brief intro R Markdown
 
 Wrap-up:
 -------------------------
-#### * Always remember to check working directory getwd() or set the right working directory setwd()
-#### * Use on-line help, get used to read tutorials on CRAN; also Google and Stack Overflow
-#### * Define meaningful&easy names for datasets and variables, remember R is case sensitive
-#### * Practice and create your own cheatsheet 
-#### * Quiz: To read dataset from other statistical analysis software, like Stata and SPSS, what packages shall we use? 
+ * Always remember to check working directory getwd() or set the right working directory setwd()
+ * Use on-line help, get used to read tutorials on CRAN; also Google and Stack Overflow
+ * Define meaningful&easy names for datasets and variables, remember R is case sensitive
+ * Practice and create your own cheatsheet 
+ * Quiz: To read dataset from other statistical analysis software, like Stata and SPSS, what packages shall we use? 
 
 Useful Resources:
 -------------------------
-R basic: http://cran.r-project.org/manuals.html
-R for Beginners
-R in a Nutshell
-Quick R: http://www.statmethods.net/
-Data Analysis Examples with R: http://www.ats.ucla.edu/stat/dae/
+* R basic: http://cran.r-project.org/manuals.html
+* R for Beginners
+* R in a Nutshell
+* Quick R: http://www.statmethods.net/
+* Data Analysis Examples with R: http://www.ats.ucla.edu/stat/dae/
 
 
 

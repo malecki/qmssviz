@@ -254,6 +254,7 @@ Useful Resources:
 * [R in a Nutshell](http://web.udl.es/Biomath/Bioestadistica/R/Manuals/r_in_a_nutshell.pdf)
 * [Quick R](http://www.statmethods.net)
 * [Data Analysis Examples with R](http://www.ats.ucla.edu/stat/dae/)
+* [Rseek](http://www.rseek.org/) * I just heard about this cool website from this morning * 
 
 
 

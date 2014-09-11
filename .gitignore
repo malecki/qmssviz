@@ -10,3 +10,4 @@ _site
 .RData
 .Rhistory
 Thumbs.db
+.Rproj.user

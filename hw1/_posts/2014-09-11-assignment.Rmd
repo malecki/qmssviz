@@ -32,6 +32,8 @@ tags: hw1
 1. Commit your changes. A message like “initial commit” is fine.
   ![](commit.png)
 1. Push your branch so that the simple buttons for “push”/“pull” work. For this you have to use *More > Shell…* and then type `git push -u origin hw1` so that your current branch goes live to your fork and the two (local and server) know about each other.
+1. Now, explore some data and write about it!
+1. Save and commit frequently. You might choose just to commit changes to the Rmd, and then only include the html at the end. Then you can see (and share, and store) the entire history of the process. 
 1. Before class (or within the first moments of class) next week, open a pull request for your branch targeting the class repo.
 
 If in the first draft of the assignment you can’t debug your issues with git or Rmd, you will have time in class to show your broken branch to your peers, who might be able to help, and to try again. Share your frustrations and get them resolved.

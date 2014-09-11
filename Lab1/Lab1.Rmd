@@ -174,7 +174,7 @@ demo[1,1]
 #### indexing rows, columns and cells in a dataframe. 
 * object[row,column]
 * object[[selector]] ## integer or character
-* object$column.name
+* object$column.name ## 
 ```{r}
 # 
 demo[1,1]

@@ -18,9 +18,14 @@ tags: hw1
 ## Detailed instructions
 
 1. Create a branch on which to work: `git checkout -b hw1`
-1. Select *file > new Rmarkdown* in RStudio and create a file in `qmssviz/hw1/`
-1. Do some work.
-1. `git add` files to submit. Push those commits on your branch.
+1. Select *file > new Rmarkdown* in RStudio and create a file in `qmssviz/hw1/_posts`.
+1. Add some stuff to the YAML Front Matter at the top of the document:
+   - `published: false`
+   - `tags: hw1`
+1. Save the file. Follow the required naming convention: ISO8601 date and some other text. A good name is something like `2014-09-18-HW1-Michael-Malecki.Rmd`. (Uni is fine too. You just can't all name it `hw1`.)
+1. Select that file for staging using the Git pane of RStudio.
+1. Commit your changes. A message like “initial commit” is fine.
+1. Push your branch so that the simple buttons for “push”/“pull” work: `git push -u origin hw1`.
 1. Before class (or within the first moments of class) next week, open a pull request for your branch targeting the class repo.
 
 If in the first draft of the assignment you can’t debug your issues with git or Rmd, you will have time in class to show your broken branch to your peers, who might be able to help, and to try again. Share your frustrations and get them resolved.

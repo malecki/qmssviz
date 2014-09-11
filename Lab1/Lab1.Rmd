@@ -172,7 +172,8 @@ demo[1,1]
 ```
 
 #### indexing rows, columns and cells in a dataframe. 
-* object[row,column] 
+* object[row,column]
+* object[[selector]] ## integer or character
 * object$column.name
 ```{r}
 # 
@@ -247,7 +248,7 @@ Wrap-up:
  * Practice and create your own cheatsheet 
  * Quiz: To read dataset from other statistical analysis software, like Stata and SPSS, what packages shall we use? 
 
-Useful Resources:
+Useful Resources: 
 -------------------------
 * [R basic](http://cran.r-project.org/manuals.html)
 * [R for Beginners](http://cran.r-project.org/doc/contrib/Paradis-rdebuts_en.pdf)

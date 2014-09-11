@@ -192,7 +192,7 @@ demo[2:5, 1:2]
 Install R Packages
 ----------------------------------------
 #### To use packages in R, we must first install them using install.packages function, which downloads the packages from CRAN. 
-
+You just need to install a package once for your RStudio, you only need to call this package in the future. 
 
 ```{r}
 # install.packages("ggplot2") #package for elegant data visualization using the Grammar of Graphics

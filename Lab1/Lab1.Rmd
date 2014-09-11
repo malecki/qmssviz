@@ -228,7 +228,7 @@ Adjust the point label
 ```{r}
 ggplot(demo, aes(x=MoneyRaised, y=Death,label=Name)) +
     geom_point(shape=1,size=0.3) +
-    geom_text(aes(label=Name),size=1.8,position=position_jitter(width=-8, height=20))+
+    geom_text(aes(label=Name),size=1.8,position=position_jitter(width=-8, height=21))+
     xlab("Money Raised million US$") + 
     ylab("Recent Record of Annual Death in US") + 
     ggtitle("Should we rethink where to donate?") 

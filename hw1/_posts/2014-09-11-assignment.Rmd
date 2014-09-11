@@ -1,0 +1,26 @@
+---
+title: "Homework 1 assignment"
+author: mm3940
+output: html_document
+published: false
+tags: hw1
+---
+
+## Assignment 1: RMarkdown, R graphics, and Github
+
+> Make some pictures of some dataset(s). Use either of the two datasets we have provided (questionnaire, and donations-vs-deaths), or acquire one of your own.
+
+> - Write about your process and your results using RMarkdown and submit both the Rmd and compiled html as a pull request to the course repository.
+> - Next week, you will each lead a code review with a group of your peers explaining your implementations. You will then have the opportunity to amend your branch in light of your peers’ feedback. Pull requests will be merged over the following week when you indicate that they are complete.
+
+> This is a many-part assignment. It asks you to do some things that are familiar, to recite some unfamiliar incantations to git, and to follow some strict rules about naming and changes that are appropriate to include in a pull request. On the other hand, the actual work of the assignment — making pictures of data — is an open, creative exercise and is a chance to share something with your peers and to learn from them. 
+
+## Detailed instructions
+
+1. Create a branch on which to work: `git checkout -b hw1`
+1. Select *file > new Rmarkdown* in RStudio and create a file in `qmssviz/hw1/`
+1. Do some work.
+1. `git add` files to submit. Push those commits on your branch.
+1. Before class (or within the first moments of class) next week, open a pull request for your branch targeting the class repo.
+
+If in the first draft of the assignment you can’t debug your issues with git or Rmd, you will have time in class to show your broken branch to your peers, who might be able to help, and to try again. Share your frustrations and get them resolved.

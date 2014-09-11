@@ -179,6 +179,7 @@ demo[1,1]
 demo[1,1]
 demo$Name
 ```
+
 Install R Packages
 ----------------------------------------
 #### To use packages in R, we must first install them using install.packages function, which downloads the packages from CRAN. 
@@ -187,6 +188,11 @@ You just need to install a package once for your RStudio, you only need to call 
 ```{r}
 # install.packages("ggplot2") #package for elegant data visualization using the Grammar of Graphics
 library(ggplot2)
+```
+
+####Intro to ggplot2 [More Examples](http://docs.ggplot2.org/current/)
+```{r}
+
 ?ggplot #Get R on-line help 
 
 ggplot(demo, aes(x=MoneyRaised, y=Death)) +
@@ -194,13 +200,48 @@ ggplot(demo, aes(x=MoneyRaised, y=Death)) +
 
 ```
 
+2nd try:
+1) change the scale of y-axis Death, because people in general don't like "4e+05"
+2) give informative main, x-axis, y-axis labels 
+```{r}
+demo$Death<-as.numeric(demo$Death)
+demo$Death<-demo$Death/1000
+ggplot(demo, aes(x=MoneyRaised, y=Death)) +
+    geom_point(shape=1) +xlab("Money Raised million US$") + 
+    ylab("Recent Record of Annual Death in US") + 
+    ggtitle("Should we rethink where to donate?")
+```
+
+3rd try:
+Label the dots, make it clear for the readers 
+```{r}
+ggplot(demo, aes(x=MoneyRaised, y=Death,label=Name)) +
+    geom_point(shape=1) +
+    xlab("Money Raised million US$") + 
+    ylab("Recent Record of Annual Death in US") + 
+    ggtitle("Should we rethink where to donate?")+
+    geom_text(aes(label=Name))
+```
+
+Final: 
+Adjust the point label  
+```{r}
+ggplot(demo, aes(x=MoneyRaised, y=Death,label=Name)) +
+    geom_point(shape=1,size=0.3) +
+    geom_text(aes(label=Name),size=1.8,position=position_jitter(width=-8, height=20))+
+    xlab("Money Raised million US$") + 
+    ylab("Recent Record of Annual Death in US") + 
+    ggtitle("Should we rethink where to donate?") 
+```
+
+
 Brief intro R Markdown
 -------------------------
 
 
 Wrap-up:
 -------------------------
- * Always remember to check working directory getwd() or set the right working directory setwd()
+ * Always remember to check working directory getwd or set the right working directory setwd
  * Use on-line help, get used to read tutorials on CRAN; also Google and Stack Overflow
  * Define meaningful&easy names for datasets and variables, remember R is case sensitive
  * Practice and create your own cheatsheet 
@@ -208,11 +249,11 @@ Wrap-up:
 
 Useful Resources:
 -------------------------
-* R basic: http://cran.r-project.org/manuals.html
-* R for Beginners
-* R in a Nutshell
-* Quick R: http://www.statmethods.net/
-* Data Analysis Examples with R: http://www.ats.ucla.edu/stat/dae/
+* [R basic](http://cran.r-project.org/manuals.html)
+* [R for Beginners](http://cran.r-project.org/doc/contrib/Paradis-rdebuts_en.pdf)
+* [R in a Nutshell](http://web.udl.es/Biomath/Bioestadistica/R/Manuals/r_in_a_nutshell.pdf)
+* [Quick R](http://www.statmethods.net)
+* [Data Analysis Examples with R](http://www.ats.ucla.edu/stat/dae/)
 
 
 

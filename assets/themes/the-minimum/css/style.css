@@ -1,9 +1,6 @@
 @import "base.css";
-
 @import "module.css";
-
 @import "syntaxhighlighter.css";
-
 @import "helper.css";
 /*
 Frameless			<http://framelessgrid.com/>
@@ -54,27 +51,31 @@ h6 {
   font-family: junctionregularRegular, "Frutiger Linotype", Univers, Calibri, "Gill Sans", "Gill Sans MT", "Myriad Pro", Myriad, "DejaVu Sans Condensed", "Liberation Sans", "Nimbus Sans L", Tahoma, Geneva, "Helvetica Neue", Helvetica, Arial, "MS PGothic", Osaka, Sans-Serif;
   font-weight: bold;
 }
-h1, .h1 {
+h1,
+.h1 {
   font-size: 42px;
   line-height: 52px;
   margin-top: 52px;
   margin-bottom: 26px;
   letter-spacing: -1px;
 }
-h2, .h2 {
+h2,
+.h2 {
   font-size: 42px;
   line-height: 52px;
   margin-top: 52px;
   margin-bottom: 26px;
   letter-spacing: -1px;
 }
-h3, .h3 {
+h3,
+.h3 {
   font-size: 26px;
   line-height: 26px;
   margin-top: 26px;
   margin-bottom: 26px;
 }
-h4, .h4 {
+h4,
+.h4 {
   font-size: 20px;
   line-height: 26px;
   margin-top: 26px;
@@ -88,7 +89,9 @@ img {
   margin-top: 0;
   margin-bottom: 1.625em;
 }
-small, .small, aside {
+small,
+.small,
+aside {
   font-size: 0.75em;
 }
 .font-size-default {
@@ -232,7 +235,7 @@ pre {
   background: url('/assets/themes/the-minimum/skin/100-90-5-monochrome.png');
   background-repeat: repeat;
   background-position: 0 0;
-  background-color: #BADA55;
+  background-color: #2b5e8b;
   margin-bottom: 1.625em;
   padding-top: 1.625em;
   padding-bottom: 1.625em;
@@ -281,13 +284,13 @@ pre {
   margin-top: 0;
 }
 .unit-article a:link {
-  border-bottom: 1px dotted #99cc99;
+  border-bottom: 1px dotted #66cccc;
 }
 .unit-article a:visited {
-  border-bottom: 1px dotted #77bb77;
+  border-bottom: 1px dotted #40bfbf;
 }
 .unit-article a:hover {
-  border-bottom: 1px dotted #bbddbb;
+  border-bottom: 1px dotted #8cd9d9;
 }
 .unit-article blockquote {
   border-left: 1em solid rgba(21, 25, 25, 0.8);
@@ -297,7 +300,9 @@ pre {
   margin-left: 0;
   margin-right: 0;
 }
-.unit-article ul, .unit-article ol, .unit-article dl {
+.unit-article ul,
+.unit-article ol,
+.unit-article dl {
   padding-left: 0;
 }
 .unit-article ul {
@@ -342,7 +347,8 @@ pre {
   margin-left: 0;
   margin-right: 0;
 }
-.unit-article p code, .unit-article li code {
+.unit-article p code,
+.unit-article li code {
   margin: 0 2px;
   padding: 2px 5px;
   white-space: nowrap;
@@ -372,13 +378,16 @@ pre {
 .unit-article .list-linear .list-head {
   margin-right: 4px;
 }
-.unit-article .list-category a, .unit-article .list-tag a {
+.unit-article .list-category a,
+.unit-article .list-tag a {
   border: 0 none;
 }
-.unit-article .list-category a:hover span, .unit-article .list-tag a:hover span {
+.unit-article .list-category a:hover span,
+.unit-article .list-tag a:hover span {
   background-color: #f99157;
 }
-.unit-article .list-category span, .unit-article .list-tag span {
+.unit-article .list-category span,
+.unit-article .list-tag span {
   background-color: #e25608;
   padding: 1px 5px;
   -webkit-border-radius: 10px;
@@ -513,15 +522,15 @@ pre {
   padding-bottom: 1.625em;
 }
 .the-footer a:link {
-  color: #99cc99;
+  color: #66cccc;
   border: 0;
 }
 .the-footer a:visited {
-  color: #77bb77;
+  color: #40bfbf;
   border: 0;
 }
 .the-footer a:hover {
-  color: #bbddbb;
+  color: #8cd9d9;
   border: 0;
 }
 .the-footer ul {
@@ -811,7 +820,9 @@ pre {
   .the-header .nav-global {
     width: 43.125em;
   }
-  .unit-article .unit-head-inner, .unit-article .entry-content, .unit-article .misc-content {
+  .unit-article .unit-head-inner,
+  .unit-article .entry-content,
+  .unit-article .misc-content {
     width: 43.125em;
   }
   .unit-article .unit-foot-inner {

@@ -35,5 +35,6 @@ tags: hw1
 1. Now, explore some data and write about it!
 1. Save and commit frequently. You might choose just to commit changes to the Rmd, and then only include the html at the end. Then you can see (and share, and store) the entire history of the process. 
 1. Before class (or within the first moments of class) next week, open a pull request for your branch targeting the class repo.
+  ![](opened-request.png)
 
 If in the first draft of the assignment you can’t debug your issues with git or Rmd, you will have time in class to show your broken branch to your peers, who might be able to help, and to try again. Share your frustrations and get them resolved.

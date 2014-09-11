@@ -3,11 +3,8 @@ title: "R Basics"
 author: "Yang Yang"
 ---
 
-R Basics 
-========================================================
 
 Brief intro of RStudio, an integrated development environment (IDE)
--------------------------
 
 Anything following a # is a comment
 
@@ -65,9 +62,7 @@ a    ##remember, R is case sensitive!
 ```{r}
 ls()  # R stores both data and data analysis output as objects. ls() returns a list of all objects in the current session
 rm(a) 
-a
 ```
-
 
 
 Vectors
@@ -141,8 +136,9 @@ It should be your own working directory in "..."; if you are using a R script, y
 #setwd("/Users/timz/Downloads")
 demo <- read.csv("Donation-Disease.csv",
                  stringsAsFactors=F,
-                 arg2=blah,
-                 more args)
+                # arg2=blah,
+                # more args
+                )
 ```
 
 #### read.table and read.csv can read data stored as text files, delimited by nearly everything, e.g. comma delimited and tab delimited. 
@@ -176,13 +172,15 @@ demo[1,1]
 ```
 
 #### indexing rows, columns and cells in a dataframe. 
-* object[row,column] 
+* object[row,column]
+* object[[selector]] ## integer or character
 * object$column.name
 ```{r}
 # 
 demo[1,1]
 demo$Name
 ```
+
 Install R Packages
 ----------------------------------------
 #### To use packages in R, we must first install them using install.packages function, which downloads the packages from CRAN. 
@@ -191,6 +189,11 @@ You just need to install a package once for your RStudio, you only need to call 
 ```{r}
 # install.packages("ggplot2") #package for elegant data visualization using the Grammar of Graphics
 library(ggplot2)
+```
+
+####Intro to ggplot2 [More Examples](http://docs.ggplot2.org/current/)
+```{r}
+
 ?ggplot #Get R on-line help 
 
 ggplot(demo, aes(x=MoneyRaised, y=Death)) +
@@ -198,25 +201,61 @@ ggplot(demo, aes(x=MoneyRaised, y=Death)) +
 
 ```
 
+2nd try:
+1) change the scale of y-axis Death, because people in general don't like "4e+05"
+2) give informative main, x-axis, y-axis labels 
+```{r}
+demo$Death<-as.numeric(demo$Death)
+demo$Death<-demo$Death/1000
+ggplot(demo, aes(x=MoneyRaised, y=Death)) +
+    geom_point(shape=1) +xlab("Money Raised million US$") + 
+    ylab("Recent Record of Annual Death in US") + 
+    ggtitle("Should we rethink where to donate?")
+```
+
+3rd try:
+Label the dots, make it clear for the readers 
+```{r}
+ggplot(demo, aes(x=MoneyRaised, y=Death,label=Name)) +
+    geom_point(shape=1) +
+    xlab("Money Raised million US$") + 
+    ylab("Recent Record of Annual Death in US") + 
+    ggtitle("Should we rethink where to donate?")+
+    geom_text(aes(label=Name))
+```
+
+Final: 
+Adjust the point label  
+```{r}
+ggplot(demo, aes(x=MoneyRaised, y=Death,label=Name)) +
+    geom_point(shape=1,size=0.3) +
+    geom_text(aes(label=Name),size=1.8,position=position_jitter(width=-8, height=21))+
+    xlab("Money Raised million US$") + 
+    ylab("Recent Record of Annual Death in US") + 
+    ggtitle("Should we rethink where to donate?") 
+```
+
+
 Brief intro R Markdown
 -------------------------
 
 
 Wrap-up:
 -------------------------
-#### * Always remember to check working directory getwd() or set the right working directory setwd()
-#### * Use on-line help, get used to read tutorials on CRAN; also Google and Stack Overflow
-#### * Define meaningful&easy names for datasets and variables, remember R is case sensitive
-#### * Practice and create your own cheatsheet 
-#### * Quiz: To read dataset from other statistical analysis software, like Stata and SPSS, what packages shall we use? 
+ * Always remember to check working directory getwd or set the right working directory setwd
+ * Use on-line help, get used to read tutorials on CRAN; also Google and Stack Overflow
+ * Define meaningful&easy names for datasets and variables, remember R is case sensitive
+ * Practice and create your own cheatsheet 
+ * Quiz: To read dataset from other statistical analysis software, like Stata and SPSS, what packages shall we use? 
 
-Useful Resources:
+Useful Resources: 
 -------------------------
-R basic: http://cran.r-project.org/manuals.html
-R for Beginners
-R in a Nutshell
-Quick R: http://www.statmethods.net/
-Data Analysis Examples with R: http://www.ats.ucla.edu/stat/dae/
+* [R basic](http://cran.r-project.org/manuals.html)
+* [R for Beginners](http://cran.r-project.org/doc/contrib/Paradis-rdebuts_en.pdf)
+* [R in a Nutshell](http://web.udl.es/Biomath/Bioestadistica/R/Manuals/r_in_a_nutshell.pdf)
+* [Quick R](http://www.statmethods.net)
+* [Data Analysis Examples with R](http://www.ats.ucla.edu/stat/dae/)
+* [Rseek](http://www.rseek.org/) * I just heard about this cool website from this morning * 
 
 
 

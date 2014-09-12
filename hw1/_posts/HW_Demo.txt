@@ -1,4 +1,9 @@
+---
+Title: title
+Author: who wrote this?
+---
+
 Showing Emily and Evelyn how to do HW1 pull request.
 If the request is sent back for revisions, then make those revisions, add, commit, push origin and pull request again!
 
-Here are my changes for Prof. Mike!
+Here are my changes for Mike!

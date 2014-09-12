@@ -1,1 +1,2 @@
 Showing Emily and Evelyn how to do HW1 pull request.
+If the request is sent back for revisions, then make those revisions, add, commit, push origin and pull request again!

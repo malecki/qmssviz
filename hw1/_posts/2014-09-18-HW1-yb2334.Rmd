@@ -10,15 +10,20 @@ tags: hw1
 ## Yannan Bu (yb2334)
 ========================================================
 
+### Dataset: 
+    responses-2014-09-05.csv
 
+### Description: 
+    This dataset contains information about students of QMSS Data Visualization course collected in the first session on Sept 5, 2014. Most of the questions concern about students' basic information and software experience. 
 
-When you click the **Knit HTML** button a web page will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+### 1. Preparation: Getting and Cleaning Data
 
+1.1 Read data and have a preliminary sense of the general picture. 
 ```{r}
-summary(cars)
-```
-
-You can also embed plots, for example:
+setwd("E:/QMSS/Everything abt R/qmssviz/labs/questionnaire")
+data <- read.csv("responses-2014-09-05.csv", header = T, stringsAsFactors = F)
+str(```
+You calso embed plots, for example:
 
 ```{r fig.width=7, fig.height=6}
 plot(cars)

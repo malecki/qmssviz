@@ -5,20 +5,26 @@ output: html_document
 published: false
 tags: hw1
 ---
+###I acquired this data from the package UsingR which includes a long list of data sets that are clean and easily accessible.  I have chosen to use the data set "batting" which includes variables such as homeruns, at bats, RBIs, strikeouts, etc.  The first thing that occured to me was to examine the relationship between homeruns and strikeouts.  
+
+```{r,figure2, fig.height=8, fig.width=6,echo=FALSE,message=FALSE, error=FALSE, fig.keep='all', fig.show='asis'}
+library(ggplot2)
+library(UsingR)
+qplot(SO, HR, data = batting, geom = c("point", "smooth"))
+```
+
+```{r fig.width=7, fig.height=6}
+qplot(SO, HR, data = batting, geom = c("point", "smooth"))
+```
+
+```{r fig.width=7, fig.height=6}
+qplot(teamID, HR, data = batting, geom = "boxplot")
+```
+
+
+
+
 
 ========================================================
 
 This is an R Markdown document. Markdown is a simple formatting syntax for authoring web pages (click the **MD** toolbar button for help on Markdown).
-
-When you click the **Knit HTML** button a web page will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r}
-summary(cars)
-```
-
-You can also embed plots, for example:
-
-```{r fig.width=7, fig.height=6}
-plot(cars)
-```
-

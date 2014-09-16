@@ -14,7 +14,7 @@ tags: hw1
     responses-2014-09-05.csv
 
 ### Description: 
-    This dataset contains information about students of QMSS Data Visualization course collected in the first session on Sept 5, 2014. Most of the questions concern about students' basic information and software experience. 
+    This dataset contains information about students of QMSS Data Visualization course collected in the first session on Sept 5, 2014 (http://bit.ly/qmssvizt0). Most of the questions concern about students' basic information and software experience. 
 
 ### 1. Preparation: Getting and Cleaning Data
 
@@ -22,10 +22,41 @@ tags: hw1
 ```{r}
 setwd("E:/QMSS/Everything abt R/qmssviz/labs/questionnaire")
 data <- read.csv("responses-2014-09-05.csv", header = T, stringsAsFactors = F)
-str(```
-You calso embed plots, for example:
-
-```{r fig.width=7, fig.height=6}
-plot(cars)
+str(data)
+head(data, 5)
 ```
+
+1.2 Clena data
+Change classes of some variables and variable names. 
+```{r}
+data$Program <- as.factor(data$Program)
+colnames(data)[4] <- "Twitter"
+data$Twitter <- as.factor(data$Twitter)
+```
+
+Tranform multiple choice variable "Baseline.experience" into dichotomous variables. 
+```{r}
+data <- as.data.frame(sapply(data, gsub, pattern = "cvs, svn, hg, bzr", replacement = "cvs; svn; hg; bzr"))
+data <- as.data.frame(sapply(data, gsub, pattern = "ec2, s3", replacement = "ec2; s3"))
+data <- as.data.frame(sapply(data, gsub, pattern = "html, css, js", replacement = "html; css; js"))
+lev <- levels(factor(data$Baseline.experience))
+lev <- unique(unlist(strsplit(lev, ", ")))
+name <- gsub(" ", "_", paste("Base.ex", lev, sep = "."))
+result <- matrix(data = "0", nrow = length(data$Baeline.experience), ncol = length(lev))
+char <- as.character(data$Baseline.experience)
+for (i in 1:length(lev)) {
+  result[grep(lev[i], char, fixed = T), i] <- "1"
+}
+result <- data.frame(result, stringsAsFactors = T)
+colnames(result) <- name
+data <- cbind(data, result)
+```
+
+### 2. Exploratory Analysis
+
+All the analysis are done with the "ggplot2 package.
+```{r}
+library(ggplot2)
+```
+
 

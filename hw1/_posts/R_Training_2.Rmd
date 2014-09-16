@@ -1,9 +1,10 @@
 ---
-title: "Engineering Analysis with R"
+title: "R Training 2"
 author: "Elliot Cohen"
 date: "July 2, 2014"
 output: html_document
 ---
+<link href="http://kevinburke.bitbucket.org/markdowncss/markdown.css" rel="stylesheet"></link>
 
 ```{r initialize, include=FALSE}
 ## Instead of setting the working directory in each R session, we created an RStudio Project within the ECREEE directory.
@@ -21,13 +22,23 @@ Thelib<-c("knitr", "xlsx", "plyr", "ggplot2", "scales", "gdata", "chron", "resha
 ## apply the function
 lapply(Thelib, load_install)
 
-## load custom functions
+## load custom functions (for computing stats and model diagnostics)
 source("multiplot.R")
 source("skew.r")
+source("myModelDiagnostics.R")
 ```
+This tutorial requires the following data files (dependencies):  
+* DTL-PS-2012-13.xls  
+* Daily_Temperature_1995-2013_Delhi.txt
+
+... and the following external functions:  
+* multiplot.R (for cool, side-by-side plots)  
+* skew.r (for estimation of statistical skew)  
+* myModelDiagnostics.R (for a suite of diagnostics tests that I run on all of my statistical models)  
+
 
 ```{r global-options, include=FALSE}
-opts_chunk$set(fig.path="figs/", fig.align="left", echo=FALSE)
+opts_chunk$set(fig.path="figs/", fig.align="left", echo=TRUE)
 #options(width=75)
 ```
   
@@ -53,12 +64,12 @@ Regional grid operator data was obtained for the period April 1 2012 - March 31 
 
 For now, we will focus on the demand data. We will use all of the techniques we learned in 'R Basic Training' for reading, organizing and visualizing data, and then move into engineering analysis.
 ```{r import-energy-data, cache=TRUE}
-# Import data in .xls fomrat
-#library(xlsx)
-#SLDC<-read.xlsx(file="DTL-PS-2012-13.xls", sheetIndex=1, as.data.frame=TRUE, header=TRUE)
-
-# Save it as an R object
-#save(SLDC, file="SLDC.raw.rsav")
+## Import data in .xls fomrat
+# library(xlsx)
+# SLDC<-read.xlsx(file="DTL-PS-2012-13.xls", sheetIndex=1, as.data.frame=TRUE, header=TRUE)
+# 
+# # Save it as an R object
+# save(SLDC, file="SLDC.raw.rsav")
 
 # Load the data as an R object (much faster than reading the .xlsx)
 load("SLDC.raw.rsav")

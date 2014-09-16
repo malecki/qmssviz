@@ -5,8 +5,11 @@ output: html_document
 published: false
 tags: hw1
 ---
-###I acquired this data from the package UsingR which includes a long list of data sets that are clean and easily accessible.  I have chosen to use the data set "batting" which includes variables such as homeruns, at bats, RBIs, strikeouts, etc.  The first thing that occured to me was to examine the relationship between homeruns and strikeouts.  
+Assignment 1: Rmarkdown, R graphics, and Github
+========================================================
+I acquired this data from the package UsingR which includes a long list of data sets that are clean and easily accessible.  I have chosen to use the data set "batting" which includes variables such as homeruns, at bats, RBIs, strikeouts, etc.  The first thing that occured to me was to examine the relationship between homeruns and strikeouts.  
 
+In the case below, I wanted to be explicit about a potential relationship between homeruns and strikeouts so I added a line which is easily done using the smooth geom as shown below. Uncertainty in the form of the relationship increases as illustrated by the point-wise confidence interval shown in grey.
 ```{r,figure2, fig.height=8, fig.width=6,echo=FALSE,message=FALSE, error=FALSE, fig.keep='all', fig.show='asis'}
 library(ggplot2)
 library(UsingR)

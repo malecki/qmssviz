@@ -6,6 +6,7 @@ _site
 
 # OS weirdness
 *.DS_Store
+.DS_Store
 
 .RData
 .Rhistory

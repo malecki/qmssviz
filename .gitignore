@@ -11,3 +11,7 @@ _site
 .RData
 .Rhistory
 Thumbs.db
+
+## Rproj is seriously annoying. Sorry.
+*.Rproj
+*.Rbuildignore

@@ -1,0 +1,36 @@
+---
+title: "Homework 1 assignment"
+author: wd2234
+output: html_document
+pulished: false
+tags: hw1
+---
+
+This famous (Fisher's or Anderson's) iris data set consists of 50 samples from each of three species of flower(Setosa, Virginica and Vericolor). There are four variables that measure four features of each flower sample: petal length, petal width, septal length, and septal width, in centimeters.Since it is a R dataset package, there is no need to import data. 
+
+```{r}
+attach(iris)
+library(ggplot2)
+```
+
+There is a positive association between sepal length and width,but Virginica has a relatively low sepal length.
+
+```{r, echo=FALSE}
+
+ggplot(data=iris,aes(x=Sepal.Width,y=Sepal.Length)) + geom_point(aes(color=Species)) + ggtitle("Sepal Length and Width")
+
+```
+
+This plot shows a rough distribution of septal lengths for each species.
+```{r,echo=FALSE}
+ggplot(data=iris,aes(x=Sepal.Length)) + geom_density() + facet_wrap(~Species)+ggtitle("Distribution of Sepal Lengths")
+
+````
+
+This is also a distribution, but in a better visualized type, with each species different colors.
+
+```{r,echo=FALSE}
+p<-ggplot(data=iris,aes(x=Sepal.Length)) + geom_histogram(aes(fill=Species))+facet_wrap(~Species) + ggtitle("Distribution of Sepal Lengths")
+suppressMessages(print(p))
+```
+

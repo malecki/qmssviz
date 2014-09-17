@@ -12,14 +12,17 @@ This is my first Rmarkdown trail!
 I will plot some graphes using **Donation-Disease** dataset
 
 ```{r}
-setwd('~/_posts')
-dat <- read.table('Donation-Disease.csv')
+require(ggplot2)
+setwd("~/Google Drive/Schoolwork/2014Fall/QMSS4063G/work_repo/Lab1")
+dat <- read.table('Donation-Disease.csv',sep=',',header=T)
+ggplot(dat,aes(x=Name,y=Death)) + geom_histogram(stat='identity')
 ```
 
-You can also embed plots, for example:
 
-```{r, echo=FALSE}
-plot(cars)
+
+Another graph! 
+```{r}
+ggplot(dat,aes(x=MoneyRaised,y=Death)) + geom_point() + geom_text(aes(label=Name),size=4) 
+
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

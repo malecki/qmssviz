@@ -16,6 +16,13 @@ library(ggplot2)
 
 Draw graph of sepal width against sepal length respectively for three species.
 ```{r, echo=FALSE}
-ggplot(iris,aes(Sepal.Length,Sepal.Width))+
-  geom_point(aes(color=Species))
+ggplot(iris,aes(Sepal.Length,Sepal.Width))+geom_point(aes(color=Species))
+```
+
+```{r, echo=FALSE}
+ggplot(iris, aes(Sepal.Length, Sepal.Width))+geom_point() + facet_grid(. ~ Species)
+```
+
+```{r, echo=FALSE}
+ggplot(iris, aes(Sepal.Length, Sepal.Width)) + geom_point()+facet_grid(. ~ Species) + stat_smooth(method = "lm")
 ```

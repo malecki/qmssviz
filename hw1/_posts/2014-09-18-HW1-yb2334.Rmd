@@ -122,7 +122,7 @@ plot4 <- qplot(data[, 6], data = data, facets = Program ~ ., xlab = "Level of Ex
 last_plot() + coord_fixed(ratio = 0.1)
 ```
 
-The fifth plot is pie chart of students' version control experience.
+The fifth plot is a pie chart of students' version control experience.
 ```{r}
 plot5 <- ggplot(data, aes(x = factor(1), fill = factor(data[, 9]))) + 
   geom_bar(width = 1) +

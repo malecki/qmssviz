@@ -14,7 +14,7 @@ In the case below, I wanted to be explicit about a potential relationship betwee
 ```r
 library(ggplot2)
 library(UsingR)
-qplot(SO, HR, data = batting, geom = c("point", "smooth"))
+qplot(SO, HR, data = batting, geom = c("point", "smooth")) + xlab("Strikeouts") + ylab("Homeruns") + ggtitle("Scatter of Homeruns by Strikouts")
 ```
 
 ![plot of chunk figure2](figure/figure2.png) 
@@ -69,6 +69,19 @@ ggplot(batting, aes(teamID,HR)) + geom_boxplot() + annotate("text", label = "Ale
 
 ![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2.png) 
 
+
+```r
+library(gridExtra)
+b<-summaryBy(H ~ teamID + lgID, data=batting, FUN=c(median))
+NL <- b[which(b$lgID=='NL'),]
+d<-summaryBy(SO ~ teamID + lgID , data=batting, FUN=c(median))
+NL_S0 <- d[which(d$lgID=='NL'),]
+plot1<-ggplot(NL_S0, aes(x=teamID, y=SO.median, fill=teamID)) + geom_bar(stat="identity")
+plot2<-ggplot(NL, aes(x=teamID, y=H.median, fill=teamID)) + geom_bar(stat="identity")
+grid.arrange(plot2, plot1, ncol=2)
+```
+
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
 ========================================================
 
 This is an R Markdown document. Markdown is a simple formatting syntax for authoring web pages (click the **MD** toolbar button for help on Markdown).

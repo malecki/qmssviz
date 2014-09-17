@@ -32,6 +32,16 @@ a<-summaryBy(HR ~ teamID , data=batting, FUN=c(median))
 ggplot(batting, aes(teamID,HR)) + geom_boxplot() + annotate("text", label = "Alex Rodriquez", x = "TBA", y = 59, size = 5, colour= "red") + xlab("Teams") + ylab("Homeruns") + ggtitle("Distribution of Homeruns") + layer(data = a, mapping =                                                                                                                                        aes(x = teamID, y= a$HR.median+1, label=a$HR.median),                                                                                                                                geom = "text", color="red", size=3.5)
 ```
 
+```{r fig.width=15, fig.height=10}
+library(gridExtra)
+b<-summaryBy(H ~ teamID + lgID, data=batting, FUN=c(median))
+NL <- b[which(b$lgID=='NL'),]
+d<-summaryBy(SO ~ teamID + lgID , data=batting, FUN=c(median))
+NL_S0 <- d[which(d$lgID=='NL'),]
+plot1<-ggplot(NL_S0, aes(x=teamID, y=SO.median, fill=teamID)) + geom_bar(stat="identity")
+plot2<-ggplot(NL, aes(x=teamID, y=H.median, fill=teamID)) + geom_bar(stat="identity")
+grid.arrange(plot2, plot1, ncol=2)
+```
 ========================================================
 
 This is an R Markdown document. Markdown is a simple formatting syntax for authoring web pages (click the **MD** toolbar button for help on Markdown).

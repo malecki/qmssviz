@@ -10,15 +10,34 @@ tags: hw1
 ##Summary
 #Data Set:  NFL regular games 2014.
 This data set contains data of 8174 games in 2014, displaying records on Date, Visitor team name, Visitor Score, Home team name, Home score, Line and Total Line
-```{r}
+
+##Basic statistics
+The following tables shows how many game a team played as a visitor team during 2014.
+```{r,echo = FALSE,cache = TRUE}
+library(ggplot2)
 regular = read.csv("regular.csv")
 summary(regular$Visitor)
 ```
-
-You can also embed plots, for example:
-
-```{r, echo=FALSE}
-plot(cars)
+The following tables shows how many game a team played as a home team during 2014.
+```{r,echo = FALSE,cache = TRUE}
+regular = read.csv("regular.csv")
+summary(regular$Home.Team)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+A basic statistics of visitor score.
+```{r, echo=FALSE}
+summary(regular$Visitor.Score)
+```
+
+A basic statistics of home score.
+```{r, echo=FALSE}
+summary(regular$Home.Score)
+```
+
+Following histomgram shows how different are the scores of home team and visitor team.
+```{r, echo=FALSE}
+df <- data.frame(cond = factor( rep(c("Visitor","Home"), each=8174) ),score = c(regular$Visitor.Score,regular$Home.Score)) 
+ggplot(df, aes(x=score, fill=cond)) + geom_histogram(binwidth=3, alpha=.5, position="identity")
+```
+
+The plots above showing a difference between the home team scores and the visitor team scores. 

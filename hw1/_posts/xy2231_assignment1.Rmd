@@ -1,0 +1,25 @@
+---
+title: "Assignment1"
+author: "Xiaoyao Yang"
+date: "September 17, 2014"
+output: html_document
+tags: hw1
+published: no
+---
+
+This is my first Rmarkdown trail!
+
+I will plot some graphes using **Donation-Disease** dataset
+
+```{r}
+setwd('~/_posts')
+dat <- read.table('Donation-Disease.csv')
+```
+
+You can also embed plots, for example:
+
+```{r, echo=FALSE}
+plot(cars)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

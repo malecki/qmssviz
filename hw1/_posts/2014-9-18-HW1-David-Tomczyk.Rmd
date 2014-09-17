@@ -12,7 +12,7 @@ This is an R Markdown document. Markdown is a simple formatting syntax for autho
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
 ---
-setwd("~/qmssviz/Lab1")
-temp <- read.table("Daily_Temperature_1995-2013_DELHI.txt")
+setwd("~/qmssviz/Labs/questionnaire")
+respo <- read.table("Daily_Temperature_1995-2013_DELHI.txt")
 
 

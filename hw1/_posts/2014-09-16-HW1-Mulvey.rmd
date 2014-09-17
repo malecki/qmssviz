@@ -15,8 +15,27 @@ summary(cars)
 
 You can also embed plots, for example:
 
+
+
 ```{r, echo=FALSE}
 plot(cars)
 ```
+```{r, echo=FALSE}
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.'
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+install.packages("ggplot2")
+require(ggplot2)
+?chickwts
+cwt <- chickwts
+cwt
+#groups <- aggregate(cwt$feed, 
+?aggregate
+
+aggregate(cwt$weight ~ cwt$feed, FUN="mean")
+ggplot(cwt, aes(x = weight, fill=cwt$feed)) + geom_dotplot(binwidth = 20) + ylab("Count") + xlab("Weight") + ggtitle("Chicken Weight by Type of Feed")
+
+
+```
+
+

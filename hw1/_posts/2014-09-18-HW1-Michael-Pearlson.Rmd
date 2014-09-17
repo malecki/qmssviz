@@ -13,7 +13,7 @@ In the case below, I wanted to be explicit about a potential relationship betwee
 ```{r,figure2, fig.height=6, fig.width=7,echo=TRUE,message=FALSE, error=FALSE, fig.keep='all', fig.show='asis'}
 library(ggplot2)
 library(UsingR)
-qplot(SO, HR, data = batting, geom = c("point", "smooth"))
+qplot(SO, HR, data = batting, geom = c("point", "smooth")) + xlab("Strikeouts") + ylab("Homeruns") + ggtitle("Scatter of Homeruns by Strikouts")
 ```
 
 There does seem to be a relationship between strikeouts and homeruns.  There is also appears to be a relationship between strikeouts and doubles, triples, RBIs, etcs.  However, after running a simple multivariate regression strikouts still have a strong relationship with homeruns after controlling for hits and at bats.

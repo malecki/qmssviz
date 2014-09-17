@@ -10,23 +10,27 @@ Assignment 1: Rmarkdown, R graphics, and Github
 I acquired this data from the package UsingR which includes a long list of data sets that are clean and easily accessible.  I have chosen to use the data set "batting" which includes variables such as homeruns, at bats, RBIs, strikeouts, etc.  The first thing that occured to me was to examine the relationship between homeruns and strikeouts.  
 
 In the case below, I wanted to be explicit about a potential relationship between homeruns and strikeouts so I added a line which is easily done using the smooth geom as shown below. Uncertainty in the form of the relationship increases as illustrated by the point-wise confidence interval shown in grey.
-```{r,figure2, fig.height=8, fig.width=6,echo=FALSE,message=FALSE, error=FALSE, fig.keep='all', fig.show='asis'}
+```{r,figure2, fig.height=6, fig.width=7,echo=TRUE,message=FALSE, error=FALSE, fig.keep='all', fig.show='asis'}
 library(ggplot2)
 library(UsingR)
 qplot(SO, HR, data = batting, geom = c("point", "smooth"))
 ```
 
-```{r fig.width=7, fig.height=6}
-qplot(SO, HR, data = batting, geom = c("point", "smooth"))
+There does seem to be a relationship between strikeouts and homeruns.  There is also appears to be a relationship between strikeouts and doubles, triples, RBIs, etcs.  However, after running a simple multivariate regression strikouts still have a strong relationship with homeruns after controlling for hits and at bats.
+
+```{r}
+lin.reg<-lm(HR ~ SO + H + AB, data = batting)
+summary(lin.reg)
 ```
 
-```{r fig.width=7, fig.height=6}
-qplot(teamID, HR, data = batting, geom = "boxplot")
+Let's take a look at some boxplots to see what the distribution is like for each team.  You'll see that I have highlighted the leader in homeruns in red as well as the median number of homeruns for each team.  
+
+```{r fig.width=10, fig.height=8}
+install.packages("doBy")
+library(doBy)
+a<-summaryBy(HR ~ teamID , data=batting, FUN=c(median)) 
+ggplot(batting, aes(teamID,HR)) + geom_boxplot() + annotate("text", label = "Alex Rodriquez", x = "TBA", y = 59, size = 5, colour= "red") + xlab("Teams") + ylab("Homeruns") + ggtitle("Distribution of Homeruns") + layer(data = a, mapping =                                                                                                                                        aes(x = teamID, y= a$HR.median+1, label=a$HR.median),                                                                                                                                geom = "text", color="red", size=3.5)
 ```
-
-
-
-
 
 ========================================================
 

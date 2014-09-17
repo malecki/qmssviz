@@ -13,6 +13,9 @@ When you click the **Knit** button a document will be generated that includes bo
 
 ---
 setwd("~/qmssviz/Labs/questionnaire")
-respo <- read.table("Daily_Temperature_1995-2013_DELHI.txt")
+respo <- read.csv("responses-2014-09-05.csv",stringsAsFactors=F)
 
+program <- respo[2]
 
+ggplot(data=program, aes(x=Program)) + geom_bar(stat="bin")
+#CASE SENSITIVE!!

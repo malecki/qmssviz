@@ -38,8 +38,8 @@ b<-summaryBy(H ~ teamID + lgID, data=batting, FUN=c(median))
 NL <- b[which(b$lgID=='NL'),]
 d<-summaryBy(SO ~ teamID + lgID , data=batting, FUN=c(median))
 NL_S0 <- d[which(d$lgID=='NL'),]
-plot1<-ggplot(NL_S0, aes(x=teamID, y=SO.median, fill=teamID)) + geom_bar(stat="identity")
-plot2<-ggplot(NL, aes(x=teamID, y=H.median, fill=teamID)) + geom_bar(stat="identity")
+plot1<-ggplot(NL_S0, aes(x=teamID, y=SO.median, fill=teamID)) + geom_bar(stat="identity") + xlab("Teams") + ylab("Median Strikeouts") + ggtitle("Bargraph of Strikeouts by Team")
+plot2<-ggplot(NL, aes(x=teamID, y=H.median, fill=teamID)) + geom_bar(stat="identity") + xlab("Teams") + ylab("Median Hits") + ggtitle("Bargraph of Hits by Team")
 grid.arrange(plot2, plot1, ncol=2)
 ```
 ========================================================

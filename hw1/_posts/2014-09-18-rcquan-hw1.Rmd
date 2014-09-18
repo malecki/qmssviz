@@ -1,7 +1,6 @@
 ---
 title: "New York City Council Meetings: A Primer"
 author: "rcquan"
-date: "September 18, 2014"
 output: html_document
 published: false
 tags: hw1
@@ -26,17 +25,19 @@ We scraped our data from [legistar.council.nyc.gov](legistar.council.nyc.gov), w
 
 ## Libraries
 
-First, let's load the relevant libraries into the R environment and set the current working directory.
-
+First, let's load the relevant libraries into the R environment and set the current working directory. Use the development version of `ggvis` to ensure that the interactive plot is embedded in the knitted html document.
 
 ```{r}
-library(stringr)
+# install.packages("devtools")
+# devtools::install_github('rstudio/ggvis', build_vignettes = FALSE)
 library(dplyr)
+library(ggvis)
+library(stringr)
 library(XML)
 library(ggplot2)
-library(ggvis)
+library(ggthemes)
 # change to your working directory
-setwd("/Users/Quan/GitHub/nycc-legistar/nycc-meetings")
+setwd("/Users/Quan/mailman/qmssviz/hw1/_posts/")
 ```
 
 ## Functions
@@ -128,41 +129,74 @@ dfPlot %>%
 
 Here we look at the proportion of City Council meetings held each month from 2000 to 2013. From this graph, we can see that council members take their summers seriously. Good luck trying to schedule a hearing during July or August. Also, you can see an upward trend starting from the beginning of the year until the month of June, the end of the fiscal cycle. Perhaps council members are spurred by deadlines just as much as the rest of us.
 
-## Total Meetings Held by Committee by Year
+## Distribution of the Number of Meetings Held By Year 
 
 ```{r}
-# create alphabetical vector of committee names 
-Committees <- sort(unique(dfPlot$Name))
-# generate plots
+# generate plot
 dfPlot %>%
-  # get frequency of meetings for each committee
-  # for every month
-  xtabs(formula = ~Name + Year) %>%
-  as.data.frame() %>%
+  # aggregate by year, get counts
+  group_by(Name, Year) %>%
+  summarise(Count = n()) %>%
   
-  # stacked bar plot
-  ggvis(x = ~Year, y = ~Freq, fill = ~Name) %>%
-  # interactive checkboxes for each committee
-  filter(Name %in% eval(input_checkboxgroup(
-      choices = Committees,
-      selected = c("Aging", "Land Use"),
-      label = "Committee Name"))) %>%
-  layer_bars()
+  # boxplot
+  ggplot(aes(x = Year, y = Count)) +
+  stat_boxplot(geom = "errorbar") + # add error bars
+  geom_boxplot() +
+  
+  # line graph through the mean of distribution
+  stat_summary(aes(group = 1), fun.y = mean, geom = "line", size = 2) +
+  
+  # adjusting axes and titles
+  scale_x_discrete(breaks = c(2000:2013)) + 
+  ylab("Number of Meetings Held") +
+  ggtitle("New York City Council Meetings, 2000-2013") +
+  theme_economist() # use the economist theme
+
 ```
 
-Some takeaways from this: 
+Here the solid black line goes through the mean of the distribution for each year. We can approximate that the total number of meetings held by the New York City Council has remained fairly consistent over the last decade. However, it is important to note that some committees were well below their quota of one meeting per month. By subsetting for the committees that held less than 12 meetings in one year, we can see who the most frequent offenders were:
 
-* The `Committee on Finance` has consistently held far more meetings than any other committee since the year 2000
-* Some committees have held far less meetings than others
+```{r}
+dfPlot %>%
+  # aggregate by year and
+  # get meeting counts per committee
+  group_by(Year, Name) %>%
+  summarise(Count = n()) %>%
+  filter(Count < 12) %>% # subset those falling behind quota
+  # get top 5 most frequent offenders
+  group_by(Name) %>%
+  summarise(Freq = n()) %>%
+  arrange(desc(Freq)) %>%
+  head(5)
+```
 
-This `ggvis` plot allows the user to compare the number of committee meetings held by each committee for each month. However, the use of total number should be viewed with skepticism since not all committees were active since the year 2000. This will be addressed in future version of this graph. 
+So internal and youth-oriented committees have consistently held less than 12 meetings per year. We should use the Charter to verify if these committees were explicitly allowed to do so.
 
-Also, the recyling of color palette does not make multiple comparisons very easy for the user to interpret. This can be addressed by categorizing the committees into more meaningful groups.
+The boxplot also shows several outliers. Since I am at lost at how to label the outliers using `ggplot2`, let's take a look at the committees that had the most meetings held by year:
+
+```{r}
+dfPlot %>%
+  group_by(Year, Name) %>%
+  summarise(Count = n()) %>%
+  filter(Count == max(Count)) %>%
+  arrange(desc(Count))
+```
+
+The `Committee on Finance` consistently holds the most meetings per year. This makes sense since all committees must go through the finance committee to approve any changes to the budget. Money is power.
 
 # Wish List
 
+* Label outliers in boxplot
 * Fix color pallette for `ggvis` stacked bar plot
 * Group committees in a meaningful way
 * Feed HTML from the .aspx framework into R to for real-time updates
 * Text analysis of the meeting topics
 * Proportion of meetings deferred by committee
+
+# Session Info
+
+```{r, echo=FALSE}
+sessionInfo()
+```
+
+

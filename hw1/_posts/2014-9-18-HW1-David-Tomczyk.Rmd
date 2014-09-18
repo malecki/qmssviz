@@ -11,9 +11,9 @@ My first foray into R and ggplot2
 
 ---
 
+# Who is in the class?
 
-
-```{r ggplot, fig.width=6, fig.height=3, message=FALSE}
+```{r ggplot, fig.width=12, fig.height=3, message=FALSE}
 
 setwd("~/qmssviz/Labs/questionnaire")
 respo <- read.csv("responses-2014-09-05.csv",stringsAsFactors=F)
@@ -21,10 +21,13 @@ program <- respo[2]
 
 library(ggplot2)
 
-qplot(x=factor(Program), data=program, geom="bar", fill=factor(Program))
+ProgramType <-factor(program[["Program"]])
+
+qplot(x=ProgramType, data=program, geom="bar", fill=ProgramType, main="Class Make Up")
 
 ```
 ---
+
 What I like:  
 -Its my first graph in R/ggplot2
 
@@ -33,4 +36,17 @@ What I don't like:
 -I wish the x axis labels were more spread out, or just gone 
 -The x axis titles should simply be "Program"  
 -I think I'd like to order the data, though I'm not sure how  
--The colors  
+-The colors
+
+#People who know how to use version control
+
+``` {r ggplot2, fig.width=4, fig.height=8, message=FALSE}
+
+vcs <-factor(respo[[9]])
+vcs.table <-table(vcs)
+vcs.df <- as.data.frame.table(vcs.table)
+
+ggplot(data=vcs.df, aes(x=vcs, y=Freq)) + geom_bar(stat="identity")
+ggplot(data=vcs.df, aes(x=vcs, y=Freq)) + geom_bar(stat="identity")
+
+```

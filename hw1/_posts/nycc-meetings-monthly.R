@@ -97,12 +97,12 @@ Committees <- sort(unique(dfPlot$Name))
 
 dfPlot %>%
   # get frequency of meetings for each committee
-  # for every month
-  xtabs(formula = ~Name + Month) %>%
+  # for every year
+  xtabs(formula = ~Name + Year) %>%
   as.data.frame() %>%
   
   # stacked bar plot
-  ggvis(x = ~Month, y = ~Freq, fill = ~Name) %>%
+  ggvis(x = ~Year, y = ~Freq, fill = ~Name) %>%
   # interactive checkboxes for each committee
   filter(Name %in% eval(input_checkboxgroup(
       choices = Committees,

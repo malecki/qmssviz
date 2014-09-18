@@ -7,7 +7,8 @@ published: false
 tags: hw1
 ---
 
-## Loading bboying injury data
+## Bboy Injury Data
+
 The data used in the narrative below was obtained from the American Journal of Sports Medicine article, "Breakdance Injuries and Overuse Syndromes in Amateurs and Professionals," by Max Daniel Kauther. The sample size for the study was 144 bboys (breakdancers, 40 professional, 104 amateur).
 
 ```{r, echo = FALSE, warning = FALSE, message = FALSE, comment = NA}
@@ -61,6 +62,7 @@ bar2 <- barplot(height2, names.arg = colnames(height2),
         )
 text(height2, bar2, label = height2, pos = 4, cex = 0.65, col = "red")
 ```
+
 On average, there are more injuries reported for amateur bboys compared to professional bboys, although more total injuries in amateurs may just be a result of a greater sample size. When adjusted on a per person basis, there are almost twice the number of injuries per bboy (16.1 injuries per professional versus 9.8 per amateur).
 
 ## Kauther's third table
@@ -154,17 +156,19 @@ panel = function(x, y) {
 
 Taking a look at loss of training days by anatomical injury leaves me a bit frightened. Of the 144 bboys, the highest losses of total training days occurred with knee injuries, spine injuries, and wrist/hand injuries. When normalized to lost training days per injury, a knee injury could take a bboy out for approximately two weeks, wrist/hand injuries for approximately a week and a half, and surprisingly, spine, shoulder or elbow injuries, one entire week (only?!?). 
 
-## Playing around with ggvis, using the cocaine dataset
+## Code below did not compile due to ggvis not being synced with Rmarkdown.
+
+## ggvis Cocaine dataset
 
 ```{r}
-library("dplyr")
-library("ggvis")
-head(cocaine)
-tail(cocaine)
+#library("dplyr")
+#library("ggvis")
+#head(cocaine)
+#tail(cocaine)
 
-cocaine %>%
-    ggvis(x = ~weight, y = ~potency, fill := "green")
-    layer_points()
+#cocaine %>%
+#    ggvis(x = ~weight, y = ~potency, fill := "green")
+#    layer_points()
 ```
 
 Graphical scatterplot representation of potency on weight of cocaine.
@@ -172,8 +176,8 @@ Graphical scatterplot representation of potency on weight of cocaine.
 ## Static histogram
 
 ```{r}
-cocaine %>% ggvis(~weight) %>%
-    layer_histograms(binwidth = 5)
+#cocaine %>% ggvis(~weight) %>%
+#    layer_histograms(binwidth = 5)
 ```
 
 Histogram of weights for cocaine incidences. 
@@ -181,14 +185,14 @@ Histogram of weights for cocaine incidences.
 ## Interactive histogram
 
 ```{r}
-state <- as.vector(unique(cocaine$state))
-cocaine %>%
-      ggvis(~potency) %>%
-        filter(state == eval(input_select(
-        choices = state,
-        selected = "NY",
-        label = "State"))) %>%
-      layer_histograms(binwidth = 2)
+#state <- as.vector(unique(cocaine$state))
+#cocaine %>%
+#      ggvis(~potency) %>%
+#        filter(state == eval(input_select(
+#        choices = state,
+#        selected = "NY",
+#        label = "State"))) %>%
+#      layer_histograms(binwidth = 2)
 ```
 
 Interactive histogram of cocaine potency counts in each state. 

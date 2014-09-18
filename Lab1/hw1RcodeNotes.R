@@ -1,17 +1,38 @@
----
-Title: "Homework 1 Assignment"
-author: jpcsoup
-output: html_document
-published: false
-tags: hw1
----
-========================================================
+demo<-read.csv("Donation-Disease.csv",stringsAsFactors=F)
+class(demo)
+str(demo)
+head(demo)
+dim(demo)
+summary(demo)
+demo[2,2]
+demo[["Name"]]
+demo[[1]]
+demo$Name
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring web pages (click the **Help** toolbar button for more details on using R Markdown).
+library(ggplot2)
+ggplot(demo, aes(x=MoneyRaised, y=Death)) + geom_point(shape=1) 
+demo$Death<-as.numeric(demo$Death)
+demo$Death<-demo$Death/1000
+ggplot(demo, aes(x=MoneyRaised, y=Death)) +
+  geom_point(shape=1) +xlab("Money Raised million US$") + 
+  ylab("Recent Record of Annual Death in US") + 
+  ggtitle("Should we rethink where to donate?")
+ggplot(demo, aes(x=MoneyRaised, y=Death,label=Name)) +
+  geom_point(shape=1) +
+  xlab("Money Raised million US$") + 
+  ylab("Recent Record of Annual Death in US") + 
+  ggtitle("Should we rethink where to donate?")+
+  geom_text(aes(label=Name))
+ggplot(demo, aes(x=MoneyRaised, y=Death,label=Name)) +
+  geom_point(shape=1,size=0.3) +
+  geom_text(aes(label=Name),size=1.8,position=position_jitter(width=-8, height=21))+
+  xlab("Money Raised million US$") + 
+  ylab("Recent Record of Annual Death in US") + 
+  ggtitle("Should we rethink where to donate?")
 
-When you click the **Knit HTML** button a web page will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r}
+## download package to read excel files ##
+install.packages("XLConnect")
+library("XLConnect")
 wb <- loadWorkbook("UN_2011_Population_Cities_Over_750K.xlsx", create = FALSE)
 # Show a summary of the workbook (shows worksheets,
 # defined names, hidden sheets, active sheet name, ...)
@@ -50,22 +71,44 @@ dfm2<- merge(dfm1, max10, by.x="Var1", by.y="df1.Country")
 colnames(dfm2) <- c("Country", "Freq", "mean10", "mean15", "mean20", 
                     "sum10", "sum15", "sum20", "max10", "max15", "max20")
 # Renaming columns in merged data.frame
+ggplot(dfm1, aes(x=Freq, y=mean10,label=Country)) +
+  geom_point(shape=1) +
+  xlab("Number of Cities") + 
+  ylab("Average Population") + 
+  ggtitle("City Poplulation Distribution")+
+  geom_text(aes(label=Country))
+# first attempt - too many countries - cannot read data at all, 
+  #besides the interesting outliers
+
+ggplot(dfm1, aes(x=Freq, y=mean10,label=Country)) +
+  geom_point(shape=1) +
+  xlab("Number of Cities") + 
+  ylab("Average Population") + 
+  ggtitle("City Poplation Distribution")
+# Graph without names
+
+ggplot(dfm1, aes(x=Freq, y=mean10,label=Var1)) +
+  geom_point(shape=1, size=0.3) +
+  xlab("Number of Cities") + 
+  ylab("Average Population") + 
+  ggtitle("City Population Distribution")+
+  geom_text(aes(label=Var1, size=0.1))
+# Graph with smaller print
+
 meansort <- subset(dfm2, select = c(Country, Freq, mean10, mean15, mean20))[order(-dfm2$mean10),]
 sumsort <- subset(dfm2, select = c(Country, sum10, sum15, sum20))[order(-dfm2$sum10),]
 maxsort <- subset(dfm2, select = c(Country, max10, max15, max20))[order(-dfm2$max10),]
-#create sorted dataframs in order to parse down via intersection
+#
 
 dfintersect <- merge(meansort[1:25,], sumsort[1:25,], by.x="Country", by.y="Country")
 #intersection of top 50 of both categories - 39 hits
 dfintersect2 <- merge(dfintersect, maxsort[1:25,], by.x="Country", by.y="Country")
 #intersection of top 50 in all 3 categories - 36 hits
 
+dfintersect <- merge(meansort[1:25,], sumsort[1:25,], by.x="Country", by.y="Country")
+
 maxsort1 <- maxsort[1:20,]
-```
 
-You can also embed plots, for example:
-
-```{r fig.width=7, fig.height=6}
 ggplot(dfintersect2, aes(x=Freq, y=mean10,label=Country)) +
   xlab("Number of Cities") + 
   ylab("Average Population") + 
@@ -101,5 +144,3 @@ ggplot(dfintersect2, aes(x=Freq, y=mean10,label=Country)) +
   geom_point(aes(size = max10, colour = Country)) +
   scale_size_area()
 ##Scatterplot of City Population disparities
-```
-

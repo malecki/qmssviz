@@ -109,4 +109,4 @@ grid2 <- grid + theme(legend.background=element_rect(fill='gray60', colour='gray
 grid2
 ```
 
-The association between BMI and number of restaurant-prepared meals consumed in a week did not seem to differ visually from occupation group to occupation group. It is interesting to note that respondents who worked in services and sales seem to eat out more frequently, on average, than respondents in other occupational groups.
+The association between BMI and number of restaurant-prepared meals consumed in a week does not seem to differ visually from occupation group to occupation group. It is interesting to note that respondents who worked in services and sales seem to eat out more frequently, on average, than respondents in other occupational groups.

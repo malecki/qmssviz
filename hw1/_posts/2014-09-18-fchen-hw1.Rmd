@@ -35,12 +35,13 @@ bar1 <- barplot(height, names.arg = colnames(height),
         horiz = TRUE,
         width = 3,
         beside = TRUE,
-        legend = TRUE
-        )
+        legend = TRUE,
+		args.legend = list(x = "bottomright")
+		)
 text(height, bar1, label = height, pos = 4, cex = 0.65, col = "red")
 ```
 
-This is a visual representation of the different characteristics of amateur and professional bboys. Some of these attributes include age, body mass index, minutes of warmup time, and time spent training headspins, all in their respective units.
+This is a visual representation of the different characteristics of amateur and professional bboys. Some of these attributes include age, body mass index, minutes of warmup time, and time spent training headspins, all in their respective units. A horizontal barplot was chosen, with each column possessing a different unit of measurement. A legend in the bottom right corner denotes that we are comparing averages between amatuer and professional bboys. 
 
 ## Kauther's second table
 
@@ -58,12 +59,12 @@ bar2 <- barplot(height2, names.arg = colnames(height2),
         width = 3,
         beside = TRUE, 
         legend = TRUE,
-        args.legend = list(x = "bottomright")
+        args.legend = list(x = "bottomright"),
         )
 text(height2, bar2, label = height2, pos = 4, cex = 0.65, col = "red")
 ```
 
-On average, there are more injuries reported for amateur bboys compared to professional bboys, although more total injuries in amateurs may just be a result of a greater sample size. When adjusted on a per person basis, there are almost twice the number of injuries per bboy (16.1 injuries per professional versus 9.8 per amateur).
+On average, there are more injuries reported for amateur bboys compared to professional bboys. When adjusted on a per person basis, there are almost twice the number of injuries per bboy (16.1 injuries per professional versus 9.8 per amateur). Side by side, horizontal barplots were used again for these average values for better comparisons across professionals and amateurs in different categories.
 
 ## Kauther's third table
 
@@ -98,7 +99,7 @@ panel = function(x, y) {
       })
 ```
 
-If we take a look at the injury counts between amateur and professional bboys, it appears that amateurs have a higher total injury count in almost all anatomical regions, with head injuries almost approaching a 1:1 ratio (amateur:professional). Normalizing for the difference between population count tells a different story. Injuries per professional bboy in all anatomical regions are higher than injuries per amateur bboy.
+If we take a look at the injury counts between amateur and professional bboys, it appears that amateurs have a higher total injury count in almost all anatomical regions, with head injuries almost approaching a 1:1 ratio (amateur:professional). Normalizing for the difference between population count tells a different story. Injuries per professional bboy in all anatomical regions are higher than injuries per amateur bboy. These two graphs show the dichotomy between total number of injuries and injuries per person. The diagonal line represents a 1:1 ratio. We see that amateur bboys win when it comes to the sheer number of injuries. However, when injuries are adjusted on a per person basis, the points are all completely on the other side of the line, telling us that professional bboys sustain more injuries than an amateur bboy.
 
 ## Kauther's fourth table
 
@@ -134,7 +135,7 @@ axis(2, at = 1:4, labels = bar5lab, tick = FALSE, las = 2, cex.axis = 0.6)
 # text(bar6, professional, label = professional, pos = 3, cex = 0.80, col = "red")
 ```
 
-What about the use of protective gear? Responses were tabulated on a scale of 0 to 4, 0 meaning "I never use gear," and 4 being "I use gear very often."
+What about the use of protective gear? Responses were tabulated on a scale of 0 to 4, 0 meaning "I never use gear," and 4 being "I use gear very often." I replaced the survey responses of 0-4 with what the survey reported as a qualitative answer. These are side by side histograms of gear usage, separated by dancer skill level. Because the responses were relatively the same, side by side by type of gear usage was unnecessary. 
 
 ## Kauther's fifth table
 
@@ -154,7 +155,7 @@ panel = function(x, y) {
       })
 ```
 
-Taking a look at loss of training days by anatomical injury leaves me a bit frightened. Of the 144 bboys, the highest losses of total training days occurred with knee injuries, spine injuries, and wrist/hand injuries. When normalized to lost training days per injury, a knee injury could take a bboy out for approximately two weeks, wrist/hand injuries for approximately a week and a half, and surprisingly, spine, shoulder or elbow injuries, one entire week (only?!?). 
+This visualization plots total loss of training days on the y-axis and loss of training days per injury on the x-axis. I decided to visualize this data in this manner in order to highlight a combination of injury severity and frequency. Taking a look at loss of training days by anatomical injury leaves me a bit frightened. Of the 144 bboys, the highest losses of total training days occurred with knee injuries, spine injuries, and wrist/hand injuries. When normalized to lost training days per injury, a knee injury could take a bboy out for approximately two weeks, wrist/hand injuries for approximately a week and a half, and surprisingly, spine, shoulder or elbow injuries, one entire week (only?!?). 
 
 ## Code below did not compile due to ggvis not being synced with Rmarkdown.
 

@@ -7,17 +7,41 @@ published: false
 tags: hw1
 ---
 
-This is the first assignment for QMSS 4059 Data Visualization.
-"Make some pictures of some dataset(s)"
+CNN had an article about the World Health Organization's report on suicides in different countries:  
+http://www.cnn.com/2014/09/05/world/who-global-suicide-report/
+
+According to the article, South Korea had one of the highest suicide rates (after Guyana and North Korea). 
+Among OECD countries, South Korea has had the highest reported suicide rates in the last 10 years.
+
+I decided to look more closely at the data provided by WHO and combine it with data on other social and economic factors.
+
+<br>
+```{r, echo=FALSE}
+suicideRate <- read.csv("/Users/User/Documents/qmssviz_other/Suicide Data/suicide_gdp.csv")
+suicideRate$logGDPpc <- log(suicideRate$GDPperCap)
+```        
 
 ```{r}
-summary(cars)
+head(suicideRate)
 ```
 
-You can also embed plots, for example:
+<br>
+
+Below we have a scatterplot of 2010 suicide rates for different countries and GDP per capita.
 
 ```{r, echo=FALSE}
-plot(cars)
+require(ggplot2)
+
+ggplot(suicideRate, aes(x=logGDPpc, y=SuicideRate)) +
+  geom_point(shape=1) +
+  ggtitle("2010 Suicide Rates vs. GDP per Capita") +
+  xlab("GDP per Capita, log scale") +
+  ylab("Suicide rates (per 100,000)") +
+  geom_text(aes(label=Country), hjust=0, vjust=0, size=4)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Data sources:
+
+http://apps.who.int/healthinfo/statistics/mortality/whodpms/
+
+http://data.worldbank.org/indicator/NY.GDP.PCAP.CD

@@ -1,6 +1,10 @@
+---
+title: "Homework 1, Rachel Smith"
+author: rls2191
+output: html_document
 published:false
 tags:hw1
-Title
+---
 ========================================================
 
 This is an R Markdown document. Markdown is a simple formatting syntax for authoring web pages (click the **Help** toolbar button for more details on using R Markdown).
@@ -11,7 +15,11 @@ When you click the **Knit HTML** button a web page will be generated that includ
 summary(cars)
 ```
 
-You can also embed plots, for example:
+You can also embe
+
+```{r}
+```
+d plots, for example:
 
 ```{r fig.width=7, fig.height=6}
 plot(cars)

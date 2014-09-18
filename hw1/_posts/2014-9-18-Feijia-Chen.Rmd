@@ -14,7 +14,7 @@ attach(iris)
 library(ggplot2)
 ```
 
-Draw the graphs of sepal width against sepal length respectively for three species.
+Draw graphs of sepal width against sepal length respectively for three species.
 ```{r, echo=FALSE}
 ggplot(iris,aes(Sepal.Length,Sepal.Width))+geom_point(aes(color=Species))
 ```

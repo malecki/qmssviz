@@ -6,7 +6,8 @@ published: false
 tags: hw1
 ---
 
-This data set(firms) comprises a set of companies and looks at their industry(industry.recode), employee size(empsize), and assets(assets).
+
+This dataset(firms) comprises a set of companies and looks at their industry(industry.recode), employee size(empsize), and assets(assets).
 
 **Plotting # of employees x assets**
 

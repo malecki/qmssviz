@@ -17,6 +17,7 @@ d$Death<-as.numeric(d$Death)
 d$Death<-d$Death/1000
 qplot(data=d,x = MoneyRaised,y=Death,color=Name)
 ```
+
 UN population(I noticed it from one of our classmates and thought it beautiful, but I don't know how to change color with the range of population )
 ```{r}
 setwd("~/Desktop/ZhongjunHuqmssviz/qmssviz/Lab1")

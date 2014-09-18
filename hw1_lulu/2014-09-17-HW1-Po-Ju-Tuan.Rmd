@@ -14,13 +14,16 @@ When you click the **Knit** button a document will be generated that includes bo
 attach(cars)
 cars
 View(cars)
+
 library(ggplot2)
-qplot(cars$speed, binwidth= .5, xlab="Car Speed", ylab= "Count Number")
+
 ggplot(cars, aes(x=speed)) + geom_histogram(binwidth=.6,colour="black", fill="white")
+
 ggplot(cars, aes(x=speed)) + geom_density()
 
 ggplot(cars, aes(x=speed))+
   geom_histogram(aes(y=..density..),binwidth=.6,colour="black", fill="white")+
-  geom_density(alpha=.2, fill="#FF6666")+
-
+  geom_density(alpha=.2, fill="#FF6666")
+  
+```
  

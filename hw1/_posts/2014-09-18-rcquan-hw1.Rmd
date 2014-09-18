@@ -128,7 +128,7 @@ dfPlot %>%
 
 Here we look at the proportion of City Council meetings held each month from 2000 to 2013. From this graph, we can see that council members take their summers seriously. Good luck trying to schedule a hearing during July or August. Also, you can see an upward trend starting from the beginning of the year until the month of June, the end of the fiscal cycle. Perhaps council members are spurred by deadlines just as much as the rest of us.
 
-## Total Meetings Held by Committee by Month
+## Total Meetings Held by Committee by Year
 
 ```{r}
 # create alphabetical vector of committee names 
@@ -137,11 +137,11 @@ Committees <- sort(unique(dfPlot$Name))
 dfPlot %>%
   # get frequency of meetings for each committee
   # for every month
-  xtabs(formula = ~Name + Month) %>%
+  xtabs(formula = ~Name + Year) %>%
   as.data.frame() %>%
   
   # stacked bar plot
-  ggvis(x = ~Month, y = ~Freq, fill = ~Name) %>%
+  ggvis(x = ~Year, y = ~Freq, fill = ~Name) %>%
   # interactive checkboxes for each committee
   filter(Name %in% eval(input_checkboxgroup(
       choices = Committees,
@@ -150,8 +150,14 @@ dfPlot %>%
   layer_bars()
 ```
 
-This graph allows the user to compare the number of committee meetings held by each committee for each month. However, the use of total number should be viewed with skepticism.
+Some takeaways from this: 
 
+* The `Committee on Finance` has consistently held far more meetings than any other committee since the year 2000
+* Some committees have held far less meetings than others
+
+This `ggvis` plot allows the user to compare the number of committee meetings held by each committee for each month. However, the use of total number should be viewed with skepticism since not all committees were active since the year 2000. This will be addressed in future version of this graph. 
+
+Also, the recyling of color palette does not make multiple comparisons very easy for the user to interpret. This can be addressed by categorizing the committees into more meaningful groups.
 
 # Wish List
 

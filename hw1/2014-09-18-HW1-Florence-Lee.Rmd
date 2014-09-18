@@ -10,11 +10,11 @@ tags: hw1
 
 # About the Data
 
-The data set is a subset of the complete 2004 NYC HANES dataset. All survey participants are adults, ages 20+. Because information regarding eating behaviors, occupation, and BMI were all found in different survey portions, I used SAS to merge based on uniuqe SP_ID. SAS was also used to remove survey respondents with missing values on the variables of interest and export the data into a .CSV file. 
+The data set is a subset of the complete 2004 NYC HANES dataset. All survey participants are adults, ages 20+. Because information regarding eating behaviors, occupation, and BMI were all found in different survey portions, I used SAS to merge based on uniuqe SP_ID. SAS was also used to remove survey respondents with missing values on the variables of interest and to export the data into a .CSV file. 
 
 # Importing the Data
 
-The dataset is located in a different folder. I will first retrieve the data. 
+Change file directory to retrieve data set.
 ```{r}
 setwd("C:/Users/Flo/Desktop/Data Viz 2014/Assignment1")
 nychanes <- read.csv("nychanes.csv", stringsAsFactors=FALSE)
@@ -28,7 +28,7 @@ head(nychanes)
 
 # Dataset Variables in nychanes 
 
-(1) **"eatout"** is a composite score based on DBQ090G and DBQ090Q. It is a discrete numeric variable
+(1) **"eatout"** is a composite score based on DBQ090G and DBQ090Q. It is a discrete numeric variable.
 
 * Numeric value corresponds to the number of times the survey respondent ate meals prepared in a restaurant (includes take-out orders)
 * eatout=0 corresponds to not eating restaurant-prepared food OR eating restaurant-prepared food less than once per week
@@ -73,7 +73,7 @@ nychanes$occgrp<-as.factor(nychanes$occgrp)
 
 # Plot of BMI vs. Frequency of Eating Out
 
-I am primarily interested to see whether there is some visual association between eating out and BMI. I expect to see higher frequency of eating out with higher BMI readings due to the high sodium, high fat content of most restaurant foods. 
+I am primarily interested to see whether there is some association between eating out and BMI. I expect to see higher frequency of eating out with higher BMI readings due to the high sodium, high fat content of most restaurant foods. 
 
 ```{r}
 #Call ggplot2
@@ -87,22 +87,26 @@ baseplot<-base2 + geom_point(size=4)
 # Add aesthetics
 basefinal <- baseplot + scale_colour_brewer(expression("Occupation Level")) + theme(plot.title=element_text(face="bold", size=18), axis.title=element_text(face="bold", size=15), panel.background=element_rect(fill="gray70"), panel.grid.major=element_line(colour="gray50"), panel.grid.minor=element_line(colour="gray60", linetype="dotted", size=1))
 # Format legend
-final <- basefinal + theme(legend.background=element_rect(fill='gray87', colour='gray60', size=1.25), legend.key=element_rect(fill='gray70'), legend.position=c(0.88, 0.85))
+final <- basefinal + theme(legend.background=element_rect(fill='gray60', colour='gray60', size=1.25), legend.key=element_rect(fill='gray70'), legend.position=c(0.88, 0.85))
 final
 ```
-In the plot, we do not see a clear association, mostly because the bulk of the data is concentrated between 0 to 10 meals per week. Even within this region, BMI varies widely. 
+In the plot, I do not see a clear association, mostly because most of the data is concentrated between 0 to 10 meals per week. Even within this region, BMI varies widely. 
 
-The orange region of the graph highlights individuals that are within a normal BMI region (between 18.5 and 25). We see that fewer people fall in this normal region as number of restaruant-prepared meal increases. (As noted above, this may be due to the fact that there weren't as many data points after 10 meals.)
+The orange region of the graph highlights individuals that are within a normal BMI region (between 18.5 and 25). We see that fewer people fall in this normal BMI region as number of restaruant-prepared meal increases. (This may be due to the fact that there weren't as many data points after 10 meals.)
 
-The colors of the point indicate the occupation level of the individual. Individuals with lighter colored points are considered upper-level workers (managers and supervisors), while individuals with darker colored points are considered lower-level workers (general laborers). 
+The colors of the point indicate the occupation level of the survey respondent. Individuals with lighter colored points are considered upper-level workers (managers and supervisors), while individuals with darker colored points are considered lower-level workers (general laborers). 
 
 # Looking at Occupation 
 
-Lower-level workers tend to have jobs that require greater physical exertion in spite of lower pay rates. Thus, we might expect to see different associations between BMI and eating out when stratified by occupation. 
+Lower-level workers and higher-level workers probably have different lifestyles due to income earned and physical demand of their respective jobs. This can influence BMI and frequency of eating restaurant-prepared foods. 
+
+To observe the effect of occupation on my association of interest, I created separate graphs for each occupation group.
 
 ```{r}
-#Create facet grid without customized legend
-basefinal + facet_grid(. ~ occgrp)
+#Create facet grid with default legend placement
+grid <- basefinal + facet_grid(. ~ occgrp)
+grid2 <- grid + theme(legend.background=element_rect(fill='gray60', colour='gray60', size=1.25), legend.key=element_rect(fill='gray70'))
+grid2
 ```
 
-When we create separate graphs for each occupation level, we see that there is still no similar association, with similar crowding of data around 0 to 10 meals per week. 
+The association between BMI and number of restaurant-prepared meals consumed in a week did not seem to differ visually from occupation group to occupation group. It is interesting to note that respondents who worked in services and sales seem to eat out more frequently, on average, than respondents in other occupational groups.

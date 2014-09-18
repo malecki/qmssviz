@@ -40,13 +40,21 @@ What I don't like:
 
 #People who know how to use version control
 
-``` {r ggplot2, fig.width=4, fig.height=8, message=FALSE}
+``` {r ggplot2, fig.width=3, fig.height=7, message=FALSE}
 
 vcs <-factor(respo[[9]])
 vcs.table <-table(vcs)
 vcs.df <- as.data.frame.table(vcs.table)
 
-ggplot(data=vcs.df, aes(x=vcs, y=Freq)) + geom_bar(stat="identity")
+ggplot(data=vcs.df, aes(x=vcs, y=Freq), main="Version Control Experience") + geom_bar(stat="identity")
+```
+----
+Looks kind of bad...what if we change the scale?
+
+#People who know how to use version control
+
+``` {r ggplot3, fig.width=4, fig.height=4, message=FALSE}
+
 ggplot(data=vcs.df, aes(x=vcs, y=Freq)) + geom_bar(stat="identity")
 
 ```

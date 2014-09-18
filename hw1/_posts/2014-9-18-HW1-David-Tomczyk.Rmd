@@ -73,6 +73,7 @@ ggplot(progtwit, aes(Program, fill=Do.you.use.twitter.)) + geom_bar() + ggtitle(
 
 ```
 ---
+#look into Rcharts, have a button to switch between yes/no's in each category. Also think about adding proportions and/or frequency to the top of the bars. USE TWITTER BLUE(for users)/GREY(for not)! Consider: Dot plot, not bar chart
 
 **What I like:**  
 -The colors, I guess  

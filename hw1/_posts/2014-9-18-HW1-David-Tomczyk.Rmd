@@ -32,30 +32,26 @@ program2.df[8,"Freq"] <- 2
 program2.df <- program2.df[-6,]
 program2.df[6,"Freq"] <- 2
 names(program2.df)[1] <- "Program"
+names(program2.df)[2] <- "Count"
 program2.df[4,1] <- "QMSS 1st sem."
 program2.df[5,"Program"] <- "QMSS 2nd Sem.+"
 program2.df[6,"Program"] <- "QMSS 3rd Sem."
 
 
-ggplot(data=program2.df, aes(x=Program, y=Freq, fill=Program), main="Class Make Up") + geom_bar(stat="identity")+guides(fill=FALSE)
-
-#Rename QMSS's so they fit better. Change Var1 column name to Program
-
-#qplot(x=ProgramType, data=program, geom="bar", fill=ProgramType, main="Class Make Up")
+ggplot(data=program2.df, aes(x=Program, y=Count, fill=Program)) + geom_bar(stat="identity")+guides(fill=FALSE)+ggtitle("Class Make Up")
 
 ```
 ---
 
-What I like:  
--Its my first graph in R/ggplot2
+**What I like:**  
+-Its my first graph in R/ggplot2  
+-I was able to manipulate the dataset in r to get counts, condense similar categories, change axis/title
 
-What I don't like:  
--The colors 
--I wish the x axis labels were more spread out, or just gone  
--The x axis titles should simply be "Program"  
+
+**What I don't like:**  
+-The colors  
 -I think I'd like to order the data, though I'm not sure how  
--Two redundant categories I would like to merge together, but didn't have time to learn how
--The colors
+-I'd like to put count number on top of the bars
 
 #People who know how to use version control
 

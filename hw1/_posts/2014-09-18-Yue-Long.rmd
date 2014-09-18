@@ -10,7 +10,7 @@ tags: hw1
 For this homework, I chose the dataset Donation.Disease to practice making different kinds of graphs. 
 
 ```{r}
-dd <- read.csv("~/Desktop/qmssviz/Lab1/Donation-Disease.csv")
+dd <- read.csv("~/Documents/qmssviz/Lab1/Donation-Disease.csv")
 ```
 
 First let us observe some basic information about this dataset:
@@ -80,7 +80,7 @@ ggplot(dd, aes(x=death_simp, y=money, label=name))+
 Because this dataset is pretty small, there are limited things that we can do to manipulate it. I thus download a dataset from National Data Climate Center about JFK's monthly snow precipitation from August 1st, 2004 to August 1st, 2014 and see if there are different graphs that I can create. First I need to read the data into R. 
 
 ```{r, echo=FALSE}
-JFK <-read.csv("~/Desktop/qmssviz/JFK_snow.csv")
+JFK <-read.csv("~/Documents/qmssviz/JFK_snow.csv")
 ```
 
 Similar to what we did above we want to know some information about this dataset:

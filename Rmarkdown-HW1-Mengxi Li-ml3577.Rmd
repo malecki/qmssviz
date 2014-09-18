@@ -1,0 +1,12 @@
+---
+Title: "Homework 1 assignment"
+author: ml3577
+output: html_document
+published: false
+tags: hw1
+---
+========================================================
+
+
+
+---

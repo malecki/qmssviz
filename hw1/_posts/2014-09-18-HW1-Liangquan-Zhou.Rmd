@@ -22,4 +22,10 @@ plot(cars)
 
 Now let's exploe the history of the process. Now it's time to make the second commit.
 
+Then we can change the axes of speed and dist. And make the third commit.
+
+```{r, echo=FALSE}
+plot(cars$dist, cars$speed)
+```
+
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

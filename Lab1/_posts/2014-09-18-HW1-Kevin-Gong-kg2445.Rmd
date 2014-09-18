@@ -2,7 +2,6 @@
 title: "2014-09-18-HW1-Kevin-Gong-kg2445"
 output: html_document
 date: "September 11, 2014"
-output: html_document
 published: false
 tag: hw1
 ---

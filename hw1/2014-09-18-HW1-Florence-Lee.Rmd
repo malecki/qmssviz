@@ -33,7 +33,7 @@ head(nychanes)
 * Numeric value corresponds to the number of times the survey respondent ate meals prepared in a restaurant (includes take-out orders)
 * eatout=0 corresponds to not eating restaurant-prepared food OR eating restaurant-prepared food less than once per week
 
-(2) ***"occgrp"*** is a categorical variable based off of OCCREC and expressed numerically as a nominal numeric variable. Since there are a lot of groups, we will collapse similar categories as defined by the [Office for National Statistics Standard Occupational Classification Hierarchy](http://www.neighbourhood.statistics.gov.uk/HTMLDocs/dev3/ONS_SOC_hierarchy_view.html).
+(2) **"occgrp"** is a categorical variable based off of OCCREC and expressed numerically as a nominal numeric variable. Since there are a lot of groups, we will collapse similar categories as defined by the [Office for National Statistics Standard Occupational Classification Hierarchy](http://www.neighbourhood.statistics.gov.uk/HTMLDocs/dev3/ONS_SOC_hierarchy_view.html).
 
 * occgrp=1 corresponds to managerial and professional specialty (1)
 * occgrp=2 corresponds to sales (4)
@@ -43,7 +43,7 @@ head(nychanes)
 * occgrp=6 corresponds to precision production, craft, and repair (3)
 * occgrp=7 corresponds to operators, fabricators, and laborers (5)
 
-(3) ***"BMXBMI"*** is a continuous variable that corresponds to the survey respondent's BMI based off of their height and weight. Another way of looking at BMI is through ***"BMI2"***, which is an ordinal categorical variable. 
+(3) **"BMXBMI"** is a continuous variable that corresponds to the survey respondent's BMI based off of their height and weight. Another way of looking at BMI is through ***"BMI2"***, which is an ordinal categorical variable. 
 
 * BMI2=1 corresponds to underweight
 * BMI2=2 corresponds to normal weight

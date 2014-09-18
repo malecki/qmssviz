@@ -1,0 +1,22 @@
+{
+    "contents" : "",
+    "created" : 1410477762623.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "9A822528",
+    "lastKnownWriteTime" : 0,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "caption" : "demo",
+        "contentUrl" : "content?title=demo&file=32c73764e0ea405d974698f40e905e3a.htm",
+        "displayedObservations" : 8,
+        "displayedVariables" : 4,
+        "totalObservations" : 8,
+        "variables" : 4
+    },
+    "source_on_save" : false,
+    "type" : "r_dataframe"
+}

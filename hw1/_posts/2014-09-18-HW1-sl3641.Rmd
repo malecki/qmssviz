@@ -7,7 +7,7 @@ published: false
 tags: hw1
 ---
 
-CNN had an article about the World Health Organization's report on suicides in different countries:  
+CNN had an article this month about the World Health Organization's report on suicides in different countries:  
 http://www.cnn.com/2014/09/05/world/who-global-suicide-report/
 
 According to the article, South Korea had one of the highest suicide rates (after Guyana and North Korea). 
@@ -27,7 +27,7 @@ head(suicideRate)
 
 <br>
 
-Below we have a scatterplot of 2010 suicide rates for different countries and GDP per capita.
+Below we have a scatterplot of 2010 suicide rates for 59 countries and GDP per capita.
 
 ```{r, echo=FALSE}
 require(ggplot2)
@@ -37,8 +37,34 @@ ggplot(suicideRate, aes(x=logGDPpc, y=SuicideRate)) +
   ggtitle("2010 Suicide Rates vs. GDP per Capita") +
   xlab("GDP per Capita, log scale") +
   ylab("Suicide rates (per 100,000)") +
-  geom_text(aes(label=Country), hjust=0, vjust=0, size=4)
+  geom_text(aes(label=Country), hjust=0, vjust=0, size=3)
 ```
+
+<br>
+The plot below shows an increase in suicide rates in South Korea over time (since 1990).
+```{r, echo=FALSE}
+kor <- read.csv("/Users/User/Documents/qmssviz_other/Suicide Data/southkorea.csv")
+
+require(ggplot2)
+
+ggplot(kor, aes(x=year, y=suicideRate)) +
+  geom_line() +
+  geom_point() +
+  ggtitle("South Korea Suicide Rates 1990 - 2011") +
+  xlab("Year") +
+  ylab("Suicide rates (per 100,000)")
+```   
+
+Overall mortality rates have declined over time.
+
+```{r, echo=FALSE}
+ggplot(kor, aes(x=year, y=mortality)) +
+  geom_line() +
+  geom_point() +
+  ggtitle("South Korea Mortality Rates 1990 - 2011") +
+  xlab("Year") +
+  ylab("Mortality rates (per 100,000)")
+```   
 
 Data sources:
 

@@ -9,20 +9,34 @@ output: html_document
 ```{r}
 library(ggplot2)
 ```
-Donation-Disease:
-```{r}
+### Donation-Disease:
+```{r,fig.height=3, fig.width=9}
 setwd("~/Desktop/ZhongjunHuqmssviz/qmssviz/Lab1")
 d <-read.csv("Donation-Disease.csv")
 d$Death<-as.numeric(d$Death)
 d$Death<-d$Death/1000
 qplot(data=d,x = MoneyRaised,y=Death,color=Name)
+
+ggplot
 ```
 
-UN population(I noticed it from one of our classmates and thought it beautiful, but I don't know how to change color with the range of population )
+### UN population
+(I noticed a very nice pic from one of our classmates. He taught me and I came back home trying by myself but still failed.His plot is way way way better than mine. No ideas why)
+```{r, fig.height=7, fig.width=15}
+library(RColorBrewer)
+
+library(xlsx)
+color <- brewer.pal(5, "Reds")
+setwd("~/Desktop/ZhongjunHuqmssviz/qmssviz/Lab1")
+un2<-read.xlsx("UN3.xlsx",sheetName="sheet1")
+un2$Population_Thousand<-cut(as.numeric(un2$X2010),breaks=c(0,2000,5000,10000,20000,Inf),labels=c("<2000","2000~5000","5000~10000","10000~15000",">15000"))
+qplot(data=un2,x=Longitude,y=Latitude,color=Population_Thousand) +geom_point(size=3) +scale_color_manual(values=color)
+
+```
+### Ages of Marriage
 ```{r}
 setwd("~/Desktop/ZhongjunHuqmssviz/qmssviz/Lab1")
-un2<-read.csv("UN3.csv")
-qplot(data=un2,x=Longitude,y=Latitude,color=X2010)
-
-```
+cb<-read.csv("GSS.2006.csv")
+cb$Ages<-as.numeric(cb$agewed)
+qplot(x=Ages, data=cb,geom="density",main="Distribution of How old were you when first married")
 

@@ -26,3 +26,7 @@ Note that the `echo = FALSE` parameter was added to the code chunk to prevent pr
 d=read(choose.csv(file.choose())
 
 plot(d$V45, d$V55)
+
+install.packages("ggplot2")
+library(ggplot2)
+

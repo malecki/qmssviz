@@ -26,7 +26,7 @@ I thought it would be useful to take a look at who is taking this class. Its a Q
 
 ```{r ggplot, fig.width=12, fig.height=3, message=FALSE}
 
-program2.df <-as.data.frame.table(table(factor(responses[[2]])),stringsAsFactors=FALSE)
+program2.df <-as.data.frame.table(table(responses[[2]]),stringsAsFactors=FALSE)
 program2.df <- program2.df[-8,]
 program2.df[8,"Freq"] <- 2
 program2.df <- program2.df[-6,]
@@ -53,11 +53,29 @@ ggplot(data=program2.df, aes(x=Program, y=Count, fill=Program)) + geom_bar(stat=
 -I think I'd like to order the data, though I'm not sure how  
 -I'd like to put count number on top of the bars
 
+---
+
+#Twitter users among the class, by program
+
+Which program/cohort has the highest proportion of twitter users?
+
+```{r ggplot2, fig.width=14, fig.height=5, message=FALSE}
+
+progtwit <- responses[,c(2,4)]
+progtwit[14,"Program"] <- "Stat"
+progtwit[28,"Program"] <- "QMSS Third Semester"
+progtwit2.df <-as.data.frame.table(table(progtwit),stringsAsFactors=FALSE)
+
+ggplot(progtwit, aes(Program, fill=Do.you.use.twitter.)) + geom_bar()
+
+
+```
+
 #People who know how to use version control
 
 I had a lot of trouble with git over the week, so I wanted to look at who the other git noobies were.
 
-``` {r ggplot2, fig.width=3, fig.height=7, message=FALSE}
+``` {r ggplot3, fig.width=3, fig.height=7, message=FALSE}
 
 vcs <-factor(responses[[9]])
 vcs.table <-table(vcs)
@@ -70,12 +88,8 @@ Looks kind of bad...what if we use a more appropriate scale?
 
 #People who know how to use version control
 
-``` {r ggplot3, fig.width=3, fig.height=3, message=FALSE}
+``` {r ggplot4, fig.width=3, fig.height=3, message=FALSE}
 
 ggplot(data=vcs.df, aes(x=vcs, y=Freq)) + geom_bar(stat="identity")
-
-```
-
-```{r nameof}
 
 ```

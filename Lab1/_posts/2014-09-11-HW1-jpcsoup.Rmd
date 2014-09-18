@@ -5,11 +5,12 @@ output: html_document
 published: false
 tags: hw1
 ---
+Hw1
 ========================================================
 
-#This is an R Markdown document. Markdown is a simple formatting syntax for authoring web pages (click the **Help** toolbar button for more details on using R Markdown).
+This is the organization and presentation of the UN_2011_Population_Cities_Over_750K.xlsx data set. 
 
-#When you click the **Knit HTML** button a web page will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+I started my process by making transforming the data so that it could be more easily presented as a whole.
 
 
 ```{r}

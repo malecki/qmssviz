@@ -8,15 +8,66 @@ tags: hw1
 
 ========================================================
 
+# About the Data
+
+The data set is a subset of the complete 2004 NYC HANES dataset. All survey participants are adults, ages 20+. Because information regarding eating behaviors, occupation, and BMI were all found in different survey portions, I used SAS to merge based on uniuqe SP_ID. SAS was also used to remove survey respondents with missing values on the variables of interest and export the data into a .CSV file. 
+
+# Importing the Data
+
 The dataset is located in a different folder. I will first retrieve the data. 
 ```{r}
-getwd()
 setwd("C:/Users/Flo/Desktop/Data Viz 2014/Assignment1")
 nychanes <- read.csv("nychanes.csv", stringsAsFactors=FALSE)
 ```
 
+Explore the dataset.
 
+```{r}
+head(nychanes)
+```
 
+# Dataset Variables in nychanes 
+
+(1) **"eatout"** is a composite score based on DBQ090G and DBQ090Q. It is a discrete numeric variable
+
+* Numeric value corresponds to the number of times the survey respondent ate meals prepared in a restaurant (includes take-out orders)
+
+(2) ***"occgrp"*** is a categorical variable based off of OCCREC and expressed numerically as a nominal numeric variable.
+
+* occgrp=1 corresponds to managerial and professional specialty 
+* occgrp=2 corresponds to sales
+* occgrp=3 corresponds to technical and administrative 
+* occgrp=4 corresponds to service
+* occgrp=5 corresponds to farming, forestry, and fishing
+* occgrp=6 corresponds to precision production, craft, and repair
+* occgrp=7 corresponds to operators, fabricators, and laborers
+
+(3) ***"BMXBMI"*** is a continuous variable that corresponds to the survey respondent's BMI based off of their height and weight. Another way of looking at BMI is through ***"BMI2"***, which is an ordinal categorical variable. 
+
+* BMI2=1 corresponds to underweight
+* BMI2=2 corresponds to normal weight
+* BMI2=3 corresponds to overweight 
+* BMI2=4 corresponds to obese
+
+# Renaming Variables of Interest in nychanes
+
+```{r}
+colnames(nychanes)
+newCol <- c("id", "eatout_bin", "eatout_num", "occ", "occgrp", "eatout", "bmi", "bmi_grp")
+colnames(nychanes) <- newCol          
+```
+
+# Creating Initial Plot 
+
+I am primarily interested to see whether there is some visual association between eating out and BMI. I expect to see higher frequency of eating out with higher BMI readings due to the high sodium, high fat content of most restaurant foods. 
+
+(Later, I will add in occupational group to explore whether occupation affects this association.)
+
+```{r}
+colnames(nychanes)
+newCol <- c("id", "eatout_bin", "eatout_num", "occ", "occgrp", "eatout", "bmi", "bmi_grp")
+colnames(nychanes) <- newCol          
+```
 
 
 

@@ -8,6 +8,8 @@ tags: hw1
 ---
 
 ## Loading bboying injury data
+The data used in the narrative below was obtained from the American Journal of Sports Medicine article, "Breakdance Injuries and Overuse Syndromes in Amateurs and Professionals," by Max Daniel Kauther. The sample size for the study was 144 bboys (breakdancers, 40 professional, 104 amateur).
+
 ```{r, echo = FALSE, warning = FALSE, message = FALSE, comment = NA}
 setwd("/Users/knarf/Copy/Datasets/bboy")
 k1 <- read.table("kauther_t1.txt") 
@@ -37,6 +39,8 @@ bar1 <- barplot(height, names.arg = colnames(height),
 text(height, bar1, label = height, pos = 4, cex = 0.65, col = "red")
 ```
 
+This is a visual representation of the different characteristics of amateur and professional bboys. Some of these attributes include age, body mass index, minutes of warmup time, and time spent training headspins, all in their respective units.
+
 ## Kauther's second table
 
 ```{r, echo = FALSE, warning = FALSE, message = FALSE}
@@ -57,6 +61,7 @@ bar2 <- barplot(height2, names.arg = colnames(height2),
         )
 text(height2, bar2, label = height2, pos = 4, cex = 0.65, col = "red")
 ```
+On average, there are more injuries reported for amateur bboys compared to professional bboys, although more total injuries in amateurs may just be a result of a greater sample size. When adjusted on a per person basis, there are almost twice the number of injuries per bboy (16.1 injuries per professional versus 9.8 per amateur).
 
 # Kauther's third table
 
@@ -90,6 +95,8 @@ panel = function(x, y) {
       labels = rownames(k3), pos = 4, cex = 0.8)
       })
 ```
+
+If we take a look at the injury counts between amateur and professional bboys, it appears that amateurs have a higher total injury count in almost all anatomical regions, with head injuries almost approaching a 1:1 ratio (amateur:professional). Normalizing for the difference between population count tells a different story. Injuries per professional bboy in all anatomical regions are higher than injuries per amateur bboy.
 
 ## Kauther's fourth table
 
@@ -125,6 +132,8 @@ axis(2, at = 1:4, labels = bar5lab, tick = FALSE, las = 2, cex.axis = 0.6)
 # text(bar6, professional, label = professional, pos = 3, cex = 0.80, col = "red")
 ```
 
+What about the use of protective gear? Responses were tabulated on a scale of 0 to 4, 0 meaning "I never use gear," and 4 being "I use gear very often."
+
 ## Kauther's fifth table
 
 ```{r, echo = FALSE, warning = FALSE, message = FALSE}
@@ -143,6 +152,8 @@ panel = function(x, y) {
       })
 ```
 
+Taking a look at loss of training days by anatomical injury leaves me a bit frightened. Of the 144 bboys, the highest losses of total training days occurred with knee injuries, spine injuries, and wrist/hand injuries. When normalized to lost training days per injury, a knee injury could take a bboy out for approximately two weeks, wrist/hand injuries for approximately a week and a half, and surprisingly, spine, shoulder or elbow injuries, one entire week (only?!?). 
+
 # Playing around with ggvis, using the cocaine dataset
 
 ```{r}
@@ -152,12 +163,24 @@ head(cocaine)
 tail(cocaine)
 
 cocaine %>%
-    ggvis(x = ~weight, y = ~price, fill := "green")
+    ggvis(x = ~weight, y = ~potency, fill := "green")
     layer_points()
+```
 
+Graphical scatterplot representation of potency on weight of cocaine.
+
+# Static histogram
+
+```{r}
 cocaine %>% ggvis(~weight) %>%
     layer_histograms(binwidth = 5)
+```
 
+Histogram of weights for cocaine incidences. 
+
+# Interactive histogram
+
+```{r}
 state <- as.vector(unique(cocaine$state))
 cocaine %>%
       ggvis(~potency) %>%
@@ -168,3 +191,4 @@ cocaine %>%
       layer_histograms(binwidth = 2)
 ```
 
+Interactive histogram of cocaine potency counts in each state. 

@@ -29,9 +29,20 @@ legend(2.75, 8.75, unique(health$zone), pch=19, col=unique(health$zone))
 text(health$num_doctors_fulltime, health$num_nurses_fulltime, labels=health$lga, cex= 0.7)
 ```
 
-Trying to do the same with ggplot:
+Showing the same information with ggplot
 ```{r}
 library(ggplot2)
-ggplot(health, aes(num_doctors_fulltime, num_nurses_fulltime, xlim=4, ylim=9), color=zone) + geom_point(shape=1, alpha=1) 
+ggplot(health, aes(num_doctors_fulltime, num_nurses_fulltime, color=zone)) + 
+  geom_point(shape=9, alpha=2/3, fill=5) + 
+  scale_color_hue(l=50) + 
+  labs(x="Number of Full Time Doctors", y="Number of Full Time Nurses") + 
+  theme(                              
+      plot.background = element_blank(), 
+      panel.grid.major = element_blank(), 
+      panel.grid.minor = element_blank(), 
+      panel.border = element_blank(), 
+      panel.background = element_blank(),
+      axis.line = element_line(size=.4)
+  )
 ```
 

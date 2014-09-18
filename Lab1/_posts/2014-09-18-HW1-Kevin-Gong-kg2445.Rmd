@@ -6,22 +6,30 @@ published: false
 tag: hw1
 ---
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+We'll visualize two datasets: Donation-Disease.csv and ChickWeight. The former looks at money raised versus deaths for different diseases, while the latter looks at weight versus age of chickens on different diets.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+Let's first look at the Donation-Disease.csv:
+
+
+
+
+
 
 ```{r, echo=FALSE}
-summary(cars)
-cars
-dd <- read.csv("Donation-Disease.csv")
+
+dd <- read.csv("~/home/qmssviz/hw1/_posts/Donation-Disease.csv")
 dd2 <- data.frame(dd)
-head(dd2)
 dim(dd2)
 dd2
 library(MASS)
 data(ChickWeight)
 head(ChickWeight)
 dim(ChickWeight)
+
+
+
+
+
 
 library(ggplot2)
 

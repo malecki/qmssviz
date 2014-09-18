@@ -5,23 +5,16 @@ output: html_document
 published:false
 tags:hw1
 ---
-========================================================
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring web pages (click the **Help** toolbar button for more details on using R Markdown).
-
-When you click the **Knit HTML** button a web page will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
+load data:
 ```{r}
-summary(cars)
+dondis <- read.csv("./Lab1/Donation-Disease.csv")
+health <- read.csv("./Lab1/sample_health_facilities.csv")
 ```
-
-You can also embe
-
+make scatter plot:
 ```{r}
+library(car)
+plot.new()
+plot.window(c(0,9), c(0,5))
+points(health$num_doctors_fulltime, health$num_nurses_fulltime)
+plot(health$num_doctors_fulltime, health$num_nurses_fulltime)
 ```
-d plots, for example:
-
-```{r fig.width=7, fig.height=6}
-plot(cars)
-```
-

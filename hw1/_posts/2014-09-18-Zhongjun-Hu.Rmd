@@ -4,19 +4,20 @@ author: "Zhongjun Hu"
 date: "2014年9月17日"
 output: html_document
 ---
+# HW1
+## HU
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+### Read data
+first 
+```{r}
+setwd("~/Desktop/ZhongjunHuqmssviz/qmssviz/Lab1")
+d <- read.csv("Donation-Disease.csv")
+```
 
 ```{r}
-summary(cars)
+library(ggplot2)
+qplot(x = Name, y = Death, data = d, color = Name)
 ```
 
-You can also embed plots, for example:
-
-```{r, echo=FALSE}
-plot(cars)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

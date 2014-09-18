@@ -85,10 +85,24 @@ base2 <- base + geom_rect(aes(xmin=-Inf, xmax=Inf, ymin=18.5, ymax=25), fill="or
 # Add points
 baseplot<-base2 + geom_point(size=4)
 # Add aesthetics
-basefinal <- baseplot + scale_colour_brewer(expression("Occupation Level")) + theme(plot.title=element_text(face="bold", size=20), axis.title=element_text(face="bold", size=15), panel.background=element_rect(fill="gray70"), panel.grid.major=element_line(colour="gray50"), panel.grid.minor=element_line(colour="gray60", linetype="dotted", size=1))
-basefinal
+basefinal <- baseplot + scale_colour_brewer(expression("Occupation Level")) + theme(plot.title=element_text(face="bold", size=18), axis.title=element_text(face="bold", size=15), panel.background=element_rect(fill="gray70"), panel.grid.major=element_line(colour="gray50"), panel.grid.minor=element_line(colour="gray60", linetype="dotted", size=1))
 # Format legend
-basefinal + theme(legend.background=element_rect(fill='gray87', colour='gray60', size=1.25), legend.key=element_rect(fill='gray70'), legend.position=c(0.95, 0.85))
+final <- basefinal + theme(legend.background=element_rect(fill='gray87', colour='gray60', size=1.25), legend.key=element_rect(fill='gray70'), legend.position=c(0.88, 0.85))
+final
+```
+In the plot, we do not see a clear association, mostly because the bulk of the data is concentrated between 0 to 10 meals per week. Even within this region, BMI varies widely. 
+
+The orange region of the graph highlights individuals that are within a normal BMI region (between 18.5 and 25). We see that fewer people fall in this normal region as number of restaruant-prepared meal increases. (As noted above, this may be due to the fact that there weren't as many data points after 10 meals.)
+
+The colors of the point indicate the occupation level of the individual. Individuals with lighter colored points are considered upper-level workers (managers and supervisors), while individuals with darker colored points are considered lower-level workers (general laborers). 
+
+# Looking at Occupation 
+
+Lower-level workers tend to have jobs that require greater physical exertion in spite of lower pay rates. Thus, we might expect to see different associations between BMI and eating out when stratified by occupation. 
+
+```{r}
+#Create facet grid without customized legend
+basefinal + facet_grid(. ~ occgrp)
 ```
 
-
+When we create separate graphs for each occupation level, we see that there is still no similar association, with similar crowding of data around 0 to 10 meals per week. 

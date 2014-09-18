@@ -6,19 +6,18 @@ output: html_document
 ---
 
 
-
-attach(mtcars)
-head(mtcars)
-
- 
+#attach dataset
+attach(mtcars) 
+#library ggplot2
 library(ggplot2)
+#plot1
 qplot(wt, mpg, data = mtcars, xlab = "Weight", ylab = "Miles per Gallon")
-
-## change change  hahahah1!! working!!! pushing is working!! ahahha
-
+#add color and title
 qplot(wt, mpg, data = mtcars, xlab = "Weight", ylab = "Miles per Gallon", color = cyl, main = "Weight vs MPG", size = hp)
-
+#set p
 p <- ggplot(mtcars, aes(factor(cyl), mpg), title = "Friday" )
+#more 
 p2 <- p + geom_boxplot(aes(fill = cyl))
+#boxplot
 p2 + ggtitle("Cylinder vs MPG") + theme(plot.title = element_text(lineheight=.8, face="bold"))
 

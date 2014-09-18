@@ -61,7 +61,7 @@ ggplot(batting, aes(teamID,HR)) + geom_boxplot() + annotate("text", label = "Ale
 
 ![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2.png) 
 
-For the two bargraphs below, I have teams on the horizontal axes and median hits and strikeouts on the vertical axes.  This has nothing to with homeruns, but I was interested to see the rel
+For the two bargraphs below, I have teams on the horizontal axes and median homeruns and strikeouts on the vertical axes.  I was interested to see what the bargraphs would look like side-by-side to see if this revealed anything more about the relationship.  
 
 
 ```r

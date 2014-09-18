@@ -10,10 +10,28 @@ This is an R Markdown document. Markdown is a simple formatting syntax for autho
 
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
-```{r}
+```{r, echo=FALSE}
 summary(cars)
 cars
 dd <- read.csv("Donation-Disease.csv")
+dd2 <- data.frame(dd)
+head(dd2)
+dim(dd2)
+
+library(MASS)
+data(ChickWeight)
+head(ChickWeight)
+dim(ChickWeight)
+
+library(ggplot2)
+
+help(ggplot)
+
+ggplot(dd)
+ggplot(ChickWeight)
+
+d <- ggplot(data=data3, aes(x=MonthNB, y=Ptot, colour=StationNAME))
+
 ```
 
 You can also embed plots, for example:

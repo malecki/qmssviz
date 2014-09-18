@@ -5,12 +5,13 @@ output: html_document
 published:false
 tags:hw1
 ---
-I'm interested in investigating the dataset of health facilities in Niger.
+I'm interested in investigating the dataset of health facilities in Niger. The dataset contains  information about the location, number of full-time doctors, nurses, and lab techs, and the management type for 44 health facilities. Some descriptives:
 ```{r}
-health <- read.csv("./Lab1/sample_health_facilities.csv")
+health <- read.csv("../../Lab1/sample_health_facilities.csv")
+summary(health)
 ```
-make scatter plot:
+Here is a scatter plot of doctors vs. nurses. The dot colors refer to the region of the clinic.
 ```{r}
-plot(health$num_doctors_fulltime, health$num_nurses_fulltime, main="Doctors and Nurses in Niger by Region", xlab="number of full time doctors", ylab="number of full time nurses", xlim=c(0,5), ylim=c(0,9), col=health$zone)
+plot(health$num_doctors_fulltime, health$num_nurses_fulltime, main="Doctors and Nurses in Niger by Region", xlab="number of full time doctors", ylab="number of full time nurses", xlim=c(0,4), ylim=c(0,9), col=health$zone)
 ```
-this produces the following plot:
+

@@ -19,7 +19,7 @@ k4 <- read.table("kauther_t4.txt")
 k5 <- read.table("kauther_t5.txt")
 ```
 
-# Kauther's first table
+## Kauther's first table
 
 ```{r, echo = FALSE, warning = FALSE, message = FALSE}
 height <- rbind(k1$amateur_mean, k1$prof_mean)
@@ -63,7 +63,7 @@ text(height2, bar2, label = height2, pos = 4, cex = 0.65, col = "red")
 ```
 On average, there are more injuries reported for amateur bboys compared to professional bboys, although more total injuries in amateurs may just be a result of a greater sample size. When adjusted on a per person basis, there are almost twice the number of injuries per bboy (16.1 injuries per professional versus 9.8 per amateur).
 
-# Kauther's third table
+## Kauther's third table
 
 ```{r, echo = FALSE, warning = FALSE, message = FALSE}
 library("lattice")
@@ -154,7 +154,7 @@ panel = function(x, y) {
 
 Taking a look at loss of training days by anatomical injury leaves me a bit frightened. Of the 144 bboys, the highest losses of total training days occurred with knee injuries, spine injuries, and wrist/hand injuries. When normalized to lost training days per injury, a knee injury could take a bboy out for approximately two weeks, wrist/hand injuries for approximately a week and a half, and surprisingly, spine, shoulder or elbow injuries, one entire week (only?!?). 
 
-# Playing around with ggvis, using the cocaine dataset
+## Playing around with ggvis, using the cocaine dataset
 
 ```{r}
 library("dplyr")
@@ -169,7 +169,7 @@ cocaine %>%
 
 Graphical scatterplot representation of potency on weight of cocaine.
 
-# Static histogram
+## Static histogram
 
 ```{r}
 cocaine %>% ggvis(~weight) %>%
@@ -178,7 +178,7 @@ cocaine %>% ggvis(~weight) %>%
 
 Histogram of weights for cocaine incidences. 
 
-# Interactive histogram
+## Interactive histogram
 
 ```{r}
 state <- as.vector(unique(cocaine$state))

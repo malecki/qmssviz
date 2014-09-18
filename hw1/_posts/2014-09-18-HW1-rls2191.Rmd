@@ -5,16 +5,12 @@ output: html_document
 published:false
 tags:hw1
 ---
-load data:
+I'm interested in investigating the dataset of health facilities in Niger.
 ```{r}
-dondis <- read.csv("./Lab1/Donation-Disease.csv")
 health <- read.csv("./Lab1/sample_health_facilities.csv")
 ```
 make scatter plot:
 ```{r}
-library(car)
-plot.new()
-plot.window(c(0,9), c(0,5))
-points(health$num_doctors_fulltime, health$num_nurses_fulltime)
-plot(health$num_doctors_fulltime, health$num_nurses_fulltime)
+plot(health$num_doctors_fulltime, health$num_nurses_fulltime, main="Doctors and Nurses in Niger by Region", xlab="number of full time doctors", ylab="number of full time nurses", xlim=c(0,5), ylim=c(0,9), col=health$zone)
 ```
+this produces the following plot:

@@ -6,8 +6,6 @@ published: false
 tags: hw1
 ========================================================
 
-
-
 ```{r  include=FALSE}
 setwd ("/Users/awtang/Desktop/qmssviz/qmssviz")
 measures<-read.csv("bodyfat.csv", stringsAsFactors=F)

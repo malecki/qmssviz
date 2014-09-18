@@ -7,7 +7,7 @@ published: false
 tags: hw1
 ---
 # hw1
-## Lanxiang_Li
+## Lanxiang_Li-caroline
 
 ### 1. read data
 
@@ -21,6 +21,9 @@ dd <- read.csv("Donation-Disease.csv")
 ```{r}
 library(ggplot2)
 qplot(x = Name, y = Death, data = dd, color = Name)
+```
+```{r}
+qplot(x = Name, y = Death, geom = "histogram", color = Name)
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

@@ -1,0 +1,24 @@
+---
+title: "2014-9-18-HW1-Jinho-Lee"
+author: "JL4204"
+date: "Thursday, September 18, 2014"
+output: html_document
+---
+
+
+
+attach(mtcars)
+head(mtcars)
+
+ 
+library(ggplot2)
+qplot(wt, mpg, data = mtcars, xlab = "Weight", ylab = "Miles per Gallon")
+
+## change change  hahahah1!! working!!! pushing is working!! ahahha
+
+qplot(wt, mpg, data = mtcars, xlab = "Weight", ylab = "Miles per Gallon", color = cyl, main = "Weight vs MPG", size = hp)
+
+p <- ggplot(mtcars, aes(factor(cyl), mpg), title = "Friday" )
+p2 <- p + geom_boxplot(aes(fill = cyl))
+p2 + ggtitle("Cylinder vs MPG") + theme(plot.title = element_text(lineheight=.8, face="bold"))
+

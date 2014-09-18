@@ -28,13 +28,18 @@ We can graph the association using a scatterplot of log(MoneyRaised) versus log(
 library(ggplot2)
 
 
-p1 = ggplot(data=dd2, aes(x=log(MoneyRaised), y=log(Death))) + geom_point(stat = "identity")
+p1 = ggplot(data=dd2, aes(x=log(MoneyRaised), y=log(Death))) + geom_point(stat = "identity", colour = as.numeric(rownames(dd2)),size=10)
 p1 + 
-  geom_abline(slope=1) +
-  geom_text(aes(label=Name), size=3) +
+  #geom_abline(slope=1) +
+  ylim(8, 14) +
+  xlim(0, 6) +
+  geom_text(aes(label=Name), size=3, colour = as.numeric(rownames(dd2)),vjust = 3,
+        position = position_jitter(width=0, height=0)) +
   labs(title = "Money Raised vs Deaths for Different Diseases") +
+  
   ylab("Log Deaths") +
-  xlab("Log Money Raised")
+  xlab("Log Money Raised") 
+  #scale_colour_gradient(low="black", high="white")
 
 
 ```
@@ -55,10 +60,10 @@ head(ChickWeight)
 Let's look at the visualization of this data:
 
 ```{r,echo=FALSE}
-p2 = ggplot(data=ChickWeight, aes(x=Time, y=weight)) + geom_point(stat = "identity")
+p2 = ggplot(data=ChickWeight, aes(x=Time, y=weight)) + geom_point(stat = "identity", colour = ChickWeight$Chick)
 
 p2 + 
-  geom_abline(slope=1) +
+  #geom_abline(slope=1) +
   #geom_text(aes(label=Chick), size=3) +
   labs(title = "Weight Versus Age of Chickens on Different Diets") +
   ylab("Weight") +

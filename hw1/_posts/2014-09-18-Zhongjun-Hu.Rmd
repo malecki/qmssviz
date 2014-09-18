@@ -6,18 +6,22 @@ output: html_document
 ---
 # HW1
 ## HU
-
-
-
-### Read data
-first 
+```{r}
+library(ggplot2)
+```
+Donation-Disease:
 ```{r}
 setwd("~/Desktop/ZhongjunHuqmssviz/qmssviz/Lab1")
-d <- read.csv("Donation-Disease.csv")
+d <-read.csv("Donation-Disease.csv")
+d$Death<-as.numeric(d$Death)
+d$Death<-d$Death/1000
+qplot(data=d,x = MoneyRaised,y=Death,color=Name)
 ```
 
 ```{r}
-library(ggplot2)
-qplot(x = Name, y = Death, data = d, color = Name)
+setwd("~/Desktop/ZhongjunHuqmssviz/qmssviz/Lab1")
+un2<-read.csv("UN3.csv")
+qplot(data=un2,x=Longitude,y=Latitude,color=X2010, r)
+
 ```
 

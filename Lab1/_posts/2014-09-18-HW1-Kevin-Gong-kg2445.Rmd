@@ -42,13 +42,13 @@ p1 +
 
 
 
-Next, we look at ChickWeight, a dataset that comes with R's MASS package. This dataset contains information from an experiment on the effect of diet on early growth of chickens.
+Next, we look at ChickWeight, a dataset that comes with R's MASS package. This dataset contains information from an experiment on the effect of diet on early growth of chickens. We'll examine just the first few rows.
 
 ```{r, echo=FALSE}
 library(MASS)
 data(ChickWeight)
 dim(ChickWeight)
-ChickWeight
+head(ChickWeight)
 ```
 
 
@@ -56,11 +56,10 @@ Let's look at the visualization of this data:
 
 ```{r,echo=FALSE}
 p2 = ggplot(data=ChickWeight, aes(x=Time, y=weight)) + geom_point(stat = "identity")
-p2
 
 p2 + 
   geom_abline(slope=1) +
-  geom_text(aes(label=Chick), size=3) +
+  #geom_text(aes(label=Chick), size=3) +
   labs(title = "Weight Versus Age of Chickens on Different Diets") +
   ylab("Weight") +
   xlab("Time")

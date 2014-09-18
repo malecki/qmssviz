@@ -2,32 +2,45 @@
 title: "Homework 1 assignment"
 author: wd2234
 output: html_document
-pulished: false
+pulished: false 
 tags: hw1
 ---
 
-This famous (Fisher's or Anderson's) iris data set consists of 50 samples from each of three species of flower(Setosa, Virginica and Vericolor). There are four variables that measure four features of each flower sample: petal length, petal width, septal length, and septal width, in centimeters.Since it is a R dataset package, there is no need to import data. 
+This famous (Fisher's or Anderson's) iris data set consists of 50 samples from each of three species of flower(Setosa, Virginica and Vericolor). There are four variables that measure four features of each flower sample: petal length, petal width, septal length, and septal width, in centimeters.Since it is a R dataset package, there is no need to import data.  
 
 ```{r}
 attach(iris)
 library(ggplot2)
 ```
 
-There is a positive association between sepal length and width,but Virginica has a relatively low sepal length.
+#scatterpoint plot
+There is a positive and approximately linear association between sepal length and width. Meanwhile, Virginica has a relatively higher sepal length at the same level of sepal width, compared to versicolor and setosa.
 
 ```{r, echo=FALSE}
 
-ggplot(data=iris,aes(x=Sepal.Width,y=Sepal.Length)) + geom_point(aes(color=Species)) + ggtitle("Sepal Length and Width")
+ggplot(data=iris,aes(x=Sepal.Width,y=Sepal.Length,colour=Species))+ geom_point(aes(shape=Species),size=2.5) + ggtitle("Sepal Length and Width")+stat_smooth(method="lm",formula=y~x,se=FALSE)
 
 ```
 
-This plot shows a rough distribution of septal lengths for each species.
+There is a positive and approximately linear association between petal length and width. Meanwhile, Virginica has the largest size petal, with highest level of both petal length and width on average. Versicolor comes second place, and setosa tends to have very small-sized petal. 
+
+```{r, echo=FALSE}
+
+ggplot(data=iris,aes(x=Petal.Width,y=Petal.Length))+ geom_point(aes(color=Species,shape=Species),size=3.5) + ggtitle("Petal Length and Width")+stat_smooth(method="lm",formula=y~x,se=FALSE,color="grey",size=1)
+                                                                                                                                                  
+```
+
+#Boxplot,jitter plot and violin plot
+These plots also shows that virginica has a relatively high sepal length, versicolor comes second, and setosa comes last.
 ```{r,echo=FALSE}
-ggplot(data=iris,aes(x=Sepal.Length)) + geom_density() + facet_wrap(~Species)+ggtitle("Distribution of Sepal Lengths")
+ggplot(data=iris,aes(x=Species,y=Sepal.Length)) + geom_boxplot(aes(fill=Species))+geom_jitter(aes(colour=Species),size=3)+ggtitle("Distribution of Sepal Lengths in box plot")
+
+ggplot(data=iris,aes(x=Species,y=Sepal.Length)) +geom_jitter(aes(colour=Species),size=3)+geom_violin(aes(fill=Species))+ggtitle("Distribution of Sepal Lengths in violin plot")
 
 ````
 
-This is also a distribution, but in a better visualized type, with each species different colors.
+#Bar plot
+According to the graph, the sepal length follows a normal distribution. Viginica has a higher variance of sepal length. The sepal length of vesicolor and setosa are less volatile. The mean for virginica is about 6.3, for versicolor is about 6, and for setosa is about 5. 
 
 ```{r,echo=FALSE}
 p<-ggplot(data=iris,aes(x=Sepal.Length)) + geom_histogram(aes(fill=Species))+facet_wrap(~Species) + ggtitle("Distribution of Sepal Lengths")

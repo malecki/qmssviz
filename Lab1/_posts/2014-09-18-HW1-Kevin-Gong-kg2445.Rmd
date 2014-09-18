@@ -1,7 +1,7 @@
 ---
-title: "2014-09-18-HW1-Kevin-Gong-kg2445"
+title: "2014-09-18-kmgong-hw1"
 output: html_document
-date: "September 11, 2014"
+date: "September 18, 2014"
 published: false
 tag: hw1
 ---
@@ -12,19 +12,13 @@ When you click the **Knit** button a document will be generated that includes bo
 
 ```{r}
 summary(cars)
-plot(cars)
-head(cars)
-
+cars
 ```
 
 You can also embed plots, for example:
 
 ```{r, echo=FALSE}
-plot(cars) 
+plot(cars)
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
-
-```{r, echo=FALSE}
-cars
-```

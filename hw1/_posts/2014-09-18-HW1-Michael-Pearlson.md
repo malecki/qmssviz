@@ -54,14 +54,6 @@ Let's take a look at some boxplots to see what the distribution is like for each
 
 
 ```r
-install.packages("doBy")
-```
-
-```
-## Error: trying to use CRAN without setting a mirror
-```
-
-```r
 library(doBy)
 a<-summaryBy(HR ~ teamID , data=batting, FUN=c(median)) 
 ggplot(batting, aes(teamID,HR)) + geom_boxplot() + annotate("text", label = "Alex Rodriquez", x = "TBA", y = 59, size = 5, colour= "red") + xlab("Teams") + ylab("Homeruns") + ggtitle("Distribution of Homeruns") + layer(data = a, mapping =                                                                                                                                        aes(x = teamID, y= a$HR.median+1, label=a$HR.median),                                                                                                                                geom = "text", color="red", size=3.5)
@@ -69,15 +61,17 @@ ggplot(batting, aes(teamID,HR)) + geom_boxplot() + annotate("text", label = "Ale
 
 ![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2.png) 
 
+For the two bargraphs below, I have teams on the horizontal axes and median hits and strikeouts on the vertical axes.  This has nothing to with homeruns, but I was interested to see the rel
+
 
 ```r
 library(gridExtra)
-b<-summaryBy(H ~ teamID + lgID, data=batting, FUN=c(median))
+b<-summaryBy(HR ~ teamID + lgID, data=batting, FUN=c(median))
 NL <- b[which(b$lgID=='NL'),]
 d<-summaryBy(SO ~ teamID + lgID , data=batting, FUN=c(median))
 NL_S0 <- d[which(d$lgID=='NL'),]
 plot1<-ggplot(NL_S0, aes(x=teamID, y=SO.median, fill=teamID)) + geom_bar(stat="identity") + xlab("Teams") + ylab("Median Strikeouts") + ggtitle("Bargraph of Strikeouts by Team")
-plot2<-ggplot(NL, aes(x=teamID, y=H.median, fill=teamID)) + geom_bar(stat="identity") + xlab("Teams") + ylab("Median Hits") + ggtitle("Bargraph of Hits by Team")
+plot2<-ggplot(NL, aes(x=teamID, y=HR.median, fill=teamID)) + geom_bar(stat="identity") + xlab("Teams") + ylab("Median Homeruns") + ggtitle("Bargraph of Homeruns by Team")
 grid.arrange(plot2, plot1, ncol=2)
 ```
 

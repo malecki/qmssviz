@@ -26,10 +26,17 @@ I thought it would be useful to take a look at who is taking this class. Its a Q
 
 ```{r ggplot, fig.width=12, fig.height=3, message=FALSE}
 
-program <- responses[2]
-ProgramType <-factor(program[["Program"]])
+program2.df <-as.data.frame.table(table(factor(responses[[2]])))
+program2.df <- program2.df[-8,]
+program2.df[8,"Freq"] <- 2
+program2.df <- program2.df[-6,]
+program2.df[6,"Freq"] <- 2
 
-qplot(x=ProgramType, data=program, geom="bar", fill=ProgramType, main="Class Make Up")
+ggplot(data=program2.df, aes(x=Var1, y=Freq), main="Class Make Up") + geom_bar(stat="identity")
+
+#Rename QMSS's so they fit better. Change Var1 column name to Program
+
+#qplot(x=ProgramType, data=program, geom="bar", fill=ProgramType, main="Class Make Up")
 
 ```
 ---

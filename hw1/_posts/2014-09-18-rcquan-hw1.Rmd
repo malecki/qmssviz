@@ -1,5 +1,5 @@
 ---
-title: "Homework 1"
+title: "New York City Council Meetings: A Primer"
 author: "rcquan"
 date: "September 11, 2014"
 output: html_document
@@ -7,18 +7,156 @@ published: false
 tags: hw1
 ---
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+# Introduction
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+The [New York City Council](http://council.nyc.gov/html/home/home.shtml) is the lawmaking body of the City of New York. The Council has 35 committees with oversight of various functions of the city government. Each council member sits on at least three standing, select or subcommittees. The standing committees must meet at least once a month unless the Charter mandates otherwise.
+
+This brief write-up seeks to explore the following questions:
+
+* Which months during the year are meetings likely to be held?
+* What is the share of meetings held among the standing committees?
+
+With this information, we can hold our government bodies accountable and determine the best (and worse) times of the year for legislative action.
+
+# The Data
+
+We scraped our data from [legistar.council.nyc.gov](legistar.council.nyc.gov), which uses an .aspx framework to house the minutes and legislative documents related to the New York City Council. We could export the document to an Excel document, but unfortunately, this feature is broken. As such, I have included the HTML export of the site [here](https://www.dropbox.com/s/356ccfd2o3zmt3p/nycc-meetings.html?dl=0) for convenience.
+
+# Set-Up
+
+## Libraries
+
+First, let's load the relevant libraries into the R environment and set the current working directory.
+
 
 ```{r}
-summary(cars)
+library(stringr)
+library(dplyr)
+library(XML)
+library(ggplot2)
+library(ggvis)
+# change to your working directory
+setwd("/Users/Quan/GitHub/nycc-legistar/nycc-meetings")
 ```
 
-You can also embed plots, for example:
+## Functions
 
-```{r, echo=FALSE}
-plot(cars)
+Next, let's define some functions to help us get and process the data more easily. `HTMLtoDF` parses the HTML tree, retreives values enclosed in the `</td>` tag, and plops them into a `data.frame`. `RemoveSpaces` uses a regular expression to remove leading and lagging spaces.
+
+```{r}
+HTMLtoDF <- function(file){
+    doc <- htmlParse(file)
+    tables <- readHTMLTable(doc, 
+                            stringsAsFactors = FALSE,
+                            na.strings = "")
+    df <- tables[[1]]
+    return(df)
+}
+
+RemoveSpaces <- function(df) {
+    gsub("^\\s+|\\s+$", "", df)
+}
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+## Loading the Data
+
+```{r}
+df <- HTMLtoDF("nycc-meetings.html")
+```
+
+# Data Processing
+
+We clean the data to create more consistency in variable names and to ensure that variables are the correct data type for our analysis.
+
+```{r}
+# remove leading and lagging spaces
+df <- data.frame(sapply(df, RemoveSpaces))
+# convert blank strings to NA
+df[df == ""] <- NA
+# change column names
+names(df) <- c("Name", "Date", "Time", "Location", "Topic")
+df$Date <- as.POSIXct(df$Date, format = "%m/%d/%Y")
+```
+
+We use the `dplyr` library to filter out observations that will not help us answer our overarching questions. As such, we remove non-standing committees and ignore meetings that were deferred. We also create new variables to help us cut the data on month and year with greater ease.
+
+```{r}
+# Remove defunct committees & Committee on Finance (outliers)
+dfPlot <- df %>%
+  # filter out inactive and small committees
+  filter(!str_detect(Name, ignore.case("Inactive")),
+         !str_detect(Name, ignore.case("Subcommittee")),
+         !str_detect(Name, ignore.case("Task")),
+         !str_detect(Name, ignore.case("Town"))) %>%
+  # create new variables
+  mutate(DateTime = paste(Date,Time),
+         # clean "name" variable
+         Name = str_replace(Name, "Committee on ", ""),
+         Name = str_replace(Name, ",.*$", ""),
+         Name = str_replace(Name, "and Solid Waste Management", ""),
+         Name = str_replace(Name, "Justice Services", "Justice"),
+         # create new columns for month and year with proper format
+         Month = factor(format(Date, format = "%b"), levels = month.abb),
+         Year = factor(format(Date, format = "%Y")),
+         # create new column for Status
+         Status = ifelse(Time == "Deferred", "Deferred", "Calendared")) %>%
+  # filter for meetings that were actually held
+  filter(Year %in% c(2000:2013),
+         Status == "Calendared")
+```
+
+# Visualizations
+
+## Proportion of Committee Meetings Held by Month
+
+```{r}
+# Total Committee Meetings Held by Month
+dfPlot %>%
+  group_by(Month) %>%
+  summarise(Count = n()) %>%
+  mutate(Proportion = (Count/sum(Count)*100)) %>%
+  
+  # bar plot
+  ggplot(aes(x = Month, y = Proportion)) +
+  geom_bar(stat = "identity") +
+  ylab("Proportion of Meetings Held (%)") +
+  # create more breaks
+  scale_y_continuous(breaks = seq(0, 16, 2)) +
+  ggtitle("City Council Meetings (2000-2013)") +
+  theme_bw()
+```
+
+Here we look at the proportion of City Council meetings held each month from 2000 to 2013. From this graph, we can see that council members take their summers seriously. Good luck trying to schedule a hearing during July or August. Also, you can see an upward trend starting from the beginning of the year until the month of June, the end of the fiscal cycle. Perhaps council members are spurred by deadlines just as much as the rest of us.
+
+## Total Meetings Held by Committee by Month
+
+```{r}
+# create alphabetical vector of committee names 
+Committees <- sort(unique(dfPlot$Name))
+# generate plots
+dfPlot %>%
+  # get frequency of meetings for each committee
+  # for every month
+  xtabs(formula = ~Name + Month) %>%
+  as.data.frame() %>%
+  
+  # stacked bar plot
+  ggvis(x = ~Month, y = ~Freq, fill = ~Name) %>%
+  # interactive checkboxes for each committee
+  filter(Name %in% eval(input_checkboxgroup(
+      choices = Committees,
+      selected = c("Aging", "Land Use"),
+      label = "Committee Name"))) %>%
+  layer_bars()
+```
+
+This graph allows the user to compare the number of committee meetings held by each committee for each month. However, the use of total number should be viewed with skepticism.
+
+
+# Wish List
+
+* Fix color pallette for `ggvis` stacked bar plot
+* Group committees in a meaningful way
+* Feed HTML from the .aspx framework into R to for real-time updates
+* Text analysis of the meeting topics
+* Proportion of meetings deferred by committee

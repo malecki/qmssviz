@@ -1,0 +1,113 @@
+---
+title: "2014_09_16_HW1_ClaireKelley"
+output: html_document
+published: false
+tags: hw1
+---
+
+```{r,echo=FALSE}
+##Here we read in data and calcuate any addional columns we are going to use 
+setwd("C:/Users/Esmail/Desktop/DataViz/qmssviz/Lab1")
+x<-read.csv("Donation-Disease.csv")
+
+```
+
+After readin in data, Add CDC data on the number of new cases of each disease each year. For suicides data is on the number of attempted suicides. 
+
+
+```{r}
+NewCases<-c(550000,1000000, 232000,1700000,47000,209000,5600,6800000)
+x<-cbind(x,NewCases)
+
+```
+
+Next calculate new columns for dollars spent per death, and per case
+```{r,echo=FALSE}
+x[,6]<-(x[,3]*1000/x[,4])
+names(x)[6]<-"PerDeath"
+x[,7]<-(x[,3]*1000/x[,5])
+names(x)[7]<-"PerCase"
+x
+```
+
+Now make an intial plot
+
+```{r,echo=FALSE}
+library(ggplot2)
+graph1<-qplot(MoneyRaised,NewCases,data=x,main="Money Raised by Number of New Cases",ylab="Money Raised (in thousands)",xlab="New Cases Yearly",col=Name)
+
+##make a vector for shortened names
+labelNames<-c("Suicide","Prostate Cancer","MDN and AlS","HIV/AIDS","Heart Disease","Diabetes","COPD","Breast Cancer")
+
+graph2<-graph1+theme(axis.title=element_text(face="bold.italic",size="14", color="black"),legend.position="none")+geom_text(aes(label=labelNames),vjust=1,hjust=.15)
+graph2
+```
+
+Now Lets look at money spent per case and per death
+
+```{r,echo=FALSE}
+par(mar=plotrix::pyramid.plot(x$PerDeath,x$PerCase, labels=labelNames,main="Dollars Spent",gap=2.3,show.values=F,top.labels=c("Per Death","","Per Case")))
+```
+
+
+```{r,echo=FALSE}
+xSmall<-x[,c(1,6,7)]
+library(reshape2)
+dat.m <- melt(xSmall, id.vars='Name')
+###fixing long names 
+name2<-as.character(dat.m[,1])
+name2[7]<-"MND or ALS"
+name2[15]<-"MND or ALS"
+name2[8]<-"COPD"
+name2[16]<-"COPD"
+
+dat.m2<-cbind(name2,dat.m[,2:3])
+
+xSmall<-x[,c(1,6,7)]
+dat.m <- melt(xSmall, id.vars='Name')
+###fixing long names 
+name2<-as.character(dat.m[,1])
+name2[7]<-"MND or ALS"
+name2[15]<-"MND or ALS"
+name2[8]<-"COPD"
+name2[16]<-"COPD"
+
+dat.m2<-cbind(name2,dat.m[,2:3])
+
+e<-ggplot(dat.m2, aes(name2, value)) +   
+    geom_bar(aes(fill = variable), position = "dodge", stat="identity")+
+    theme(axis.title.x = element_blank(), axis.title.y=element_blank(), axis.text.x  = element_text(angle=300, vjust=0.6, hjust=.4,size=16),plot.title = element_text(lineheight=.8, face="bold"))+ggtitle("Money Raised")+scale_fill_discrete(name="", labels=c("Per Death","Per New Case"))
+
+e
+
+```
+
+Graph of Dollars raised per case
+
+```{r,echo=FALSE}
+##producing a bargraph for Dollars spent per case
+d<-ggplot(data=x, aes(x=Name, y=PerCase)) + geom_bar(stat="identity")
+
+d2<-d+geom_bar(aes(fill=Name), stat="identity")+ggtitle("Dollars raised Per Case")+coord_flip()+guides(fill=FALSE)+scale_x_discrete(limits=c("Chronic Obstructive Pulmonary Disease","Diabetes","Suicide","Heart Disease","HIV/AIDS","Prostate Cancer","Breast Cancer","Motor Neuron Disease (including ALS)"))
+
+###Edit the x and y labels and format Title 
+d3<-d2+theme(axis.title.y = element_blank(),axis.title.x=element_blank(),plot.title = element_text(lineheight=2, face="bold"))
+d3
+
+
+```
+
+Now produce a similar graph for dollars raised per death 
+```{r,echo=FALSE}
+c<-ggplot(data=x, aes(x=Name, y=PerDeath)) + geom_bar(stat="identity")
+
+##add in Colors  and title, reoder
+c2<-c+geom_bar(aes(fill=Name), stat="identity")+ggtitle("Dollars Raised Per Death")+coord_flip()+guides(fill=FALSE)+scale_x_discrete(limits=c("Chronic Obstructive Pulmonary Disease","Diabetes","Suicide","Heart Disease","HIV/AIDS","Motor Neuron Disease (including ALS)","Breast Cancer","Prostate Cancer"))
+
+###Edit the x and y labels and format Title 
+c3<-c2+theme(axis.title.y = element_blank(),axis.title.x=element_blank(),plot.title = element_text(lineheight=2, face="bold"))
+c3
+```
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

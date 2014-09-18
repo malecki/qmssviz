@@ -37,16 +37,13 @@ program2.df[4,1] <- "QMSS 1st sem."
 program2.df[5,"Program"] <- "QMSS 2nd Sem.+"
 program2.df[6,"Program"] <- "QMSS 3rd Sem."
 
-
 ggplot(data=program2.df, aes(x=Program, y=Count, fill=Program)) + geom_bar(stat="identity")+guides(fill=FALSE)+ggtitle("Class Make Up")
 
 ```
 ---
 
 **What I like:**  
--Its my first graph in R/ggplot2  
--I was able to manipulate the dataset in r to get counts, condense similar categories, change axis/title
-
+-I was able to manipulate the dataset in r to get counts(not necessary but useful), condense similar categories, change axis/title
 
 **What I don't like:**  
 -The colors  
@@ -59,37 +56,55 @@ ggplot(data=program2.df, aes(x=Program, y=Count, fill=Program)) + geom_bar(stat=
 
 Which program/cohort has the highest proportion of twitter users?
 
-```{r ggplot2, fig.width=14, fig.height=5, message=FALSE}
+```{r ggplot2, fig.width=16, fig.height=8, message=FALSE}
 
 progtwit <- responses[,c(2,4)]
 progtwit[14,"Program"] <- "Stat"
-progtwit[28,"Program"] <- "QMSS Third Semester"
+progtwit[28,"Program"] <- "QMSS Third semester"
 progtwit2.df <-as.data.frame.table(table(progtwit),stringsAsFactors=FALSE)
+progtwit2.df[4,"Program"] <- "QMSS 1st Sem."
+progtwit2.df[5,"Program"] <- "QMSS 2nd Sem.+"
+progtwit2.df[6,"Program"] <- "QMSS 3rd Sem."
+progtwit2.df[12,"Program"] <- "QMSS 1st Sem."
+progtwit2.df[13,"Program"] <- "QMSS 2nd Sem.+"
+progtwit2.df[14,"Program"] <- "QMSS 3rd Sem."
 
-ggplot(progtwit, aes(Program, fill=Do.you.use.twitter.)) + geom_bar()
-
+ggplot(progtwit, aes(Program, fill=Do.you.use.twitter.)) + geom_bar() + ggtitle("Twitter Users by Program")
 
 ```
+---
+
+**What I like:**  
+-The colors, I guess  
+-More interesting than a simple bar chart
+
+**What I don't like:**  
+-Still a pretty simple bar chart  
+-The sizes of the legend/axis labels/title  
+-Might be useful to see specific count within bar groups, though that might look cluttered  
+
+---
 
 #People who know how to use version control
 
 I had a lot of trouble with git over the week, so I wanted to look at who the other git noobies were.
 
-``` {r ggplot3, fig.width=3, fig.height=7, message=FALSE}
+``` {r ggplot3, fig.width=4, fig.height=7, message=FALSE}
 
 vcs <-factor(responses[[9]])
 vcs.table <-table(vcs)
 vcs.df <- as.data.frame.table(vcs.table)
 
-ggplot(data=vcs.df, aes(x=vcs, y=Freq), main="Version Control Experience") + geom_bar(stat="identity")
+ggplot(data=vcs.df, aes(x=vcs, y=Freq), main="Version Control Experience") + geom_bar(stat="identity") + ggtitle("Experience With Version Control")
+
 ```
 ----
 Looks kind of bad...what if we use a more appropriate scale?
 
 #People who know how to use version control
 
-``` {r ggplot4, fig.width=3, fig.height=3, message=FALSE}
+``` {r ggplot4, fig.width=4, fig.height=3, message=FALSE}
 
-ggplot(data=vcs.df, aes(x=vcs, y=Freq)) + geom_bar(stat="identity")
+ggplot(data=vcs.df, aes(x=vcs, y=Freq)) + geom_bar(stat="identity") + ggtitle("Experience With Version Control")
 
 ```

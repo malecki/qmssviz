@@ -62,6 +62,7 @@ avtemp
 ## 73.82 75.72 76.80 76.07 73.98 76.90
 ```
 
+
 ## Scatterplot which displays average temperature by year and fits a linear regression line
 The slope is not statistically significant at even the 10% significance level. This tells us that we cannot reject the null hypothesis that there is no relation between year and temperature. In other words, there is no strong evidence to support a claim that temperature and year are dependent (on average). 
 

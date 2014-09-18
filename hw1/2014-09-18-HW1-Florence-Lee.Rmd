@@ -31,16 +31,17 @@ head(nychanes)
 (1) **"eatout"** is a composite score based on DBQ090G and DBQ090Q. It is a discrete numeric variable
 
 * Numeric value corresponds to the number of times the survey respondent ate meals prepared in a restaurant (includes take-out orders)
+* eatout=0 corresponds to not eating restaurant-prepared food OR eating restaurant-prepared food less than once per week
 
-(2) ***"occgrp"*** is a categorical variable based off of OCCREC and expressed numerically as a nominal numeric variable.
+(2) ***"occgrp"*** is a categorical variable based off of OCCREC and expressed numerically as a nominal numeric variable. Since there are a lot of groups, we will collapse similar categories as defined by the [Office for National Statistics Standard Occupational Classification Hierarchy](http://www.neighbourhood.statistics.gov.uk/HTMLDocs/dev3/ONS_SOC_hierarchy_view.html).
 
-* occgrp=1 corresponds to managerial and professional specialty 
-* occgrp=2 corresponds to sales
-* occgrp=3 corresponds to technical and administrative 
-* occgrp=4 corresponds to service
-* occgrp=5 corresponds to farming, forestry, and fishing
-* occgrp=6 corresponds to precision production, craft, and repair
-* occgrp=7 corresponds to operators, fabricators, and laborers
+* occgrp=1 corresponds to managerial and professional specialty (1)
+* occgrp=2 corresponds to sales (4)
+* occgrp=3 corresponds to technical and administrative (2)
+* occgrp=4 corresponds to service (4)
+* occgrp=5 corresponds to farming, forestry, and fishing (3)
+* occgrp=6 corresponds to precision production, craft, and repair (3)
+* occgrp=7 corresponds to operators, fabricators, and laborers (5)
 
 (3) ***"BMXBMI"*** is a continuous variable that corresponds to the survey respondent's BMI based off of their height and weight. Another way of looking at BMI is through ***"BMI2"***, which is an ordinal categorical variable. 
 
@@ -49,27 +50,45 @@ head(nychanes)
 * BMI2=3 corresponds to overweight 
 * BMI2=4 corresponds to obese
 
-# Renaming Variables of Interest in nychanes
+# Recoding & Renaming Variables of Interest in nychanes
 
 ```{r}
+#Rename columns
 colnames(nychanes)
 newCol <- c("id", "eatout_bin", "eatout_num", "occ", "occgrp", "eatout", "bmi", "bmi_grp")
-colnames(nychanes) <- newCol          
+colnames(nychanes) <- newCol
+colnames(nychanes)
+
+#Consolidate occgrp
+nychanes$occgrp[nychanes$occgrp==1] <- "Level 1"
+nychanes$occgrp[nychanes$occgrp==3] <- "Level 2"
+nychanes$occgrp[(nychanes$occgrp==5)|(nychanes$occgrp==6)] <- "Level 3"
+nychanes$occgrp[(nychanes$occgrp==2)|(nychanes$occgrp==4)] <- "Level 4"
+nychanes$occgrp[nychanes$occgrp==7] <- "Level 5"
+nychanes$occgrp<-as.factor(nychanes$occgrp)
+#NOTE: Levels correspond to pay, with Level 1 as highest paying. 
+#NOTE: Assume that as Level increases, physical exertion requirement also increases. 
+
 ```
 
-# Creating Initial Plot 
+# Plot of BMI vs. Frequency of Eating Out
 
 I am primarily interested to see whether there is some visual association between eating out and BMI. I expect to see higher frequency of eating out with higher BMI readings due to the high sodium, high fat content of most restaurant foods. 
 
-(Later, I will add in occupational group to explore whether occupation affects this association.)
-
 ```{r}
-colnames(nychanes)
-newCol <- c("id", "eatout_bin", "eatout_num", "occ", "occgrp", "eatout", "bmi", "bmi_grp")
-colnames(nychanes) <- newCol          
+#Call ggplot2
+library(ggplot2)
+#Create base
+base <- ggplot(nychanes, aes(xmin=0, xmax=30, ymin=15, ymax=60, x=eatout, y=bmi, colour=occgrp)) + xlab("Number of Restaurant-Prepared Meals Consumed Per Week") + ylab("BMI (kg/m2)") + ggtitle("Body Mass Index (BMI) and Frequency of Eating Out")
+#Highlight Normal BMI region
+base2 <- base + geom_rect(aes(xmin=-Inf, xmax=Inf, ymin=18.5, ymax=25), fill="orange", alpha=1/100, inherit.aes=FALSE) 
+# Add points
+baseplot<-base2 + geom_point(size=4)
+# Add aesthetics
+basefinal <- baseplot + scale_colour_brewer(expression("Occupation Level")) + theme(plot.title=element_text(face="bold", size=20), axis.title=element_text(face="bold", size=15), panel.background=element_rect(fill="gray70"), panel.grid.major=element_line(colour="gray50"), panel.grid.minor=element_line(colour="gray60", linetype="dotted", size=1))
+basefinal
+# Format legend
+basefinal + theme(legend.background=element_rect(fill='gray87', colour='gray60', size=1.25), legend.key=element_rect(fill='gray70'), legend.position=c(0.95, 0.85))
 ```
-
-
-
 
 

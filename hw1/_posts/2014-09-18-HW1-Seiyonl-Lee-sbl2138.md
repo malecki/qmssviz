@@ -29,7 +29,7 @@ Added a color scheme for month
 colorsch<-data.frame(c(1:12),c(rep(1,3),rep(2,3),rep(3,3),rep(4,3)))
 ```
 
-Created a Plot to show cyclical pattern of temperature
+## Scatterplot which displays the cyclical nature of temperature
 
 ```r
 plot(data$Date[data$Temperature!=-99], data$Temperature[data$Temperature!=-99], main="Temperature by Day for 1995-2013",xlab="Date", ylab="Temperature (Fahrenheit)", ylim = c(min(data$Temperature[data$Temperature!=-99]),max(data$Temperature[data$Temperature!=-99]) ), type ="p", pch=20, col = colorsch[data$Month,2])
@@ -62,7 +62,8 @@ avtemp
 ## 73.82 75.72 76.80 76.07 73.98 76.90
 ```
 
-Plot scatterplot and regression line
+## Scatterplot which displays average temperature by year and fits a linear regression line
+The slope is not statistically significant at even the 10% significance level. This tells us that we cannot reject the null hypothesis that there is no relation between year and temperature. In other words, there is no strong evidence to support a claim that temperature and year are dependent (on average). 
 
 ```r
 plot(tempavg[,1],tempavg[,2], main="Average Temperature by Year", 

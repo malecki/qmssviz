@@ -6,7 +6,7 @@ published: false
 tags: hw1
 ---
 
-# Introduction
+## Introduction
 
 The [New York City Council](http://council.nyc.gov/html/home/home.shtml) is the lawmaking body of the City of New York. The Council has 35 committees with oversight of various functions of the city government. Each council member sits on at least three standing, select or subcommittees. The standing committees must meet at least once a month unless the Charter mandates otherwise.
 
@@ -17,17 +17,17 @@ This brief write-up seeks to explore the following questions:
 
 With this information, we can hold our government bodies accountable and determine the best (and worse) times of the year for legislative action.
 
-# The Data
+## The Data
 
 We scraped our data from [legistar.council.nyc.gov](legistar.council.nyc.gov), which uses an .aspx framework to house the minutes and legislative documents related to the New York City Council. We could export the document to an Excel document, but unfortunately, this feature is broken. As such, I have included the HTML export of the site [here](https://www.dropbox.com/s/356ccfd2o3zmt3p/nycc-meetings.html?dl=0) for convenience.
 
-# Set-Up
+## Set-Up
 
-## Libraries
+### Libraries
 
 First, let's load the relevant libraries into the R environment and set the current working directory. Use the development version of `ggvis` to ensure that the interactive plot is embedded in the knitted html document.
 
-```{r}
+```{r, message=FALSE}
 # install.packages("devtools")
 # devtools::install_github('rstudio/ggvis', build_vignettes = FALSE)
 library(dplyr)
@@ -40,9 +40,9 @@ library(ggthemes)
 setwd("/Users/Quan/mailman/qmssviz/hw1/_posts/")
 ```
 
-## Functions
+### Functions
 
-Next, let's define some functions to help us get and process the data more easily. `HTMLtoDF` parses the HTML tree, retreives values enclosed in the `</td>` tag, and plops them into a `data.frame`. `RemoveSpaces` uses a regular expression to remove leading and lagging spaces.
+Next, let's define some functions to help us get and process the data more easily. `HTMLtoDF` parses the HTML tree using the `XML` package, retreives values enclosed in the `</td>` tag, and plops them into a `data.frame`. `RemoveSpaces` uses a regular expression to remove leading and lagging spaces.
 
 ```{r}
 HTMLtoDF <- function(file){
@@ -59,13 +59,13 @@ RemoveSpaces <- function(df) {
 }
 ```
 
-## Loading the Data
+### Loading the Data
 
 ```{r}
 df <- HTMLtoDF("nycc-meetings.html")
 ```
 
-# Data Processing
+## Data Processing
 
 We clean the data to create more consistency in variable names and to ensure that variables are the correct data type for our analysis.
 
@@ -106,9 +106,11 @@ dfPlot <- df %>%
          Status == "Calendared")
 ```
 
-# Visualizations
+## Visualizations
 
-## Proportion of Committee Meetings Held by Month
+Let's make some plots.
+
+### Proportion of Committee Meetings Held by Month
 
 ```{r}
 # Total Committee Meetings Held by Month
@@ -129,7 +131,7 @@ dfPlot %>%
 
 Here we look at the proportion of City Council meetings held each month from 2000 to 2013. From this graph, we can see that council members take their summers seriously. Good luck trying to schedule a hearing during July or August. Also, you can see an upward trend starting from the beginning of the year until the month of June, the end of the fiscal cycle. Perhaps council members are spurred by deadlines just as much as the rest of us.
 
-## Distribution of the Number of Meetings Held By Year 
+### Distribution of the Number of Meetings Held By Year 
 
 ```{r}
 # generate plot
@@ -184,7 +186,7 @@ dfPlot %>%
 
 The `Committee on Finance` consistently holds the most meetings per year. This makes sense since all committees must go through the finance committee to approve any changes to the budget. Money is power.
 
-# Wish List
+## Wish List
 
 * Label outliers in boxplot
 * Fix color pallette for `ggvis` stacked bar plot
@@ -193,7 +195,7 @@ The `Committee on Finance` consistently holds the most meetings per year. This m
 * Text analysis of the meeting topics
 * Proportion of meetings deferred by committee
 
-# Session Info
+## Session Info
 
 ```{r, echo=FALSE}
 sessionInfo()

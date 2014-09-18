@@ -1,21 +1,36 @@
 ---
 title: "hw1"
 author: "David Tomczyk"
-date: "17 de septiembre de 2014"
+date: "September 18 2014"
 output: html_document
-published: false
+published: FALSE
 tags: hw1
 ---
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+My first foray into R and ggplot2
 
 ---
+
+
+
+```{r ggplot, fig.width=6, fig.height=3, message=FALSE}
+
 setwd("~/qmssviz/Labs/questionnaire")
 respo <- read.csv("responses-2014-09-05.csv",stringsAsFactors=F)
-
 program <- respo[2]
 
-ggplot(data=program, aes(x=Program)) + geom_bar(stat="bin")
-#CASE SENSITIVE!!
+library(ggplot2)
+
+qplot(x=factor(Program), data=program, geom="bar", fill=factor(Program))
+
+```
+---
+What I like:  
+-Its my first graph in R/ggplot2
+
+What I don't like:  
+-The colors  
+-I wish the x axis labels were more spread out, or just gone 
+-The x axis titles should simply be "Program"  
+-I think I'd like to order the data, though I'm not sure how  
+-The colors  

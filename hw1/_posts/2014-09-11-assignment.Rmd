@@ -1,8 +1,8 @@
 ---
 title: "Homework 1 assignment"
-author: mm3940
-output: html_document
-published: false
+author: "mm3940"
+published: no
+output: pdf_document
 tags: hw1
 ---
 

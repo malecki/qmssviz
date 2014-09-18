@@ -33,9 +33,10 @@ What I like:
 
 What I don't like:  
 -The colors  
--I wish the x axis labels were more spread out, or just gone 
+-I wish the x axis labels were more spread out, or just gone  
 -The x axis titles should simply be "Program"  
 -I think I'd like to order the data, though I'm not sure how  
+-Two redundant categories I would like to merge together, but didn't have time to learn how
 -The colors
 
 #People who know how to use version control

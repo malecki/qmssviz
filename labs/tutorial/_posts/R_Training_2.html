@@ -114,14 +114,14 @@ SLDC$month = factor(SLDC$month,levels(SLDC$month)[c(6:12,1:5)])
 hourly&lt;-ddply(SLDC, .(Date, year, month, day, hours), numcolwise(mean))
 length(levels(as.factor(hourly$hours))) # 24 hours, check!</code></pre>
 <pre><code>## [1] 24</code></pre>
-<pre class="r"><code># save the clean dataframe. The extension .rsav is for reading/writing data in R.
-save(hourly, file=&quot;hourly-demand.rsav&quot;)
-
-# Alternatively, we could have written the clean data to a new .csv file.
-write.csv(hourly, file=&quot;hourly-demand.csv&quot;)
-
-# Next time, you can simply load the clean data without repeating all the code above
-load(&quot;hourly-demand.rsav&quot;)  # for R objects</code></pre>
+<pre class="r"><code># # save the clean dataframe. The extension .rsav is for reading/writing data in R.
+# save(hourly, file=&quot;hourly-demand.rsav&quot;)
+# 
+# # Alternatively, we could have written the clean data to a new .csv file.
+# write.csv(hourly, file=&quot;hourly-demand.csv&quot;)
+# 
+# # Next time, you can simply load the clean data without repeating all the code above
+# load(&quot;hourly-demand.rsav&quot;)  # for R objects</code></pre>
 <pre class="r"><code># hourly&lt;-read.xlsx(file=&quot;CaboVerde_Santiago_Hourly_Dispatch.xlsx&quot;,
 #                   sheetIndex=1,
 #                   as.data.frame=TRUE,

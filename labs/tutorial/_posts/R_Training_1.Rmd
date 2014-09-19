@@ -12,7 +12,6 @@ output:
     toc: yes
     toc_depth: 4
 ---
-<link href="http://kevinburke.bitbucket.org/markdowncss/markdown.css" rel="stylesheet"></link>
 
 ****************
 Let's get started!
@@ -42,7 +41,7 @@ source("multiplot.R")
 ## set R Markdown options. 
 ## Markdown defines the layout and format of the resulting document. 
 ## It is not R code, but allows you to hide/supress unwanted R output.
-opts_chunk$set(fig.path="ECREEE_R_Training_1/figs/", warning=TRUE, message=FALSE , tidy=TRUE)
+opts_chunk$set(fig.path="R_Training_1/figs/", warning=TRUE, message=FALSE , tidy=TRUE)
 ```
 
 This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
@@ -88,7 +87,7 @@ getwd()
   
 Set the working directory
 ```
-setwd("~/github/ECREEE")
+setwd("~/github/qmssviz-FORK/labs/tutorial/_posts/")
 ```
 
 ## Libraries

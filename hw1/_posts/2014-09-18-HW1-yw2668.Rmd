@@ -8,7 +8,7 @@ published: false
 
 # I am a R beginner. I intend to make a picture showing different levels of software experience in [R, data manipulation and modeling] of people in different programs. ##
 
-##Here I go!# 
+##Here I go! re-knitting # 
 
 ```{r}
 setwd("/Users/Emily/Documents/Columbia/Data Visualization")

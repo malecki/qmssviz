@@ -41,9 +41,10 @@ Note that the `echo = FALSE` parameter was added to the code chunk to prevent pr
 
 
 
-Now let's finish today's hw(2014-09-18). First load sample data.
+## Now let's finish today's hw(2014-09-18). First load sample data.
 
 ```{r, cache=TRUE}
+setwd("C:/Liangquan Zhou/Study/2014 fall/data visualization/hw1")
 sample_data= read.csv("sample_health_facilities.csv") # read the .csv file
 ```
 

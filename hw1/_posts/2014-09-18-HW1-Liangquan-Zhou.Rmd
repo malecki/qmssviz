@@ -54,7 +54,7 @@ sample_data= read.csv("sample_health_facilities.csv") # read the .csv file
 new_data= subset(sample_data, zone %in% c("Southwest","Southeast","South-South"))
 ```
 
-2.Incorporate the pop2006 column from the `lgas.csv` file into the new data.frame containing only those facilities located in Southern Nigeria. (Hint: your id column is `lga_id`)
+2. Incorporate the pop2006 column from the `lgas.csv` file into the new data.frame containing only those facilities located in Southern Nigeria. (Hint: your id column is `lga_id`)
 
 ```{r, cache=TRUE}
 lgas= read.csv("lgas.csv", stringsAsFactors=T)

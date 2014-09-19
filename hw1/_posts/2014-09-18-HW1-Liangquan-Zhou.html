@@ -90,7 +90,9 @@ sample_data= read.csv(&quot;sample_health_facilities.csv&quot;) # read the .csv 
 <li>Select all facilities located in the southern zones of Nigeria.</li>
 </ol>
 <pre class="r"><code>new_data= subset(sample_data, zone %in% c(&quot;Southwest&quot;,&quot;Southeast&quot;,&quot;South-South&quot;))</code></pre>
-<p>2.Incorporate the pop2006 column from the <code>lgas.csv</code> file into the new data.frame containing only those facilities located in Southern Nigeria. (Hint: your id column is <code>lga_id</code>)</p>
+<ol start="2" style="list-style-type: decimal">
+<li>Incorporate the pop2006 column from the <code>lgas.csv</code> file into the new data.frame containing only those facilities located in Southern Nigeria. (Hint: your id column is <code>lga_id</code>)</li>
+</ol>
 <pre class="r"><code>lgas= read.csv(&quot;lgas.csv&quot;, stringsAsFactors=T)
 new_data= merge(new_data, lgas[c(&quot;lga_id&quot;,&quot;pop_2006&quot;)],by= &quot;lga_id&quot;)</code></pre>
 <p>And we can use <code>str</code> to see the new dataset:</p>

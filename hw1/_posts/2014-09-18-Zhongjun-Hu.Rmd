@@ -39,4 +39,4 @@ setwd("~/Desktop/ZhongjunHuqmssviz/qmssviz/Lab1")
 cb<-read.csv("GSS.2006.csv")
 cb$Ages<-as.numeric(cb$agewed)
 qplot(x=Ages, data=cb,geom="density",main="Distribution of How old were you when first married")
-
+qplot(x=Ages, data=cb,geom="histogram",main="Distribution of How old were you when first married")

@@ -7,6 +7,8 @@ published: false
 tags: hw1
 ---
 
+TO BE FIXED: use mean ratio, make things square, compare side by side, and use a dot plot instead of arbitrary columns.
+
 ## Bboy Injury Data
 
 The data used in the narrative below was obtained from the American Journal of Sports Medicine article, "Breakdance Injuries and Overuse Syndromes in Amateurs and Professionals," by Max Daniel Kauther. The sample size for the study was 144 bboys (breakdancers, 40 professional, 104 amateur).
@@ -157,9 +159,9 @@ panel = function(x, y) {
 
 This visualization plots total loss of training days on the y-axis and loss of training days per injury on the x-axis. I decided to visualize this data in this manner in order to highlight a combination of injury severity and frequency. Taking a look at loss of training days by anatomical injury leaves me a bit frightened. Of the 144 bboys, the highest losses of total training days occurred with knee injuries, spine injuries, and wrist/hand injuries. When normalized to lost training days per injury, a knee injury could take a bboy out for approximately two weeks, wrist/hand injuries for approximately a week and a half, and surprisingly, spine, shoulder or elbow injuries, one entire week (only?!?). 
 
-## Code below did not compile due to ggvis not being synced with Rmarkdown.
-
 ## ggvis Cocaine dataset
+
+**Code below did not compile due to ggvis not being synced with Rmarkdown.**
 
 ```{r}
 #library("dplyr")

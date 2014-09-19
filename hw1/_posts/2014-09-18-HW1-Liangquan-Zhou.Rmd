@@ -1,8 +1,8 @@
 ---
 title: "Homework 1 assignment"
-author: lz2377
+author: "lz2377"
+published: no
 output: html_document
-published: false
 tags: hw1
 ---
 
@@ -30,4 +30,54 @@ plot(cars$dist, cars$speed)
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
 
-fourth commit
+
+
+
+
+
+
+Now let's finish today's hw(2014-09-18). First load sample data.
+
+```{r, cache=TRUE}
+sample_data= read.csv("sample_health_facilities.csv") # read the .csv file
+```
+
+1. Select all facilities located in the southern zones of Nigeria.
+
+```{r, cache=TRUE}
+new_data= subset(sample_data, zone %in% c("Southwest","Southeast","South-South"))
+```
+
+2.Incorporate the pop2006 column from the `lgas.csv` file into the new data.frame containing only those facilities located in Southern Nigeria. (Hint: your id column is `lga_id`)
+
+```{r, cache=TRUE}
+lgas= read.csv("lgas.csv", stringsAsFactors=T)
+new_data= merge(new_data, lgas[c("lga_id","pop_2006")],by= "lga_id")
+```
+
+And we can use `str` to see the new dataset:
+```{r}
+str(new_data)
+```
+
+3. Calculate the total number of full time nurses and doctors for all health facilities in each state.
+```{r, cache=TRUE}
+tapply(new_data$num_doctors_fulltime,  new_data$state,sum)
+tapply(new_data$num_nurses_fulltime,  new_data$state,sum)
+```
+
+4. Sort the resulting dataset by state population, in descending order.
+```{r,cache=TRUE}
+data1=subset(new_data,select=c(num_doctors_fulltime,num_nurses_fulltime,pop_2006,state))
+data1$state=as.factor(as.character(data1$state))
+result=data.frame(tapply(data1$num_doctors_fulltime, data1$state,sum),
+  tapply(data1$num_nurses_fulltime,  data1$state,sum),
+  tapply(data1$pop_2006,  data1$state,sum))
+names(result)=c("num_doctors_fulltime","num_nurses_fulltime","pop_2006")
+result=result[order(result$pop_2006),]
+```
+
+The result is:
+```{r,cache=TRUE}
+result
+```

@@ -6,7 +6,16 @@ _site
 
 # OS weirdness
 *.DS_Store
+.DS_Store
 
 .RData
 .Rhistory
 Thumbs.db
+<<<<<<< HEAD
+.Rproj.user
+=======
+
+## Rproj is seriously annoying. Sorry.
+*.Rproj
+*.Rbuildignore
+>>>>>>> upstream/gh-pages

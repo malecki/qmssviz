@@ -1,0 +1,398 @@
+---
+title: "R Training 2"
+author: "Elliot Cohen"
+date: "July 2, 2014"
+output: html_document
+---
+<link href="http://kevinburke.bitbucket.org/markdowncss/markdown.css" rel="stylesheet"></link>
+
+```{r initialize, include=FALSE}
+## Instead of setting the working directory in each R session, we created an RStudio Project within the ECREEE directory.
+# setwd(~/github/ECREEE)
+
+## The following function will load the packages required for this tutorial.  If a package cannot be found in your instance of Rstudio, it will automatically be insalled.
+load_install<-function(lib){
+  if(! require(lib, character.only=TRUE)) install.packages(lib, character.only=TRUE)
+  library(lib, character.only=TRUE)
+}
+
+## the required libraries (e.g. packages)
+Thelib<-c("knitr", "xlsx", "plyr", "ggplot2", "scales", "gdata", "chron", "reshape2", "grid", "hydroTSM")
+
+## apply the function
+lapply(Thelib, load_install)
+
+## load custom functions (for computing stats and model diagnostics)
+source("multiplot.R")
+source("skew.r")
+source("myModelDiagnostics.R")
+```
+This tutorial requires the following data files (dependencies):  
+* DTL-PS-2012-13.xls  
+* Daily_Temperature_1995-2013_Delhi.txt
+
+... and the following external functions:  
+* multiplot.R (for cool, side-by-side plots)  
+* skew.r (for estimation of statistical skew)  
+* myModelDiagnostics.R (for a suite of diagnostics tests that I run on all of my statistical models)  
+
+
+```{r global-options, include=FALSE}
+opts_chunk$set(fig.path="figs/", fig.align="left", echo=TRUE)
+#options(width=75)
+```
+  
+****************
+Energy Load Forecasting
+----------------
+Let's suppose we wish to merge daily temperature data with energy consumption data for the city of Delhi to analyze temperature-load correlations.  Urban energy use is driven in large part by thermal comfort (heating in the winter, cooling in the summer). Peak electricity demand in particular is highly correlated with air conditioning loads and thus outdoor air temperature.  Understanding the relationship is key to accurate load forecasts. 
+
+Of course, there are additional determinants of energy demand related to weather and climate besides temperature (such as humidity and windspeed) as well as determinants related to economic activity (such as weekday/weekend, holiday/non-holiday, school/no-school, etc..). However, the effect of these determinants are typically secondary to temperature, especially in extreme climates such as Delhi. 
+
+As an illustrative example, let's try to quantify the temperature-load correlation for Delhi.  We can always add complexity to our model later by including additional load determinants mentioned above.
+
+Let's get started: 
+
+First, we need to bring in the energy consumption data and perform requisite data cleaning. 
+
+Regional grid operator data was obtained for the period April 1 2012 - March 31 2013 at 30 minute timeslices.  The data includes:
+* In-Boundary Generation   
+* Schedule from Grid  
+* Drawal from Grid  
+* Overdraw/Underdraw from Grid(OD/UD)  
+* __Total Demand Met__   
+
+For now, we will focus on the demand data. We will use all of the techniques we learned in 'R Basic Training' for reading, organizing and visualizing data, and then move into engineering analysis.
+```{r import-energy-data, cache=TRUE}
+## Import data in .xls fomrat
+# library(xlsx)
+# SLDC<-read.xlsx(file="DTL-PS-2012-13.xls", sheetIndex=1, as.data.frame=TRUE, header=TRUE)
+# 
+# # Save it as an R object
+# save(SLDC, file="SLDC.raw.rsav")
+
+# Load the data as an R object (much faster than reading the .xlsx)
+load("SLDC.raw.rsav")
+```
+
+```{r organize-energy-data}
+# Create Time and Date attributes
+SLDC$Date<-as.Date(SLDC$Time)
+
+# Seperate Date into yr-month-day
+ymd<-strsplit(as.character(SLDC$Date),"-")
+SLDC$year<-laply(ymd, '[[', 1) #assign the list of years to an array called SLDC$year
+SLDC$month<-laply(ymd, '[[', 2)
+SLDC$day<-laply(ymd, '[[', 3)
+
+SLDC$year<-as.factor(SLDC$year)
+SLDC$month<-as.factor(SLDC$month)
+SLDC$day<-as.factor(SLDC$day)
+
+# Timestamps in the raw data are not uniformly spaced, but we wish to characterize the diurnal pattern in discrete time blocks (e.g. midnight to 01:00, 01:00 to 02:00, etc...). 
+# To do so, we must round the timestamp to the nearest hour and bin the data by time block.
+clean.time<-round(SLDC$Time, units="hours")
+
+# # Format the timestamp
+# SLDC$hours<-times(format(clean.time, "%H:%M:%S"))
+# 
+# # To summarize the data for each hour, we use the `ddply` function. `ddply` does not accept Date-Time class variables, so we will need to convert the time to a character string before summarizing:
+# SLDC$hours<-as.character(SLDC$hours)
+
+# keep just the hour component
+SLDC$hours<-as.factor(format(clean.time, "%H"))
+
+# re-order factor levels for the month attribute to show cold months with cool colors and hot months with warm colors.
+SLDC$month = factor(SLDC$month,levels(SLDC$month)[c(6:12,1:5)])
+
+# Finally, we can summarize the data by hour.  This is similar to "binning" the data by hour and taking the mean.
+hourly<-ddply(SLDC, .(Date, year, month, day, hours), numcolwise(mean))
+length(levels(as.factor(hourly$hours))) # 24 hours, check!
+
+# save the clean dataframe. The extension .rsav is for reading/writing data in R.
+save(hourly, file="hourly-demand.rsav")
+
+# Alternatively, we could have written the clean data to a new .csv file.
+write.csv(hourly, file="hourly-demand.csv")
+
+# Next time, you can simply load the clean data without repeating all the code above
+load("hourly-demand.rsav")  # for R objects
+```
+
+```{r CapeVerde-Hourly}
+# hourly<-read.xlsx(file="CaboVerde_Santiago_Hourly_Dispatch.xlsx",
+#                   sheetIndex=1,
+#                   as.data.frame=TRUE,
+#                   header=FALSE,
+#                   check.names=TRUE,
+#                   rowIndex=7:30,
+#                   colIndex=2:32
+#                   )
+# str(hourly) # rows are hours of the day, columns are days of the month
+# which(hourly)
+# hourly<-melt(hourly)
+```
+
+### Diurnal and Seasonal Patterns
+Given hourly demand data, we can study diurnal patterns, and importantly, how those patterns change throughout the year.  This provides insight into how and when energy is used, and thus what it is likely used for.  As a result, this information can be used for peak-load forecasting. 
+
+**The goal of peak-load forecasting is to identify factors that drive demand (e.g. climate, weather, population, affluence and technology) and then apply projections of how those drivers are likely to change over time to better estimate future demand.** 
+
+In this example, we are only looking at the effect of temperature on demand, but given adequate data, we could apply the same techniques to test the effect of any explanatory variable (e.g. driver of demand).
+
+Before we begin modeling, let's get familiar with the data and its underlying phenomena. We start with a visualization of the diurnal load profile for each calendar month.
+```{r diurnal}
+# Summarize the data by month and hour, calculating the min, mean and max 'Demand.met'.
+diurnal<-ddply(hourly, .(month, hours), summarize, 
+               min=min(Demand.met), 
+               mean=mean(Demand.met), 
+               max=max(Demand.met), 
+               sd=sd(Demand.met), 
+               peak_to_mean=max(Demand.met)/mean(Demand.met), 
+               peak_to_trough=max(Demand.met)/quantile(Demand.met,0.05))
+
+# plot the diurnal pattern characteristic of each month
+ggplot(diurnal, aes(x=hours, y=mean, group=month, color=month)) +
+  geom_line() +
+  scale_y_continuous(name='MW') +
+  scale_x_discrete(name="hour") +
+  labs(title="Characteristic diurnal pattern of hourly demand in each month") +
+  theme_bw()
+```
+
+### Discussion:
+* What is driving the diurnal pattern in the summer months (warm colors)?
+    + What could explain the midnight peak observed during summer months?
+* What is driving the diurnal pattern in the winter months (cool colors)?
+    + What is different about the diurnal pattern in summer vs. winter?
+* How do you think these patterns will evolve over the next 5-10 years?
+
+### Peak-to-Mean Ratios
+Let's look at the peak-to-mean and peak-to-trough ratio for a characteristic day in each month.
+```{r peak-to-mean, fig.height=4, fig.width=8}
+# plot 
+ggplot(diurnal, aes(x=hours, y=peak_to_mean, group=month, colour=month)) +
+  geom_line() +
+  facet_wrap(~month) +
+  scale_x_discrete(breaks=c("00","06","12","18","23")) + 
+  labs(title="Characteristic diurnal peak-to-mean ratios, by month") +
+  theme_classic()
+
+
+ggplot(diurnal, aes(x=hours, y=peak_to_trough, group=month, colour=month)) + 
+  geom_line() +
+  facet_wrap(~month) +
+  scale_x_discrete(breaks=c("00","06","12","18","23")) +
+  labs(title="Characteristic diurnal peak-to-trough ratios, by month") +
+  theme_classic()
+```
+
+...and as a timeseries for one year:
+```{r time-series, fig.height=8}
+# summarize the data by Date
+daily.ptm<-ddply(SLDC, .(Date), summarize, 
+  peak_to_mean=max(Demand.met)/mean(Demand.met), 
+  peak_to_trough=max(Demand.met)/quantile(Demand.met,0.05)
+  )
+# Note: zero values may exist in the Demand.met data (e.g. due to temperorary loss-of-load), in which case the peak-to-trough ratio would go to infinity. As a quick fix, take the 5th percentile (instead of zeroeth) as the "trough".  This effectively removes outliers at the bottom tail of the distribution.
+
+# additionally, we can remove known outliers due to the July 30-31 2012 blackout.
+daily.ptm<-subset(daily.ptm, Date !="2012-07-30" & Date != "2012-07-31")
+
+# create time series object with daily data
+daily <- ts(daily.ptm$peak_to_mean, 
+            start = c(2012, 90), 
+            end=c(2013, 89), 
+            frequency = 365
+            )
+
+# pass daily data into smoothing function
+smooth.ts<-function(daily, title){
+  weekly<-aggregate(daily, nfrequency=52, ts.eps=1, FUN=mean)             
+  monthly<-aggregate(daily, nfrequency=12, ts.eps=1, FUN=mean)
+  par(mfrow=c(3,1))
+  par(oma=c(0,0,2,0))             # set outter margins
+  par(mar=c(2,4,2,2) + 0.1)       # set plot margins
+  # par(mar=c(5,4,4,2) + 0.1.)    # default (bottom, left, top, right)
+  plot(daily, cex.lab=1.2, cex.axis=1.2)
+  plot(weekly, cex.lab=1.2, cex.axis=1.2)
+  plot(monthly, cex.lab=1.2, cex.axis=1.2)
+  title(main=title, outer=TRUE, cex.main=1.5)
+}
+  
+# apply time-series smoothing function
+smooth.ts(daily, title="Peak-to-Mean Load Ratios for Delhi")
+
+# Repeat for Peak-to-Trough daily data
+daily <- ts(daily.ptm$peak_to_trough, 
+            start = c(2012, 90), 
+            end=c(2013, 89), 
+            frequency = 365
+            )
+
+smooth.ts(daily, title="Peak-to-Trough Load Ratios for Delhi")
+```
+
+### Discussion:
+- At what time of the year are the ramp-requirements typically highest? The answer may be counter-intuitive!
+- When are ramp requirements lowest?
+- Why?
+- What would help alleviate large daily load swings?  e.g. on days when peak demand is almost three times as high as minimum demand, perhaps seperated by only 6 hours!
+- What technologies may alleviate or exaccerbate this challenge?
+
+Similarly, let's look at a boxplot of diurnal peak-to-mean and peak-to-trough ratios for each month. What do you notice here?
+```{r monthly}
+boxplot(diurnal$peak_to_mean ~ diurnal$month)
+boxplot(diurnal$peak_to_trough ~ diurnal$month)
+```
+
+### Discussion:
+- Which months are more peaky?
+- Which months have the most variance (e.g. spread or variability)?
+- How can you tell?
+- What do you think is driving the diurnal pattern in the winter months?
+
+### Temperature-Load Correlations
+Now that we are familiar with the hourly demand data, let's start looking at temperature dependence. Daily-average temperature timeseries are available (but not hourly), so we must aggregate the load data accordingly. We compute daily average load as follows:
+```{r aggregation}
+daily.load<-ddply(SLDC, .(Date), numcolwise(mean))
+```
+
+Next, let's grab temperature data corresponding to the same dates as the load data.
+```{r temperature, cache=TRUE}
+# Import daily mean temperature data for Delhi, India 1995-2013.
+daily.temp<-read.table(file="Daily_Temperature_1995-2013_Delhi.txt", header=FALSE, colClasses=c("factor", "factor","factor","numeric"))
+
+# Assign column names
+names(daily.temp)<-c("Month","Day","Year","Temp")
+
+# Create Date attribute (column)
+daily.temp$Date<-as.Date(as.character(paste(daily.temp$Year, daily.temp$Month, daily.temp$Day,sep="-")), "%Y-%m-%d")
+
+# grab daily.temp for period 2012-04-01 to 2013-03-31
+daily.temp<-subset(daily.temp, Date > as.Date("2012-03-31") & Date < as.Date("2013-04-01"))
+```
+
+```{r vizualization}
+# Plot the daily-average demand met for Delhi
+load.p<-ggplot(daily.load, aes(x=Date, y=Demand.met)) + 
+  geom_line(colour="blue") + 
+  scale_y_continuous(name='Mean Load (MW)') +
+  scale_x_date(breaks=date_breaks("2 months"), labels=date_format("%b-%Y")) +
+  labs(title="Load Profile of Delhi, India ")
+
+# Now plot the daily-average temperature for Delhi that we've been working with....
+temp.p<-ggplot(daily.temp, aes(x=Date, y=Temp)) +
+  geom_line(colour="red") +
+  scale_y_continuous(name='Temperature (deg.F)', limits=c(round(32,digits=-1),round(1.1*max(daily.temp$Temp),digits=-1)), expand=c(0,0)) +
+  scale_x_date(breaks=date_breaks("2 months"), labels=date_format("%b-%Y")) +
+  labs(title="Temperature Profile of Delhi,  India")
+
+# plot the two side-by-side
+multiplot(load.p, temp.p, cols=1)
+
+# combine the data into a single data frame
+df<-merge(daily.load, daily.temp, by="Date")
+```
+
+Now that we have coressponding temperature and load data for one year, we can build a simple model to quantify the effect of temperature on load. Before we do that, however, let's start with a simple X-Y scatterplot to visually check the relationship between temperature and load.
+```{r scatterplot}
+plot(x=df$Temp, y=df$Demand.met, xlab="Temperature (deg. F)", ylab="Load (MW)")
+```
+- What do you notice about the X-Y relationship?
+- What is causing this phenomena?
+
+Based on the scatterplot (and knowledge of the system), we infer that the temp-load correlation is driven by heating loads at low temperatures up until ~65 deg. F (room temperature), at which there is little-to-no demand for thermal comfort energy services. At higher temperatures, we enter a cooling-regime where the temp-load correlation is driven mostly by air-conditioning and to a lesser extent, fans.  
+
+Since we are fitting a linear model, we will get a much better fit if we first seperate the data into heating and cooling regimes, and fit a different model to each.  Based on the inflection point in the scatterplot, let's divide the data at 70 deg. F. 
+```{r divide}
+cooling<-subset(df, Temp > 70)
+heating<-subset(df, Temp < 70)
+```
+
+As a working example, let's focus on the cooling regime (e.g. when temperatures are above 70 F.)
+```{r cooling-regime}
+plot(x=cooling$Temp, y=cooling$Demand.met, xlab="Temperature (deg. F)", ylab="Load (MW)")
+```
+Now we see a clear linear trend: As temperature increases, so does load.
+
+Given the linear relationship, it's appropriate to fit a linear model using the `lm` function (short for "linear model").  The simplest linear model is an ordinary least-squares (OLS) regression. Check ```?lm``` for further details.
+
+```{r temp-load-cor}
+mod<-lm(Demand.met ~ Temp, data=cooling)
+```
+
+As with any statistical model, it is imperative to check **model diagnostics**.  Diagnostics verify that the underlying theoretical assumptions of a statistical model are satisfied.  In the case of linear regression models, there are three basic assumptions:
+1. Residuals are independent and identically distributed (IID)
+2. No undue influence of outliers
+3. Little to no autocorrelation
+
+Before we explain the meaning of these assumptions, we must explain how a least-squares regression works. Of course there are entire textbooks on regression models (and we suggest consulting one), but here we will introduce the basic concept.
+
+A least-squares regressions solves the matrix operation:
+```Yestimate=X (X^T^X)^-1^X^T^Y``` to find a straight line that runs through a set of data points minimizing the square of the orthogonal distance from that line to each data point, summed over all such distances. Put simply, draw a line through a set of data points that best represents the overall trend of the data. How well this can be done is known as the "goodness of fit" (e.g. how well does the line fit the data?). "Goodness of fit" is often represented by simple metrics such as R-squared, or Pearson's Correlation. This same concept can be applied in k-dimensional space for multi-variate regression (e.g. more than one explanatory variable).
+
+After fitting a linear model with the technique described above, it is imperative to check the assumptions of the residuals: **normality**, **heteroscadasticity** and **independence**. We also check for undue influence of outliers (e.g. Cook’s Distance) and autocorrelation. Below, we show a suite of model diagnostics designed to allow for visual inspection of these assumptions.
+```{r model-diagnostics}
+# load a custom-built suite of functions for running model diagnostics.
+source("myModelDiagnostics.R")
+
+# pass the temperature-load model to the function
+GLMdiagnostics(mod)
+
+## Alternatively, use native model diagnostics
+# par(mfrow=c(2,2))
+# plot(mod)
+```
+
+The residuals pass inspection: 
+*Normally distributed residuals (Q-Q plot);
+*No significant heteroscadasticity (residuals vs. covariate scatterplots are largely random);
+*Mild autocorrelation (up to lag-3 and some cyclical behavior at higher lags, although below a standard critical threshold); and
+*No undue influence of outliers (all Cook’s distance << 10).
+
+Next we can cross-validate our model. That is, do we get similar results if we use a slightly different set of data? Recall that each observation is simply a random realization from an underlying distribution of possible outcomes.  As such, a robust model will maintain similar goodness-of-fit given a different realization of observed values for the same underlying phenomena.
+
+The following function generates cross-validated estimates by droping observations one at a time, refiting the model to the remaining data points (N-1) and predicting at the dropped point.  This is reapeated for all observations.
+```{r cross-validation}
+crossval(mod)
+```
+
+Similarly, we can randomly drop 10% of the data, fit the model to the remaining points, and predict the dropped points.  We repeat this at random 500 times to simulate new realizations of the data.
+```{r drop-test}
+droptest(drop=0.1, bestmodel=mod)
+```
+
+Finally, we can add the least-square regression line (e.g. model fit) to the observed data.
+```{r goodness-of-fit}
+plot(x=cooling$Temp, y=cooling$Demand.met, xlab="Temperature (deg. F)", ylab="Load (MW)")
+abline(mod)
+```
+Finally, we can use the regression model to predict daily peak load given a daily mean temperature:  Input the temperature forecast for the coming days/weeks, and the model will predict the load.  
+
+Suppose we're expecting a two-week heatwave in June, with temperature anomalies 10 degrees above the monthly average.
+```{r predict}
+# monthly mean temperatures
+month.temp<-ddply(cooling, .(Month), summarize, meanTemp=mean(Temp))
+June.temp<-as.numeric(subset(month.temp, Month==6, select=meanTemp))
+temp.forecast<-data.frame(Temp=rnorm(14, mean=June.temp + 10))
+load.forecast<-predict(mod, newdata=temp.forecast, type="response")
+```
+
+This is a streamlined example of creating an accurate load-forecast!
+
+*************
+Cumulative Duration Curves
+-------------
+Duration curves describe the "peakyness" of a phenomena (e.g. flowrate or load). Data with no peaks and is always constant would produce a flat-line duration curve. "Peaky"" data will have steep gradients at the upper and lower tail. Duration curves are constructed by organizing the data in descending order and showing the fraction of instances where the ordinate (y-axis) is below a certain threshold.
+```{r load-duration-curve, results='hide'}
+invisible(
+  fdc(SLDC[,5], lQ.thr=0.7, hQ.thr=0.2, plot=TRUE, log="y", cex.axis=0.9, main="Load Duration Curve", ylab="Load [MW at 30 minute dt]", xlab="% of Time Equaled or Exceeded", thr.shw=FALSE, ylim=quantile(SLDC$Demand.met, probs=c(0.01,1)), verbose=FALSE)
+  )
+
+invisible(
+  fdc(daily.temp$Temp, lQ.thr=0.7, hQ.thr=0.2, plot=TRUE, log="y", cex.axis=0.9, main="Temperature Duration Curve", ylab="Temperature [Daily Average deg. F]", xlab="% of Time Equaled or Exceeded", thr.shw=FALSE, ylim=quantile(daily.temp$Temp, probs=c(0.01,1)), verbose=FALSE)
+  )
+```
+  
+  

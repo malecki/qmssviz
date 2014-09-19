@@ -23,6 +23,7 @@ suicideRate$logGDPpc <- log(suicideRate$GDPperCap)
 
 ```{r}
 head(suicideRate)
+str(suicideRate)
 ```
 
 <br>
@@ -55,7 +56,7 @@ ggplot(kor, aes(x=year, y=suicideRate)) +
   ylab("Suicide rates (per 100,000)")
 ```   
 
-Overall mortality rates have declined over time.
+However, overall mortality rates have declined over time.
 
 ```{r, echo=FALSE}
 ggplot(kor, aes(x=year, y=mortality)) +

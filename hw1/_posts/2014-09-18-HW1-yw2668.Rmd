@@ -3,11 +3,12 @@ title: "Homework 1 Assignment"
 author: "yw2668"
 date: "September 19, 2014"
 output: html_document
+published: false
 ---
 
 # I am a R beginner. I intend to make a picture showing different levels of software experience in [R, data manipulation and modeling] of people in different programs. ##
 
-##Here I go!#
+##Here I go!# 
 
 ```{r}
 setwd("/Users/Emily/Documents/Columbia/Data Visualization")

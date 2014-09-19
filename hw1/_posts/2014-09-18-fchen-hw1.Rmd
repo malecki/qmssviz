@@ -7,7 +7,7 @@ published: false
 tags: hw1
 ---
 
-TO BE FIXED: use mean ratio, make things square, compare side by side, and use a dot plot instead of arbitrary columns.
+CLASS TO BE FIXED: use mean ratio, make things square, compare side by side, and use a dot plot instead of arbitrary columns.
 
 ## Bboy Injury Data
 

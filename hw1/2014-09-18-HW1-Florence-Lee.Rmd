@@ -75,7 +75,7 @@ nychanes$occgrp<-as.factor(nychanes$occgrp)
 
 I am primarily interested to see whether there is some association between eating out and BMI. I expect to see higher frequency of eating out with higher BMI readings due to the high sodium, high fat content of most restaurant foods. 
 
-```{r}
+``````{r base, fig.width=15, fig.height=10, message=FALSE}
 #Call ggplot2
 library(ggplot2)
 #Create base
@@ -102,7 +102,7 @@ Lower-level workers and higher-level workers probably have different lifestyles 
 
 To observe the effect of occupation on my association of interest, I created separate graphs for each occupation group.
 
-```{r}
+```{r grid, fig.width=15, fig.height=10, message=FALSE}
 #Create facet grid with default legend placement
 grid <- basefinal + facet_grid(. ~ occgrp)
 grid2 <- grid + theme(legend.background=element_rect(fill='gray60', colour='gray60', size=1.25), legend.key=element_rect(fill='gray70'))

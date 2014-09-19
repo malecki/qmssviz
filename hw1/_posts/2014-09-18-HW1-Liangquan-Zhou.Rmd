@@ -5,6 +5,7 @@ published: no
 output: html_document
 tags: hw1
 ---
+##Learn to create a branch, commit, pull, push in github, and use Rmarkdown.to create html document.
 
 This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
@@ -20,9 +21,13 @@ You can also embed plots, for example:
 plot(cars)
 ```
 
-Now let's exploe the history of the process. Now it's time to make the second commit.
+Now let's exploe the history of the process. 
 
-Then we can change the axes of speed and dist. And make the third commit.
+### Now it's time to make the second commit.
+
+Then we can change the axes of speed and dist. 
+
+### And make the third commit.
 
 ```{r, echo=FALSE}
 plot(cars$dist, cars$speed)

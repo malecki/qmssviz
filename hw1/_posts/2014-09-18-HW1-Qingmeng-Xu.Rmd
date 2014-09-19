@@ -21,6 +21,9 @@ library(ggplot2)
 library(plyr)
 ```
 
+```{r}
+summary(cars)
+````
 
 ```{r, echo=FALSE}
 p <- ggplot(iris, aes(Sepal.Length, Sepal.Width))

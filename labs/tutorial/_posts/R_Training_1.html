@@ -504,13 +504,13 @@ icecream</code></pre>
 <h2><span class="header-section-number">3.6</span> writing data</h2>
 <p>Notice that the original data files that we imported at the beginning of this tutprial have not been changed, only manipulated in the R environment. If you open <code>Daily_Temperature_1995-2013_Delhi.txt</code>, it is the same as it was. If you want to save the changes we have made so far (e.g. removed missing data, added a Date attribute, etc..) you can write the current R object (’data) to an external file. This is like hitting the “save” button in Excel, but it is not done automatically in R; you have to do it expicitly.</p>
 <p>To write a .csv, call the <code>write.csv</code> function and supply the name of the R object you wish to save (‘data’) and the desired filepath (“data.csv”).</p>
-<pre class="r"><code>write.csv(data, file = &quot;./temperature_data.csv&quot;, row.names = FALSE)</code></pre>
+<pre><code>write.csv(data, file=&quot;./temperature_data.csv&quot;, row.names=FALSE)</code></pre>
 <p>Note the row.names argument. Try to see what the csv looks like if you omit the argument, or change row.names=TRUE. We generally prefer to output csv files without the row.names.</p>
 <p>Similarly, you can save your work as an R object, which is very efficient but means you can only re-open the object in R. This is an excellent choice for “works in progress” that you are developing in R.</p>
 <p>Call the <code>save</code> function and pass the R ojbect you wish to save (‘data’), the name of the file you wish to save it as (‘temperature_data’), and a valid file extension (‘rsav’). Later, you can retrieve the R object using the <code>load</code> function.</p>
-<pre class="r"><code>save(data, file = &quot;temperature_data.rsav&quot;)
-load(&quot;temperature_data.rsav&quot;)</code></pre>
-<p>After loading the file, the object name will be the same as it was when you saved it. That is, the file is named “temperature_data.rsav”, but the object is named “data”. Recall, the object name was the first argument passed to the <code>save</code> function.</p>
+<pre class="r"><code>save(data, file = &quot;temperature_data.Rdata&quot;)
+load(&quot;temperature_data.Rdata&quot;)</code></pre>
+<p>After loading the file, the object name will be the same as it was when you saved it. That is, the file is named “temperature_data.Rdata”, but the object is named “data”. Recall, the object name was the first argument passed to the <code>save</code> function.</p>
 <pre class="r"><code>str(data)</code></pre>
 <pre><code>## 'data.frame':    365 obs. of  5 variables:
 ##  $ Month: Factor w/ 12 levels &quot;1&quot;,&quot;10&quot;,&quot;11&quot;,..: 7 7 7 7 7 7 7 7 7 7 ...

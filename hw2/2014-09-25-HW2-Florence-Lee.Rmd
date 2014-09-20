@@ -7,4 +7,124 @@ tags: hw2
 ---
 ========================================================
 
+##Import Data
+The file ```lgas.csv``` is a .csv file. To import, use ```read.csv()```.
+?read.csv
 
+```{r}
+file1 <- "C:/Users/Flo/Desktop/Data Viz 2014/Assignment2/lgas.csv"
+lgas <- read.csv(file1)
+file2 <- "C:/Users/Flo/Desktop/Data Viz 2014/qmssviz/labs/tutorial/sample_health_facilities.csv"
+sample_data <- read.csv(file2)
+```
+
+##Explore Data
+Let's explore ```lgas``` first:
+
+```{r eval=FALSE}
+dim(lgas)
+colnames(lgas)
+str(lgas)
+head(lgas)
+```
+
+```{r}
+## 'data.frame':  774 obs. of  13 variables:
+##  $ lga_id             : int  1 2 3 4 5 6 7 8 9 10 ...
+##  $ unique_lga         : Factor w/ 773 levels "abia_aba_north",..: 142 275 39 211 1 2 563 564 169 292 ...
+##  $ pop_2006           : int  100180 58444 139090 151723 107488 423852 201329 250278 144802 195652 ...
+##  $ lga                : Factor w/ 768 levels "Aba North","Aba South",..: 3 4 5 6 1 2 7 8 9 10 ...
+##  $ state              : Factor w/ 37 levels "Abia","Adamawa",..: 8 15 3 11 1 1 28 28 9 17 ...
+##  $ zone               : Factor w/ 6 levels "North-Central",..: 2 1 4 5 5 5 6 6 4 5 ...
+##  $ area_sq_km         : num  3967.1 992.4 190 584.1 22.8 ...
+##  $ surveying_effort   : Factor w/ 4 levels "113","148","Others",..: 3 1 3 3 3 3 3 3 3 3 ...
+##  $ pop_density_2006   : num  25.3 58.9 732.1 259.8 4719.5 ...
+##  $ longitude          : num  13.33 6.85 7.77 8.22 7.37 ...
+##  $ latitude           : num  13.43 8.88 5.02 6.26 5.11 ...
+##  $ senatorial_district: Factor w/ 67 levels "","Abia Central",..: 40 1 33 21 4 4 42 42 12 53 ...
+##  $ TA_names           : Factor w/ 121 levels "Abdul Samad Isah Haruna",..: 75 57 62 83 19 114 108 108 94 80 ...
+```
+
+Next, let's explore ```sample_data```:
+
+```{r eval=FALSE}
+dim(sample_data)
+colnames(sample_data)
+str(sample_data)
+head(lgas)
+```
+
+```{r}
+## 'data.frame':  50 obs. of  10 variables:
+## $ lga                   : Factor w/ 50 ## levels "Aliero","Anaocha",..: 6 2 7 38 17 4 16 26 8 18 ...
+## $ lga_id                : int  91 49 96 611 258 76 232 441 101 261 ...
+## $ state                 : Factor w/ 24 levels "Abia","Adamawa",..: 21 3 14 10 5 3 4 17 6 18 ...
+## $ zone                  : Factor w/ 6 levels "North-Central",..: 1 5 3 5 1 5 2 6 4 1 ...
+## $ c_section_yn          : logi  FALSE FALSE FALSE FALSE FALSE FALSE ...
+## $ num_nurses_fulltime   : int  0 2 1 0 0 0 0 1 3 0 ...
+## $ gps                   : Factor w/ 50 levels "10.50716994 7.39845258 633.4000244140625 5.0",..: 48 27 14 24 42 30 7 33 34 47 ...
+## $ num_lab_techs_fulltime: int  1 NA 1 0 0 1 0 0 2 0 ...
+## $ management            : Factor w/ 1 level "public": 1 1 1 1 1 1 1 NA 1 1 ...
+## $ num_doctors_fulltime  : int  0 NA 0 0 0 1 0 1 0 0 ...
+```
+
+```lgas``` contains information about Nigeria's local goverment areas, while ```sample_data``` contains information about Nigeria's hospital facilities. Both data sets share a number of variables.
+
+## Select facilities in Southern zones
+
+The variable we are interested in subsetting by is ```zone```. 
+
+```{r}
+levels(sample_data$zone)
+```
+
+There are three different Southern zones: "South-South", "Southeast", and "Southwest". 
+
+```{r}
+south <- subset(sample_data, zone %in% c("South-South", "Southeast", "Southwest"))
+dim(south)
+```
+
+There are 26 of the observations in the ```sample_data``` data set were from the Southern regions of Nigeria.
+
+## Merge in 2006 Population Data
+
+If we use the ```merge``` function to add the information from the ```pop_2006``` column into the ```south``` data set, the function will only append population values for those observations in ```south```. The unique id used to link the two data sets will be ```lga_id```.
+
+```{r}
+#We only want the pop2006 column from lgas
+pop <- lgas[, c("lga_id", "pop_2006")]
+southpop <- merge(south, pop, by="lga_id")
+dim(southpop)
+```
+
+The new merged south data set has an additional column, ```pop_2006```. There are still only 26 observations.
+
+## Statistics
+
+### Total number of full-time nurses and doctors across all health facilities by state
+
+```{r}
+names(southpop)
+str(southpop)
+```
+
+The variables we are interested in looking at are ```num_nurses_fulltime```, ```num_doctors_fulltime```, and ```state```. Steps:
+
+* Add the columns ```num_nurses_fulltime``` and ```num_doctors_fulltime``` to get ``num_fulltime```.
+* Then, you want to find the sum of ```num_fulltime``` within each state.
+
+Before we proceed, we have to see if there are any NA values, and whether they occur in our variables of interest.
+
+southpop
+
+```{r}
+sum(is.na(southpop))
+southpop[is.na(southpop), ]
+``` 
+
+15 observations contain a NA value. Since there are only 26 observations in our data set, we should not omit these 15 observations.  
+
+
+```{r}
+sum(southpop$num_nurses_fulltime, southpop$num_doctors_fulltime)

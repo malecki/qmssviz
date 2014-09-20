@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<!-- saved from url=(0014)about:internet -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=9" >
+
+<title></title>
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 12px;
+   margin: 8px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 { 
+   font-size:2.2em; 
+}
+
+h2 { 
+   font-size:1.8em; 
+}
+
+h3 { 
+   font-size:1.4em; 
+}
+
+h4 { 
+   font-size:1.0em; 
+}
+
+h5 { 
+   font-size:0.9em; 
+}
+
+h6 { 
+   font-size:0.8em; 
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre {	
+   margin-top: 0;
+   max-width: 95%;
+   border: 1px solid #ccc;
+   white-space: pre-wrap;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code.r, code.cpp {
+   background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * { 
+      background: transparent !important; 
+      color: black !important; 
+      filter:none !important; 
+      -ms-filter: none !important; 
+   }
+
+   body { 
+      font-size:12pt; 
+      max-width:100%; 
+   }
+       
+   a, a:visited { 
+      text-decoration: underline; 
+   }
+
+   hr { 
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote { 
+      padding-right: 1em; 
+      page-break-inside: avoid; 
+   }
+
+   tr, img { 
+      page-break-inside: avoid; 
+   }
+
+   img { 
+      max-width: 100% !important; 
+   }
+
+   @page :left { 
+      margin: 15mm 20mm 15mm 10mm; 
+   }
+     
+   @page :right { 
+      margin: 15mm 10mm 15mm 20mm; 
+   }
+
+   p, h2, h3 { 
+      orphans: 3; widows: 3; 
+   }
+
+   h2, h3 { 
+      page-break-after: avoid; 
+   }
+}
+
+</style>
+
+<!-- Styles for R syntax highlighter -->
+<style type="text/css">
+   pre .operator,
+   pre .paren {
+     color: rgb(104, 118, 135)
+   }
+
+   pre .literal {
+     color: rgb(88, 72, 246)
+   }
+
+   pre .number {
+     color: rgb(0, 0, 205);
+   }
+
+   pre .comment {
+     color: rgb(76, 136, 107);
+   }
+
+   pre .keyword {
+     color: rgb(0, 0, 255);
+   }
+
+   pre .identifier {
+     color: rgb(0, 0, 0);
+   }
+
+   pre .string {
+     color: rgb(3, 106, 7);
+   }
+</style>
+
+<!-- R syntax highlighter -->
+<script type="text/javascript">
+var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
+hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+</head>
+
+<body>
+<h1></h1>
+
+<h2>Import Data</h2>
+
+<p>The file <code>lgas.csv</code> is a .csv file. To import, use <code>read.csv()</code>.
+?read.csv</p>
+
+<pre><code class="r">file1 &lt;- &quot;C:/Users/Flo/Desktop/Data Viz 2014/Assignment2/lgas.csv&quot;
+lgas &lt;- read.csv(file1)
+file2 &lt;- &quot;C:/Users/Flo/Desktop/Data Viz 2014/qmssviz/labs/tutorial/sample_health_facilities.csv&quot;
+sample_data &lt;- read.csv(file2)
+</code></pre>
+
+<h2>Explore Data</h2>
+
+<p>Let&#39;s explore <code>lgas</code> first:</p>
+
+<pre><code class="r">dim(lgas)
+colnames(lgas)
+str(lgas)
+head(lgas)
+</code></pre>
+
+<pre><code class="r">## &#39;data.frame&#39;: 774 obs. of 13 variables: $ lga_id : int 1 2 3 4 5 6 7 8
+## 9 10 ...  $ unique_lga : Factor w/ 773 levels &#39;abia_aba_north&#39;,..: 142
+## 275 39 211 1 2 563 564 169 292 ...  $ pop_2006 : int 100180 58444
+## 139090 151723 107488 423852 201329 250278 144802 195652 ...  $ lga :
+## Factor w/ 768 levels &#39;Aba North&#39;,&#39;Aba South&#39;,..: 3 4 5 6 1 2 7 8 9 10
+## ...  $ state : Factor w/ 37 levels &#39;Abia&#39;,&#39;Adamawa&#39;,..: 8 15 3 11 1 1
+## 28 28 9 17 ...  $ zone : Factor w/ 6 levels &#39;North-Central&#39;,..: 2 1 4 5
+## 5 5 6 6 4 5 ...  $ area_sq_km : num 3967.1 992.4 190 584.1 22.8 ...  $
+## surveying_effort : Factor w/ 4 levels &#39;113&#39;,&#39;148&#39;,&#39;Others&#39;,..: 3 1 3 3
+## 3 3 3 3 3 3 ...  $ pop_density_2006 : num 25.3 58.9 732.1 259.8 4719.5
+## ...  $ longitude : num 13.33 6.85 7.77 8.22 7.37 ...  $ latitude : num
+## 13.43 8.88 5.02 6.26 5.11 ...  $ senatorial_district: Factor w/ 67
+## levels &#39;&#39;,&#39;Abia Central&#39;,..: 40 1 33 21 4 4 42 42 12 53 ...  $ TA_names
+## : Factor w/ 121 levels &#39;Abdul Samad Isah Haruna&#39;,..: 75 57 62 83 19 114
+## 108 108 94 80 ...
+</code></pre>
+
+<p>Next, let&#39;s explore <code>sample_data</code>:</p>
+
+<pre><code class="r">dim(sample_data)
+colnames(sample_data)
+str(sample_data)
+head(lgas)
+</code></pre>
+
+<pre><code class="r">## &#39;data.frame&#39;: 50 obs. of 10 variables: $ lga : Factor w/ 50 ## levels
+## &#39;Aliero&#39;,&#39;Anaocha&#39;,..: 6 2 7 38 17 4 16 26 8 18 ...  $ lga_id : int 91
+## 49 96 611 258 76 232 441 101 261 ...  $ state : Factor w/ 24 levels
+## &#39;Abia&#39;,&#39;Adamawa&#39;,..: 21 3 14 10 5 3 4 17 6 18 ...  $ zone : Factor w/ 6
+## levels &#39;North-Central&#39;,..: 1 5 3 5 1 5 2 6 4 1 ...  $ c_section_yn :
+## logi FALSE FALSE FALSE FALSE FALSE FALSE ...  $ num_nurses_fulltime :
+## int 0 2 1 0 0 0 0 1 3 0 ...  $ gps : Factor w/ 50 levels &#39;10.50716994
+## 7.39845258 633.4000244140625 5.0&#39;,..: 48 27 14 24 42 30 7 33 34 47 ...
+## $ num_lab_techs_fulltime: int 1 NA 1 0 0 1 0 0 2 0 ...  $ management :
+## Factor w/ 1 level &#39;public&#39;: 1 1 1 1 1 1 1 NA 1 1 ...  $
+## num_doctors_fulltime : int 0 NA 0 0 0 1 0 1 0 0 ...
+</code></pre>
+
+<pre><code class="r">range(lgas$lga_id)
+</code></pre>
+
+<pre><code>## [1]   1 774
+</code></pre>
+
+<pre><code class="r">range(sample_data$lga_id)
+</code></pre>
+
+<pre><code>## [1]  43 753
+</code></pre>
+
+<p><code>lgas</code> contains information about Nigeria&#39;s local government areas, while <code>sample_data</code> contains information about Nigeria&#39;s hospital facilities. Both data sets share a number of variables, but only a few of Nigeria&#39;s local government areas are represented in the <code>sample_data</code> data set.</p>
+
+<h2>Select facilities in Southern zones</h2>
+
+<p>The variable we are interested in subsetting by is <code>zone</code>. </p>
+
+<pre><code class="r">table(sample_data$zone)
+</code></pre>
+
+<pre><code>## 
+## North-Central     Northeast     Northwest   South-South     Southeast 
+##             7             5            12             9             8 
+##     Southwest 
+##             9
+</code></pre>
+
+<p>There are three different Southern zones: &ldquo;South-South&rdquo;, &ldquo;Southeast&rdquo;, and &ldquo;Southwest&rdquo;. We expect to see 26 different facilities listed in our subsetted data set.</p>
+
+<pre><code class="r">south &lt;- subset(sample_data, zone %in% c(&quot;South-South&quot;, &quot;Southeast&quot;, &quot;Southwest&quot;))
+dim(south)
+</code></pre>
+
+<pre><code>## [1] 26 10
+</code></pre>
+
+<p>There are 26 of the observations in the <code>sample_data</code> data set were from the Southern regions of Nigeria.</p>
+
+<h2>Merge in 2006 Population Data</h2>
+
+<p>If we use the <code>merge</code> function to add the information from the <code>pop_2006</code> column into the <code>south</code> data set, the function will only append population values for those observations in <code>south</code>. The unique id used to link the two data sets will be <code>lga_id</code>.</p>
+
+<pre><code class="r"># We only want the pop2006 column from lgas
+pop &lt;- lgas[, c(&quot;lga_id&quot;, &quot;pop_2006&quot;)]
+southpop &lt;- merge(south, pop, by = &quot;lga_id&quot;)
+dim(southpop)
+</code></pre>
+
+<pre><code>## [1] 26 11
+</code></pre>
+
+<p>The new merged south data set has an additional column, <code>pop_2006</code>. There are still only 26 observations.</p>
+
+<h2>Summary Stats</h2>
+
+<h3>Total number of full-time nurses and doctors across all health facilities by state</h3>
+
+<pre><code class="r">names(southpop)
+</code></pre>
+
+<pre><code>##  [1] &quot;lga_id&quot;                 &quot;lga&quot;                   
+##  [3] &quot;state&quot;                  &quot;zone&quot;                  
+##  [5] &quot;c_section_yn&quot;           &quot;num_nurses_fulltime&quot;   
+##  [7] &quot;gps&quot;                    &quot;num_lab_techs_fulltime&quot;
+##  [9] &quot;management&quot;             &quot;num_doctors_fulltime&quot;  
+## [11] &quot;pop_2006&quot;
+</code></pre>
+
+<pre><code class="r">str(southpop)
+</code></pre>
+
+<pre><code>## &#39;data.frame&#39;:    26 obs. of  11 variables:
+##  $ lga_id                : int  49 67 76 101 183 191 218 304 312 316 ...
+##  $ lga                   : Factor w/ 50 levels &quot;Aliero&quot;,&quot;Anaocha&quot;,..: 2 3 4 8 12 13 14 19 20 21 ...
+##  $ state                 : Factor w/ 24 levels &quot;Abia&quot;,&quot;Adamawa&quot;,..: 3 20 3 6 10 3 10 20 3 19 ...
+##  $ zone                  : Factor w/ 6 levels &quot;North-Central&quot;,..: 5 6 5 4 5 5 5 6 5 6 ...
+##  $ c_section_yn          : logi  FALSE FALSE FALSE FALSE FALSE TRUE ...
+##  $ num_nurses_fulltime   : int  2 0 0 3 1 0 7 6 2 0 ...
+##  $ gps                   : Factor w/ 50 levels &quot;10.50716994 7.39845258 633.4000244140625 5.0&quot;,..: 27 41 30 34 22 26 18 44 25 37 ...
+##  $ num_lab_techs_fulltime: int  NA 0 1 2 0 0 1 1 0 0 ...
+##  $ management            : Factor w/ 1 level &quot;public&quot;: 1 1 1 1 NA NA NA NA NA 1 ...
+##  $ num_doctors_fulltime  : int  NA 0 1 0 0 1 0 1 1 0 ...
+##  $ pop_2006              : int  285002 68643 158410 105822 130931 158231 165593 96748 302158 284336 ...
+</code></pre>
+
+<p>The variables we are interested in looking at are <code>num_nurses_fulltime</code>, <code>num_doctors_fulltime</code>, and <code>state</code>. Steps:</p>
+
+<ul>
+<li>Add the columns <code>num_nurses_fulltime</code> and <code>num_doctors_fulltime</code> to get <code>num_med_fulltime</code>.</li>
+<li>Then, you want to find the sum of <code>num_med_fulltime</code> within each state.</li>
+</ul>
+
+<p>Before we proceed, we have to see if there are any NA values, and whether they occur in our variables of interest.</p>
+
+<pre><code class="r">sum(is.na(southpop))
+</code></pre>
+
+<pre><code>## [1] 15
+</code></pre>
+
+<p>15 observations contain a <code>NA</code> value. Since there are only 26 observations in our data set, we should not omit these 15 observations. </p>
+
+<pre><code class="r">southpop$num_med_fulltime &lt;- southpop$num_nurses_fulltime + southpop$num_doctors_fulltime
+sum(is.na(southpop$num_med_fulltime))
+</code></pre>
+
+<pre><code>## [1] 2
+</code></pre>
+
+<p>There are two observations with a <code>NA</code> value for <code>num_med_fulltime</code>. It would be more useful to omit those observations that only have <code>NA</code> on this summed variable. We kept <code>pop_2006</code> because we will need it later.</p>
+
+<pre><code class="r">southpop_sub &lt;- southpop[, c(&quot;lga_id&quot;, &quot;num_med_fulltime&quot;, &quot;state&quot;, &quot;pop_2006&quot;)]
+southpop_sub &lt;- na.omit(southpop_sub)
+dim(southpop_sub)
+</code></pre>
+
+<pre><code>## [1] 24  4
+</code></pre>
+
+<p><code>southpop_sub</code> has 24 observations and 4 variables. Only 2 observations were ommitted after we removed <code>NA</code> values.</p>
+
+<p>Now that we have this column, we want to sum <code>num_med_fulltime</code> within each state. State is currently a factor, so we will have to convert its elements into character strings before using <code>aggregate()</code>. </p>
+
+<pre><code class="r">state_num &lt;- aggregate(southpop_sub$num_med_fulltime, list(southpop_sub$state), 
+    sum)
+state_num
+</code></pre>
+
+<pre><code>##        Group.1  x
+## 1      Anambra  5
+## 2  Cross River  3
+## 3        Delta 12
+## 4          Edo  0
+## 5        Ekiti  3
+## 6          Imo  8
+## 7        Lagos  8
+## 8         Ogun  2
+## 9         Osun  7
+## 10      Rivers  4
+</code></pre>
+
+<pre><code class="r">names(state_num) &lt;- c(&quot;state&quot;, &quot;num_med_fulltime&quot;)
+state_num
+</code></pre>
+
+<pre><code>##          state num_med_fulltime
+## 1      Anambra                5
+## 2  Cross River                3
+## 3        Delta               12
+## 4          Edo                0
+## 5        Ekiti                3
+## 6          Imo                8
+## 7        Lagos                8
+## 8         Ogun                2
+## 9         Osun                7
+## 10      Rivers                4
+</code></pre>
+
+<h3>Re-sort southpop</h3>
+
+<p>We want to re-sort <code>state_num</code> descending by state population. For this, we need to find the state population by adding <code>pop_2006</code> for the facilities in each state.</p>
+
+<pre><code class="r">state_pop &lt;- aggregate(southpop_sub$pop_2006, list(southpop_sub$state), sum)
+state_pop
+</code></pre>
+
+<pre><code>##        Group.1       x
+## 1      Anambra  618799
+## 2  Cross River  470167
+## 3        Delta  828912
+## 4          Edo  120813
+## 5        Ekiti  113754
+## 6          Imo  439241
+## 7        Lagos 1802377
+## 8         Ogun  597659
+## 9         Osun  165391
+## 10      Rivers  284010
+</code></pre>
+
+<pre><code class="r">names(state_pop) &lt;- c(&quot;state&quot;, &quot;state_pop_2006&quot;)
+state_pop
+</code></pre>
+
+<pre><code>##          state state_pop_2006
+## 1      Anambra         618799
+## 2  Cross River         470167
+## 3        Delta         828912
+## 4          Edo         120813
+## 5        Ekiti         113754
+## 6          Imo         439241
+## 7        Lagos        1802377
+## 8         Ogun         597659
+## 9         Osun         165391
+## 10      Rivers         284010
+</code></pre>
+
+<p>Now, to merge our two data sets!</p>
+
+<pre><code class="r">state_south &lt;- merge(state_pop, state_num, by = &quot;state&quot;)
+state_south
+</code></pre>
+
+<pre><code>##          state state_pop_2006 num_med_fulltime
+## 1      Anambra         618799                5
+## 2  Cross River         470167                3
+## 3        Delta         828912               12
+## 4          Edo         120813                0
+## 5        Ekiti         113754                3
+## 6          Imo         439241                8
+## 7        Lagos        1802377                8
+## 8         Ogun         597659                2
+## 9         Osun         165391                7
+## 10      Rivers         284010                4
+</code></pre>
+
+<p><code>state_south</code> is currently sorted alphabetically by <code>state</code>. Let&#39;s sort decending by <code>state_pop_2006</code>.</p>
+
+<pre><code class="r">state_south &lt;- state_south[order(-state_south$state_pop_2006), ]
+state_south
+</code></pre>
+
+<pre><code>##          state state_pop_2006 num_med_fulltime
+## 7        Lagos        1802377                8
+## 3        Delta         828912               12
+## 1      Anambra         618799                5
+## 8         Ogun         597659                2
+## 2  Cross River         470167                3
+## 6          Imo         439241                8
+## 10      Rivers         284010                4
+## 9         Osun         165391                7
+## 4          Edo         120813                0
+## 5        Ekiti         113754                3
+</code></pre>
+
+</body>
+
+</html>
+

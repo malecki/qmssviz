@@ -7,7 +7,7 @@ tags: hw2
 ---
 ========================================================
 
-##Import Data
+## Import Data
 The file ```lgas.csv``` is a .csv file. To import, use ```read.csv()```.
 ?read.csv
 
@@ -18,7 +18,7 @@ file2 <- "C:/Users/Flo/Desktop/Data Viz 2014/qmssviz/labs/tutorial/sample_health
 sample_data <- read.csv(file2)
 ```
 
-##Explore Data
+## Explore Data
 Let's explore ```lgas``` first:
 
 ```{r eval=FALSE}
@@ -68,17 +68,23 @@ head(lgas)
 ## $ num_doctors_fulltime  : int  0 NA 0 0 0 1 0 1 0 0 ...
 ```
 
-```lgas``` contains information about Nigeria's local goverment areas, while ```sample_data``` contains information about Nigeria's hospital facilities. Both data sets share a number of variables.
+```{r}
+range(lgas$lga_id)
+range(sample_data$lga_id)
+```
+
+```lgas``` contains information about Nigeria's local government areas, while ```sample_data``` contains information about Nigeria's hospital facilities. Both data sets share a number of variables, but only a few of Nigeria's local government areas are represented in the ```sample_data``` data set.
 
 ## Select facilities in Southern zones
 
 The variable we are interested in subsetting by is ```zone```. 
 
 ```{r}
-levels(sample_data$zone)
+table(sample_data$zone)
 ```
 
-There are three different Southern zones: "South-South", "Southeast", and "Southwest". 
+There are three different Southern zones: "South-South", "Southeast", and "Southwest". We expect to see 26 different facilities listed in our subsetted data set.
+
 
 ```{r}
 south <- subset(sample_data, zone %in% c("South-South", "Southeast", "Southwest"))
@@ -100,7 +106,7 @@ dim(southpop)
 
 The new merged south data set has an additional column, ```pop_2006```. There are still only 26 observations.
 
-## Statistics
+## Summary Stats
 
 ### Total number of full-time nurses and doctors across all health facilities by state
 
@@ -111,20 +117,62 @@ str(southpop)
 
 The variables we are interested in looking at are ```num_nurses_fulltime```, ```num_doctors_fulltime```, and ```state```. Steps:
 
-* Add the columns ```num_nurses_fulltime``` and ```num_doctors_fulltime``` to get ``num_fulltime```.
-* Then, you want to find the sum of ```num_fulltime``` within each state.
+* Add the columns ```num_nurses_fulltime``` and ```num_doctors_fulltime``` to get ``num_med_fulltime```.
+* Then, you want to find the sum of ```num_med_fulltime``` within each state.
 
 Before we proceed, we have to see if there are any NA values, and whether they occur in our variables of interest.
 
-southpop
-
 ```{r}
 sum(is.na(southpop))
-southpop[is.na(southpop), ]
 ``` 
 
-15 observations contain a NA value. Since there are only 26 observations in our data set, we should not omit these 15 observations.  
-
+15 observations contain a ```NA``` value. Since there are only 26 observations in our data set, we should not omit these 15 observations. 
 
 ```{r}
-sum(southpop$num_nurses_fulltime, southpop$num_doctors_fulltime)
+southpop$num_med_fulltime <- southpop$num_nurses_fulltime + southpop$num_doctors_fulltime
+sum(is.na(southpop$num_med_fulltime))
+```
+
+There are two observations with a ```NA``` value for ```num_med_fulltime```. It would be more useful to omit those observations that only have ```NA``` on this summed variable. We kept ```pop_2006``` because we will need it later.
+
+```{r}
+southpop_sub <- southpop[,c("lga_id", "num_med_fulltime", "state", "pop_2006")]
+southpop_sub <- na.omit(southpop_sub)
+dim(southpop_sub)
+```
+
+```southpop_sub``` has 24 observations and 4 variables. Only 2 observations were ommitted after we removed ```NA``` values.
+
+Now that we have this column, we want to sum ```num_med_fulltime``` within each state. State is currently a factor, so we will have to convert its elements into character strings before using ```aggregate()```. 
+
+```{r}
+state_num <- aggregate(southpop_sub$num_med_fulltime, list(southpop_sub$state), sum)
+state_num
+names(state_num) <- c("state", "num_med_fulltime")
+state_num
+```
+
+### Re-sort southpop
+
+We want to re-sort ```state_num``` descending by state population. For this, we need to find the state population by adding ```pop_2006``` for the facilities in each state.
+
+```{r}
+state_pop <- aggregate(southpop_sub$pop_2006, list(southpop_sub$state), sum)
+state_pop
+names(state_pop) <- c("state", "state_pop_2006")
+state_pop
+```
+
+Now, to merge our two data sets!
+
+```{r}
+state_south <- merge(state_pop, state_num, by="state")
+state_south
+```
+
+```state_south``` is currently sorted alphabetically by ```state```. Let's sort decending by ```state_pop_2006```.
+
+```{r}
+state_south <- state_south[order(-state_south$state_pop_2006), ]
+state_south
+```

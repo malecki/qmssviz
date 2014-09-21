@@ -25,3 +25,10 @@ There is no missing value in the dataset
 library(ggplot2)
 qplot(factor(verbal), gamble, data=teengamb, geom="boxplot")+geom_boxplot(aes(fill = factor(sex)))
 ```
+
+###Line charts of gamble expense for status and income by sex
+```{r, echo=FALSE}
+data1=teengamb[,c("status", "gamble", "sex")]
+data2=aggregate(gamble~status+sex, data=data1, FUN="mean")
+ggplot(data2, aes(x=status, y=gamble, group=sex))+geom_line(aes(colour = sex))
+```

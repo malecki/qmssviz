@@ -19,3 +19,9 @@ str(teengamb)
 sum(is.na(teengamb))
 ```
 There is no missing value in the dataset
+
+###Boxplot of gamble expense by verbal score and sex
+```{r, echo=FALSE}
+library(ggplot2)
+qplot(factor(verbal), gamble, data=teengamb, geom="boxplot")+geom_boxplot(aes(fill = factor(sex)))
+```

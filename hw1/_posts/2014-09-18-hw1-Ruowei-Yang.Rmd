@@ -31,4 +31,14 @@ qplot(factor(verbal), gamble, data=teengamb, geom="boxplot")+geom_boxplot(aes(fi
 data1=teengamb[,c("status", "gamble", "sex")]
 data2=aggregate(gamble~status+sex, data=data1, FUN="mean")
 ggplot(data2, aes(x=status, y=gamble, group=sex))+geom_line(aes(colour = sex))
+
+data3=teengamb[,c("income", "gamble", "sex")]
+data4=aggregate(gamble~income+sex, data=data3, FUN="mean")
+ggplot(data4, aes(x=income, y=gamble, group=sex, color=sex))+geom_line()
+```
+
+###Create a Linear Model
+```{r}
+gamblemod=lm(gamble~sex+status+income+verbal)
+summary(gamblemod)
 ```

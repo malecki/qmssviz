@@ -6,6 +6,8 @@ output: html_document
 published: false
 tags: hw1
 ---
+###Data Discription <br>
+The dataset concerns a study of teenage gambling in Britain. It has five variables, sex, status, income, verbal and gamble. Status is the socioeconomic status score based on parents' occupation, verbal is the verbal score in words out of 12 correctly defined which could indicate the teenager's education level. Gamble is the expenditure on gambling in pounds per year.
 
 ###Get Data
 ```{r}
@@ -25,6 +27,8 @@ There is no missing value in the dataset
 library(ggplot2)
 qplot(factor(verbal), gamble, data=teengamb, geom="boxplot")+geom_boxplot(aes(fill = factor(sex)))
 ```
+
+From the boxplot, we can see that people with lower verbal score tends to spend more money on gambling which indicates tnat people with high education tend to spend less. Among the people with same verbal score, male tends to spend more than female.
 
 ###Line charts of gamble expense for status and income by sex
 ```{r, echo=FALSE}

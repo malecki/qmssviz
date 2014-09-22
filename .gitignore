@@ -16,3 +16,5 @@ Thumbs.db
 ## Rproj is seriously annoying. Sorry.
 *.Rproj
 *.Rbuildignore
+.Rproj.user
+*cache

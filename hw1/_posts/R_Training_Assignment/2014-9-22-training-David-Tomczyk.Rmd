@@ -7,8 +7,6 @@ published: FALSE
 tags: r_training
 ---
 
-
-
 ```{r}
 
 setwd("~/qmssviz/hw1/_posts/R_Training_Assignment") #change working directory
@@ -26,12 +24,20 @@ lgas2 <- subset(lgas, select = c(lga_id, pop_2006)) #create a new data frame tha
 
 southern_pop <- merge(southern, lgas2, by = "lga_id") #merge southern and lgas together by lga_id
 
+southern_pop$full_time <- southern_pop$num_nurses_fulltime + southern_pop$num_doctors_fulltime #creating a new column that sums full time nurses and full time doctors
+
+southern_pop2 <- subset(southern_pop, select = c(lga_id, lga, state, zone, pop_2006, full_time))
+
+sum(is.na(southern_pop2)) #checking for NA's
+southern_pop2[which(is.na(southern_pop2)), ] #where are the NA's
+which(is.na(southern_pop2)) #why is this returning 131 and 155??? Guessing it is taking row id's from an older data set?? ASK SOMEONE
+
+#anyway, 2 rows have NA values in the full_time column, and need to be omitted
+
+final <- na.omit(southern_pop2) #remove the 2 rows with NA values
+
+final_sorted <- final[order(final$pop_2006, decreasing=TRUE), ] #sort the data set in descending order by state population
+
 
 
 ```
-
-```{r, echo=FALSE}
-##Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
-```
-
-

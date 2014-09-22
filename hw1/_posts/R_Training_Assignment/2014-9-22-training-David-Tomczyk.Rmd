@@ -21,7 +21,10 @@ table(sample_data[["zone"]]) #looking at distribution of zones
 southern <- subset(sample_data, substr(zone,1,5) == "South") #select all facilities located in the Southern zones of Nigeria
 
 file2 <- "lgas.csv"
-lgas <-read.csv(file2)
+lgas <-read.csv(file2) #read lgas.csv into a dataframe
+lgas2 <- subset(lgas, select = c(lga_id, pop_2006)) #create a new data frame that contains only columns of interest: lga_id and pop_2006
+
+southern_pop <- merge(southern, lgas2, by = "lga_id") #merge southern and lgas together by lga_id
 
 
 

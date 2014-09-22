@@ -13,16 +13,34 @@ I will plot some graphes using **Donation-Disease** dataset
 
 ```{r}
 require(ggplot2)
-setwd("~/Google Drive/Schoolwork/2014Fall/QMSS4063G/work_repo/Lab1")
-dat <- read.table('Donation-Disease.csv',sep=',',header=T)
-ggplot(dat,aes(x=Name,y=Death)) + geom_histogram(stat='identity')
+setwd("~/Google Drive/Schoolwork/2014Fall/QMSS4063G/qmssviz/Lab1")
+dat <- read.table('Donation-Disease.csv',sep=',',header=T,stringsAsFactors=FALSE)
+dat$Name[7] <- 'MND'
+dat$Name[8] <- 'COPD'
+ggplot(dat,aes(x=Name,y=Death)) + geom_histogram(stat='identity') + 
+  theme(axis.text.x = element_text(angle = 40, hjust = 1))
 ```
 
 
 
-Another graph! 
+Here is another graph! Normally, we expect high money raised for high death rate disease.
 ```{r}
-ggplot(dat,aes(x=MoneyRaised,y=Death)) + geom_point() + geom_text(aes(label=Name),size=4) 
+ggplot(dat,aes(x=MoneyRaised,y=Death,color=Name)) + geom_point() + geom_text(aes(label=Name),size=2) + ggtitle(label = 'Money Raised vs Death') 
+  
 
 ```
 
+
+We can also see if there is linear relation between Money Raised vs Death. It turns out there is no such relation at all. One might says that we should pay more money for disease that can kill more people. However, it is possible that the low Death rate is outcome of Money that already raised, and also some disease are not curable. Also, Death is different to Death rate. Some lethal diseases cost a lot, despite low affected population. Anyway, I believe if we have more detail data, these graphes will make more sense.
+
+```{r-lm}
+fit <- lm(dat$Death~dat$MoneyRaised)
+ggplotRegression <- function (fit,col_group=1) {
+require(ggplot2)
+ggplot(fit$model, aes_string(x = names(fit$model)[2], y = names(fit$model)[1])) + 
+  geom_point(color=col_group) +
+  stat_smooth(method = "lm", col = "red") 
+}
+ggplotRegression(fit = fit) + xlab('Money Raised') + ylab('Death')
+
+```

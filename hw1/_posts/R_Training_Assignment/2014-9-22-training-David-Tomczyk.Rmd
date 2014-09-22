@@ -12,16 +12,20 @@ tags: r_training
 ```{r}
 
 setwd("~/qmssviz/hw1/_posts/R_Training_Assignment") #change working directory
-file <- "lgas.csv"
+
+file <- "sample_health_facilities.csv"
 sample_data <- read.csv(file)
 
-table(sample_data[["senatorial_district"]]) #looking at distribution of districts
+table(sample_data[["zone"]]) #looking at distribution of zones
 
-southern <- subset(sample_data, senatorial_district == "Southern") #select all facilities located in the Southern zones of Nigeria
+southern <- subset(sample_data, substr(zone,1,5) == "South") #select all facilities located in the Southern zones of Nigeria
+
+file2 <- "lgas.csv"
+lgas <-read.csv(file2)
+
+
 
 ```
-
-
 
 ```{r, echo=FALSE}
 ##Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

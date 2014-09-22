@@ -1,0 +1,30 @@
+---
+title: "R Training Assignment"
+author: "David Tomczyk"
+date: "September 22 2014"
+output: html_document
+published: FALSE
+tags: r_training
+---
+
+
+
+```{r}
+
+setwd("~/qmssviz/hw1/_posts/R_Training_Assignment") #change working directory
+file <- "lgas.csv"
+sample_data <- read.csv(file)
+
+table(sample_data[["senatorial_district"]]) #looking at distribution of districts
+
+southern <- subset(sample_data, senatorial_district == "Southern") #select all facilities located in the Southern zones of Nigeria
+
+```
+
+
+
+```{r, echo=FALSE}
+##Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```
+
+

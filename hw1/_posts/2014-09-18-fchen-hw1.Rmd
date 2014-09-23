@@ -7,7 +7,7 @@ published: false
 tags: hw1
 ---
 
-CLASS TO BE FIXED: use mean ratio, make things square, compare side by side, and use a dot plot instead of arbitrary columns.
+comments from class: use mean ratio, make things square, compare side by side, and use a dot plot instead of arbitrary columns.
 
 ## Bboy Injury Data
 
@@ -25,22 +25,21 @@ k5 <- read.table("kauther_t5.txt")
 ## Kauther's first table
 
 ```{r, echo = FALSE, warning = FALSE, message = FALSE}
-height <- rbind(k1$amateur_mean, k1$prof_mean)
-colnames(height) <- c("age", "bmi", "yr_dance", "hr/week_train", "min_warmup", "min_stretch", "headspin_train", "yr_headspin", "% use trainer", "doc-visit/person")
-bar1 <- barplot(height, names.arg = colnames(height),
-        main = "Professional vs. Amateur Bboys (Average Characteristics)", 
-        xlab = "Mean Values (multiple)", 
+k1$mean_ratio <- round(k1$prof_mean/k1$amateur_mean, digits = 2)
+height <- as.matrix(t(k1$mean_ratio))
+colnames(height) <- c("age", "bmi", "yr_dance", "hr/week_train", "min_warmup", "min_stretch", "headspin_train", "yr_headspin", "% use trainer", "doc-visit/pers")
+bar1 <- barplot(height,
+        main = "Pro/Amateur Mean Ratio Characteristics", 
+        xlab = "Mean Ratio", 
         cex.names = 0.6, 
         cex.axis = 0.6, 
         las = 2, 
-        xlim = c(0,80), 
+        xlim = c(0,2), 
         horiz = TRUE,
         width = 3,
         beside = TRUE,
-        legend = TRUE,
-		args.legend = list(x = "bottomright")
-		)
-text(height, bar1, label = height, pos = 4, cex = 0.65, col = "red")
+    	)
+text(height, bar1, label = height, pos = 4, cex = 0.65, col = "blue")
 ```
 
 This is a visual representation of the different characteristics of amateur and professional bboys. Some of these attributes include age, body mass index, minutes of warmup time, and time spent training headspins, all in their respective units. A horizontal barplot was chosen, with each column possessing a different unit of measurement. A legend in the bottom right corner denotes that we are comparing averages between amatuer and professional bboys. 
@@ -48,20 +47,19 @@ This is a visual representation of the different characteristics of amateur and 
 ## Kauther's second table
 
 ```{r, echo = FALSE, warning = FALSE, message = FALSE}
-height2 <- rbind(k2$amateurs, k2$professionals)
-colnames(height2) <- c("# of Injuries", "Injuries/bboy", "Hours/Injury", "# OVS", "OVS/bboy", "Hours/OVS")
-bar2 <- barplot(height2, names.arg = colnames(height2), 
-        main = "Professional vs. Amateur Bboys (Injuries & Overuse Syndrome (OVS))", 
+k2$mratio <- round(k2$professionals/k2$amateurs, digits = 2)
+height2 <- as.matrix(t(k2$mratio))
+colnames(height2) <- c("# of injuries", "injuries/bboy", "hrs/injury", "# ovs", "ovs/bboy", "hours/ovs")
+bar2 <- barplot(height2, 
+        main = "Pro/Amateur Mean Ratio (Injuries & Overuse Syndrome)", 
         xlab = "Mean Values", 
         cex.names = 0.6, 
         cex.axis = 0.6, 
         las = 2, 
-        xlim = c(0,2500), 
+        xlim = c(0,2), 
         horiz = TRUE,
         width = 3,
-        beside = TRUE, 
-        legend = TRUE,
-        args.legend = list(x = "bottomright"),
+        beside = TRUE
         )
 text(height2, bar2, label = height2, pos = 4, cex = 0.65, col = "red")
 ```
@@ -72,6 +70,7 @@ On average, there are more injuries reported for amateur bboys compared to profe
 
 ```{r, echo = FALSE, warning = FALSE, message = FALSE}
 library("lattice")
+par(mfrow = c(1, 1))
 xyplot(k3$proff ~ k3$ama, groups = rownames(k3),
       ylim = c(0, 250),
       ylab = "Professional Injuries Count",
@@ -79,13 +78,14 @@ xyplot(k3$proff ~ k3$ama, groups = rownames(k3),
       xlab = "Amateur Injuries Count",
       abline = c(0, 1),
       main = "Injuries Count by Region",
+      aspect = 1,
 panel = function(x, y) {
       panel.xyplot(x, y, abline = c(0, 1), subscripts = TRUE, 
       groups = rownames(k3))
       ltext(x = k3$ama, y = k3$proff, labels = rownames(k3),
-      pos = 4, cex = 0.8)
+      pos = 4, cex = 0.6)
       })
-      
+ 
 xyplot(k3$proff_inj_pp ~ k3$ama_inj_pp, groups = rownames(k3),
        ylim = c(0, 4),
        ylab = "Professional Injuries per Person",
@@ -93,11 +93,12 @@ xyplot(k3$proff_inj_pp ~ k3$ama_inj_pp, groups = rownames(k3),
        xlab = "Amateur Injuries per Person",
        abline = c(0, 1),
        main = "Injuries per Person by Region",
+	   aspect = 1,
 panel = function(x, y) {
       panel.xyplot(x, y, abline = c(0, 1), subscripts = TRUE, 
       groups = rownames(k3))
       ltext(x = k3$ama_inj_pp, y = k3$proff_inj_pp, 
-      labels = rownames(k3), pos = 4, cex = 0.8)
+      labels = rownames(k3), pos = 4, cex = 0.6)
       })
 ```
 
@@ -108,9 +109,8 @@ If we take a look at the injury counts between amateur and professional bboys, i
 ```{r, echo = FALSE, warning = FALSE, message = FALSE}
 bar5lab <- c("Rare", "Seldom", "Often", "Very Often")
 par(mfrow = c(1, 2))
-bar5 <- barplot(k4$amateur, names.arg = rownames(k4),
-        main = "Amateur Gear Usage",
-        xlab = "Type of Gear", 
+bar5 <- boxplot(k4$amateur, names.arg = rownames(k4),
+        main = "Amateur Gear Usage", 
         cex.names = 0.6, 
         cex.axis = 0.6, 
         las = 1, 
@@ -122,9 +122,8 @@ bar5 <- barplot(k4$amateur, names.arg = rownames(k4),
 axis(2, at = 1:4, labels = bar5lab, tick = FALSE, las = 2, cex.axis = 0.6)
 # text(bar5, amateur, label = amateur, pos = 3, cex = 0.80, col = "red")
 
-bar6 <- barplot(k4$professional, names.arg = rownames(k4),
+bar6 <- boxplot(k4$professional, names.arg = rownames(k4),
         main = "Professional Gear Usage", 
-        xlab = "Type of Gear", 
         cex.names = 0.6, 
         cex.axis = 0.6, 
         las = 1, 
@@ -149,11 +148,12 @@ xyplot(k5s$td_loss ~ k5s$td_loss_overuse, groups = rownames(k5s),
        xlim = c(0, 15),
        xlab = "Loss of Training Days per Injury",
        main = "Loss of Training Days (Totals & per Injury)",
+	   aspect = 1,
 panel = function(x, y) {
       panel.xyplot(x, y, abline = c(0, 1), subscripts = TRUE, 
       groups = rownames(k5s))
       ltext(x = k5s$td_loss_overuse, y = k5s$td_loss, 
-      labels = rownames(k5s), pos = 4, cex = 1)
+      labels = rownames(k5s), pos = 4, cex = 0.6)
       })
 ```
 

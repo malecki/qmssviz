@@ -7,6 +7,7 @@ tags: hw1
 ---
 
 # Data Visualization Homework 1
+
 ## Yannan Bu (yb2334)
 ========================================================
 
@@ -87,7 +88,7 @@ library(ggplot2)
 
 2.1 Student Background Summary
 The first plot shows a histogram of the number of students from each program.
-```{r}
+```{r, fig.align='center'}
 plot1 <- qplot(Program, data = data, color = Program, size = I(1.5), main = "Student Background Summary", ylab = " ")
 last_plot() + theme(axis.text.x = element_blank(), title = element_text(size = 12)) + coord_fixed(ratio = 0.3)
 ```
@@ -97,19 +98,18 @@ last_plot() + theme(axis.text.x = element_blank(), title = element_text(size = 1
 The second plot demonstrates top 10 most popular computer tools among Data Visualization students.
 ```{r}
 sub_tool <- tools[10:1, ]
-color <- rep(c("light blue", "pink"), 5)
-plot2 <- ggplot(sub_tool, aes(x= factor(name, levels=unique(name)), y = count, fill = color)) +
+plot2 <- ggplot(sub_tool, aes(x= factor(name, levels=unique(name)), y = count)) +
   geom_bar(stat="identity", alpha = 1, position = "identity") +
   coord_flip() +
   xlab(" ") +
   ylab(" ") +
-  ggtitle("Top 10 Most Popular Computer Tools among Data Visualization Students") +
+  ggtitle("Top 10 Most Popular Computer Tools") +
   guides(fill = FALSE)
 print(plot2)
 ```
 
 The third plot displays number of tools used before of each student, grouped by program.
-```{r}
+```{r, fig.align='center'}
 plot3 <- qplot(Program, TotalBE, data = data, color = Program, geom = "point", ylab = "Total Number of Baseline Experience Tools", main = "Baseline Experience Summary")
 last_plot() + theme(axis.text.x = element_blank()) + coord_fixed(ratio = 0.25)
 ```
@@ -117,17 +117,19 @@ last_plot() + theme(axis.text.x = element_blank()) + coord_fixed(ratio = 0.25)
 2.3 Software Experience Analysis
 
 The fourth plot shows distribution of level of students' experience with R graphics.
-```{r}
-plot4 <- qplot(data[, 6], data = data, facets = Program ~ ., xlab = "Level of Experience with R Graphics", ylab = " ", main = "Distribution of R Graphics Experience")
-last_plot() + coord_fixed(ratio = 0.1)
+```{r, fig.height=6,fig.width=6, fig.align='center'}
+plot4 <- qplot(data[, 6], data = data, xlab = "Level of Experience with R Graphics", ylab = " ", main = "Distribution of R Graphics Experience") +
+  facet_wrap(~Program, ncol = 3)
+print(plot4)
+#last_plot() + coord_fixed(ratio = 0.1)
 ```
 
 The fifth plot is a pie chart of students' version control experience.
-```{r}
+```{r, fig.align='center'}
 plot5 <- ggplot(data, aes(x = factor(1), fill = factor(data[, 9]))) + 
   geom_bar(width = 1) +
   xlab(" ") +
   ylab(" ") +
-  ggtitle("Summary of Students' Version Control Experience") +
+  ggtitle("Proportional Distribution of Version Control Experience") +
   scale_fill_discrete("Level of Experience")
 plot5 + coord_polar(theta = "y")

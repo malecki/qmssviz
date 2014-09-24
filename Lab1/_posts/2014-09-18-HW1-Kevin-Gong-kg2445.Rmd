@@ -83,17 +83,17 @@ text1
 text2 <- as.vector(c("The project failed","The building is great", "that was strangely beautiful"))
 
 text3 = matrix(nrow=3, ncol = 3)
-text3<- as.vector(c("The project failed","The building is great wonderful fantastic", "that was strangely beautiful"))
+text3<- as.vector(c("The project failed","The building is great wonderful fantastic", "that was strangely beautiful", "aww", "omg", "ghetto","basic"))
 
 text2
 polarity(text3)$all
 help(sentSplit)
 sentSplit(text2)
 
+text1 <- scan("~/qmssviz/Lab1/_posts/text1.txt")
 
-
-
-
+help(scan)
+help(readLines)
 
 
 ```

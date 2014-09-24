@@ -1,5 +1,5 @@
 ---
-title: "2014-09-11-HW1-Ben-Chow"
+title: "140911 Data Visualization HW1"
 author: "Ben Chow"
 date: "16 September, 2014"
 output: html_document

@@ -1,0 +1,62 @@
+---
+title: "HW1"
+author: "Junyuan Yi"
+date: "Wednesday, September 17, 2014"
+output: html_document
+pubilished: false
+tags: hw1
+---
+
+
+
+
+For this homework, I choose GDP dataset from my advanced macroeconomics class for graphics.Since I never use R before, I try to learn from Yang's tutorial and search on internet to practice scatter graphics with ggplot.
+
+First, let us find some basic information of the dataset.According to the results below, we know that the dataset contains real GDP per capita, which have accounted for inflation and purchase power, of 98 countries in the year 1960 and 2009.
+```{r}
+#import dataset
+library(xlsx)
+gdpdata <- read.xlsx("~/Documents/GDPdata.xlsx",sheetIndex=1)
+#basic information
+str(gdpdata)
+```
+
+Start with simple graph, we can plot real GDP percapita of 1960 and 2009 for all countries, as showed below. We notice that most of countries are located in the lower left corner, which means they were poor in 1960 and the situation is not getting better 49 years later. However, a lot of rich countries such as USA, Canada becomes much richer during this period. But the graph is not clear enough to see most of countries or to compare between them. 
+
+```{r}
+library(ggplot2)
+#Plot gdp1960 against gdp2009
+ggplot(gdpdata,aes(x=rgdpch60,y=rgdpch2009))+geom_point(size=1)+xlab("Real GDP percapita in 1960")+ylab("Real GDP percapita in 2009")+geom_text(aes(label=country.isocode),size=2,vjust=1.5)
+```
+
+We can munipulate our data in two aspets. First, calculating the growth rate of all countries. Second, set the real GDP percapita of USA to standard unit, and calculate the ratio between every other countries to USA. To make the point more scattered, we can further take log of the ratio with base 2(as the difference between first and second graph showed below). Then plot the growth rate against the ratio(relative GDP) of 1960 and 2009
+```{r}
+#Calcute the growth rate
+gdpdata$growth<-log(gdpdata$rgdpch2009/gdpdata$rgdpch60)/49
+#calculate  relative GDP to US
+gdpdata$rrgdp60<-gdpdata$rgdpch60/gdpdata[94,3] 
+gdpdata$rrgdp2009<-gdpdata$rgdpch2009/gdpdata[94,4]
+#plot growth rate against relative GDP of 1960 and 2009
+ggplot(gdpdata,aes(x=rrgdp60,y=growth))+geom_point(size=1)+xlab("Relative GDP percapita in 1960")+ylab("Average Growth Rate")+geom_text(aes(label=country.isocode),size=2,vjust=1.5)
+ggplot(gdpdata,aes(x=log2(rrgdp60),y=growth))+geom_point(size=1)+xlab("Relative GDP percapita in 1960(log2base)")+ylab("Average Growth Rate")+geom_text(aes(label=country.isocode),size=2,vjust=1.5)
+ggplot(gdpdata,aes(x=log2(rrgdp2009),y=growth))+geom_point(size=1)+xlab("Relative GDP percapita in 2009(log2base)")+ylab("Average Growth Rate")+geom_text(aes(label=country.isocode),size=2,vjust=1.5)
+```
+
+
+We could find a lot information for the graphs above, such as the change of individual country, the correlation between current rich countries and their growth rate and so on. 
+
+From the second graph above, we notice a linear relationship between growth rate and GDP percapita, which may suggest that rich countries benefited by their rapid growth for the last 49 years, not by their initial richness. We can take a deeper look of it by fitting a regression line. To emphasize the line, I remove the annotations of each plot and make the the points larger and lighter. Now we can see the linear trend is not as good as we saw at the first glance.
+```{r}
+ggplot(gdpdata,aes(x=log2(rrgdp2009),y=growth))+geom_point(size=2,colour="gray60")+xlab("Relative GDP percapita in 2009(log2base)")+ylab("Average Growth Rate")+stat_smooth(method=lm,level=0.90,color="black")
+```
+
+Besides, someone may have particular interest of certain countries, so I tried to just keep the label of the countries of my interest to show on the graph.
+
+```{r}
+#Only show countries of interest
+idx<-gdpdata$country %in% c("China","Japan","United States","Luxembourg","Zimbabwe","Hong Kong","Norway")
+gdpdata$countryofint<-gdpdata$country
+gdpdata$countryofint[!idx]<-NA
+ggplot(gdpdata,aes(x=log2(rrgdp60),y=growth))+geom_point(size=1)+xlab("Relative GDP percapita in 1960(log2base)")+ylab("Average Growth Rate")+geom_text(aes(label=countryofint),size=4,vjust=1)
+ggplot(gdpdata,aes(x=log2(rrgdp2009),y=growth))+geom_point(size=1)+xlab("Relative GDP percapita in 1960(log2base)")+ylab("Average Growth Rate")+geom_text(aes(label=countryofint),size=4,vjust=1)
+```

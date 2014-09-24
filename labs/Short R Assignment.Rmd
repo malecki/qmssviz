@@ -1,0 +1,19 @@
+---
+title: "Short R Assignment"
+output: html_document
+date: "September 24, 2014"
+published: false
+tag: hw1
+---
+
+```{r, echo=FALSE}
+lgas <- read.csv("~/qmssviz/labs/lgas.csv")
+head(lgas)
+str(lgas)
+```
+
+
+```{r, echo=FALSE}
+plot(cars)
+```
+

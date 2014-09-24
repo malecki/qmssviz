@@ -6,14 +6,51 @@ published: false
 tag: hw1
 ---
 
-```{r, echo=FALSE}
+```{r}
 lgas <- read.csv("~/qmssviz/labs/lgas.csv")
+facilities <- read.csv("~/qmssviz/labs/tutorial/sample_health_facilities.csv")
 head(lgas)
-str(lgas)
-```
+str(facilities)
+head(facilities)
+unique(facilities$zone)
+
+condition1 = which(facilities$zone==c("Southeast") | facilities$zone==c("South-South") | facilities$zone==c("Southwest"))
+fac2 <- facilities[condition1,]
+fac2
+
+unique(lgas$zone)[2]
+
+help(merge)
+
+fac3 <- merge(fac2, lgas, by.x="lga_id", by.y="lga_id")
+unique(fac3$state.y)
+
+health_counts = data.frame(unique(fac3$state.y))
+health_counts[,2]=NA
+health_counts
+
+health_sum = 
+  
+temp = as.vector(NULL)
+temp
+
+for(i in 1:11) {
+  
+  tally = 0
+  temp = as.vector(NULL)
+  
+  temp = which(as.character(fac3$state.y)==as.character(health_counts[i,1]))
+  tally = sum(sum(fac3$num_nurses_fulltime[temp],na.rm=TRUE) + sum(fac3$num_doctors_fulltime[temp],na.rm=TRUE))
+  
+  
+  health_counts[i,2] = tally
+  
+  
+}
+
+health_counts
 
 
-```{r, echo=FALSE}
-plot(cars)
 ```
+
 

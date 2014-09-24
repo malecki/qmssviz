@@ -90,7 +90,7 @@ polarity(text3)$all
 help(sentSplit)
 sentSplit(text2)
 
-text1 <- scan("~/qmssviz/Lab1/_posts/text1.txt")
+text1 <- read.csv("~/qmssviz/Lab1/_posts/artists.csv")
 
 help(scan)
 help(readLines)

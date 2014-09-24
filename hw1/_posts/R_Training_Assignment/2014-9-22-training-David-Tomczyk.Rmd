@@ -6,7 +6,7 @@ output: html_document
 published: FALSE
 tags: r_training
 ---
-
+code to produce the new data frame:
 ```{r}
 
 setwd("~/qmssviz/hw1/_posts/R_Training_Assignment") #change working directory
@@ -15,6 +15,8 @@ file <- "sample_health_facilities.csv"
 sample_data <- read.csv(file)
 
 table(sample_data[["zone"]]) #looking at distribution of zones
+
+
 
 southern <- subset(sample_data, substr(zone,1,5) == "South") #select all facilities located in the Southern zones of Nigeria
 
@@ -39,11 +41,20 @@ which(is.na(southern_pop2)) #why is this returning 131 and 155??? Guessing it is
 
 southern_pop3 <- na.omit(southern_pop2) #remove the 2 rows with NA values. Side effect: adds column row.names, why?
 
-full_time.total <- aggregate(full_time ~ state,data=southern_pop3,sum)
-state_pop.total <- aggregate(pop_2006 ~ state,data=southern_pop3,sum)
+full_time.total <- aggregate(full_time ~ state,data=southern_pop3,sum) #sum the number of full time docs and nurses by state
+state_pop.total <- aggregate(pop_2006 ~ state,data=southern_pop3,sum) #sum the populations by state
 
-final <- merge(full_time.total, state_pop.total, by = "state")
+final <- merge(full_time.total, state_pop.total, by = "state") #merge two data frames above into the final data frame
 
-final.sorted <- final[order(final$pop_2006, decreasing=TRUE), ]
+final.sorted <- final[order(final$pop_2006, decreasing=TRUE), ] #sort the final data frame
+
+```
+Final Data Frame
+---
+The final data frame shows the number of full time doctors and nurses in each state. It is sorted in descending order by state population.
+
+```{r final, echo=FALSE}
+
+final.sorted
 
 ```

@@ -1,7 +1,7 @@
 ---
-title: "2014-09-18-kmgong-hw1"
+title: "Homework 1"
 output: html_document
-date: "September 18, 2014"
+date: "September 24, 2014"
 published: false
 tag: hw1
 ---
@@ -60,7 +60,7 @@ head(ChickWeight)
 Let's look at the visualization of this data:
 
 ```{r,echo=FALSE}
-p2 = ggplot(data=ChickWeight, aes(x=Time, y=weight)) + geom_point(stat = "identity", colour = ChickWeight$Chick)
+p2 = ggplot(data=ChickWeight, aes(x=Time, y=weight)) + geom_point(stat = "identity",colour = ChickWeight$Chick)
 
 p2 + 
   #geom_abline(slope=1) +
@@ -74,5 +74,26 @@ p2 +
 install.packages("shiny")
 library(shiny)
 runExample("01_hello")
+
+
+
+library(qdap)
+text1 <- as.vector(c("This", "is", "a", "bad", "review"))
+text1
+text2 <- as.vector(c("The project failed","The building is great", "that was strangely beautiful"))
+
+text3 = matrix(nrow=3, ncol = 3)
+text3<- as.vector(c("The project failed","The building is great wonderful fantastic", "that was strangely beautiful"))
+
+text2
+polarity(text3)$all
+help(sentSplit)
+sentSplit(text2)
+
+
+
+
+
+
 
 ```

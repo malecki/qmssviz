@@ -70,5 +70,9 @@ p2 +
   xlab("Time")
 ```
 
+```{r,echo=FALSE}
+install.packages("shiny")
+library(shiny)
+runExample("01_hello")
 
-
+```

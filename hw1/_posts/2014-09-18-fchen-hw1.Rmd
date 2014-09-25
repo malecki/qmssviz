@@ -15,10 +15,10 @@ The data used in the narrative below was obtained from the American Journal of S
 
 ```{r, echo = FALSE, warning = FALSE, message = FALSE, comment = NA}
 setwd("/Users/knarf/Copy/Datasets/bboy")
-k1 <- read.table("kauther_t1.txt") 
-k2 <- read.table("kauther_t2.txt") 
-k3 <- read.table("kauther_t3.txt") 
-k4 <- read.table("kauther_t4.txt") 
+k1 <- read.table("kauther_t1.txt")
+k2 <- read.table("kauther_t2.txt")
+k3 <- read.table("kauther_t3.txt")
+k4 <- read.table("kauther_t4.txt")
 k5 <- read.table("kauther_t5.txt")
 ```
 

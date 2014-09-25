@@ -1,0 +1,40 @@
+#Elliot_Assign_1
+#Zhongjun Hu(UNI:zh2223)
+
+###1. Creat a new data.frame named "southern" and select all facilities located in the Southern zones of Nigeria.
+```{r}
+setwd("~/Desktop/ZhongjunHuqmssviz/qmssviz/labs/tutorial")
+file <- "sample_health_facilities.csv"
+sample_data <- read.csv(file)
+head(sample_data)
+str(sample_data)
+table(sample_data$zone)
+southern<-subset(sample_data,zone%in%c("South-South","Southeast","Southwest"),row.names=FALSE)
+southern
+```
+###2. Download "lgas.csv" and incorporate pop_2006 into my new data.frame "southern"
+```{r}
+setwd("~/Desktop/ZhongjunHuqmssviz/qmssviz/labs/tutorial")
+lgas<-read.csv("lgas.csv")
+subset1<-subset(lgas, select = c("lga_id","pop_2006"))
+merge3<-merge(southern,subset1,by="lga_id")
+merge3
+```
+###3. Calculate the total number of full time nurses and doctors for all health facilities in each state
+```{r}
+tapply(merge3$num_nurses_fulltime, merge3$state,sum,na.rm=T)
+tapply(merge3$num_doctors_fulltime,merge3$state,sum,na.rm=T)
+```
+###4. Sort the resulting dataset by state population, in descending order
+```{r}
+###Sort each sample of the new dataset by population scale
+class(merge3$pop_2006)
+order<-merge3[order(-merge3$pop_2006),]
+order
+####Sort the state by population in descending order
+library(plyr)
+statepop<-ddply(merge3, "state", summarize, population = sum(pop_2006))
+statepop
+sttpporder<-statepop[order(-statepop$population),]
+sttpporder
+```

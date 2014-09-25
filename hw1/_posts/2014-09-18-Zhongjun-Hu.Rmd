@@ -35,11 +35,15 @@ qplot(data=un2,x=Longitude,y=Latitude,color=Population_Thousand) +geom_point(siz
 #####Flaws: I did not figure out how to put a real world map as a bottom layer. I thought it would be much more vivid if I achieved that.
 
 ### Ages of Marriage
+#####This dataset is from 
 ```{r}
 setwd("~/Desktop/ZhongjunHuqmssviz/qmssviz/Lab1")
 cb<-read.csv("GSS.2006.csv")
 cb$Ages<-as.numeric(cb$agewed)
 qplot(x=Ages, data=cb,geom="density",main="Distribution of How old were you when first married")
+```
+#####
+```{r}
 qplot(x=Ages, data=cb,geom="histogram",main="Distribution of How old were you when first married")
 ```
 #####

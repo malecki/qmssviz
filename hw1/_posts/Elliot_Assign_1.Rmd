@@ -11,6 +11,7 @@ str(sample_data)
 table(sample_data$zone)
 southern<-subset(sample_data,zone%in%c("South-South","Southeast","Southwest"),row.names=FALSE)
 southern
+
 ```
 ###2. Download "lgas.csv" and incorporate pop_2006 into my new data.frame "southern"
 ```{r}

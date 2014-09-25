@@ -1,0 +1,40 @@
+---
+title: "R Basics_Assignment"
+author: "yw2668"
+date: "September 24, 2014"
+output: html_document
+---
+
+```{r}
+setwd("/Users/Emily/Documents/Columbia/Data Visualization")
+data1<-read.csv("lgas.csv", stringsAsFactors=F)
+data2<-read.csv("sample_health_facilities.csv",stringsAsFactors=F)
+
+#no.2 Produce a new data.frame, which has the following properties:- From the Nigeria Facilities Inventory data (sample_data from section 1.5.1), select all facilities located in the Southern zones of Nigeria.
+table(data2$zone)
+data2.south<- subset(data2, zone %in% c("South-South", "Southeast", "Southwest"))
+
+#No.3 Incorporate the pop2006 column from the lgas.csv file into the new data.frame containing only those facilities located in Southern Nigeria. (Hint: your id column is lga_id).
+data1.pop2006<-data1[,c(1,3)]
+new.data<-merge(data2.south, data1.pop2006, by="lga_id")
+
+#No.4 Calculate the total number of full time nurses and doctors for all health facilities in each state.
+doc.no<-as.data.frame(aggregate(new.data$num_doctors_fulltime, by= list(new.data$state), FUN= sum))
+nur.no<-as.data.frame(aggregate(new.data$num_nurses_fulltime, by= list(new.data$state), FUN= sum))
+names(doc.no)[names(doc.no)=="Group.1"]<- "State"
+names(nur.no)[names(nur.no)=="Group.1"]<- "State"
+docnur.no<-merge(doc.no, nur.no, by="State")
+ sum.no<-as.data.frame(cbind(apply(docnur.no[,2:3],1,sum, na.rm=T),docnur.no$State))
+names(sum.no)[names(sum.no)=="V2"]<-"State"
+names(sum.no)[names(sum.no)=="V1"]<-"Number of Doctors & Nurses"
+
+#No.5 Sort the resulting dataxxxset by state population, in descending order.
+pop.state<-as.data.frame(aggregate(new.data$pop_2006, by= list(new.data$state), FUN= sum))
+names(pop.state)[names(pop.state)=="Group.1"]<- "State"
+names(pop.state)[names(pop.state)=="x"]<- "Population"
+merge.data<- merge(sum.no, pop.state, by = "State")
+result.data<- merge.data[order(merge.data$Population,decreasing=T),]
+result.data
+
+```
+

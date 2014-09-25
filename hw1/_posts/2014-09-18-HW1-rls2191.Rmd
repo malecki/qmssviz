@@ -49,3 +49,5 @@ Fixing coordinates:
 health_gps <- data.frame(do.call('rbind', strsplit(as.character(health_full$gps),' ',fixed=TRUE)))
 names(health_gps) <- paste(c("xcoord", "ycoord", "gps_unsure1", "gps_unsure2"))
 health_full <- cbind(health_full, health_gps)
+ggplot(health_full, aes(xcoord, ycoord, color=zone)) + geom_point(share=9, fill=5)
+```

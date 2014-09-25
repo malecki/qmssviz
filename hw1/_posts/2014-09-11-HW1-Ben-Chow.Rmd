@@ -1,0 +1,53 @@
+---
+title: "140911 Data Visualization HW1"
+author: "Ben Chow"
+date: "16 September, 2014"
+output: html_document
+---
+
+Initial try, playing with the original dataset and the ggplot2 command `quickplot`:
+
+```{r, message=FALSE, echo=FALSE}
+demo <- read.csv("Donation-Disease.csv", stringsAsFactor=F)
+library(ggplot2)
+demo$Death <- demo$Death/1000
+qplot(demo$Death, demo$MoneyRaised,
+      xlab = "Number of Deaths ('000s)",
+      ylab = "Amount of Money Raised",
+      main = "Where should we be donating our money?")
+```
+
+For my next attempt I will be using the dataset `InsectSprays`. 
+
+**Description of Dataset**
+
+The counts of insects in agricultural experimental units treated with different insecticides
+
+
+Tabulating the data:
+```{r, message=FALSE, echo=FALSE}
+IS <- InsectSprays
+groups <- aggregate(IS$count ~ IS$spray, FUN = "mean")
+groups
+```
+
+### Plot 1 ###
+My first plot with this data doesn't differentiate amongst the different type of sprays:
+```{r, message=FALSE, echo=FALSE}
+require("RColorBrewer")
+color <- brewer.pal(11, "RdYlGn")
+ggplot(IS, aes(x=count)) + geom_histogram(binwidth = 3, fill = color) + xlab("Number of bugs killed")
+```
+
+### Plot 2 ###
+My second plot is a dotplot. Here the dots do discriminate amongst the 6 different types of sprays
+```{r, message=FALSE, echo=FALSE}
+ggplot(data = IS, aes(x = count, fill = spray)) + geom_dotplot(binwidth = 1, dotsize = 0.9, stackdir = "centerwhole") + xlab("No. of bugs killed") + scale_y_continuous(name="Spray Count", breaks = NULL) + ggtitle("Sprays vs Bugs")
+```
+
+### Plot 3 ###
+This plot is a variant of Plot 2's data, in boxplot format
+
+```{r, message=FALSE, echo=FALSE}
+ggplot(data = IS) + geom_boxplot(aes(y = count, x = spray), fill = brewer.pal(6, "Blues")) + xlab("Spray type") + ylab("No. of bugs killed") + ggtitle("Bug sprays: effectiveness vs consistency")
+```

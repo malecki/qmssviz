@@ -1,0 +1,33 @@
+---
+title: "0140925-Qingmeng Xu-hw2"
+output: html_document
+---
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+
+```
+
+You can also embed plots, for example:
+
+```{r, echo=FALSE}
+if (!require(plyr)) install.packages("plyr")
+library(plyr)
+if (!require(ggplot2)) install.packages("ggplot2")
+library(ggplot2)
+getwd()
+setwd("/Users/ningmeng/Desktop")
+file <-"lgas.csv"
+lgas_data <- read.csv(file)
+nigeria_data <- read.csv("sample_health_facilities.csv")
+summary(sample_data$zone)
+south <- subset(nigeria_data, nigeria$zone == "South-South" | nigeria$zone == "Southeast" | nigeria$zone == "Southwest")
+lgas_pop <- lgas_data[，c(1，3)]
+
+
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

@@ -36,11 +36,10 @@ par(opar)
 
 ## 3. ggplot & annotation
 ```{r}
-DonationperDeath=d$MoneyRaised / d$Death * 1000
-counts <- as.factor(DonationperDeath)
-bp <- ggplot(d, aes(y=DonationperDeath,x=Death, color=Name, size=counts)) +
+DonationperDeath=(d$MoneyRaised / d$Death )* 1000
+bp <- ggplot(d, aes(y=DonationperDeath,x=Death, color=Name, size=DonationperDeath)) +
   geom_point() +
-  geom_text(aes(y=nvar+0.3, x=Death-50000, label=Name, colour=Name), size=5, hjust=0)
+  geom_text(aes(y=DonationperDeath+0.3, x=Death-50000, label=Name, colour=Name), size=5, hjust=0)
 bp + theme(legend.position="none") +
   ggtitle("Donation per Death") + theme(plot.title = element_text(lineheight=.7, size=24, face="bold"))
 ```

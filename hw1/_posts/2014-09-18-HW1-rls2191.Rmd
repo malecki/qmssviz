@@ -8,14 +8,13 @@ tags:hw1
 I'm interested in investigating the dataset of health facilities in Niger. The dataset contains  information about the location, number of full-time doctors, nurses, and lab techs, and the management type for 44 health facilities. Some descriptives, including the number of facilities with the value NA for doctors and nurses:
 ```{r}
 health_full <- read.csv("../../Lab1/sample_health_facilities.csv")
-summary(health)
+summary(health_full)
 ```
 I'd like to graph the number of doctors vs. the number of nurses, but some entries have a value of NA for one or both of those pieces of information. Points with an NA value for the number of doctors or nurses are dropped, a total of 4 points.
 ```{r}
 table(is.na(health_full$num_doctors_fulltime), is.na(health_full$num_nurses_fulltime))
 health <- health_full[!(is.na(health_full$num_doctors_fulltime) | is.na(health_full$num_nurses_fulltime)), ]
 ```
-
 Here is a scatter plot of doctors vs. nurses. The dot colors refer to the region of the clinic. 
 ```{r}
 plot(health$num_doctors_fulltime, health$num_nurses_fulltime, main="Doctors and Nurses in Niger by Region", xlab="Number of Full Time Doctors", ylab="Number of Full Time Nurses", xlim=c(0,4), ylim=c(0,9), pch=19, col=health$zone)
@@ -45,4 +44,8 @@ ggplot(health, aes(num_doctors_fulltime, num_nurses_fulltime, color=zone)) +
       axis.line = element_line(size=.4)
   )
 ```
-
+Fixing coordinates:
+```{r}
+health_gps <- data.frame(do.call('rbind', strsplit(as.character(health_full$gps),' ',fixed=TRUE)))
+names(health_gps) <- paste(c("xcoord", "ycoord", "gps_unsure1", "gps_unsure2"))
+health_full <- cbind(health_full, health_gps)

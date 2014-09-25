@@ -1,13 +1,15 @@
+##load data
 lgas<-read.csv("labs/tutorial/lgas.csv")
-str(lgas)
-dim(lgas)
-
 facilities<-read.csv("labs/tutorial/sample_health_facilities.csv")
-str(facilities)
-dim(facilities)
 
+##make sample dframe of southern facilities from facilities file
 sample <- facilities[facilities$zone=="South-South" | facilities$zone=="Southeast" | facilities$zone=="Southwest", ]
+
+#merge with lgas data for those facilities
 sample <- merge(sample, lgas, by="lga_id")
-sample <- sample[,1:12]
-sample$total <- sample$num_doctors_fulltime  + sample$num_nurses_fulltime
-sample <- sample[order(-sample$pop_2006),]
+
+#sort by state population, print table
+library(plyr)
+states<-ddply(sample, .(state.x), numcolwise(sum))
+states<-states[, -2]
+states[order(-states$pop_2006), ]

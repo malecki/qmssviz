@@ -13,8 +13,7 @@ After getting the dataset, the first step is always to make exploratroy data ana
 ## Data importing
 ```{r Data-importing}
 mques <- read.csv("/Users/HanLu/Documents/Unsorted/QMSS.Vis/labs/questionnaire/responses-2014-09-05.csv", header=T)
-colnames(mques)[3:13] <- c("Base.ex", "Twitter", "Soft.ex.Rdata", "Soft.ex.Rgraph", "Soft.ex.doc", "Soft.ex.py", "Soft.ex.vc", "Soft.ex.db", "Soft.ex.web", "Soft.ex.java", "Wait") #Define short names.
-summary(mques)
+colnames(mques)[13] <- "Waitlist" #Define short names.
 ```
 
 ## Single variable plot
@@ -34,7 +33,7 @@ Not satisfied with single variable's distribution, we also want to know the rela
 
 For instance, we want to know how many students are in waiting list for each program; then, we can look into the following stacked barplot between variable "Program" and "Wait".
 ```{r Bivar-plot1}
-counts <- table(mques$Wait, mques$Program)
+counts <- table(mques$Waitlist, mques$Program)
 barplot(counts, main="Waiting Student in Each Program", col=c("orange","yellow"), legend = rownames(counts), cex.names=0.4, las=2)
 ```
 
@@ -42,9 +41,22 @@ As shown in the above plot, all the second year QMSS masters are not on the wait
 
 This stacked barplot can also be swifted to the following grouped barplot, which is much more easier for comparison.
 ```{r Bivar-plot2}
-counts <- table(mques$Wait, mques$Program)
+counts <- table(mques$Waitlist, mques$Program)
 barplot(counts, main="Waiting Student in Each Program", col=c("orange","yellow"), legend = rownames(counts), cex.names=0.4, las=2, beside=T)
 ```
 
 ## Multivariable plot
-In our questionnaire, there is a question about baseline. 
+In our questionnaire, there are 8 questions about students' proficiency in 8 categories of software, rating as "None", "A little", "Confident" or "Expert". In order to compare students' proficiency in different software, we can plot their frequency side-by-side as follows:
+
+```{r Multiv-plot}
+par(mfrow=c(2,4))
+ordered <- c("None", "A little", "Confident", "Expert")
+for (i in 5:12){
+  counti <- table(mques[,i])[ordered]
+  listi <- unlist(strsplit(colnames(mques)[i], split="[.]+"))
+  titlei <- paste(listi[6:length(listi)], collapse=" ")
+  barplot(counti, main=titlei, cex.main=0.7, col=i, cex.names=0.5)
+}
+```
+
+From the above plots, we can see that there are more students familiar with R data manipulation and R graphics; some students know a little about databses, python or web frontend; but fewer students have some knowledge of version control, reproducible research, and javascript. 

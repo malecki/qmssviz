@@ -9,10 +9,11 @@ I'm interested in investigating the dataset of health facilities in Niger. The d
 
 I'd like to graph the number of doctors vs. the number of nurses, but some entries have a value of NA for one or both of those pieces of information. Points with an NA value for the number of doctors or nurses are dropped, a total of 4 points.
 ```{r}
+health_full <- read.csv("../../Lab1/sample_health_facilities.csv")
 table(is.na(health_full$num_doctors_fulltime), is.na(health_full$num_nurses_fulltime))
 health <- health_full[!(is.na(health_full$num_doctors_fulltime) | is.na(health_full$num_nurses_fulltime)), ]
 ```
-Here is a scatter plot of doctors vs. nurses. The dot colors refer to the region of the clinic. It becomes clear that the grions are clustered but not systematically separated in any obvious way. Previously dropped points are still present on this plot.
+Here is a scatter plot of doctors vs. nurses. The dot colors refer to the region of the clinic. It becomes clear that the regions are clustered but not systematically separated in any obvious way. Previously dropped points are still present in this plot.
 ```{r}
 library(ggplot2)
 ggplot(health, aes(num_doctors_fulltime, num_nurses_fulltime, color=zone)) + 

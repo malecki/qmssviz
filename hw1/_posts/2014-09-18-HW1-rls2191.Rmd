@@ -5,17 +5,14 @@ output: html_document
 published:false
 tags:hw1
 ---
-I'm interested in investigating the dataset of health facilities in Niger. The dataset contains  information about the location, number of full-time doctors, nurses, and lab techs, and the management type for 44 health facilities. Some descriptives, including the number of facilities with the value NA for doctors and nurses:
-```{r}
-health_full <- read.csv("../../Lab1/sample_health_facilities.csv")
-summary(health_full)
-```
+I'm interested in investigating the dataset of health facilities in Niger. The dataset contains  information about the location, number of full-time doctors, nurses, and lab techs, and the management type for 44 health facilities. 
+
 I'd like to graph the number of doctors vs. the number of nurses, but some entries have a value of NA for one or both of those pieces of information. Points with an NA value for the number of doctors or nurses are dropped, a total of 4 points.
 ```{r}
 table(is.na(health_full$num_doctors_fulltime), is.na(health_full$num_nurses_fulltime))
 health <- health_full[!(is.na(health_full$num_doctors_fulltime) | is.na(health_full$num_nurses_fulltime)), ]
 ```
-Here is a scatter plot of doctors vs. nurses. The dot colors refer to the region of the clinic. 
+Here is a scatter plot of doctors vs. nurses. The dot colors refer to the region of the clinic. It becomes clear that the grions are clustered but not systematically separated in any obvious way. Previously dropped points are still present on this plot.
 ```{r}
 library(ggplot2)
 ggplot(health, aes(num_doctors_fulltime, num_nurses_fulltime, color=zone)) + 

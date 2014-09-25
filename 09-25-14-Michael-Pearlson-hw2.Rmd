@@ -1,7 +1,7 @@
 ---
 title: "MDRC Sample"
 author: Michael Pearlson
-output: pdf_document
+output: html_document
 published: false
 tags: hw2
 ---

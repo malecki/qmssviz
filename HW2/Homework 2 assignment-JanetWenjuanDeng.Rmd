@@ -46,4 +46,3 @@ total
 ```{r, echo=FALSE}
 newdataframe[order(newdataframe$pop_2006, decreasing=TRUE), ]
 ```
-

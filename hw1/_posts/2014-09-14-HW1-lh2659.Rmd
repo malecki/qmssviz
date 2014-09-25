@@ -12,8 +12,9 @@ After getting the dataset, the first step is always to make exploratroy data ana
 
 ## Data importing
 ```{r Data-importing}
-mques <- read.csv("/Users/HanLu/Documents/Unsorted/qmssviz/labs/questionnaire/responses-2014-09-05.csv", header=T)
+mques <- read.csv("/Users/HanLu/Documents/Unsorted/QMSS.Vis/labs/questionnaire/responses-2014-09-05.csv", header=T)
 colnames(mques)[3:13] <- c("Base.ex", "Twitter", "Soft.ex.Rdata", "Soft.ex.Rgraph", "Soft.ex.doc", "Soft.ex.py", "Soft.ex.vc", "Soft.ex.db", "Soft.ex.web", "Soft.ex.java", "Wait") #Define short names.
+summary(mques)
 ```
 
 ## Single variable plot
@@ -44,3 +45,6 @@ This stacked barplot can also be swifted to the following grouped barplot, which
 counts <- table(mques$Wait, mques$Program)
 barplot(counts, main="Waiting Student in Each Program", col=c("orange","yellow"), legend = rownames(counts), cex.names=0.4, las=2, beside=T)
 ```
+
+## Multivariable plot
+In our questionnaire, there is a question about baseline. 

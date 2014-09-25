@@ -1,0 +1,35 @@
+---
+Title: "Homework 1 Assignment"
+author: Andy Tang, awt2118
+output: html_document
+published: false
+tags: hw1
+========================================================
+
+
+
+```{r  include=FALSE}
+setwd ("/Users/awtang/Desktop/qmssviz/qmssviz")
+measures<-read.csv("bodyfat.csv", stringsAsFactors=F)
+summary(measures)
+```
+
+```{r include=FALSE}
+library(ggplot2)
+```
+
+```{r fig.width=10, fig.height=8 }
+g<-ggplot(measures, aes(Abdomen, Neck,))
+
+g+geom_point(aes(color=FatStat), size=4, alpha=1/2)+labs(title="Neck and Abdomen Size by Fat Status")+labs(x=("Abdomen size in inches"), y="Neck size in inches")
+```
+
+```{r fig.width=10, fig.height=8}
+g+geom_point(aes(color=Age), size=4, alpha=1/2)+labs(title="Neck and Abdomen Size by Age Groups")+labs(x=("Abdomen size in inches"), y="Neck size in inches")
+```
+
+```{r fig.width=10, fig.height=8}
+g+geom_point()+facet_grid(~FatStat)+labs(title="Neck and Abdomen Size By Fat Status")+labs(x=("Abdomen size in inches"), y="Neck size in inches")
+g+geom_point()+facet_grid(~Age)+labs(title="Neck and Abdomen Size By Age Groups")+labs(x=("Abdomen size in inches"), y="Neck size in inches")
+qplot(FatStat, data=measures, fill=Age)+labs(title="Age Groups Across Fat Status Groups")+labs(x=("Fat Status"), y="Count")
+```

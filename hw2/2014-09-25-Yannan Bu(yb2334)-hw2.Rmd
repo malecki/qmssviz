@@ -1,0 +1,71 @@
+---
+title: "R Tutorial Assignment"
+author: Yannan Bu (yb2334)
+output: html_document
+published: false
+tags: hw2
+---
+
+**0. Library packages to be used**
+```{r}
+library(plyr)
+```
+
+
+**1. Read "lgas.csv" file**
+```{r}
+lgas <- read.csv("E:/QMSS/Data Visualization/lgas.csv", header = T, stringsAsFactor = F)
+head(lgas)
+str(lgas)
+```
+
+
+**2. Read "sample_health_facilities.csv" file**
+```{r}
+facil <- read.csv("E:/QMSS/Everything abt R/qmssviz/labs/tutorial/sample_health_facilities.csv", header = T, stringsAsFactor = F)
+head(facil)
+str(facil)
+
+#Check distribution of the "zone" variable
+table(facil$zone)
+```
+
+
+**3. Select all facilities located in the Southern zones of Nigeria**
+```{r}
+south_facil <- subset(facil, zone %in% c("South-South", "Southeast", "Southwest"))
+
+#Check the subset result
+table(south_facil$zone)
+```
+
+
+**4. Incorporate the pop2006 column from the lgas.csv file into the new data frame**
+```{r}
+d <- subset(lgas, select = c(lga_id, pop_2006))
+data_final <- merge(south_facil, d, by = "lga_id")
+```
+
+
+**5. Calculate the total number of full time nurses and doctors for all health facilities in each state**
+```{r}
+total_nurse <- aggregate(data_final$num_nurses_fulltime, by = list(data_final$state), FUN = "sum", na.rm = T)
+colnames(total_nurse) <- c("state", "count")
+total_nurse
+
+total_doc <- aggregate(data_final$num_doctors_fulltime, by = list(data_final$state), FUN = "sum", na.rm = T)
+colnames(total_doc) <- c("state", "count")
+total_doc
+```
+
+
+**6. Sort the final data set by state population, in descending order**
+```{r}
+#Create a new column showcasing total population of each state
+state_pop <- ddply(data_final, "state", summarise, statesum = sum(pop_2006))
+data_final <- merge(data_final, state_pop, by = "state")
+
+#Display the final data set in descending order
+data_final <- data_final[ order(-data_final$statesum), ]
+data_final
+```

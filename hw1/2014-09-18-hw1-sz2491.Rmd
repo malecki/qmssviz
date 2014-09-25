@@ -1,0 +1,68 @@
+---
+title: "2014-09-18-hw1-sz2491"
+author: "Siqian Zhu"
+date: "9/18/2014"
+output: html_document
+published: false
+tags: hw1
+---
+
+
+This dataset I choose is "GSS2006" in csv form. 
+
+```{r}
+setwd ("/Users/ac/Documents/columbia/study/2014fall/datavisualization")
+d=read.csv("GSS2006.csv")
+```
+
+The GSS contains a standard 'core' of demographic, behavioral, and attitudinal questions, plus topics of special interest. Many of the core questions have remained unchanged since 1972 to facilitate time-trend studies as well as replication of earlier findings. The GSS takes the pulse of America, and is a unique and valuable resource. It has tracked the opinions of Americans over the last four decades. (quoted from http://www3.norc.org/Gss+website/)
+
+In this homework, I want to exam the relationship between two variables, "coop" and "happy". The former one indicates the respondent's attitudes towards the interview while the latter one reports people's happiness level in recent days. The description of these two varible can be seen as follows.
+
+Table 1: coop, from the Electronic Codebook
+254) In general, what was the respondent's attitude toward the interview? (COOP)
+  TOTAL	%
+1) Friendly and interested	3686	81.7
+2) Cooperative but not particularly interested	665	14.7
+3) Impatient and restless	143	3.2
+4) Hostile	9	0.2
+9) No answer	7	0.2
+TOTAL	4510	100.0
+
+Table 2: happy, from the Electronic Codebook
+159) Taken all together, how would you say things are these days -- would you say that you are very happy, pretty happy, or not too happy? (HAPPY)
+	TOTAL	%
+1) Very happy	920	30.7
+2) Pretty happy	1676	56.0
+3) Not too happy	390	13.0
+8) Don't know	6	0.2
+Missing	1518	
+TOTAL	2992	100.0
+
+
+First, let's see them individually, using histogram. Colors are added into the bars.
+
+
+```{r}
+
+d$happy1=4-d$happy
+d$happy1.lab=ordered(d$happy1, levels=c(1,2,3), labels=c("very happy", "pretty happy", "not too happy"))
+hist(d$happy1, main="Happiness Level", xlab="happiness", ylab="number", col="yellow")
+hist(d$coop, main="Attitudes towards the Interview", xlab="attitude", ylab="number", col="green")
+
+```
+
+
+Then I will use ggplot2 to draw picture.
+
+
+```{r, echo=FALSE}
+dense <- density(d$happy1, na.rm=T)
+plot(dense, main="happiness level")
+
+library(ggplot2)
+pic <- ggplot(data=d, aes(x=happy1))
+pic + geom_bar(binwidth=0.2, col="black")
+```
+
+to be continued

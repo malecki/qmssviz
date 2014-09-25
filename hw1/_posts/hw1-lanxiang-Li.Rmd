@@ -18,12 +18,44 @@ dd <- read.csv("Donation-Disease.csv")
 
 ### 2. draw charts
 
+#### scatter diagram
 ```{r}
 library(ggplot2)
 qplot(x = Name, y = Death, data = dd, color = Name)
 ```
 ```{r}
-qplot(x = Name, y = Death, geom = "histogram", color = Name)
+library(ggplot2)
+qplot(x = Name, y = MoneyRaised, data = dd, color = Name)
+```
+```{r}
+library(ggplot2)
+p <- ggplot(data = dd, mapping = aes(x = Death, y = MoneyRaised))
+p + geom_point()
+```
+```{r}
+library(ggplot2)
+ggplot(dd, aes(x=Death, y=MoneyRaised)) +
+geom_point(shape=1)
+```
+```{r}
+library(ggplot2)
+ggplot(dd, aes(x=Death, y=MoneyRaised)) +
+geom_point (shape=1) +
+geom_smooth(method=lm)
+```
+#### pie chart
+```{r}
+library(ggplot2)
+par(mar=c(8,8,8,8),font=4)
+pct <- round (dd$MoneyRaised/sum(dd$MoneyRaised)*100)
+lbls<- paste(dd$Name, " ",pct, "%", sep="")
+pie(dd$MoneyRaised, labels=lbls,col=rainbow(length(lbls)), main="pie chart of MoneyRaised")
+```
+```{r}
+library(ggplot2)
+par(mar=c(8,8,8,8),font=4)
+pct <- round (dd$Death/sum(dd$Death)*100)
+lbls<- paste(dd$Name, " ",pct, "%", sep="")
+pie(dd$Death, labels=lbls,col=rainbow(length(lbls)), main="pie chart of Death")
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

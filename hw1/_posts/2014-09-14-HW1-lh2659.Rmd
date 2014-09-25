@@ -1,0 +1,50 @@
+---
+title: "Homework 1"
+author: "Lu Han: lh2659"
+date: "September 14, 2014"
+output: html_document
+published: false
+tags: hw1
+---
+
+
+After getting the dataset, the first step is always to make exploratroy data analysis. Graph is the most useful exploratory tool. Here, we use different kinds of graphs to get a brief idea about the questionnaire result.
+
+## Data importing
+```{r Data-importing}
+mques <- read.csv("/Users/HanLu/Documents/Unsorted/QMSS.Vis/labs/questionnaire/responses-2014-09-05.csv", header=T)
+colnames(mques)[3:13] <- c("Base.ex", "Twitter", "Soft.ex.Rdata", "Soft.ex.Rgraph", "Soft.ex.doc", "Soft.ex.py", "Soft.ex.vc", "Soft.ex.db", "Soft.ex.web", "Soft.ex.java", "Wait") #Define short names.
+summary(mques)
+```
+
+## Single variable plot
+In our questionnaire, all the variables are categorical and are read as factors in mques data frame. As for a single factor variable, we can use barplot to look into the distribution of this variable at each level.
+
+For example, if we want to know the distribution of students from different programs, we can plot variable "Program", and get the following barplot.
+```{r Single-var-plot}
+ppro <- plot(mques$Program, main="Program Distribution", ylab="Counts", col="orange", cex.names=0.4, las=2)
+counts <- table(mques$Program)
+text(y=counts-0.5, x=ppro, lab=as.character(counts), cex=0.5)
+```
+
+From the above plot, we can see that most students are first year masters in QMSS, accounting for about one third. And there are also many masters from other program (only 2 students less than QMSS first year masters).
+
+## Bivariable plot
+Not satisfied with single variable's distribution, we also want to know the relationship between two different variables. At this time, we can draw stacked barplot or grouped barplot for two variables.
+
+For instance, we want to know how many students are in waiting list for each program; then, we can look into the following stacked barplot between variable "Program" and "Wait".
+```{r Bivar-plot1}
+counts <- table(mques$Wait, mques$Program)
+barplot(counts, main="Waiting Student in Each Program", col=c("orange","yellow"), legend = rownames(counts), cex.names=0.4, las=2)
+```
+
+As shown in the above plot, all the second year QMSS masters are not on the waiting list, while more than half of the first QMSS masters are on the waiting list. Only a small part of other masters and PhDs is on the waiting list.
+
+This stacked barplot can also be swifted to the following grouped barplot, which is much more easier for comparison.
+```{r Bivar-plot2}
+counts <- table(mques$Wait, mques$Program)
+barplot(counts, main="Waiting Student in Each Program", col=c("orange","yellow"), legend = rownames(counts), cex.names=0.4, las=2, beside=T)
+```
+
+## Multivariable plot
+In our questionnaire, there is a question about baseline. 

@@ -13,7 +13,7 @@ I will plot some graphes using **Donation-Disease** dataset
 
 ```{r}
 require(ggplot2)
-setwd("~/Google Drive/Schoolwork/2014Fall/QMSS4063G/qmssviz/Lab1")
+setwd("~/GoogleDrive/Schoolwork/2014Fall/QMSS4063G/qmssviz/Lab1")
 dat <- read.table('Donation-Disease.csv',sep=',',header=T,stringsAsFactors=FALSE)
 dat$Name[7] <- 'MND'
 dat$Name[8] <- 'COPD'

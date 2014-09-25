@@ -65,16 +65,15 @@ progtwit <- responses[,c(2,4)]
 progtwit[14,"Program"] <- "Stat"
 progtwit[28,"Program"] <- "QMSS Third semester"
 
-progtwit2 <- data.frame(revalue(progtwit$Program, c("QMSS  First semester" = "QMSS 1st Sem.")))
-#progtwit2 <- data.frame(revalue(progtwit$Program, c("QMSS Second semester +" = "QMSS 2nd Sem. +")))
-#progtwit2 <- data.frame(revalue(progtwit$Program, c("QMSS Third semester" = "QMSS 3rd Sem.")))
 
-progtwit2
+progtwit$Program[progtwit$Program == "QMSS First semester"] <- "QMSS 1st Sem."
+progtwit$Program[progtwit$Program == "QMSS Second semester +"] <- "QMSS 2nd Sem. +"
+progtwit$Program[progtwit$Program == "QMSS Third semester"] <- "QMSS 3rd Sem."
 ```
 
 #Visualizing data
 
-```{r ggplot2, fig.width=18, fig.height=8, message=FALSE}
+```{r ggplot2, fig.width=18, fig.height=12, message=FALSE}
 
 twit.title <- ggtitle("Twitter Users by Program")
 dotplot <- geom_dotplot(stackgroups=TRUE, binpositions="all")

@@ -71,3 +71,29 @@ ggplot(r,aes(x=soft.r.level, fill=Program))+geom_bar(stat="bin", position="dodge
 1. Why the pictures are different using qplot and ggplot?
 
 2.How to add count numbers over each bar?
+
+<hr/>
+
+##Remaining Questions:
+1. Why the pictures are different using qplot and ggplot?
+
+2.How to add count numbers over each bar?
+
+<hr/>
+--
+Improve my last assignment
+
+First of all, I'd like to resolve the remaining questions:
+1.
+2.
+```{r}
+
+ggplot(r,aes(x=soft.r.level, fill=Program))+geom_bar(width=0.8, position="dodge", colour="black")+xlab("Levels in R, Data Manipulation & Modeling") + 
+    ylab("Count") + 
+    ggtitle("Different Levels in R of Different Programs")+scale_fill_brewer(palette="Pastel1")
+
+```
+
+
+
+

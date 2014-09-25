@@ -1,0 +1,48 @@
+---
+title: "Assignment 1 Upgraded (Assignment 2?)"
+author: "Bethany Rolfs"
+date: "Wednesday, September 24, 2014"
+output: html_document
+---
+This is a second attempt at assignment 1. Last week I was struggling to figure out numerous aspects of Git as well as R Markdown. I am still without a doubt Noob level, but hopefully this attempt is a bit better. Here it goes!
+
+```{r,echo=FALSE}
+setwd("~/GitHub/qmssviz/hw1")
+disease <- read.csv("Donation-Disease.csv", stringsAsFactors=F)
+library(ggplot2)
+
+ggplot(disease, aes(x=MoneyRaised, y=Death))+ geom_point(shape=1, size=5, color= "blue")+ geom_text(aes(label=Name), size=1.8, position=position_jitter(width=-8, height=21))+ xlab("Money Raised millon USD")+ ggtitle("How do we make our donation choices?")
+
+```
+
+
+
+```{r, echo=FALSE}
+setwd("~/GitHub/qmssviz/hw1")
+disease <- read.csv("Donation-Disease.csv")
+library(ggplot2)
+
+ggplot(data=disease,aes(x= Name, fill= Name, y=Death)) +geom_bar(position= "dodge",stat= "identity")+guides(fill= FALSE)+xlab("Medical Conditions")+ ylab("Number of Deaths")+ggtitle("Deaths Caused by Medical Conditons")                                                                                                                                                                                                                         
+
+```
+
+
+Note: While plotting this bar graph in the console I used the code -theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5))- to make the x-axis vertical. For some reason this would not work in Markdown.Thoughts?
+
+
+
+
+
+
+```{r, echo=FALSE}
+setwd("~/GitHub/qmssviz/hw1")
+disease <- read.csv("Donation-Disease.csv")
+library(ggplot2)
+
+ggplot(data=disease,aes(x= factor(MoneyRaised), fill= Name, y=Death)) +geom_bar(position=position_dodge(),stat= "identity")+xlab("Money Raised ($ millions)")+ ylab("Number of Deaths")+ggtitle("Deaths v. Money Raised for Medical Conditons")
+```
+
+
+
+
+It's clear that the there is no obvious correlation between the amount of money raised by individual orginizations and the number of deaths for each medical condition.

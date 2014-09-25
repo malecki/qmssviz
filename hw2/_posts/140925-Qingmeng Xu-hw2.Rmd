@@ -14,12 +14,11 @@ When you click the **Knit** button a document will be generated that includes bo
 You can also embed plots, for example:
 
 ```{r, echo=FALSE}
-getwd()
 setwd("/Users/ningmeng/Desktop")
 file <-"lgas.csv"
 lgas_data <- read.csv(file)
 nigeria_data <- read.csv("sample_health_facilities.csv")
-summary(sample_data$zone)
+#summary(sample_data$zone)
 south <- subset(nigeria_data, nigeria_data$zone == "South-South" | nigeria_data$zone == "Southeast" | nigeria_data$zone == "Southwest")
 lgas_pop <- lgas_data[,c(1,3)]
 merge_data <- merge(south, lgas_pop, by="lga_id")

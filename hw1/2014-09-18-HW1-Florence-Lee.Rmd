@@ -26,7 +26,9 @@ Explore the dataset.
 head(nychanes)
 ```
 
-# Dataset Variables in nychanes 
+# About the Dataset
+
+### Dataset Variables in nychanes 
 
 (1) **"eatout"** is a composite score based on DBQ090G and DBQ090Q. It is a discrete numeric variable.
 
@@ -60,23 +62,26 @@ colnames(nychanes) <- newCol
 colnames(nychanes)
 
 #Consolidate occgrp
-nychanes$occgrp[nychanes$occgrp==1] <- "Level 1"
-nychanes$occgrp[nychanes$occgrp==3] <- "Level 2"
-nychanes$occgrp[(nychanes$occgrp==5)|(nychanes$occgrp==6)] <- "Level 3"
-nychanes$occgrp[(nychanes$occgrp==2)|(nychanes$occgrp==4)] <- "Level 4"
-nychanes$occgrp[nychanes$occgrp==7] <- "Level 5"
+nychanes$occgrp[nychanes$occgrp==1] <- "Managerial and professional"
+nychanes$occgrp[nychanes$occgrp==3] <- "Administrative and technical"
+nychanes$occgrp[(nychanes$occgrp==5)|(nychanes$occgrp==6)] <- "High-skill workers"
+nychanes$occgrp[(nychanes$occgrp==2)|(nychanes$occgrp==4)] <- "Service"
+nychanes$occgrp[nychanes$occgrp==7] <- "Laborers"
 nychanes$occgrp<-as.factor(nychanes$occgrp)
-#NOTE: Levels correspond to pay, with Level 1 as highest paying. 
-#NOTE: Assume that as Level increases, physical exertion requirement also increases. 
+levels(nychanes$occgrp) <- c("Managerial and professional","Administrative and technical", "High-skill workers", "Service", "Laborers")
+levels(nychanes$occgrp)
 
 ```
 
-# Plot of BMI vs. Frequency of Eating Out
+# Graphs
+
+### Plot of BMI vs. Frequency of Eating Out
 
 I am primarily interested to see whether there is some association between eating out and BMI. I expect to see higher frequency of eating out with higher BMI readings due to the high sodium, high fat content of most restaurant foods. 
 
-``````{r base, fig.width=15, fig.height=10, message=FALSE}
+```{r base, fig.width=15, fig.height=10, message=FALSE}
 #Call ggplot2
+install.packages('ggplot2')
 library(ggplot2)
 #Create base
 base <- ggplot(nychanes, aes(xmin=0, xmax=30, ymin=15, ymax=60, x=eatout, y=bmi, colour=occgrp)) + xlab("Number of Restaurant-Prepared Meals Consumed Per Week") + ylab("BMI (kg/m2)") + ggtitle("Body Mass Index (BMI) and Frequency of Eating Out")
@@ -96,7 +101,7 @@ The orange region of the graph highlights individuals that are within a normal B
 
 The colors of the point indicate the occupation level of the survey respondent. Individuals with lighter colored points are considered upper-level workers (managers and supervisors), while individuals with darker colored points are considered lower-level workers (general laborers). 
 
-# Looking at Occupation 
+### Looking at Occupation 
 
 Lower-level workers and higher-level workers probably have different lifestyles due to income earned and physical demand of their respective jobs. This can influence BMI and frequency of eating restaurant-prepared foods. 
 
@@ -110,3 +115,7 @@ grid2
 ```
 
 The association between BMI and number of restaurant-prepared meals consumed in a week does not seem to differ visually from occupation group to occupation group. It is interesting to note that respondents who worked in services and sales seem to eat out more frequently, on average, than respondents in other occupational groups.
+
+### Another view: Boxplot
+
+On a second pass, it seems more sensible, visually, to look at the distribution of BMI and eating restaurant-prepared food within each occupational group through a boxplot. With a boxplot, I will only be able to look at one variable of interest at a time, but that might present more interesting information. 

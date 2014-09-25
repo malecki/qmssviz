@@ -8,6 +8,8 @@ tag: hw1
 
 We'll visualize several bathymetric datasets. Bathymetry data documents the terrain of the floors of water bodies. In our case, we'll produce maps of the ocean floor in several parts of the Atlantic Ocean.
 
+These datasets come in XYZ coordinate formats and must be converted to .bathy formats before they can be visualized using the wireframe function from the lattice library. The two packages we use in this exercise are marmap and lattice.
+
 
 First, we look at an included dataset of the marmap package.
 

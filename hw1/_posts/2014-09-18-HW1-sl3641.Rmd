@@ -10,7 +10,7 @@ tags: hw1
 CNN had an article this month about the World Health Organization's report on suicides in different countries:  
 http://www.cnn.com/2014/09/05/world/who-global-suicide-report/
 
-According to the article, South Korea had one of the highest suicide rates (after Guyana and North Korea). 
+According to the article, South Korea had one of the highest suicide rates (after Guyana and North Korea).   
 Among OECD countries, South Korea has had the highest reported suicide rates in the last 10 years.
 
 I decided to look more closely at the data provided by WHO and combine it with data on other social and economic factors.
@@ -38,7 +38,8 @@ ggplot(suicideRate, aes(x=logGDPpc, y=SuicideRate)) +
   ggtitle("2010 Suicide Rates vs. GDP per Capita") +
   xlab("GDP per Capita, log scale") +
   ylab("Suicide rates (per 100,000)") +
-  geom_text(aes(label=Country), hjust=0, vjust=0, size=3)
+  geom_text(aes(label=Country), hjust=0, vjust=0, size=3) +
+  annotate("rect", xmin = 9.8, xmax = 10.7, ymin = 25, ymax = 27, alpha = .2, fill="yellow")
 ```
 
 <br>
@@ -56,7 +57,7 @@ ggplot(kor, aes(x=year, y=suicideRate)) +
   ylab("Suicide rates (per 100,000)")
 ```   
 
-However, overall mortality rates have declined over time.
+However, overall mortality rates have declined during this period.
 
 ```{r, echo=FALSE}
 ggplot(kor, aes(x=year, y=mortality)) +
@@ -66,6 +67,8 @@ ggplot(kor, aes(x=year, y=mortality)) +
   xlab("Year") +
   ylab("Mortality rates (per 100,000)")
 ```   
+
+
 
 Data sources:
 

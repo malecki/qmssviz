@@ -27,3 +27,4 @@ totmed <- join(totmed, stpop, by = "state", type = "left", match = "first")
 # Sort by state population
 totmed.sort <- totmed[order(totmed[, 4], decreasing = TRUE), ]
 totmed.sort
+rm(list=ls())

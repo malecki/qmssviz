@@ -7,15 +7,23 @@ published: false
 tags: hw1
 ---
 
+#Hi, everyone!
 
-This dataset I choose is "GSS2006" in csv form. 
+
+The dataset I choose is "_GSS2006_" in __csv__ form. 
+
 
 ```{r}
 setwd ("/Users/ac/Documents/columbia/study/2014fall/datavisualization")
 d=read.csv("GSS2006.csv")
 ```
 
-The GSS contains a standard 'core' of demographic, behavioral, and attitudinal questions, plus topics of special interest. Many of the core questions have remained unchanged since 1972 to facilitate time-trend studies as well as replication of earlier findings. The GSS takes the pulse of America, and is a unique and valuable resource. It has tracked the opinions of Americans over the last four decades. (quoted from http://www3.norc.org/Gss+website/)
+
+>   The GSS contains a standard 'core' of demographic, behavioral, and attitudinal questions, plus topics of special interest. Many of the core questions have remained unchanged since 1972 to facilitate time-trend studies as well as replication of earlier findings. The GSS takes the pulse of America, and is a unique and valuable resource. It has tracked the opinions of Americans over the last four decades. 
+
+Quoted from http://www3.norc.org/Gss+website/)
+
+
 
 In this homework, I want to exam the relationship between two variables, "coop" and "happy". The former one indicates the respondent's attitudes towards the interview while the latter one reports people's happiness level in recent days. The description of these two varible can be seen as follows.
 

@@ -6,98 +6,51 @@ published: false
 tag: hw1
 ---
 
-We'll visualize two datasets: Donation-Disease.csv and ChickWeight. The former looks at money raised versus deaths for different diseases, while the latter looks at weight versus age of chickens on different diets.
+We'll visualize several bathymetric datasets. Bathymetry data documents the terrain of the floors of water bodies. In our case, we'll produce maps of the ocean floor in several parts of the Atlantic Ocean.
 
-Let's first look at the Donation-Disease.csv:
+
+First, we look at an included dataset of the marmap package.
+
+```{r,echo=FALSE}
+
+library(marmap)
+
+library(lattice)
+data(nw.atlantic)
+atl <- as.bathy(nw.atlantic)
+wireframe(unclass(atl), shade = TRUE, aspect = c(1/2, 0.1), xlab="",ylab="",zlab="")
+```
+
+
+Now, we look at three randomly sampled patches of ocean floor, taken from UCSD Scripps Institution of Oceanography's global topography data extractor (link: http://topex.ucsd.edu/cgi-bin/get_data.cgi)
+
+```{r,echo=FALSE}
+bathy1 <- read.csv("~/qmssviz/Lab1/_posts/bathy.csv")
+
+head(bathy1)
+bathy1 <- as.bathy(bathy1)
+wireframe(unclass(bathy1), shade = TRUE,aspect = c(1, 1), xlab="",ylab="",zlab="",scales = list(arrows = FALSE))
+
+bathy3 <- read.csv("~/qmssviz/Lab1/_posts/bathy3.csv")
+
+head(bathy3)
+bathy3 <- as.bathy(bathy3)
+wireframe(unclass(bathy3), shade = TRUE,aspect = c(1, 1), xlab="",ylab="",zlab="",scales = list(arrows = FALSE))
+```
+
+
+The last bathymetric map looks particularly interesting, so we expanded our coordinates for the area where it was sampled from and produce the map below. We can clearly see some sort of trench feature, as well as a potential underwater mountain.
 
 
 ```{r,echo=FALSE}
+bathy4 <- read.csv("~/qmssviz/Lab1/_posts/bathy4.csv")
 
-dd <- read.csv("~/qmssviz/Lab1/Donation-Disease.csv")
-dd2 <- data.frame(dd)
-dim(dd2)
-dd2
-```
+head(bathy4)
+bathy4 <- as.bathy(bathy4)
+wireframe(unclass(bathy4), shade = TRUE,aspect = c(1, 1), xlab="",ylab="",zlab="",scales = list(arrows = FALSE))
 
-
-We can graph the association using a scatterplot of log(MoneyRaised) versus log(Death) and then labeling the individual points as different diseases.
+help(wireframe)
 
 
-```{r, echo=FALSE}
-
-library(ggplot2)
-
-
-p1 = ggplot(data=dd2, aes(x=log(MoneyRaised), y=log(Death))) + geom_point(stat = "identity", colour = as.numeric(rownames(dd2)),size=10)
-p1 + 
-  #geom_abline(slope=1) +
-  ylim(8, 14) +
-  xlim(0, 6) +
-  geom_text(aes(label=Name), size=3, colour = as.numeric(rownames(dd2)),vjust = 3,
-        position = position_jitter(width=0, height=0)) +
-  labs(title = "Money Raised vs Deaths for Different Diseases") +
-  
-  ylab("Log Deaths") +
-  xlab("Log Money Raised") 
-  #scale_colour_gradient(low="black", high="white")
-
-
-```
-
-
-
-
-Next, we look at ChickWeight, a dataset that comes with R's MASS package. This dataset contains information from an experiment on the effect of diet on early growth of chickens. We'll examine just the first few rows.
-
-```{r, echo=FALSE}
-library(MASS)
-data(ChickWeight)
-dim(ChickWeight)
-head(ChickWeight)
-```
-
-
-Let's look at the visualization of this data:
-
-```{r,echo=FALSE}
-p2 = ggplot(data=ChickWeight, aes(x=Time, y=weight)) + geom_point(stat = "identity",colour = ChickWeight$Chick)
-
-p2 + 
-  #geom_abline(slope=1) +
-  #geom_text(aes(label=Chick), size=3) +
-  labs(title = "Weight Versus Age of Chickens on Different Diets") +
-  ylab("Weight") +
-  xlab("Time")
-```
-
-```{r,echo=FALSE}
-install.packages("shiny")
-library(shiny)
-runExample("01_hello")
-
-
-
-library(qdap)
-text1 <- as.vector(c("This", "is", "a", "bad", "review"))
-text1
-text2 <- as.vector(c("The project failed","The building is great", "that was strangely beautiful"))
-
-text3 = matrix(nrow=3, ncol = 3)
-text3<- as.vector(c("The project failed","The building is great wonderful fantastic", "that was strangely beautiful", "aww", "omg", "ghetto","basic"))
-
-text2
-polarity(text3)$all
-help(sentSplit)
-sentSplit(text2)
-
-text1 <- read.csv("~/qmssviz/Lab1/_posts/artists.csv")
-head(text1)
-help(scan)
-help(readLines)
-
-sentSplit(text1,"lyrics")
-
-polarity(text1$lyrics)
-help(strsplit)
 
 ```

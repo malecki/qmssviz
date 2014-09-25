@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<!-- saved from url=(0014)about:internet -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=9" >
+
+<title>Sorted Data</title>
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 12px;
+   margin: 8px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 { 
+   font-size:2.2em; 
+}
+
+h2 { 
+   font-size:1.8em; 
+}
+
+h3 { 
+   font-size:1.4em; 
+}
+
+h4 { 
+   font-size:1.0em; 
+}
+
+h5 { 
+   font-size:0.9em; 
+}
+
+h6 { 
+   font-size:0.8em; 
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre {	
+   margin-top: 0;
+   max-width: 95%;
+   border: 1px solid #ccc;
+   white-space: pre-wrap;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code.r, code.cpp {
+   background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * { 
+      background: transparent !important; 
+      color: black !important; 
+      filter:none !important; 
+      -ms-filter: none !important; 
+   }
+
+   body { 
+      font-size:12pt; 
+      max-width:100%; 
+   }
+       
+   a, a:visited { 
+      text-decoration: underline; 
+   }
+
+   hr { 
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote { 
+      padding-right: 1em; 
+      page-break-inside: avoid; 
+   }
+
+   tr, img { 
+      page-break-inside: avoid; 
+   }
+
+   img { 
+      max-width: 100% !important; 
+   }
+
+   @page :left { 
+      margin: 15mm 20mm 15mm 10mm; 
+   }
+     
+   @page :right { 
+      margin: 15mm 10mm 15mm 20mm; 
+   }
+
+   p, h2, h3 { 
+      orphans: 3; widows: 3; 
+   }
+
+   h2, h3 { 
+      page-break-after: avoid; 
+   }
+}
+
+</style>
+
+<!-- Styles for R syntax highlighter -->
+<style type="text/css">
+   pre .operator,
+   pre .paren {
+     color: rgb(104, 118, 135)
+   }
+
+   pre .literal {
+     color: rgb(88, 72, 246)
+   }
+
+   pre .number {
+     color: rgb(0, 0, 205);
+   }
+
+   pre .comment {
+     color: rgb(76, 136, 107);
+   }
+
+   pre .keyword {
+     color: rgb(0, 0, 255);
+   }
+
+   pre .identifier {
+     color: rgb(0, 0, 0);
+   }
+
+   pre .string {
+     color: rgb(3, 106, 7);
+   }
+</style>
+
+<!-- R syntax highlighter -->
+<script type="text/javascript">
+var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
+hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+</head>
+
+<body>
+<h1>Sorted Data</h1>
+
+<p>This is an R Markdown document. Markdown is a simple formatting syntax for authoring web pages (click the <strong>Help</strong> toolbar button for more details on using R Markdown).</p>
+
+<p>When you click the <strong>Knit HTML</strong> button a web page will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:</p>
+
+<pre><code class="r">df4 &lt;- read.csv(&quot;lgas.csv&quot;)
+sample_data &lt;- read.csv(&quot;sample_health_facilities.csv&quot;)
+subdf4 &lt;- subset(df4, zone == &quot;South-South&quot;)
+df4merge &lt;- merge(subdf4, sample_data, by.x = &quot;lga_id&quot;, by.y = &quot;lga_id&quot;)
+orddf4mrg &lt;- df4merge[order(df4merge$pop_2006),]
+orddf4mrg
+</code></pre>
+
+<pre><code>##   lga_id               unique_lga pop_2006             lga.x     state.x
+## 1    101      cross_river_bekwara   105822           Bekwara Cross River
+## 8    722           edo_uhunmwonde   120813        Uhunmwonde         Edo
+## 3    523        delta_ndokwa_west   149325       Ndokwa-West       Delta
+## 2    324          delta_ika_south   162594         Ika South       Delta
+## 6    569        cross_river_ogoja   171901             Ogoja Cross River
+## 4    559     cross_river_odukpani   192444          Odukpani Cross River
+## 7    720      delta_ughelli_south   213576     Ughelli South       Delta
+## 5    562 rivers_ogba_egbema_ndoni   284010 Ogba/Egbema/Ndoni      Rivers
+## 9    746        delta_warri_south   303417       Warri South       Delta
+##        zone.x area_sq_km surveying_effort pop_density_2006 longitude
+## 1 South-South      305.6           Others           346.31     8.910
+## 8 South-South     2034.5           Others            59.38     5.911
+## 3 South-South      816.4           Others           182.90     6.341
+## 2 South-South      435.9           Others           373.04     6.200
+## 6 South-South      972.3           Others           176.81     8.721
+## 4 South-South     1354.4              113           142.08     8.147
+## 7 South-South      786.3           Others           271.63     5.901
+## 5 South-South      969.8           Others           292.87     6.636
+## 9 South-South      633.8           Others           478.75     5.610
+##   latitude senatorial_district                     TA_names
+## 1    6.698   Cross-River North       Patrick  Theresa Ogeyi
+## 8    6.503           Edo South              Ekweozoh Ijeoma
+## 3    5.801         Delta North        Ogbolu Chidi McDonald
+## 2    6.182         Delta North             Ayuya Tega David
+## 6    6.511   Cross-River North       Patrick  Theresa Ogeyi
+## 4    5.165   Cross-River South                   Akima Edet
+## 7    5.344       Delta Central                Dennis Bennis
+## 5    5.399         Rivers West Amakiri Fikiniseleka Collins
+## 9    5.629         Delta South                Dennis Bennis
+##               lga.y     state.y      zone.y c_section_yn
+## 1           Bekwara Cross River South-South        FALSE
+## 8        Uhunmwonde         Edo South-South        FALSE
+## 3       Ndokwa-West       Delta South-South         TRUE
+## 2         Ika South       Delta South-South        FALSE
+## 6             Ogoja Cross River South-South        FALSE
+## 4          Odukpani Cross River South-South        FALSE
+## 7     Ughelli South       Delta South-South        FALSE
+## 5 Ogba/Egbema/Ndoni      Rivers South-South        FALSE
+## 9       Warri South       Delta South-South        FALSE
+##   num_nurses_fulltime                                            gps
+## 1                   3 6.6513848304748535 8.869051337242126 151.0 4.0
+## 8                   0  6.679955720901489 6.085991263389587 306.0 4.0
+## 3                   8   5.70480295 6.43165459 34.099998474121094 5.0
+## 2                   1  6.247004270553589 6.134732365608215 178.0 4.0
+## 6                   0   6.477068066596985 8.580247163772583 66.0 4.0
+## 4                   0   5.494038462638855 7.967378497123718 38.0 4.0
+## 7                   1   5.37297057 5.91941726 25.200000762939453 5.0
+## 5                   2   5.36041084 6.67822917 30.399999618530273 5.0
+## 9                   0    5.5714229 5.70460127 38.400001525878906 5.0
+##   num_lab_techs_fulltime management num_doctors_fulltime
+## 1                      2     public                    0
+## 8                      0     public                    0
+## 3                      1       &lt;NA&gt;                    2
+## 2                      0     public                    0
+## 6                      0     public                    0
+## 4                      0       &lt;NA&gt;                    0
+## 7                      0     public                    0
+## 5                      0       &lt;NA&gt;                    2
+## 9                      0     public                    0
+</code></pre>
+
+<pre><code class="r">subdf4.1 &lt;- subset(df4, grepl(&quot;South&quot;, df4$zone))
+df4merge.1 &lt;- merge(subdf4.1, sample_data, by.x = &quot;lga_id&quot;, by.y = &quot;lga_id&quot;)
+orddf4mrg.1 &lt;- df4merge.1[order(df4merge.1$pop_2006),]
+orddf4mrg.1
+</code></pre>
+
+<pre><code>##    lga_id               unique_lga pop_2006             lga.x     state.x
+## 20    651          ogun_remo_north    59911        Remo North        Ogun
+## 2      67     osun_atakunmosa_west    68643   Atakunmosa West        Osun
+## 8     304            osun_ifelodun    96748          Ifelodun        Osun
+## 4     101      cross_river_bekwara   105822           Bekwara Cross River
+## 12    359           ekiti_ise_orun   113754          Ise/Orun       Ekiti
+## 24    722           edo_uhunmwonde   120813        Uhunmwonde         Edo
+## 5     183          imo_ehime_mbano   130931       Ehime-Mbano         Imo
+## 19    611                 imo_orlu   142717              Orlu         Imo
+## 15    523        delta_ndokwa_west   149325       Ndokwa-West       Delta
+## 6     191         anambra_ekwusigo   158231          Ekwusigo     Anambra
+## 3      76         anambra_ayamelum   158410          Ayamelum     Anambra
+## 11    324          delta_ika_south   162594         Ika South       Delta
+## 7     218           imo_ezinihitte   165593        Ezinihitte         Imo
+## 18    569        cross_river_ogoja   171901             Ogoja Cross River
+## 16    559     cross_river_odukpani   192444          Odukpani Cross River
+## 23    720      delta_ughelli_south   213576     Ughelli South       Delta
+## 25    728       abia_umuahia_north   220660     Umuahia North        Abia
+## 21    671             ogun_shagamu   253412           Shagamu        Ogun
+## 17    562 rivers_ogba_egbema_ndoni   284010 Ogba/Egbema/Ndoni      Rivers
+## 10    316         ogun_ijebu_north   284336       Ijebu North        Ogun
+## 1      49          anambra_anaocha   285002           Anaocha     Anambra
+## 9     312           anambra_ihiala   302158            Ihiala     Anambra
+## 26    746        delta_warri_south   303417       Warri South       Delta
+## 22    694           lagos_surulere   503975          Surulere       Lagos
+## 14    516             lagos_mushin   633009            Mushin       Lagos
+## 13    441             lagos_kosofe   665393            Kosofe       Lagos
+##         zone.x area_sq_km surveying_effort pop_density_2006 longitude
+## 20   Southwest     199.59           Others           300.18     3.732
+## 2    Southwest     577.55           Others           118.85     4.667
+## 8    Southwest     114.53           Others           844.73     4.636
+## 4  South-South     305.57           Others           346.31     8.910
+## 12   Southwest     432.27           Others           263.15     5.402
+## 24 South-South    2034.49           Others            59.38     5.911
+## 5    Southeast     168.62           Others           776.46     7.290
+## 19   Southeast     131.65           Others          1084.09     7.038
+## 15 South-South     816.44           Others           182.90     6.341
+## 6    Southeast     116.47           Others          1358.59     6.848
+## 3    Southeast     588.71              148           269.08     6.989
+## 11 South-South     435.86           Others           373.04     6.200
+## 7    Southeast     109.33           Others          1514.61     7.327
+## 18 South-South     972.26           Others           176.81     8.721
+## 16 South-South    1354.44              113           142.08     8.147
+## 23 South-South     786.27           Others           271.63     5.901
+## 25   Southeast     244.60           Others           902.13     7.485
+## 21   Southwest     614.74           Others           412.22     3.583
+## 17 South-South     969.76           Others           292.87     6.636
+## 10   Southwest     968.00           Others           293.74     3.984
+## 1    Southeast     104.38           Others          2730.39     7.017
+## 9    Southeast     251.83           Others          1199.83     6.872
+## 26 South-South     633.77           Others           478.75     5.610
+## 22   Southwest      23.03           Others         21881.16     3.351
+## 14   Southwest      17.50           Others         36161.91     3.351
+## 13   Southwest      81.52           Others          8162.20     3.408
+##    latitude senatorial_district                      TA_names
+## 20    7.006           Ogun East         Hammed Abayomi Adeola
+## 2     7.517           Osun East      Adeyefa Adedayo Adeyinka
+## 8     7.921        Osun Central      Ogunleye, Victor Oluseun
+## 4     6.698   Cross-River North        Patrick  Theresa Ogeyi
+## 12    7.441         Ekiti South    Olatunbosun Taiwo Franklin
+## 24    6.503           Edo South               Ekweozoh Ijeoma
+## 5     5.679              Okigwe            Leonard C. Onyeiwu
+## 19    5.804                Orlu        Olebara Chukwuemeka C.
+## 15    5.801         Delta North         Ogbolu Chidi McDonald
+## 6     5.991       Anambra South Okpalaosimiri Azubuike Nnamdi
+## 3     6.559     Anambra Central Okpalaosimiri Azubuike Nnamdi
+## 11    6.182         Delta North              Ayuya Tega David
+## 7     5.475              Owerri          Nwabugwu E. Nkemjika
+## 18    6.511   Cross-River North        Patrick  Theresa Ogeyi
+## 16    5.165   Cross-River South                    Akima Edet
+## 23    5.344       Delta Central                 Dennis Bennis
+## 25    5.595        Abia Central           Orji Stanley Alozie
+## 21    6.782           Ogun East         Hammed Abayomi Adeola
+## 17    5.399         Rivers West  Amakiri Fikiniseleka Collins
+## 10    7.015           Ogun East         Hammed Abayomi Adeola
+## 1     6.090       Anambra North        Azubuike Arinze Achike
+## 9     5.851       Anambra South Okpalaosimiri Azubuike Nnamdi
+## 26    5.629         Delta South                 Dennis Bennis
+## 22    6.492       Lagos Central    Danmole- Olalade  Adenekan
+## 14    6.531       Lagos Central    Danmole- Olalade  Adenekan
+## 13    6.593          Lagos East             Douglas Adebowale
+##                lga.y     state.y      zone.y c_section_yn
+## 20        Remo North        Ogun   Southwest         TRUE
+## 2    Atakunmosa West        Osun   Southwest        FALSE
+## 8           Ifelodun        Osun   Southwest         TRUE
+## 4            Bekwara Cross River South-South        FALSE
+## 12          Ise/Orun       Ekiti   Southwest        FALSE
+## 24        Uhunmwonde         Edo South-South        FALSE
+## 5        Ehime-Mbano         Imo   Southeast        FALSE
+## 19              Orlu         Imo   Southeast        FALSE
+## 15       Ndokwa-West       Delta South-South         TRUE
+## 6           Ekwusigo     Anambra   Southeast         TRUE
+## 3           Ayamelum     Anambra   Southeast        FALSE
+## 11         Ika South       Delta South-South        FALSE
+## 7         Ezinihitte         Imo   Southeast         TRUE
+## 18             Ogoja Cross River South-South        FALSE
+## 16          Odukpani Cross River South-South        FALSE
+## 23     Ughelli South       Delta South-South        FALSE
+## 25     Umuahia North        Abia   Southeast         TRUE
+## 21           Shagamu        Ogun   Southwest        FALSE
+## 17 Ogba/Egbema/Ndoni      Rivers South-South        FALSE
+## 10       Ijebu North        Ogun   Southwest        FALSE
+## 1            Anaocha     Anambra   Southeast        FALSE
+## 9             Ihiala     Anambra   Southeast         TRUE
+## 26       Warri South       Delta South-South        FALSE
+## 22          Surulere       Lagos   Southwest         TRUE
+## 14            Mushin       Lagos   Southwest        FALSE
+## 13            Kosofe       Lagos   Southwest         TRUE
+##    num_nurses_fulltime                                            gps
+## 20                   0   6.98168426 3.68639208 123.19999694824219 5.0
+## 2                    0   7.52274164 4.62185659 407.20001220703125 5.0
+## 8                    6   7.91940107 4.65994516 421.70001220703125 5.0
+## 4                    3 6.6513848304748535 8.869051337242126 151.0 4.0
+## 12                   2    7.46085228 5.4184795 390.29998779296875 5.0
+## 24                   0  6.679955720901489 6.085991263389587 306.0 4.0
+## 5                    1  5.662475824356079 7.232480049133301 164.0 4.0
+## 19                   0  5.768364071846008 7.061988115310669 241.0 4.0
+## 15                   8   5.70480295 6.43165459 34.099998474121094 5.0
+## 6                    0                5.95802932 6.84972263 148.0 5.0
+## 3                    0   6.481826305389404 6.938955187797546 78.0 6.0
+## 11                   1  6.247004270553589 6.134732365608215 178.0 4.0
+## 7                    7    5.49070932 7.28365219 165.3000030517578 5.0
+## 18                   0   6.477068066596985 8.580247163772583 66.0 4.0
+## 16                   0   5.494038462638855 7.967378497123718 38.0 4.0
+## 23                   1   5.37297057 5.91941726 25.200000762939453 5.0
+## 25                  NA     5.5224549 7.49361609 175.1999969482422 5.0
+## 21                   0     6.69276612 3.49483379 92.4000015258789 5.0
+## 17                   2   5.36041084 6.67822917 30.399999618530273 5.0
+## 10                   0   6.97047814 3.81543107 102.19999694824219 5.0
+## 1                    2    6.07903635 7.00366347 276.1000061035156 5.0
+## 9                    2   5.88475837 6.89508114 110.30000305175781 5.0
+## 26                   0    5.5714229 5.70460127 38.400001525878906 5.0
+## 22                   3   6.49775137 3.35969109 42.400001525878906 5.0
+## 14                   0                 6.52714249 3.34915425 43.5 5.0
+## 13                   1    6.60113991 3.41806628 35.29999923706055 5.0
+##    num_lab_techs_fulltime management num_doctors_fulltime
+## 20                      1       &lt;NA&gt;                    2
+## 2                       0     public                    0
+## 8                       1       &lt;NA&gt;                    1
+## 4                       2     public                    0
+## 12                      0       &lt;NA&gt;                    1
+## 24                      0     public                    0
+## 5                       0       &lt;NA&gt;                    0
+## 19                      0     public                    0
+## 15                      1       &lt;NA&gt;                    2
+## 6                       0       &lt;NA&gt;                    1
+## 3                       1     public                    1
+## 11                      0     public                    0
+## 7                       1       &lt;NA&gt;                    0
+## 18                      0     public                    0
+## 16                      0       &lt;NA&gt;                    0
+## 23                      0     public                    0
+## 25                     41     public                  308
+## 21                      0     public                    0
+## 17                      0       &lt;NA&gt;                    2
+## 10                      0     public                    0
+## 1                      NA     public                   NA
+## 9                       0       &lt;NA&gt;                    1
+## 26                      0     public                    0
+## 22                      2       &lt;NA&gt;                    3
+## 14                      0     public                    0
+## 13                      0       &lt;NA&gt;                    1
+</code></pre>
+
+</body>
+
+</html>
+

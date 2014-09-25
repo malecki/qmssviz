@@ -75,7 +75,7 @@ sample_data &lt;- read.csv(file)</code></pre>
 <pre class="r"><code>sample_data2 &lt;- read.csv(&quot;lgas.csv&quot;)
 sample_data3&lt;-sample_data2[,c(&quot;lga_id&quot;,&quot;pop_2006&quot;)]
 newdataframe&lt;-merge(southern,sample_data3,by=&quot;lga_id&quot;)</code></pre>
-<p>Here we get a new data frame called newdataframe,and the first 5 records are as follows:</p>
+<p>Here we get a new data frame called newdataframe,and the first 6 records are as follows:</p>
 <pre><code>##   lga_id             lga       state        zone c_section_yn
 ## 1     49         Anaocha     Anambra   Southeast        FALSE
 ## 2     67 Atakunmosa West        Osun   Southwest        FALSE

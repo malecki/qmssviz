@@ -1,0 +1,60 @@
+---
+title: "R Tutorial Mini-Assignment"
+author: "Elliot Cohen"
+date: "September 25, 2014"
+output: html_document
+---
+```{r RMD-global-options, include=FALSE}
+## set R Markdown options. 
+## Markdown defines the layout and format of the resulting document. 
+## It is not R code, but allows you to hide/supress R code and output.
+options(width=90)
+# opts_chunk$set(warning=TRUE, message=FALSE , tidy=TRUE)
+```
+
+1. Go to this [link](http://bit.ly/1fj3sjD) and download the file into the working directory.  
+2. Produce a new `data.frame`, which has the following properties:
+    + From the Nigeria Facilities Inventory data (`sample_data` from section 1.5.1), select all facilities located in the Southern zones of Nigeria.
+    + Incorporate the pop2006 column from the `lgas.csv` file into the new data.frame containing only those facilities located in Southern Nigeria. (Hint: your id column is `lga` or `lga_id`).  
+3. Calculate the total number of full time nurses and doctors for all health facilities in each state.
+    + Sort the resulting dataset by state population, in descending order.
+    + Show the results!  
+
+Read-in the raw data from .csv
+```{r import-data}
+lgas<-read.csv("labs/tutorial/lgas.csv")
+str(lgas)
+dim(lgas)
+
+facilities<-read.csv("labs/tutorial/sample_health_facilities.csv")
+str(facilities)
+dim(facilities)
+```
+
+From the Nigeria Facilities Inventory data (`sample_health_facilities.csv` or 'sample_data' from section 1.5.1), select all facilities located in the Southern zones of Nigeria
+```{r subset}
+# What are the zone classifications for Nigeria?
+levels(facilities$zone)
+# grab facilities located in a Southern zone, e.g. a zone containing the regular expression "South". 
+# This includes South-South, Southwest, and Southeast.
+row<-grep("South", facilities$zone)
+set<-facilities[row, ]
+```
+
+Incorporate the pop2006 column from the `lgas.csv` file into the new data.frame containing only those facilities located in Southern
+```{r merge}
+df<-merge(set, lgas[,3:4], by="lga")
+```
+
+Calculate the total number of full time nurses and doctors for all health facilities in each state.  
+  - Sort the resulting dataset by state population, in descending order.  
+  - Show the results! 
+```{r stats}
+library(plyr)
+library(reshape2)
+library(ggplot2)
+states<-ddply(df, .(state), numcolwise(sum)) # summarize by state
+states<-states[, -2] # remove the lga_id (not really a numeric value, and thus not additive). Should have been a factor or character string.
+states[order(-states$pop_2006), ] # ordered table (by State population, decreasing)
+```
+Tufte always says that the best way to show a small data set with precision is with a table!

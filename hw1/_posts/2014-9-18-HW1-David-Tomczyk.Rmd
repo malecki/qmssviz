@@ -15,65 +15,77 @@ responses <- read.csv("responses-2014-09-05.csv",stringsAsFactors=F)
 ```
 ---
 
-My first foray into R and ggplot2
+# Visualizing data from the Questionnaire
 
 ---
 
-# Who is in the class?
+## Who is in the class?
 
 I thought it would be useful to take a look at who is taking this class. Its a QMSS class, but how many non-QMSS students are here?
 
+First creating the data frame:
+```{r}
+program.df <-as.data.frame.table(table(responses[[2]]),stringsAsFactors=FALSE)
+program.df #look at the data frame created
 
-```{r ggplot, fig.width=12, fig.height=3, message=FALSE}
+program.df <- program.df[-8,]
+program.df[8,"Freq"] <- 2
+program.df <- program.df[-6,]
+program.df[6,"Freq"] <- 2
+names(program.df)[1] <- "Program"
+names(program.df)[2] <- "Count"
+program.df[4,"Program"] <- "QMSS 1st sem."
+program.df[5,"Program"] <- "QMSS 2nd Sem.+"
+program.df[6,"Program"] <- "QMSS 3rd Sem."
+```
 
-program2.df <-as.data.frame.table(table(responses[[2]]),stringsAsFactors=FALSE)
-program2.df <- program2.df[-8,]
-program2.df[8,"Freq"] <- 2
-program2.df <- program2.df[-6,]
-program2.df[6,"Freq"] <- 2
-names(program2.df)[1] <- "Program"
-names(program2.df)[2] <- "Count"
-program2.df[4,1] <- "QMSS 1st sem."
-program2.df[5,"Program"] <- "QMSS 2nd Sem.+"
-program2.df[6,"Program"] <- "QMSS 3rd Sem."
+# Visualizing the data
 
-ggplot(data=program2.df, aes(x=Program, y=Count, fill=Program)) + geom_bar(stat="identity")+guides(fill=FALSE)+ggtitle("Class Make Up")
+```{r ggplot, fig.width=16, fig.height=5, message=FALSE}
+x.axis <- theme(axis.title.x = element_text(face="bold", colour="#990000", size=20), axis.text.x  = element_text(colour="#000000", angle=0, size=14))
+y.axis <- theme(axis.title.y = element_text(colour="#000000", size=16), axis.text.y  = element_text(angle=0, vjust=0.5, size=14))
+title.settings <- ggtitle("Class Make Up")+theme(plot.title=element_text(face="bold", size=28))#why is my tital disappearing????
+bar.text <- geom_text(data=program.df,aes(x=Program,y=Count,label=Count),vjust=0)
+
+ggplot(data=program.df, aes(x=Program, y=Count, fill=Program)) + geom_bar(stat="identity")+guides(fill=FALSE)+bar.text+x.axis+y.axis+title.settings
 
 ```
----
-
-**What I like:**  
--I was able to manipulate the dataset in r to get counts(not necessary but useful), condense similar categories, change axis/title
-
-**What I don't like:**  
--The colors  
--I think I'd like to order the data, though I'm not sure how  
--I'd like to put count number on top of the bars
-
 ---
 
 #Twitter users among the class, by program
 
 Which program/cohort has the highest proportion of twitter users?
 
-```{r ggplot2, fig.width=16, fig.height=8, message=FALSE}
+Creating the data frame:
+```{r}
+ library(plyr)
 
 progtwit <- responses[,c(2,4)]
+
 progtwit[14,"Program"] <- "Stat"
 progtwit[28,"Program"] <- "QMSS Third semester"
-progtwit2.df <-as.data.frame.table(table(progtwit),stringsAsFactors=FALSE)
-progtwit2.df[4,"Program"] <- "QMSS 1st Sem."
-progtwit2.df[5,"Program"] <- "QMSS 2nd Sem.+"
-progtwit2.df[6,"Program"] <- "QMSS 3rd Sem."
-progtwit2.df[12,"Program"] <- "QMSS 1st Sem."
-progtwit2.df[13,"Program"] <- "QMSS 2nd Sem.+"
-progtwit2.df[14,"Program"] <- "QMSS 3rd Sem."
 
-ggplot(progtwit, aes(Program, fill=Do.you.use.twitter.)) + geom_bar() + ggtitle("Twitter Users by Program")
+#progtwit <- revalue(progtwit$Program, c("QMSS Second semester +" = "b"))
 
+progtwit
 ```
----
-#look into Rcharts, have a button to switch between yes/no's in each category. Also think about adding proportions and/or frequency to the top of the bars. USE TWITTER BLUE(for users)/GREY(for not)! Consider: Dot plot, not bar chart
+
+#Visualizing data
+
+```{r ggplot2, fig.width=18, fig.height=8, message=FALSE}
+
+twit.title <- ggtitle("Twitter Users by Program")
+dotplot <- geom_dotplot(stackgroups=TRUE, binpositions="all")
+
+
+ggplot(progtwit, aes(Program, fill=Do.you.use.twitter.))+ geom_bar() + twit.title + x.axis + y.axis
+
+ggplot(progtwit, aes(Program, fill=Do.you.use.twitter.))+ dotplot + twit.title + x.axis + y.axis
+
+#Twitter logo blue
+```
+
+look into Rcharts, have a button to switch between yes/no's in each category. Also think about adding proportions and/or frequency to the top of the bars. USE TWITTER BLUE(for users)/GREY(for not)! Consider: Dot plot, not bar chart
 
 **What I like:**  
 -The colors, I guess  
@@ -85,77 +97,3 @@ ggplot(progtwit, aes(Program, fill=Do.you.use.twitter.)) + geom_bar() + ggtitle(
 -Might be useful to see specific count within bar groups, though that might look cluttered  
 
 ---
-
-#People who know how to use version control
-
-I had a lot of trouble with git over the week, so I wanted to look at who the other git noobies were.
-
-``` {r ggplot3, fig.width=4, fig.height=7, message=FALSE}
-
-vcs <-factor(responses[[9]])
-vcs.table <-table(vcs)
-vcs.df <- as.data.frame.table(vcs.table)
-
-ggplot(data=vcs.df, aes(x=vcs, y=Freq), main="Version Control Experience") + geom_bar(stat="identity") + ggtitle("Experience With Version Control")
-
-```
-----
-Looks kind of bad...what if we use a more appropriate scale?
-
-#People who know how to use version control
-
-``` {r ggplot4, fig.width=4, fig.height=3, message=FALSE}
-
-ggplot(data=vcs.df, aes(x=vcs, y=Freq)) + geom_bar(stat="identity") + ggtitle("Experience With Version Control")
-
-```
-
-```{r code_from_Malecki}
-
-setwd("~/qmssviz/Labs/questionnaire")
-
-library(ggplot2)
-library(reshape2)
-library(plyr)
-
-mrOptions <- strsplit("Excel, R, Stata, D3, Gephi, ggplot2, lattice, SQL, git / Github, SPSS, shell (terminal / command line), regular expressions (grep), Rstudio, JSON, Python, Sweave/knitr, Processing (language), C/C++, Leaflet, CartoDB, GeoJSON, PNaCl, node/npm, go, ruby, LaTeX, Heroku, Make, Pandas, Julia, non-git version control (cvs/svn/hg/bzr), XML, Web: html/css/js, vagrant/virtualbox, amazon web services (ec2/ s3), dropbox, google drive (formerly docs), OpenRefine (formerly Google refine), Pair programming", ", ")[[1]]
-
-removeParentheses <- function(x){
-  gsub("\\(.*\\)$", "", x)
-}
-mrOptions[24] <- "go language"
-mrOptions <- removeParentheses(mrOptions)
-expandSelections <- function(selected, options){
-  selected <- removeParentheses(selected)
-  sapply(options, grepl, x=selected, fixed=TRUE)
-}
-gridLevels <- c("None", "A little", "Confident", "Expert")
-makeOrderedFactor <- function(col, levels){
-  return (factor(col, levels=levels, labels=levels, ordered=TRUE))
-}
-df <- read.csv("responses-2014-09-05.csv", stringsAsFactors=FALSE,
-               check.names=FALSE)
-df[,5:12] <- lapply(df[,5:12], makeOrderedFactor, levels=gridLevels)
-mrLogical <- t(sapply(df[['Baseline experience']], expandSelections, 
-                      options=mrOptions))
-df <- cbind(df, mrLogical)
-
-plotdf <- data.frame(count=colSums(mrLogical), item=factor(colnames(mrLogical)))
-plotdf$item <- with(plotdf, reorder(item, count))
-ggplot(plotdf, aes(y=count, x=item)) + geom_bar(stat="identity") + coord_flip()
-gridQ <- df[,c(1,5:12)]
-## trim names
-names(gridQ) <- gsub("Software experience (the smaller list) ", "", names(gridQ), fixed=TRUE)
-foo <- reshape2::melt(gridQ, id.vars='Timestamp')
-eachCol <- function(col){
-  tapply(col, foo$variable, sum)
-}
-gridSummary <- apply(model.matrix(~0+value, foo), 2, eachCol)
-## from previous alpha order
-colnames(gridSummary) <- c("Some", "Lots", "Expert", "None")
-plotdf <- reshape2::melt(gridSummary)
-plotdf$Var2 <- factor(plotdf$Var2, levels=c("None", "Some", "Lots", "Expert"), ordered=TRUE)
-ggplot(plotdf, aes(x=Var2, y=value)) + geom_bar(stat="identity") + 
-  facet_wrap(~Var1, ncol=2) + ylab("count") + xlab("")
-
-```

@@ -65,9 +65,11 @@ progtwit <- responses[,c(2,4)]
 progtwit[14,"Program"] <- "Stat"
 progtwit[28,"Program"] <- "QMSS Third semester"
 
-#progtwit <- revalue(progtwit$Program, c("QMSS Second semester +" = "b"))
+progtwit2 <- data.frame(revalue(progtwit$Program, c("QMSS  First semester" = "QMSS 1st Sem.")))
+#progtwit2 <- data.frame(revalue(progtwit$Program, c("QMSS Second semester +" = "QMSS 2nd Sem. +")))
+#progtwit2 <- data.frame(revalue(progtwit$Program, c("QMSS Third semester" = "QMSS 3rd Sem.")))
 
-progtwit
+progtwit2
 ```
 
 #Visualizing data
@@ -82,7 +84,7 @@ ggplot(progtwit, aes(Program, fill=Do.you.use.twitter.))+ geom_bar() + twit.titl
 
 ggplot(progtwit, aes(Program, fill=Do.you.use.twitter.))+ dotplot + twit.title + x.axis + y.axis
 
-#Twitter logo blue
+#Twitter logo blue: #00aced
 ```
 
 look into Rcharts, have a button to switch between yes/no's in each category. Also think about adding proportions and/or frequency to the top of the bars. USE TWITTER BLUE(for users)/GREY(for not)! Consider: Dot plot, not bar chart

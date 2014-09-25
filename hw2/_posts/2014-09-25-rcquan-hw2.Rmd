@@ -1,0 +1,70 @@
+---
+title: "Homework 2"
+author: "Ryan Quan"
+date: "September 25, 2014"
+output: html_document
+---
+### Setup
+
+```{r, message=FALSE}
+setwd("~/mailman/qmssviz/hw2/_posts/")
+library(plyr)
+library(dplyr)
+```
+
+### Loading the Data
+
+```{r}
+lgas <- read.csv("lgas.csv")
+niger <- read.csv("sample_health_facilities.csv")
+```
+
+### Column Names
+
+```{r}
+names(lgas)
+```
+
+```{r}
+names(niger)
+```
+
+### Subsetting
+
+Let's select facilities located in the Southern zones of Nigeria. We use the `unique` function to look at the different labels for zones and subset for the ones in the with the term "south".
+
+```{r}
+unique(niger$zone)
+nigerSouth <- niger[niger$zone %in% 
+                      c("South-South", "Southeast", "Southwest"), ]
+```
+
+We are interested in getting the `pop2006` column from the lgas dataset. Let's subset the data on the columns `pop_2006` and `lga_id` which we will need to join the datasets.
+
+```{r}
+pop2006 <- lgas[, c("lga_id","pop_2006")]
+```
+
+### Merging the Datasets
+
+Here we use the `join` function from the `plyr` package to join the two datasets on `lga_id`.
+
+```{r}
+lgasSouth <- join(nigerSouth, pop2006, by = "lga_id")
+```
+
+### Summary
+
+Let's calculate the total number of full time nurses and doctors for all health facilities in each state, sorted by the state population. We use the `dplyr` package for readability.
+
+```{r}
+lgasSouth %>%
+    group_by(state) %>%
+    summarise(num_nurses = sum(num_nurses_fulltime),
+              num_doctors = sum(num_doctors_fulltime),
+              population = sum(pop_2006)) %>%
+    arrange(desc(population))
+```
+
+
+```

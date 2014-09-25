@@ -64,7 +64,7 @@ progtwit <- responses[,c(2,4)]
 
 progtwit[14,"Program"] <- "Stat"
 progtwit[28,"Program"] <- "QMSS Third semester"
-
+colnames(progtwit)[2] <- "Twitter"
 
 progtwit$Program[progtwit$Program == "QMSS First semester"] <- "QMSS 1st Sem."
 progtwit$Program[progtwit$Program == "QMSS Second semester +"] <- "QMSS 2nd Sem. +"
@@ -76,25 +76,20 @@ progtwit$Program[progtwit$Program == "QMSS Third semester"] <- "QMSS 3rd Sem."
 ```{r ggplot2, fig.width=18, fig.height=12, message=FALSE}
 
 twit.title <- ggtitle("Twitter Users by Program")
+twit.legend <- theme(legend.text = element_text(size = 20)) + theme(legend.title = element_text(size = 25))
+legend.order <- guides(fill = guide_legend(reverse=TRUE))
+colors.custom <- scale_fill_manual(values=c("#999999", "#1dcaff"))
+
+#Stacked bar chart
+ggplot(progtwit, aes(Program, fill=Twitter))+ geom_bar()+ legend.order + colors.custom + twit.title + x.axis + y.axis + twit.legend
+
+#Dot plot
 dotplot <- geom_dotplot(stackgroups=TRUE, binpositions="all")
+ggplot(progtwit, aes(Program, fill=Twitter))+ dotplot + legend.order + colors.custom + twit.title + x.axis + y.axis+twit.legend
 
-
-ggplot(progtwit, aes(Program, fill=Do.you.use.twitter.))+ geom_bar() + twit.title + x.axis + y.axis
-
-ggplot(progtwit, aes(Program, fill=Do.you.use.twitter.))+ dotplot + twit.title + x.axis + y.axis
-
-#Twitter logo blue: #00aced
 ```
+---
 
+Suggestions:
 look into Rcharts, have a button to switch between yes/no's in each category. Also think about adding proportions and/or frequency to the top of the bars. USE TWITTER BLUE(for users)/GREY(for not)! Consider: Dot plot, not bar chart
-
-**What I like:**  
--The colors, I guess  
--More interesting than a simple bar chart
-
-**What I don't like:**  
--Still a pretty simple bar chart  
--The sizes of the legend/axis labels/title  
--Might be useful to see specific count within bar groups, though that might look cluttered  
-
 ---

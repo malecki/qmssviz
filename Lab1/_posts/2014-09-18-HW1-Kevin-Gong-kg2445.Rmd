@@ -91,9 +91,13 @@ help(sentSplit)
 sentSplit(text2)
 
 text1 <- read.csv("~/qmssviz/Lab1/_posts/artists.csv")
-
+head(text1)
 help(scan)
 help(readLines)
 
+sentSplit(text1,"lyrics")
+
+polarity(text1$lyrics)
+help(strsplit)
 
 ```

@@ -18,5 +18,5 @@ sample_lgas <- sample_lgas[,c(1,6)]
 sample_lgas <- merge(sample_lgas, pop_lgas, by="lga_id")
 nrow(sample_lgas)
 newdata <- sample_lgas[order(-sample_lgas$pop_2006),]
-View(newdata)
+newdata
 ```

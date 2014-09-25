@@ -1,0 +1,61 @@
+---
+title: "2014-09-18-HW1-Jenna-Song"
+output: html_document
+published: false
+tags: hw1
+---
+This dataset is one that I made on a sample of the Top 20 K-pop songs in Korea from 2011-2012. For each song, I collected domestic and international outcome data along with several variables that noted the globalization strategies involved in the production of the song. For these plots I only used the domestic outcome data, i.e. how the song performed in Korea. 
+ 
+The first plot looks at the digital sales volume of each song according to the highest rank it achieved on the charts. Since the data is only from when songs were in the Top 20, this is a representation of digital sales while the song was in the Top 20 rather than the total volume of digital sales. I began by using a scatterplot to show the distribution of the data.
+
+```{r, echo=FALSE}
+
+library(gdata)
+artist.data = read.xls("/Users/youjinsong/Documents/Documents old/Princeton Academics/Junior Spring/Thesis/Thesis Data copy.xlsx", sheet = 3)
+
+# scatterplot for highest rank achieved vs. digital sales
+library(ggplot2)
+
+ggplot(artist.data, aes(x=toprank, y=gaonsum)) + geom_point(shape=1)
+
+```
+
+Once I obtained this scatterplot, I realized that the rankings were misleading because 1 is the best ranking but it was represented as lower (on the left side) in the plot, so I reversed the order of the rankings and then added labels to the axises and a title to the plot. I also added a Loess fit line to show the general trend of the data.
+
+```{r, echo=FALSE}
+artist.data$gaonsum <- as.numeric(artist.data$gaonsum)
+artist.data$gaonsum <- artist.data$gaonsum/1000
+
+ranksumplot <- ggplot(artist.data, aes(x=toprank, y=gaonsum)) + geom_point(shape=1) + xlim(20,1) + xlab("Highest Rank Achieved") + ylab("Digital Sales While in Top 20") + ggtitle("Digital Sales vs. Highest Rank")
+(ranksumplot1 <- ranksumplot + geom_smooth(method = "loess", size = 1.5))
+```
+
+For the last step I just made the theme black and white instead of gray so the plot is more visible.
+
+```{r, echo=FALSE}
+ranksumplot1 + theme_bw()
+```
+
+Overall, the results seem to show that while in general the higher the ranking, the larger the digital sales volume, there is a higher spread in lower ranking songs' digital sales volume than with the higher ranking songs.
+
+For the next section, I began by creating a bar graph to show the number of songs per genre. The genre here is the artist's main genre.
+
+```{r, echo=FALSE}
+# bar graph to count number of songs by genre
+ggplot(artist.data, aes(x=artistgenre)) + geom_bar(aes(fill=artistgenre)) + xlab("Artist's Main Genre") + ylab("Number of Songs") + ggtitle("Number of Songs per Genre") + ylim(0, 200) + theme_bw() + guides(fill=guide_legend(title=NULL)) + scale_fill_discrete(breaks=c("Ballad", "Dance", "Folk", "R&amp;B", "Rap/Hip-Hop", "Rock"), labels=c("Ballad", "Dance", "Folk", "R&B", "Rap/Hip-Hop", "Rock"))
+```
+
+Next, I wanted to show the performance outcomes per genre, so I showed the search volume in Korea by the song's artist's main genre with boxplots for each genre. The search volume was calculated using Google Trends data.
+
+```{r, echo=FALSE}
+# boxplot for search volume by artist's main genre
+ggplot(artist.data, aes(x=artistgenre, y=sumkorea)) + geom_boxplot(aes(fill = artistgenre)) + xlab("Artist's Main Genre") + ylab("Search Volume in Korea") + theme_bw()
+```
+
+The boxplots that I got initially was not very easy to read because the outliers were leading the boxplots to be crammed to the bottom, so I reset the y-axis limits to show the bottom part in a larger scale. The outliers were not removed from the data but rather the lower section of the plot was shown in a magnified section.
+The results show that the medians for ballads, folk, R&B, and rap/hip-hop are near 0, while dance and rock have higher medians. In general, the search volume for dance music seems to be the highest.
+
+```{r, echo=FALSE}
+# boxplot with outliers cut, not removed
+ggplot(artist.data, aes(x=artistgenre, y=sumkorea)) + geom_boxplot(aes(fill = artistgenre)) + ylim(0,20) + xlab("Artist's Main Genre") + ylab("Search Volume in Korea") + theme_bw() + guides(fill=guide_legend(title=NULL)) + scale_fill_discrete(breaks=c("Ballad", "Dance", "Folk", "R&amp;B", "Rap/Hip-Hop", "Rock"), labels=c("Ballad", "Dance", "Folk", "R&B", "Rap/Hip-Hop", "Rock"))
+```

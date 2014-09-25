@@ -12,9 +12,12 @@ _site
 .Rhistory
 Thumbs.db
 .Rproj.user
+<<<<<<< HEAD
 
 ## Rproj is seriously annoying. Sorry.
 *.Rproj
 *.Rbuildignore
 .Rproj.user
 *cache
+=======
+>>>>>>> 0af8d1529b485cd70cb80f45e153455ac735c145

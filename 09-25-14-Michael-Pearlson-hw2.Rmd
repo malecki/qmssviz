@@ -3,7 +3,7 @@ title: "MDRC Sample"
 author: Michael Pearlson
 output: pdf_document
 published: false
-tags: sample
+tags: hw2
 ---
 MDRC Sample Code
 ========================================================

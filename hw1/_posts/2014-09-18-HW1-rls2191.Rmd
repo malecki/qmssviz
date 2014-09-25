@@ -17,19 +17,6 @@ health <- health_full[!(is.na(health_full$num_doctors_fulltime) | is.na(health_f
 ```
 Here is a scatter plot of doctors vs. nurses. The dot colors refer to the region of the clinic. 
 ```{r}
-plot(health$num_doctors_fulltime, health$num_nurses_fulltime, main="Doctors and Nurses in Niger by Region", xlab="Number of Full Time Doctors", ylab="Number of Full Time Nurses", xlim=c(0,4), ylim=c(0,9), pch=19, col=health$zone)
-legend(2.75, 8.75, unique(health$zone), pch=19, col=unique(health$zone))
-```
-
-Here is the same plot with the locations labeled:
-```{r}
-plot(health$num_doctors_fulltime, health$num_nurses_fulltime, main="Doctors and Nurses in Niger by Region", xlab="Number of Full Time Doctors", ylab="Number of Full Time Nurses", xlim=c(0,4), ylim=c(0,9), pch=19, col=health$zone)
-legend(2.75, 8.75, unique(health$zone), pch=19, col=unique(health$zone))
-text(health$num_doctors_fulltime, health$num_nurses_fulltime, labels=health$lga, cex= 0.7)
-```
-
-Showing the same information with ggplot
-```{r}
 library(ggplot2)
 ggplot(health, aes(num_doctors_fulltime, num_nurses_fulltime, color=zone)) + 
   geom_point(shape=9, alpha=2/3, fill=5) + 

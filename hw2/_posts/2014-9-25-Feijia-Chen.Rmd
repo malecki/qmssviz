@@ -1,0 +1,22 @@
+---
+title: "Homework 2 assignment"
+author: "fc2440"
+date: "September 22, 2014"
+output: html_document
+published: FALSE
+tags: hw2
+---
+
+
+```{r}
+setwd('/Users/Chen/Desktop/Data Visualization/hw2')
+data_lgas <- read.csv('lgas.csv')
+summary(data_lgas$zone)
+sample_lgas <- subset(data_lgas, data_lgas$zone == "South-South" | data_lgas$zone == "Southeast" | data_lgas$zone == "Southwest")
+pop_lgas <- sample_lgas[,c(1,3)]
+sample_lgas <- sample_lgas[,c(1,6)]
+sample_lgas <- merge(sample_lgas, pop_lgas, by="lga_id")
+nrow(sample_lgas)
+newdata <- sample_lgas[order(-sample_lgas$pop_2006),]
+View(newdata)
+```

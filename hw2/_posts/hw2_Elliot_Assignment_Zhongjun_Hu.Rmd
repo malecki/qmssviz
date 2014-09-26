@@ -11,7 +11,7 @@ file <- "sample_health_facilities.csv"
 sample_data <- read.csv(file)
 head(sample_data)
 str(sample_data)
-table(sample_data$zone)
+table(sample_data$zone) 
 southern<-subset(sample_data,zone%in%c("South-South","Southeast","Southwest"),row.names=FALSE)
 southern
 

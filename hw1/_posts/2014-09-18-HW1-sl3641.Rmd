@@ -22,7 +22,6 @@ suicideRate$logGDPpc <- log(suicideRate$GDPperCap)
 ```        
 
 ```{r}
-head(suicideRate)
 str(suicideRate)
 ```
 
@@ -34,7 +33,7 @@ Below we have a scatterplot of 2010 suicide rates for 59 countries and GDP per c
 require(ggplot2)
 
 ggplot(suicideRate, aes(x=logGDPpc, y=SuicideRate)) +
-  geom_point(shape=1) +
+  geom_point() +
   ggtitle("2010 Suicide Rates vs. GDP per Capita") +
   xlab("GDP per Capita, log scale") +
   ylab("Suicide rates (per 100,000)") +
@@ -50,28 +49,27 @@ kor <- read.csv("/Users/User/Documents/qmssviz_other/Suicide Data/southkorea.csv
 require(ggplot2)
 
 ggplot(kor, aes(x=year, y=suicideRate)) +
-  geom_line() +
+  geom_smooth() +
   geom_point() +
   ggtitle("South Korea Suicide Rates 1990 - 2011") +
   xlab("Year") +
-  ylab("Suicide rates (per 100,000)")
+  ylab("Suicide rates (per 100,000)") +
+  scale_x_continuous(minor_breaks = seq(1990, 2011, 1))
 ```   
 
 However, overall mortality rates have declined during this period.
 
 ```{r, echo=FALSE}
 ggplot(kor, aes(x=year, y=mortality)) +
-  geom_line() +
+  geom_smooth() +
   geom_point() +
   ggtitle("South Korea Mortality Rates 1990 - 2011") +
   xlab("Year") +
-  ylab("Mortality rates (per 100,000)")
+  ylab("Mortality rates (per 100,000)") +
+  scale_x_continuous(minor_breaks = seq(1990, 2011, 1))
 ```   
 
 
-
 Data sources:
-
-http://apps.who.int/healthinfo/statistics/mortality/whodpms/
-
-http://data.worldbank.org/indicator/NY.GDP.PCAP.CD
+<li> http://apps.who.int/healthinfo/statistics/mortality/whodpms/
+<li> http://data.worldbank.org/indicator/NY.GDP.PCAP.CD

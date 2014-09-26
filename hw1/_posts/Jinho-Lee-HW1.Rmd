@@ -1,0 +1,13 @@
+---
+title: "Jinho-Lee-HW1"
+author: "JL4204"
+date: "Friday, September 26, 2014"
+output: html_document
+---
+
+library(ggplot2)
+
+player <- read.csv("C:/Users/lakefonger/Desktop/nba/players_edited.csv")
+str(player)
+
+qplot(height, weight, data=player)

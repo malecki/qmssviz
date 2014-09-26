@@ -6,4 +6,29 @@ published: false
 tags: hw1
 ---
 
+## Introduction
 
+This data comes from the National Longitudinal Survey of Freshmen (NLSF). I intend to use it for my master's thesis, and I am currently analyzing it for a preliminary modeling project.
+
+The NLSF is a longitudinal survey of students entering college for the first time in the fall of 1999, at one of 28 selective institutions. They were surveyed once that fall, and then once each spring for the next four years. In this homework, I analyze some summary statistics describing students' self-reported time use, GPAs, and majors over the four-year survey period. The sample here is limited to students who stayed at the same institution for exactly four years. That is, students who dropped out, transferred, or graduated early are not represented here, although they were followed and interviewed by the NLSF and make up a substantial portion of the original sample.
+
+Some preliminary code:
+
+```{r, warning = FALSE, message = FALSE}
+library(ggplot2)
+library(reshape2)
+
+load("~/Class/Causal Methods/causal methods paper/data/design.RData")
+
+gpa <- design[, grep("gpa$", names(design))]
+major <- design[, grep("w\\d_(?!(gpa|wd))", names(design), perl = TRUE)]
+time_use <- design[, grep("_wd_", names(design))]
+```
+
+## GPA
+
+```{r}
+gpa.means <- data.frame(mean_gpa = colMeans(gpa), wave = 1:5)
+
+ggplot(gpa.means) + geom_point(aes(wave, mean_gpa)) + geom_line(aes(wave, mean_gpa))
+```

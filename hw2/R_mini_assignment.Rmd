@@ -22,11 +22,12 @@ options(width=90)
 
 Read-in the raw data from .csv
 ```{r import-data}
-lgas<-read.csv("labs/tutorial/lgas.csv")
+setwd("~/github/qmssviz-FORK/labs/tutorial/") # set to directory containing data files
+lgas<-read.csv("lgas.csv")
 str(lgas)
 dim(lgas)
 
-facilities<-read.csv("labs/tutorial/sample_health_facilities.csv")
+facilities<-read.csv("sample_health_facilities.csv")
 str(facilities)
 dim(facilities)
 ```
@@ -58,3 +59,14 @@ states<-states[, -2] # remove the lga_id (not really a numeric value, and thus n
 states[order(-states$pop_2006), ] # ordered table (by State population, decreasing)
 ```
 Tufte always says that the best way to show a small data set with precision is with a table!
+
+But wait... are our population totals correct? Are all LGA's represented in the `sample_health_facilities` data set such that aggregating population bottom-up would give an accurate state total?
+```{r pop}
+# lgas in the "South" of Nigeria
+row<-grep("South", lgas$zone)
+SouthLgas<-lgas[row, ]
+SouthLgas<-droplevels(SouthLgas)
+check<-levels(SouthLgas$lga)
+compare<-levels(df$lga)
+check %in% compare # are all unique LGAs in a Southern Zone contained in the sample_health_facilies subset?  NO!
+```

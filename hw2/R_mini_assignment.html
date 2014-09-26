@@ -74,7 +74,8 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 </ul></li>
 </ol>
 <p>Read-in the raw data from .csv</p>
-<pre class="r"><code>lgas&lt;-read.csv(&quot;labs/tutorial/lgas.csv&quot;)
+<pre class="r"><code>setwd(&quot;~/github/qmssviz-FORK/labs/tutorial/&quot;) # set to directory containing data files
+lgas&lt;-read.csv(&quot;lgas.csv&quot;)
 str(lgas)</code></pre>
 <pre><code>## 'data.frame':    774 obs. of  13 variables:
 ##  $ lga_id             : int  1 2 3 4 5 6 7 8 9 10 ...
@@ -92,7 +93,7 @@ str(lgas)</code></pre>
 ##  $ TA_names           : Factor w/ 121 levels &quot;Abdul Samad Isah Haruna&quot;,..: 75 57 62 83 19 114 108 108 94 80 ...</code></pre>
 <pre class="r"><code>dim(lgas)</code></pre>
 <pre><code>## [1] 774  13</code></pre>
-<pre class="r"><code>facilities&lt;-read.csv(&quot;labs/tutorial/sample_health_facilities.csv&quot;)
+<pre class="r"><code>facilities&lt;-read.csv(&quot;sample_health_facilities.csv&quot;)
 str(facilities)</code></pre>
 <pre><code>## 'data.frame':    50 obs. of  10 variables:
 ##  $ lga                   : Factor w/ 50 levels &quot;Aliero&quot;,&quot;Anaocha&quot;,..: 6 2 7 38 17 4 16 26 8 18 ...
@@ -138,6 +139,40 @@ states[order(-states$pop_2006), ] # ordered table (by State population, decreasi
 ## 5          Edo                   0                      0                    0   120813
 ## 6        Ekiti                   2                      0                    1   113754</code></pre>
 <p>Tufte always says that the best way to show a small data set with precision is with a table!</p>
+<p>But wait… are our population totals correct? Are all LGA’s represented in the <code>sample_health_facilities</code> data set such that aggregating population bottom-up would give an accurate state total?</p>
+<pre class="r"><code># lgas in the &quot;South&quot; of Nigeria
+row&lt;-grep(&quot;South&quot;, lgas$zone)
+SouthLgas&lt;-lgas[row, ]
+SouthLgas&lt;-droplevels(SouthLgas)
+check&lt;-levels(SouthLgas$lga)
+compare&lt;-levels(df$lga)
+check %in% compare # are all unique LGAs in a Southern Zone contained in the sample_health_facilies subset?  NO!</code></pre>
+<pre><code>##   [1] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+##  [15] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+##  [29] FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE
+##  [43] FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE  TRUE FALSE
+##  [57] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+##  [71] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE
+##  [85] FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+##  [99] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+## [113]  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+## [127] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+## [141] FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE  TRUE
+## [155] FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+## [169] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+## [183] FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+## [197] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE
+## [211] FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE
+## [225] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+## [239] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE  TRUE FALSE FALSE FALSE FALSE
+## [253] FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+## [267] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+## [281] FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+## [295] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+## [309] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE  TRUE
+## [323] FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE  TRUE FALSE FALSE
+## [337] FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE
+## [351] FALSE FALSE FALSE</code></pre>
 
 
 </div>

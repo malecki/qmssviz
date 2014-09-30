@@ -1,0 +1,27 @@
+---
+title: "2014-09-18-fchen-ecreee_assign1"
+author: "fchen"
+date: "Thursday, September 18, 2014"
+output: html_document
+published: false
+tags: assign1
+---
+
+```{r}
+library("dplyr")
+setwd("/Users/knarf/Copy/github/qmssviz/lab1")
+lgas <- read.csv("lgas.csv")
+shf <- read.csv("sample_health_facilities.csv")
+str(lgas)
+str(shf)
+```
+
+```{r}
+shf_south <- shf[shf$zone == "South-South", ]
+merge <- merge(shf_south, lgas, by.x = "lga_id", by.y = "lga_id")
+sum(merge$num_nurses_fulltime)
+sum(merge$num_doctors_fulltime)
+merge_ordered <- merge[order(-merge$pop_density_2006), ]
+head(merge_ordered)
+# done
+```

@@ -1,0 +1,8 @@
+---
+title: "homework1"
+author: "Michael Malecki"
+date: "September 11, 2014"
+output: html_document
+published: false
+tags: hw1
+---

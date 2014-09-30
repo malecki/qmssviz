@@ -6,7 +6,7 @@ exclude: [".rvmrc", ".rbenv-version", "README.md", "Rakefile", "changelog.md"]
 highlighter: pygments
 markdown: redcarpet
 excerpt_separator: ""
-baseurl: http://malecki.github.io/qmssviz
+baseurl: http://mm3940.github.io/qmssviz
 
 # Themes are encouraged to use these universal variables 
 # so be sure to set them if your theme uses them.
@@ -27,7 +27,7 @@ author :
 # Else if you are pushing to username.github.io, replace with your username.
 # Finally if you are pushing to a GitHub project page, include the project name at the end.
 #
-production_url : http://malecki.github.io/qmssviz
+production_url : http://mm3940.github.io/qmssviz
 
 # All Jekyll-Bootstrap specific configurations are namespaced into this hash
 #
@@ -56,7 +56,7 @@ JB :
   #   - Only the following values are falsy: ["", null, false]
   #   - When setting BASE_PATH it must be a valid url.
   #     This means always setting the protocol (http|https) or prefixing with "/"
-  BASE_PATH : http://malecki.github.io/qmssviz
+  BASE_PATH : http://mm3940.github.io/qmssviz
 
   # By default, the asset_path is automatically defined relative to BASE_PATH plus the enabled theme.
   # ex: [BASE_PATH]/assets/themes/[THEME-NAME]

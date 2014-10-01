@@ -1,3 +1,0 @@
-https://github.com/zsqac/Spoon-Knife.git
-https://github.com/octocat/Spoon-Knife.git
-https://github.com/zsqac/qmssviz.git

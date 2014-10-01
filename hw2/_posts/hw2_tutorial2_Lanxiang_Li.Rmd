@@ -1,0 +1,30 @@
+---
+title: "hw2_Lanxiang_Li_ll2937"
+author: "Lanxiang Li"
+date: "October 1, 2014"
+output: html_document
+published:false
+tags:hw2
+
+# 1.read data
+setwd("~/Desktop/qmssviz/hw2")
+lgas <- read.csv("lgas.csv")
+str(lgas)
+dim(lgas)
+
+health_facility <- read.csv("Health_Mopup_and_Baseline_NMIS_Facility.csv")
+str(health_facility)
+dim(health_facility)
+
+# 2.Select all health facilities located in the Southern zones of Nigeria
+levels(lgas$zone)
+row<-grep("South", lgas$zone)
+slgas<-lgas[row, ]
+south_facility <-merge(slgas, health_facility, by="unique_lga", sort=TRUE, all.x=TRUE)
+str(south_facility)
+
+# 3.Calculate the total number of full time nurses and doctors for all health facilities, by state
+library(plyr)
+library(reshape2)
+library(ggplot2)
+

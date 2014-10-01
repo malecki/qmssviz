@@ -27,4 +27,28 @@ str(south_facility)
 library(plyr)
 library(reshape2)
 library(ggplot2)
+states<-ddply(south_facility, .(state), numcolwise(sum), na.rm=TRUE)
+states<-subset(states, select=c("state", "pop_2006", "area_sq_km", "num_nurses_fulltime", "num_nursemidwives_fulltime", "num_doctors_fulltime"))
 
+## Population in Millions
+states$pop_2006<-states$pop_2006/10^6
+
+## total number of healthcare professionals, by state (in descending order of state population)
+states[order(-states$pop_2006), -3]
+
+## number of healthcare professionals per 1 million people
+percap<-cbind(states$state, states[,4:6]/(states$pop_2006))
+names(percap)[1]<-"state"
+percap[,2:4]<-round(percap[,2:4], digits=2)
+print(percap)
+
+## number of healthcare professionals per 100 sq. kilometers
+persqkm<-cbind(states$state, states[,4:6]/(states$area_sq_km)*100)
+names(persqkm)[1]<-"state"
+persqkm[,2:4]<-round(persqkm[,2:4], digits=2)
+print(persqkm)
+
+# 4.check
+check<-levels(slgas$lga)
+compare<-levels(south_facility$lga)
+all(check %in% compare)

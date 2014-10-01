@@ -10,6 +10,7 @@ tags:hw2
 setwd("~/Desktop/qmssviz/hw2")
 lgas <- read.csv("lgas.csv")
 sample <- read.csv("sample_health_facilities.csv")
+
 ## finding zone classifications
 summary(lgas$zone)
 summary(sample$zone)
@@ -23,14 +24,16 @@ pop_2006 <- subset(lgas, select = c(lga_id, pop_2006))
 newsample <- merge(sample_southern, pop_2006, by = "lga_id")
 newsample
 
-
 # 4.Calculate the total number of full time nurses and doctors for all health facilities in each state
-total_nurse <- tapply(dd5$num_nurses_fulltime, dd5$state, sum)
+total_nurse <- tapply(newsample$num_nurses_fulltime, newsample$state, sum,na.rm=T)
 total_nurse
-total_doc <- tapply(dd5$num_doctors_fulltime,dd5$state, sum)
+total_doc <- tapply(newsample$num_doctors_fulltime,newsample$state, sum, na.rm=T)
 total_doc
 
 # 5.Sort the resulting dataset by state population, in descending order.
-dd5 <- dd5 [ order(-dd5$pop_2006), ]
-dd5
+library(plyr)
+state_population <- ddply(newsample, "state",summarize, population=sum(pop_2006))
+final_data <- merge(newsample, state_population, by="state")
+final_data <- final_data[order(-final_data$population), ]
+final_data
 

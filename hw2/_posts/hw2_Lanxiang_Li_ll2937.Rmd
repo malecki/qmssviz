@@ -8,19 +8,20 @@ tags:hw2
 
 # 1.importing data
 setwd("~/Desktop/qmssviz/hw2")
-dd1 <- read.csv("lgas.csv")
-dd2 <- read.csv("sample_health_facilities.csv")
-summary(dd1$zone)
-summary(dd2$zone)
+lgas <- read.csv("lgas.csv")
+sample <- read.csv("sample_health_facilities.csv")
+## finding zone classifications
+summary(lgas$zone)
+summary(sample$zone)
 
 # 2.Select all facilities located in the Southern zones of Nigeria
-dd3 <- subset(dd2, zone %in% c("South-South", "Southeast", "Southwest"))
-dd3
+sample_southern <- subset(sample, zone %in% c("South-South", "Southeast", "Southwest"))
+sample_southern
 
 # 3.Incorporate the pop2006 column
-dd4 <- subset(dd1, select = c(lga_id, pop_2006))
-dd5 <- merge(dd3, dd4, by = "lga_id")
-dd5
+pop_2006 <- subset(lgas, select = c(lga_id, pop_2006))
+newsample <- merge(sample_southern, pop_2006, by = "lga_id")
+newsample
 
 
 # 4.Calculate the total number of full time nurses and doctors for all health facilities in each state

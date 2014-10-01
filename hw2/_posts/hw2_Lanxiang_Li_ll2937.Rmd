@@ -1,0 +1,35 @@
+---
+title: "hw2_Lanxiang_Li_ll2937"
+author: "Lanxiang Li"
+date: "October 1, 2014"
+output: html_document
+published:false
+tags:hw2
+
+# 1.importing data
+setwd("~/Desktop/qmssviz/hw2")
+dd1 <- read.csv("lgas.csv")
+dd2 <- read.csv("sample_health_facilities.csv")
+summary(dd1$zone)
+summary(dd2$zone)
+
+# 2.Select all facilities located in the Southern zones of Nigeria
+dd3 <- subset(dd2, zone %in% c("South-South", "Southeast", "Southwest"))
+dd3
+
+# 3.Incorporate the pop2006 column
+dd4 <- subset(dd1, select = c(lga_id, pop_2006))
+dd5 <- merge(dd3, dd4, by = "lga_id")
+dd5
+
+
+# 4.Calculate the total number of full time nurses and doctors for all health facilities in each state
+total_nurse <- tapply(dd5$num_nurses_fulltime, dd5$state, sum)
+total_nurse
+total_doc <- tapply(dd5$num_doctors_fulltime,dd5$state, sum)
+total_doc
+
+# 5.Sort the resulting dataset by state population, in descending order.
+dd5 <- dd5 [ order(-dd5$pop_2006), ]
+dd5
+

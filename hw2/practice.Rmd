@@ -1,6 +1,0 @@
----
-title: "practice"
-author: "Siqian Zhu"
-date: "2014年10月1日"
-output: html_document
----

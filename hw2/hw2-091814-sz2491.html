@@ -61,13 +61,120 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 <div id="read-lgas.csv-and-sample_health_facilities.csv" class="section level4">
 <h4>1. Read lgas.csv and sample_health_facilities.csv</h4>
 <pre class="r"><code>d=read.csv(file=&quot;/Users/ac/Documents/columbia/study/2014fall/datavisualization/lgas.csv&quot;, header=T)
-h=read.csv(file=&quot;/Users/ac/Documents/columbia/study/2014fall/datavisualization/sample_health_facilities.csv&quot;, header=T)
-table(h$zone)</code></pre>
-<pre><code>## 
-## North-Central     Northeast     Northwest   South-South     Southeast 
+h=read.csv(file=&quot;/Users/ac/Documents/columbia/study/2014fall/datavisualization/sample_health_facilities.csv&quot;, header=T)</code></pre>
+</div>
+<div id="select-all-facilities-located-in-the-southern-zones-of-nigeria" class="section level4">
+<h4>2. Select all facilities located in the Southern zones of Nigeria</h4>
+<pre class="r"><code>summary(h$zone)</code></pre>
+<pre><code>## North-Central     Northeast     Northwest   South-South     Southeast 
 ##             7             5            12             9             8 
 ##     Southwest 
 ##             9</code></pre>
+<pre class="r"><code>southfac &lt;- subset(h,zone==&quot;Southwest&quot;|zone==&quot;Southeast&quot;|zone==&quot;South-South&quot;)
+table(southfac$zone)</code></pre>
+<pre><code>## 
+## North-Central     Northeast     Northwest   South-South     Southeast 
+##             0             0             0             9             8 
+##     Southwest 
+##             9</code></pre>
+<pre class="r"><code>str(southfac$zone)</code></pre>
+<pre><code>##  Factor w/ 6 levels &quot;North-Central&quot;,..: 5 5 5 6 4 6 5 6 5 4 ...</code></pre>
+<pre class="r"><code>dim(southfac)</code></pre>
+<pre><code>## [1] 26 10</code></pre>
+</div>
+<div id="incorporate-the-pop2006-column-from-the-lgas.csv-file-into-the-new-data.frame-containing-only-those-facilities-located-in-southern-nigeria.-hint-your-id-column-is-lga_id." class="section level4">
+<h4>3. Incorporate the pop2006 column from the lgas.csv file into the new data.frame containing only those facilities located in Southern Nigeria. (Hint: your id column is lga_id).</h4>
+<pre class="r"><code>summary(d$pop_2006)</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   11800  120000  157000  181000  211000 1280000</code></pre>
+<pre class="r"><code>pop &lt;- subset(d,zone==&quot;Southwest&quot;|zone==&quot;Southeast&quot;|zone==&quot;South-South&quot;,select=c(lga_id,pop_2006))
+dim(pop)</code></pre>
+<pre><code>## [1] 354   2</code></pre>
+<pre class="r"><code>southpop=merge(southfac,pop,by=&quot;lga_id&quot;)</code></pre>
+</div>
+<div id="calculate-the-total-number-of-full-time-nurses-and-doctors-for-all-health-facilities-in-each-state." class="section level4">
+<h4>4. Calculate the total number of full time nurses and doctors for all health facilities in each state.</h4>
+<pre class="r"><code>totalnurse=aggregate(num_nurses_fulltime~state,data=southpop,sum)
+print(totalnurse)</code></pre>
+<pre><code>##          state num_nurses_fulltime
+## 1      Anambra                   4
+## 2  Cross River                   3
+## 3        Delta                  10
+## 4          Edo                   0
+## 5        Ekiti                   2
+## 6          Imo                   8
+## 7        Lagos                   4
+## 8         Ogun                   0
+## 9         Osun                   6
+## 10      Rivers                   2</code></pre>
+<pre class="r"><code>totaldoc=aggregate(num_doctors_fulltime~state,data=southpop,sum)
+print(totaldoc)</code></pre>
+<pre><code>##          state num_doctors_fulltime
+## 1         Abia                  308
+## 2      Anambra                    3
+## 3  Cross River                    0
+## 4        Delta                    2
+## 5          Edo                    0
+## 6        Ekiti                    1
+## 7          Imo                    0
+## 8        Lagos                    4
+## 9         Ogun                    2
+## 10        Osun                    1
+## 11      Rivers                    2</code></pre>
+</div>
+<div id="sort-the-resulting-dataset-by-state-population-in-descending-order." class="section level4">
+<h4>5. Sort the resulting dataset by state population, in descending order.</h4>
+<pre class="r"><code>order=southpop[order(-southpop$pop_2006),]
+dim(order)</code></pre>
+<pre><code>## [1] 26 11</code></pre>
+<pre class="r"><code>head(order)</code></pre>
+<pre><code>##    lga_id         lga   state        zone c_section_yn num_nurses_fulltime
+## 13    441      Kosofe   Lagos   Southwest         TRUE                   1
+## 14    516      Mushin   Lagos   Southwest        FALSE                   0
+## 22    694    Surulere   Lagos   Southwest         TRUE                   3
+## 26    746 Warri South   Delta South-South        FALSE                   0
+## 9     312      Ihiala Anambra   Southeast         TRUE                   2
+## 1      49     Anaocha Anambra   Southeast        FALSE                   2
+##                                             gps num_lab_techs_fulltime
+## 13  6.60113991 3.41806628 35.29999923706055 5.0                      0
+## 14               6.52714249 3.34915425 43.5 5.0                      0
+## 22 6.49775137 3.35969109 42.400001525878906 5.0                      2
+## 26  5.5714229 5.70460127 38.400001525878906 5.0                      0
+## 9  5.88475837 6.89508114 110.30000305175781 5.0                      0
+## 1   6.07903635 7.00366347 276.1000061035156 5.0                     NA
+##    management num_doctors_fulltime pop_2006
+## 13       &lt;NA&gt;                    1   665393
+## 14     public                    0   633009
+## 22       &lt;NA&gt;                    3   503975
+## 26     public                    0   303417
+## 9        &lt;NA&gt;                    1   302158
+## 1      public                   NA   285002</code></pre>
+<pre class="r"><code>tail(order)</code></pre>
+<pre><code>##    lga_id             lga       state        zone c_section_yn
+## 24    722      Uhunmwonde         Edo South-South        FALSE
+## 12    359        Ise/Orun       Ekiti   Southwest        FALSE
+## 4     101         Bekwara Cross River South-South        FALSE
+## 8     304        Ifelodun        Osun   Southwest         TRUE
+## 2      67 Atakunmosa West        Osun   Southwest        FALSE
+## 20    651      Remo North        Ogun   Southwest         TRUE
+##    num_nurses_fulltime                                            gps
+## 24                   0  6.679955720901489 6.085991263389587 306.0 4.0
+## 12                   2    7.46085228 5.4184795 390.29998779296875 5.0
+## 4                    3 6.6513848304748535 8.869051337242126 151.0 4.0
+## 8                    6   7.91940107 4.65994516 421.70001220703125 5.0
+## 2                    0   7.52274164 4.62185659 407.20001220703125 5.0
+## 20                   0   6.98168426 3.68639208 123.19999694824219 5.0
+##    num_lab_techs_fulltime management num_doctors_fulltime pop_2006
+## 24                      0     public                    0   120813
+## 12                      0       &lt;NA&gt;                    1   113754
+## 4                       2     public                    0   105822
+## 8                       1       &lt;NA&gt;                    1    96748
+## 2                       0     public                    0    68643
+## 20                      1       &lt;NA&gt;                    2    59911</code></pre>
+<pre class="r"><code>print(order$pop_2006)</code></pre>
+<pre><code>##  [1] 665393 633009 503975 303417 302158 285002 284336 284010 253412 220660
+## [11] 213576 192444 171901 165593 162594 158410 158231 149325 142717 130931
+## [21] 120813 113754 105822  96748  68643  59911</code></pre>
 </div>
 
 

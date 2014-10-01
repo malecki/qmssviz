@@ -1,0 +1,48 @@
+---
+title: "hw2-091814-sz2491"
+author: "Siqian Zhu"
+date: "9/18/2014"
+output: html_document
+published: false
+tags: hw2
+---
+
+####1. Read lgas.csv and sample_health_facilities.csv
+```{r}
+d=read.csv(file="/Users/ac/Documents/columbia/study/2014fall/datavisualization/lgas.csv", header=T)
+h=read.csv(file="/Users/ac/Documents/columbia/study/2014fall/datavisualization/sample_health_facilities.csv", header=T)
+```
+
+####2. Select all facilities located in the Southern zones of Nigeria
+```{r}
+summary(h$zone)
+southfac <- subset(h,zone=="Southwest"|zone=="Southeast"|zone=="South-South")
+table(southfac$zone)
+str(southfac$zone)
+dim(southfac)
+```
+
+####3. Incorporate the pop2006 column from the lgas.csv file into the new data.frame containing only those facilities located in Southern Nigeria. (Hint: your id column is lga_id).
+```{r}
+summary(d$pop_2006)
+pop <- subset(d,zone=="Southwest"|zone=="Southeast"|zone=="South-South",select=c(lga_id,pop_2006))
+dim(pop)
+southpop=merge(southfac,pop,by="lga_id")
+```
+
+####4. Calculate the total number of full time nurses and doctors for all health facilities in each state.
+```{r}
+totalnurse=aggregate(num_nurses_fulltime~state,data=southpop,sum)
+print(totalnurse)
+totaldoc=aggregate(num_doctors_fulltime~state,data=southpop,sum)
+print(totaldoc)
+```
+
+####5. Sort the resulting dataset by state population, in descending order.
+```{r}
+order=southpop[order(-southpop$pop_2006),]
+dim(order)
+head(order)
+tail(order)
+print(order$pop_2006)
+```

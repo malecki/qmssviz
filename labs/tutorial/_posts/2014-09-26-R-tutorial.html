@@ -135,7 +135,7 @@ source(&quot;multiplot.R&quot;)</code></pre>
 <p>The “working directory” is where R will look to read/write files. You must set the working directory to the directory (e.g. folder) containing the data files that you want to analyze, and where you want your work to be saved. To run this tutorial, you must set the working directory to wherever you save the following data files:<br />- <strong>sample_health_facilities.csv</strong><br />- <strong>Daily_Temperature_1995-2013_Delhi.txt</strong><br />- <strong>UN_2011_Population_Cities_Over_750k.xlsx</strong></p>
 <p>Check the current working directory</p>
 <pre class="r"><code>getwd()</code></pre>
-<pre><code>## [1] &quot;/Users/elliotcohen/github/qmssviz-FORK/labs/tutorial/_posts&quot;</code></pre>
+<pre><code>## [1] &quot;/Users/elliotcohen/github/qmssviz-FORK/labs/tutorial&quot;</code></pre>
 <p>Set the working directory</p>
 <pre><code>setwd(&quot;~/github/qmssviz-FORK/labs/tutorial/_posts/&quot;)</code></pre>
 </div>
@@ -523,7 +523,22 @@ load(&quot;temperature_data.Rdata&quot;)</code></pre>
 </div>
 <div id="assignment" class="section level1">
 <h1><span class="header-section-number">4</span> Assignment</h1>
-<p>Until tomorrow, please do the following activity:<br />1. Go to this <a href="http://bit.ly/1fj3sjD">link</a> and download the file into the working directory.<br />2. Produce a new <code>data.frame</code>, which has the following properties:<br /> - From the Nigeria Facilities Inventory data (<code>sample_data</code> from section 1.5.1), select all facilities located in the Southern zones of Nigeria.<br /> - Incorporate the pop2006 column from the <code>lgas.csv</code> file into the new data.frame containing only those facilities located in Southern Nigeria. (Hint: your id column is <code>lga_id</code>).<br /> - Calculate the total number of full time nurses and doctors for all health facilities in each state.<br /> - Sort the resulting dataset by state population, in descending order.<br /> - Show the results!</p>
+<p>The Nigerian Government has committed $1.2 billion USD to achieving the United Nations Millennium Development Goals. Matching grants are given to Local Government Areas (LGAs) for approved projects and programmes geared towards reducing poverty and improving education and health. To promote the use of data in the local planning process, a rigorous, geo-referenced, baseline facility inventory was conducted for the entire country. The objective was to collect data for all of Nigeria’s health, education and water facilities. The result is this online portal, the <a href="http://nmis.mdgs.gov.ng/about">Nigeria MDG Information System</a> (NMIS).</p>
+<p>Using this rich dataset, we will assess a few key development statistics, previously unknowable.</p>
+<ol style="list-style-type: decimal">
+<li>Go to this <a href="http://bit.ly/1fj3sjD">link</a> to retrieve general metadata for Local Government Areas (LGAs) of Nigeria. LGAs are akin to counties in the U.S.</li>
+<li>Next download the full <a href="http://nmis.mdgs.gov.ng/download">NMIS dataset</a>, and grab the [very large] .csv file called “Health_Mopup_and_Baseline_NMIS_Facility.csv”. This contains every health facility in Nigeria.</li>
+<li>Produce a new dataframe with the following properties:
+<ul>
+<li>Select all health facilities located in the Southern zones of Nigeria.</li>
+<li>Incorporate LGA metadata into this new dataframe.</li>
+</ul></li>
+<li>Calculate the total number of full time nurses and doctors in all health facilities, by state. Compute per capita and per square area values, as well.
+<ul>
+<li>Sort the first resultant dataset by state population, in descending order.</li>
+<li>Show the results!</li>
+</ul></li>
+</ol>
 </div>
 
 

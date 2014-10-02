@@ -1,0 +1,53 @@
+---
+title: "hw1"
+published: no
+tags: hw1
+output: html_document
+---
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+
+
+
+```{r, echo=FALSE}
+
+
+require(ggplot2)
+?chickwts
+cwt <- chickwts
+cwt
+
+
+aggregate(cwt$weight ~ cwt$feed, FUN=mean)
+ggplot(cwt, aes(x = weight, fill=feed)) + geom_dotplot(binwidth = 20) + ylab("Count") + xlab("Weight") + ggtitle("Chicken Weight by Type of Feed")
+
+
+
+ggplot(cwt, aes(x = feed, y = weight)) +
+         geom_bar(stat="identity", fill= "green") + 
+         ggtitle("Weight by Feed Type") +
+         theme_bw()  +
+        ylim(0,400)   +
+        ylab("Weight") + xlab("Feed Type")
+
+ggplot(cwt, aes(x = feed, y = weight)) +
+  geom_boxplot(fill = "grey80", colour = "#3366FF") +
+  ggtitle("Chicken Weight by Type of Feed") +
+  ylab("Weight") + xlab("Feed Type") +
+  ggtitle("Chicken Weight by Type of Feed")
+
+```
+
+
+For the first graph I used the dataset, "Chickwt" which measured the weight of chickens by the type of feed
+they were given. The colors of the dots correspond to the type of feed. The x-axis plots the weight of childrens. The colors clump pretty closely by feed type, and fall along a continuum. You can see that casein yields chickens with the lowest weight, and sunflower seeds yields chickens with the largest weights. The number of chickens surved were different depeneding on the type of feed, so the y-axis
+shows the number of chickens corresponding to each weight category. 
+
+For the second graph, I used the same dataset and constructed a histogram. The bins are categorized by the type of feed, and the y axis is by weight of the chicken. I had to ajust the y values to be from 0 to 400. 
+
+For the third graph, I constructed box plots by feed type. The box plots show the interquartile range, similar to the spread of each variable. You can see that casein has the widest spread of values of weights while sunflower has the smallest spread. 
+
+

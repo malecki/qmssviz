@@ -13,7 +13,6 @@ output:
     toc_depth: 4
 published: false
 ---
-<link href="http://kevinburke.bitbucket.org/markdowncss/markdown.css" rel="stylesheet"></link>
 
 ****************
 Let's get started!
@@ -43,7 +42,7 @@ source("multiplot.R")
 ## set R Markdown options. 
 ## Markdown defines the layout and format of the resulting document. 
 ## It is not R code, but allows you to hide/supress unwanted R output.
-opts_chunk$set(fig.path="ECREEE_R_Training_1/figs/", warning=TRUE, message=FALSE , tidy=TRUE)
+opts_chunk$set(fig.path="R_Training_1/figs/", warning=TRUE, message=FALSE , tidy=TRUE)
 ```
 
 This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
@@ -89,7 +88,7 @@ getwd()
   
 Set the working directory
 ```
-setwd("~/github/ECREEE")
+setwd("~/github/qmssviz-FORK/labs/tutorial/_posts/")
 ```
 
 ## Libraries
@@ -518,7 +517,7 @@ Question: How is this different than `merge`?
 Notice that the original data files that we imported at the beginning of this tutprial have not been changed, only manipulated in the R environment. If you open `Daily_Temperature_1995-2013_Delhi.txt`, it is the same as it was. If you want to save the changes we have made so far (e.g. removed missing data, added a Date attribute, etc..) you can write the current R object ('data) to an external file. This is like hitting the "save" button in Excel, but it is not done automatically in R; you have to do it expicitly.
 
 To write a .csv, call the `write.csv` function and supply the name of the R object you wish to save ('data') and the desired filepath ("data.csv").
-```{r write-csv, cache=TRUE}
+```
 write.csv(data, file="./temperature_data.csv", row.names=FALSE)
 ```
 Note the row.names argument. Try to see what the csv looks like if you omit the argument, or change row.names=TRUE. We generally prefer to output csv files without the row.names.
@@ -527,11 +526,11 @@ Similarly, you can save your work as an R object, which is very efficient but me
 
 Call the `save` function and pass the R ojbect you wish to save ('data'), the name of the file you wish to save it as ('temperature_data'), and a valid file extension ('rsav').  Later, you can retrieve the R object using the `load` function. 
 ```{r save}
-save(data, file="temperature_data.rsav")
-load("temperature_data.rsav")
+save(data, file="temperature_data.Rdata")
+load("temperature_data.Rdata")
 ```
 
-After loading the file, the object name will be the same as it was when you saved it.  That is, the file is named "temperature_data.rsav", but the object is named "data". Recall, the object name was the first argument passed to the `save` function.
+After loading the file, the object name will be the same as it was when you saved it.  That is, the file is named "temperature_data.Rdata", but the object is named "data". Recall, the object name was the first argument passed to the `save` function.
 ```{r load}
 str(data)
 ```
@@ -539,11 +538,15 @@ str(data)
 ***********
 Assignment
 ===========
-Until tomorrow, please do the following activity:  
-1. Go to this [link](http://bit.ly/1fj3sjD) and download the file into the working directory.  
-2. Produce a new `data.frame`, which has the following properties:  
-  - From the Nigeria Facilities Inventory data (`sample_data` from section 1.5.1), select all facilities located in the Southern zones of Nigeria.  
-  - Incorporate the pop2006 column from the `lgas.csv` file into the new data.frame containing only those facilities located in Southern Nigeria. (Hint: your id column is `lga_id`).  
-  - Calculate the total number of full time nurses and doctors for all health facilities in each state.  
-  - Sort the resulting dataset by state population, in descending order.  
-  - Show the results!  
+The Nigerian Government has committed $1.2 billion USD to achieving the United Nations Millennium Development Goals. Matching grants are given to Local Government Areas (LGAs) for approved projects and programmes geared towards reducing poverty and improving education and health. To promote the use of data in the local planning process, a rigorous, geo-referenced, baseline facility inventory was conducted for the entire country. The objective was to collect data for all of Nigeria's health, education and water facilities. The result is this online portal, the [Nigeria MDG Information System](http://nmis.mdgs.gov.ng/about) (NMIS). 
+
+Using this rich dataset, we will assess a few key development statistics, previously unknowable.
+
+1. Go to this [link](http://bit.ly/1fj3sjD) to retrieve general metadata for Local Government Areas (LGAs) of Nigeria. LGAs are akin to counties in the U.S.
+2. Next, download the full [NMIS dataset](http://nmis.mdgs.gov.ng/download), and grab the [large] .csv file called "Health_Mopup_and_Baseline_NMIS_Facility.csv". This contains every health facility in Nigeria.
+3. Produce a new `data.frame` with the following properties:
+    + From the NMIS Health Facilities Inventory, select all facilities located in the Southern zones of Nigeria.
+    + Incorporate LGA metadata into this new dataframe.
+3. Calculate the total number of full time nurses and doctors for all health facilities, by state. Compute per capita and per area values, as well.
+    + Sort the resulting dataset by state population, in descending order.
+    + Show the results!  

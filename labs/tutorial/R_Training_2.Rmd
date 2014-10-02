@@ -4,7 +4,6 @@ author: "Elliot Cohen"
 date: "July 2, 2014"
 output: html_document
 ---
-<link href="http://kevinburke.bitbucket.org/markdowncss/markdown.css" rel="stylesheet"></link>
 
 ```{r initialize, include=FALSE}
 ## Instead of setting the working directory in each R session, we created an RStudio Project within the ECREEE directory.
@@ -109,14 +108,14 @@ SLDC$month = factor(SLDC$month,levels(SLDC$month)[c(6:12,1:5)])
 hourly<-ddply(SLDC, .(Date, year, month, day, hours), numcolwise(mean))
 length(levels(as.factor(hourly$hours))) # 24 hours, check!
 
-# save the clean dataframe. The extension .rsav is for reading/writing data in R.
-save(hourly, file="hourly-demand.rsav")
-
-# Alternatively, we could have written the clean data to a new .csv file.
-write.csv(hourly, file="hourly-demand.csv")
-
-# Next time, you can simply load the clean data without repeating all the code above
-load("hourly-demand.rsav")  # for R objects
+# # save the clean dataframe. The extension .rsav is for reading/writing data in R.
+# save(hourly, file="hourly-demand.rsav")
+# 
+# # Alternatively, we could have written the clean data to a new .csv file.
+# write.csv(hourly, file="hourly-demand.csv")
+# 
+# # Next time, you can simply load the clean data without repeating all the code above
+# load("hourly-demand.rsav")  # for R objects
 ```
 
 ```{r CapeVerde-Hourly}

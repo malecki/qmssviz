@@ -4,39 +4,43 @@ output: html_document
 published: false
 tags: hw2
 ========================================================
-
-
+Reading in the files
 ```{r }
 setwd ("/Users/awtang/Desktop/qmssviz/qmssviz/hw2")
-lgas<-read.csv("lgas.csv", stringsAsFactors=F)
-nigeria<-read.csv ("sample_health_facilities.csv" ,stringsAsFactors=F)
+lgas<-read.csv("lgas.csv")
+nigeria<-read.csv ("sample_health_facilities.csv")
 ```
 
+Produce a new data.frame, which has the following properties:From the Nigeria Facilities Inventory data (sample_data from section 1.5.1), select all facilities located in the Southern zones of Nigeria.
 ```{r fig.width=7, fig.height=6}
 head(nigeria$zone)
 south<-subset(nigeria, zone %in% c("South-South", "Southeast", "Southwest"))
 
 ```
 
-
+Incorporate the pop2006 column from the lgas.csv file into the new data.frame containing only those facilities located in Southern Nigeria. 
 ```{r fig.width=7, fig.height=6}
 lgaspop2006<-lgas[,c("lga_id","pop_2006")]
 southpop2006<-merge (south, lgaspop2006, by="lga_id")
 ```
 
-
+Calculate the total number of full time nurses and doctors for all health facilities in each state.
 ```{r}
 doctors=aggregate(data=southpop2006, num_doctors_fulltime~state,FUN=sum)
 nurses=aggregate(data=southpop2006, num_nurses_fulltime~state,FUN=sum)
 
 ```
 
+
+Sort the resulting dataset by state population, in descending order.
 ```{r}
 attach(southpop2006)
  orderedpop<-southpop2006[order(-pop_2006),]
 detach(southpop2006)
 ```
 
+
+Show results
 ```{r}
 print(doctors)
 print(nurses)

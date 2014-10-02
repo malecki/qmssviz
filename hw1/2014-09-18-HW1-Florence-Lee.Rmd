@@ -69,7 +69,14 @@ nychanes$occgrp[(nychanes$occgrp==2)|(nychanes$occgrp==4)] <- "Service"
 nychanes$occgrp[nychanes$occgrp==7] <- "Laborers"
 nychanes$occgrp<-as.factor(nychanes$occgrp)
 levels(nychanes$occgrp) <- c("Managerial and professional","Administrative and technical", "High-skill workers", "Service", "Laborers")
-levels(nychanes$occgrp)
+
+#Label bmi_grp
+nychanes$bmi_grp[nychanes$bmi_grp==1] <- "Underweight"
+nychanes$bmi_grp[nychanes$bmi_grp==2] <- "Normal"
+nychanes$bmi_grp[nychanes$bmi_grp==3] <- "Overweight"
+nychanes$bmi_grp[nychanes$bmi_grp==4] <- "Obese"
+nychanes$bmi_grp <- as.factor(nychanes$bmi_grp)
+levels(nychanes$bmi_grp) <- c("Underweight", "Normal", "Overweight", "Obese")
 
 ```
 
@@ -84,6 +91,7 @@ I am primarily interested to see whether there is some association between eatin
 install.packages('ggplot2')
 library(ggplot2)
 #Create base
+
 base <- ggplot(nychanes, aes(xmin=0, xmax=30, ymin=15, ymax=60, x=eatout, y=bmi, colour=occgrp)) + xlab("Number of Restaurant-Prepared Meals Consumed Per Week") + ylab("BMI (kg/m2)") + ggtitle("Body Mass Index (BMI) and Frequency of Eating Out")
 #Highlight Normal BMI region
 base2 <- base + geom_rect(aes(xmin=-Inf, xmax=Inf, ymin=18.5, ymax=25), fill="orange", alpha=1/100, inherit.aes=FALSE) 
@@ -116,6 +124,19 @@ grid2
 
 The association between BMI and number of restaurant-prepared meals consumed in a week does not seem to differ visually from occupation group to occupation group. It is interesting to note that respondents who worked in services and sales seem to eat out more frequently, on average, than respondents in other occupational groups.
 
-### Another view: Boxplot
+### Another view: Bargraph
 
-On a second pass, it seems more sensible, visually, to look at the distribution of BMI and eating restaurant-prepared food within each occupational group through a boxplot. With a boxplot, I will only be able to look at one variable of interest at a time, but that might present more interesting information. 
+On a second pass, I decided to create a bar plot in an additional exercise to choose a sensible color scheme. Here, I try to look at distribution of BMIs within each occupational group. 
+
+``` {r grid2, fig.width=15, message=FALSE}
+# Stacked bar graph
+stack <- qplot(factor(nychanes$occgrp), data=nychanes, geom="bar", binwidth=0.3, fill=factor(bmi_grp), ylim=c(0, 500))+ 
+  xlab("Occupational Group") + ylab("Number of Survey Respondents") + ggtitle("BMI Within Occupational Groups")
+cbPalette <- c("#67CDEB", "#78E12B", "#E99523", "#E62C26")
+colors <- scale_fill_manual(values=cbPalette) 
+look <- theme_classic(base_size = 12, base_family = "")+theme(plot.title=element_text(face="bold", size=18), axis.title=element_text(face="bold", size=15))
+finstack <- stack + colors + look
+finstack
+```
+
+On a future iteration of this code, I would like to (1) change legend title, and (2) think about a better way to convey a comparison.

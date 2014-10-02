@@ -1,0 +1,34 @@
+---
+title: "R Tutorial"
+author: "Dongze Lu"
+date: "October 2, 2014"
+output: html_document
+---
+
+
+
+```{r}
+#Read file
+lgas <- read.csv("~/Desktop/lgas.csv")
+health<- read.csv("~/R Tutorial/labs/tutorial/sample_health_facilities.csv")
+
+#Select all facilities located in the Southern zones of Nigeria
+south <- subset(health, zone %in% c("South-South", "Southeast", "Southwest"))
+
+#Incorporate the pop2006 column from the lgas.csv file into the new data frame 
+data4 <- subset(lgas, select = c(lga_id, pop_2006))
+newdata <- merge(south, data4, by = "lga_id")
+
+#Calculate the total number of full time nurses and doctors for all health facilities in each state
+tapply(newdata$num_nurses_fulltime, newdata$state, sum)
+tapply(newdata$num_doctors_fulltime, newdata$state, sum)
+
+
+#Sort the final data set by state population, in descending order
+newdata <- newdata[ order(-newdata$pop_2006), ]
+newdata
+```
+
+
+
+

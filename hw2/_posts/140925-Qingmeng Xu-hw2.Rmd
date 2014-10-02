@@ -3,26 +3,31 @@ title: "0140925-Qingmeng Xu-hw2"
 output: html_document
 ---
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+##Loading Data
 
 ```{r}
-
-```
-
-You can also embed plots, for example:
-
-```{r, echo=FALSE}
 setwd("/Users/ningmeng/Desktop")
 file <-"lgas.csv"
 lgas_data <- read.csv(file)
 nigeria_data <- read.csv("sample_health_facilities.csv")
-#summary(sample_data$zone)
+```
+
+##Mergering Data by ID
+
+```{r}
 south <- subset(nigeria_data, nigeria_data$zone == "South-South" | nigeria_data$zone == "Southeast" | nigeria_data$zone == "Southwest")
 lgas_pop <- lgas_data[,c(1,3)]
 merge_data <- merge(south, lgas_pop, by="lga_id")
-
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+##Calculation and Ranging
+
+```{r}
+doctor <- by(merge_data$num_doctors_fulltime, merge_data$state, sum, na.rm=TRUE)
+nurses <- by(merge_data$num_nurses_fulltime, merge_data$state, sum, na.rm=TRUE)
+total <- doctor + nurses
+total
+
+newdata <- merge_data[order(-merge_data$pop_2006),]
+newdata
+```

@@ -1,0 +1,59 @@
+---
+title: "2014-9-29-NanLi-hw2"
+author: "nl2482"
+date: "Monday, September 29, 2014"
+output: html_document
+---
+```{r RMD-global-options, include=FALSE}
+options(width=100)
+```
+
+### read-in data from .csv
+```{r import-data}
+setwd("F:/R-3.1.1/github/qmssviz/labs/tutorial/")
+lgas<-read.csv("lgas.csv")
+str(lgas)
+dim(lgas)
+
+facilities<-read.csv("Health_Mopup_and_Baseline_NMIS_Facility.csv")
+str(facilities)
+dim(facilities)
+```
+
+### select all facilities located in the Southern zones of Nigeria. 
+```{r subset}
+levels(lgas$zone)
+row<-grep("South", lgas$zone)
+Slgas<-lgas[row, ]
+df<-merge(Slgas, facilities, by="unique_lga", sort=TRUE, all.x=TRUE)
+```
+
+### calculate the total number of full-time nurses and doctors for all health facilities, by state.
+```{r stats}
+library(plyr)
+library(reshape2)
+library(ggplot2)
+
+states<-ddply(df, .(state), numcolwise(sum), na.rm=TRUE)
+states<-subset(states, select=c("state", "pop_2006", "area_sq_km", "num_nurses_fulltime", "num_nursemidwives_fulltime", "num_doctors_fulltime"))
+
+states$pop_2006<-states$pop_2006/10^6
+states[order(-states$pop_2006), -3]
+
+percap<-cbind(states$state, states[,4:6]/(states$pop_2006))
+names(percap)[1]<-"state"
+percap[,2:4]<-round(percap[,2:4], digits=2)
+print(percap)
+
+persqkm<-cbind(states$state, states[,4:6]/(states$area_sq_km)*100)
+names(persqkm)[1]<-"state"
+persqkm[,2:4]<-round(persqkm[,2:4], digits=2)
+print(persqkm)
+```
+
+### check
+```{r pop}
+check<-levels(Slgas$lga)
+compare<-levels(df$lga)
+all(check %in% compare)
+```

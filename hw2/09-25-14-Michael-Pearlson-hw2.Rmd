@@ -1,0 +1,45 @@
+---
+title: "MDRC Sample"
+author: Michael Pearlson
+output: pdf_document
+published: false
+tags: hw2
+---
+MDRC Sample Code
+========================================================
+```{r}
+setwd("~/Desktop")
+data <- read.csv("lgas.csv")
+hf<- read.csv("sample_health_facilities.csv")
+```
+
+First, I grabbed all of the southern areas using `grep()` as well as the *pop_2006* variable from the other data set.  Then I merged both of these new data frames by the id *lga_id*.  
+
+```{r}
+south.data <- hf[grep("South", hf$zone),]
+pop_2006 <- data[,c(1,3)]
+nd <- merge(south.data, pop_2006, by = "lga_id")
+```
+
+To answer the questions regarding the  number of full time doctors and nurses I aggregated by state.
+
+```{r}
+aggregate(num_doctors_fulltime~ state, data = nd, sum)
+aggregate(num_nurses_fulltime ~ state, data = nd, sum)
+```
+
+Finally, I ordered the dataset by population after aggregating by state.
+```{r}
+bystate <- aggregate(pop_2006 ~ state, data = nd, sum)
+final <- merge(nd, bystate, by = "state")
+names(final)[names(final)=="pop_2006.y"] <- "statepop"
+final.sort <- final[order(-final$statepop),]
+```
+
+```{r}
+aggregate(num_doctors_fulltime ~ state,data = nd, sum)
+aggregate(num_nurses_fulltime ~ state,data = nd, sum)
+```
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring web pages (click the **MD** toolbar button for help on Markdown).
+
+

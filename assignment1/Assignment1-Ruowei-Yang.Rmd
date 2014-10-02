@@ -1,0 +1,18 @@
+---
+title: "Assignment1"
+author: "Ruowei Yang"
+date: "Sunday, September 21, 2014"
+output: html_document
+published: false
+tags: assignment1
+---
+```{r}
+data1 <- read.csv("C:/Users/Yang/Desktop/qmssviz/assignment1/sample_health_facilities.csv")
+data2 <-read.csv("C:/Users/Yang/Desktop/qmssviz/assignment1/lgas.csv")
+sub_data1 <- subset (data1, zone %in% c("Southeast","Southwest","South-South"))
+data3 <- merge (sub_data1, data2[c("lga_id", "pop_2006")], by="lga_id")
+sub_data3 <- data3[c("state", "num_nurses_fulltime", "num_doctors_fulltime", "pop_2006")]
+data4 <- aggregate(. ~ state, data=sub_data3, FUN=sum)
+final_data <- data4[order(-data4$pop_2006),]
+final_data
+```

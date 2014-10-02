@@ -4,6 +4,7 @@ output: html_document
 published: false
 tags: hw2
 ========================================================
+
 Reading in the files
 ```{r }
 setwd ("/Users/awtang/Desktop/qmssviz/qmssviz/hw2")

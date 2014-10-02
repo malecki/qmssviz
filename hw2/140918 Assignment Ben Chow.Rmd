@@ -1,0 +1,68 @@
+---
+title: "140918 Data Visualization Assignment"
+author: "Ben Chow"
+date: "23 September, 2014"
+output: html_document
+---
+
+In this assignment we were asked to present a dataframe obtained by manipulating data found in two csv files.
+
+### Task 1 ###
++ **Download file into working directory**
+
+After saving the relevant csv files into my working directory I execute:
+```{r}
+d <- read.csv("sample_health_facilities.csv")
+```
+
+### Task 2 ###
++ **from `sample_data` select facilities located in Southern zones**
+
+The `grep` command searches the dataframe `d` and saves the corresponding entries. I build a new dataframe with only the southern facilities which i call `df`.
+
+```{r}
+south <- grep("South", d[,"zone"], fixed = TRUE)
+df <- d[south, ]
+```
+
+### Task 3 ###
++ **Incorporate pop2006 column from other dataset into the dataframe**
+```{r}
+# Load data
+pop <- read.csv("lgas.csv")
+# Extract population values and merge
+pop06 <- pop[df$lga_id, c("lga_id", "pop_2006")]
+df <- merge(df, pop06, by = "lga_id")
+```
+
+### Task 4 ###
++ **Calculate total number of full time nurses and doctors in each state**
+
+For the next task and others we will need the package `"plyr"` for the commands `ddply` and `join`. Here I save the totals in a dataframe `totmed`.
+
+```{r, message=FALSE}
+require("plyr")
+totmed <- ddply(df, "state", summarise, Doctors = sum(num_doctors_fulltime, na.rm = TRUE), Nurses = sum(num_nurses_fulltime, na.rm = TRUE))
+```
+
+### Task 5 ###
++ **Sort the resulting dataset by state population, in decreasing order**
+```{r}
+# Calculating State Populations
+stpop <- aggregate(pop$pop_2006 ~ pop$state, FUN = sum)
+colnames(stpop) <- c("state", "State Pop")
+
+# Merging data
+totmed <- join(totmed, stpop, by = "state", type = "left", match = "first")
+
+# Sort by state population
+totmed.sort <- totmed[order(totmed[, 4], decreasing = TRUE), ]
+```
+
+
+### Final Output ###
+```{r, collapse=TRUE}
+totmed.sort
+```
+
+

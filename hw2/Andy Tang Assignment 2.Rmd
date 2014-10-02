@@ -1,0 +1,45 @@
+Title: "Homework 2 Assignment"
+author: Andy Tang, awt2118
+output: html_document
+published: false
+tags: hw2
+========================================================
+
+
+```{r }
+setwd ("/Users/awtang/Desktop/qmssviz/qmssviz/hw2")
+lgas<-read.csv("lgas.csv", stringsAsFactors=F)
+nigeria<-read.csv ("sample_health_facilities.csv" ,stringsAsFactors=F)
+```
+
+```{r fig.width=7, fig.height=6}
+head(nigeria$zone)
+south<-subset(nigeria, zone %in% c("South-South", "Southeast", "Southwest"))
+
+```
+
+
+```{r fig.width=7, fig.height=6}
+lgaspop2006<-lgas[,c("lga_id","pop_2006")]
+southpop2006<-merge (south, lgaspop2006, by="lga_id")
+```
+
+
+```{r}
+doctors=aggregate(data=southpop2006, num_doctors_fulltime~state,FUN=sum)
+nurses=aggregate(data=southpop2006, num_nurses_fulltime~state,FUN=sum)
+
+```
+
+```{r}
+attach(southpop2006)
+ orderedpop<-southpop2006[order(-pop_2006),]
+detach(southpop2006)
+```
+
+```{r}
+print(doctors)
+print(nurses)
+print(orderedpop)
+```
+

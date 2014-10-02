@@ -1,0 +1,57 @@
+---
+title: "HW1"
+author: "Ruowei Yang"
+date: "Thursday, September 18, 2014"
+output: html_document
+published: false
+tags: hw1
+---
+###Data Discription <br>
+The dataset concerns a study of teenage gambling in Britain. It has five variables, sex, status, income, verbal and gamble. Status is the socioeconomic status score based on parents' occupation, verbal is the verbal score in words out of 12 correctly defined which could indicate the teenager's education level. Gamble is the expenditure on gambling in pounds per year. 
+<br> <br>
+
+###Get Data
+```{r}
+library(faraway)
+attach(teengamb)
+str(teengamb)
+```
+
+###Check for Missing value
+```{r sum}
+sum(is.na(teengamb))
+```
+There is no missing value in the dataset
+<br> <br>
+<p align="center">
+###Boxplot of gamble expense by verbal score and sex
+```{r, echo=FALSE}
+library(ggplot2)
+qplot(factor(verbal), gamble, data=teengamb, geom="boxplot")+geom_boxplot(aes(fill = factor(sex)))
+```
+<p>
+
+From the boxplot, we can see that people with lower verbal score tends to spend more money on gambling which indicates tnat people with high education tend to spend less. Among the people with same verbal score, male tends to spend more than female.
+<br> <br>
+<p align="center">
+###Line charts of gamble expense for status and income by sex
+```{r, echo=FALSE}
+data1=teengamb[,c("status", "gamble", "sex")]
+data2=aggregate(gamble~status+sex, data=data1, FUN="mean")
+ggplot(data2, aes(x=status, y=gamble, group=sex))+geom_line(aes(colour = sex))
+
+data3=teengamb[,c("income", "gamble", "sex")]
+data4=aggregate(gamble~income+sex, data=data3, FUN="mean")
+ggplot(data4, aes(x=income, y=gamble, group=sex, color=sex))+geom_line()
+```
+<p>
+
+From these two plots, we can see that in both cases female tends to spend much less money on gambling than male. It is interesting to see that people with higher socialeconomic status spend less while people with higher income spend more.
+<br> <br>
+
+###Create a Linear Model
+```{r}
+gamblemod=lm(gamble~sex+status+income+verbal)
+summary(gamblemod)
+```
+From the model we can see that sex and verbal have negative relationship with gamble expenditure, and income has positive relationship with gamble expenditure, which lies along with the results that we get from the graphs above. However, the status also has weak positive relationship with gamble expenditure while the plot above shows a negative relationship. This might due to outliers and influential point since the estimated coefficient is very small.

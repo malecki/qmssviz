@@ -1,9 +1,9 @@
 ---
 title: "Homework 2 assignment-JanetWenjuanDeng"
 author: wd2234
-output: html_document
-pulished: false  
-tags: hw2
+output: html_document 
+pulished: false   
+tags: hw2 
 ---
 
 1. Go to this link and download the file into the working directory.

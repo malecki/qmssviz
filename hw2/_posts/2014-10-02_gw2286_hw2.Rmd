@@ -1,0 +1,18 @@
+---
+title: "Homework 2"
+author: "Greg Werbin"
+output: html_document
+---
+
+### 3.
+
+```{r 3}
+setwd("~/class/data viz/qmssviz/hw2/")
+nmis <- read.csv("Health_Mopup_and_Baseline_NMIS_Facility.csv")
+```
+
+### 4.
+
+```{r 4}
+
+```

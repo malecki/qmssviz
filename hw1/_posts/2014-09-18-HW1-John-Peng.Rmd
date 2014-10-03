@@ -1,0 +1,74 @@
+---
+title: "hw1"
+author: "John Peng"
+output: html_document
+published: false
+tags: hw1
+---
+
+
+This dataset(firms) comprises a set of companies and looks at their industry(industry.recode), employee size(empsize), and assets(assets).
+
+**Plotting # of employees x assets**
+
+```{r, echo=FALSE, warning=FALSE}
+setwd('C:/Users/John/Desktop/Data Visualization QMSS/qmssviz')
+library(ggplot2)
+load('soc504_sp13_pager.RData')
+
+#plotting # of employees x assets
+ggplot(firms, aes(x=empsize, y=assets)) +
+  geom_point(shape=1, size =1) +
+  xlim(0,1000) +
+  ylim(0,150)
+```
+
+**Hiding outlier by adjusting plot limits**
+
+```{r, echo=FALSE, warning=FALSE}
+ggplot(firms, aes(x=empsize, y=assets)) +
+  geom_point(shape=1, size =1) +
+  xlim(0,200) +
+  ylim(0,80) +
+  xlab("# of Employees (thousands)") +
+  ylab("Assets (millions of dollars)")
+```
+
+**Zooming in on clustered data points at lower values**
+
+```{r, echo=FALSE, warning=FALSE}
+ggplot(firms, aes(x=empsize, y=assets)) +
+  geom_point(shape=1, size =1) +
+  xlim(0,40) +
+  ylim(0,20) +
+  xlab("# of Employees (thousands)") +
+  ylab("Assets (millions of dollars)")
+```
+
+- Number of employees does not seem to be a very accurate indicator of assets, but it does seem to be an indicator of the maximum assets for a company of that size, since the highest asset company is increasing as number of employees increasing. This is possibly due to the lack of success of a high proportion of companies across all employee sizes. However, a more detailed analysis would be needed to determine if there is or isn't an association for these variables.
+
+
+**Barplot of industry breakdown for businesses**
+
+```{r, echo=FALSE, warning=FALSE}
+ggplot(firms, aes(x=industry.recode)) + 
+  geom_bar(aes(fill=industry.recode)) +
+  scale_fill_hue(name="Industry", l=20) +
+  xlab("Industry") +
+  ylab("# of Companies") +
+  theme(axis.ticks.x = element_blank(), axis.text.x = element_blank())
+```
+
+- Most of the companies in the sample are in retail trade plus finance & services. It would be interesting to see in future analyses whether the high proportion of low-asset companies is due to this. Perhaps the assets of the businesses in some or one of these areas are especially volatile.
+
+
+**Density plot of company assets distribution**
+
+```{r, echo=FALSE, warning=FALSE}
+ggplot(firms, aes(x=assets)) + 
+  geom_density(alpha=.2, fill="#FF6666") +
+  xlim(0,100) +
+  ylim(0,0.4)
+```
+
+- A large proportion of companies in the sample have assets below $10 million.

@@ -1,0 +1,45 @@
+---
+title: "Homework 1 assignment"
+author: "nl2482"
+date: "Wednesday, September 17, 2014"
+output: html_document
+published: false
+tags: hw1
+---
+
+## 1. ggplot2
+```{r}
+setwd("F:/R-3.1.1/github/qmssviz/hw1/_posts")
+d <- read.csv("Donation-Disease.csv")
+library(ggplot2)
+opar <- par(no.readonly=TRUE)
+par(font=4)
+qplot(Name, Death, data = d, color = Name, geom = c("point"), xlab = "Disease", ylab = "Death", main="Total Death plot")
+qplot(Name, MoneyRaised, data = d, color = Name, geom = c("point"), xlab = "Disease", ylab = "Donation", main="Total Donation plot")
+par(opar)
+```
+
+## 2.3D pie chart
+```{r}
+library(plotrix)
+opar <- par(no.readonly=TRUE)
+par(mar=c(1,1,1,1), font=4)
+pct <- round(d$Death / sum(d$Death)*100)
+lbls <- paste(d$Name, " ", pct, "%", sep="")
+pie3D(d$Death,labels=lbls, explode=0.1, labelcex=0.5, start=0, col=c("red","blue","brown","green","orange","yellow","pink","purple"), main="Death pie chart")
+par(mar=c(1,1,1,1), font=4)
+pct <- round(d$MoneyRaised / sum(d$MoneyRaised)*100)
+lbls <- paste(d$Name, " ", pct, "%", sep="")
+pie3D(d$MoneyRaised,labels=lbls, explode=0.1, labelcex=0.7, start=0, col=c("red","blue","brown","green","orange","yellow","pink","purple"), main="Death pie chart")
+par(opar)
+```
+
+## 3. dot chart
+```{r}
+opar <- par(no.readonly=TRUE)
+nvar=d$MoneyRaised / d$Death * 1000
+par(font=4)
+lab_disease=c("Heart Disease","Suicide","Breast Cancer","Diabetes","HIV/AIDS","Prostate Cancer","Motor Neuron Disease (inc ALS)","Chronic Obstructive Pulmonary")
+dotchart(nvar, cex=0.7, col=c("red","blue","brown","green","orange","yellow","pink","purple"),labels=(lab_disease), pch=19, main="Donation per Death dot chart")
+par(opar)
+```

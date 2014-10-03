@@ -8,12 +8,25 @@ tags: assignment2
 ---
 
 ```{r}
+## read-in data
 d1 <- read.csv("F:/R-3.1.1/github/qmssviz/hw2/sample_health_facilities.csv")
 d2 <-read.csv("F:/R-3.1.1/github/qmssviz/hw2/lgas.csv")
+
+## create subset from d1
 d1_sub <- subset (d1, zone %in% c("Southeast","Southwest","South-South"))
+
+## merge by lga_id
 d3 <- merge (d1_sub, d2[c("lga_id", "pop_2006")], by="lga_id")
+
+## select certain variables
 d3_sub <- d3[c("state", "num_nurses_fulltime", "num_doctors_fulltime", "pop_2006")]
+
+## sum
 d4 <- aggregate(. ~ state, data=d3_sub, FUN=sum)
+
+## put into order
 d_final <- d4[order(-d4$pop_2006),]
+
+## show result
 d_final
 ```

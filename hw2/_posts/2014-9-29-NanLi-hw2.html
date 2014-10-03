@@ -58,13 +58,26 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 </div>
 
 
-<pre class="r"><code>d1 &lt;- read.csv(&quot;F:/R-3.1.1/github/qmssviz/hw2/sample_health_facilities.csv&quot;)
+<pre class="r"><code>## read-in data
+d1 &lt;- read.csv(&quot;F:/R-3.1.1/github/qmssviz/hw2/sample_health_facilities.csv&quot;)
 d2 &lt;-read.csv(&quot;F:/R-3.1.1/github/qmssviz/hw2/lgas.csv&quot;)
+
+## create subset from d1
 d1_sub &lt;- subset (d1, zone %in% c(&quot;Southeast&quot;,&quot;Southwest&quot;,&quot;South-South&quot;))
+
+## merge by lga_id
 d3 &lt;- merge (d1_sub, d2[c(&quot;lga_id&quot;, &quot;pop_2006&quot;)], by=&quot;lga_id&quot;)
+
+## select certain variables
 d3_sub &lt;- d3[c(&quot;state&quot;, &quot;num_nurses_fulltime&quot;, &quot;num_doctors_fulltime&quot;, &quot;pop_2006&quot;)]
+
+## sum
 d4 &lt;- aggregate(. ~ state, data=d3_sub, FUN=sum)
+
+## put into order
 d_final &lt;- d4[order(-d4$pop_2006),]
+
+## show result
 d_final</code></pre>
 <pre><code>##          state num_nurses_fulltime num_doctors_fulltime pop_2006
 ## 7        Lagos                   4                    4  1802377

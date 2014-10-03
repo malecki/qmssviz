@@ -12,7 +12,7 @@ tags: hw2
 Firstly, import sample data. 
 ```{r}
 setwd("D:/Wenjuan Deng/Columbia/2014fall/data visualization/qmssgit/HW2")
-file <- "sample_health_facilities.csv"
+file <- "D:/Wenjuan Deng/Columbia/2014fall/data visualization/HW2/sample_health_facilities.csv"
 sample_data <- read.csv(file)
 ```
 - From the Nigeria Facilities Inventory data (sample_data from section 1.5.1), select all facilities located in the Southern zones of Nigeria.

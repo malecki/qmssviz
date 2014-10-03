@@ -1,0 +1,32 @@
+---
+title: "HW2"
+author: "CongWu Uni:cw2771"
+date: "October 2, 2014"
+output: html_document
+---
+
+Read In data.
+--
+
+```{r}
+sample<- read.csv("sample_health_facilities.csv")
+df <-read.csv("lgas.csv")
+```
+Select out southern zone datapoints.
+```{r}
+south <- subset (sample, zone %in% c("Southeast","Southwest","South-South"))
+```
+Incoporate pup_2006
+```{r}
+dfmerge <- merge (south,df[c("lga_id", "pop_2006")], by="lga_id")
+```
+filter useful fields
+```{r}
+dfquery <- dfmerge[c("state", "num_nurses_fulltime", "num_doctors_fulltime", "pop_2006")]
+```
+Count and sort result.
+```{r}
+dfcount <- aggregate(. ~ state, data=dfquery, FUN=sum)
+result <- dfcount[order(-dfcount$pop_2006),]
+result
+```

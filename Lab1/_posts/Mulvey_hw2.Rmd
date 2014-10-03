@@ -1,0 +1,90 @@
+---
+title: "Mulvey_R_Hw2"
+output: html_document
+---
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+setwd("~/Desktop/QMSS_Semester_1/Data Viz")
+getwd()
+setwd("~/Desktop/QMSS_Semester_1/Data Viz")
+d <- read.csv('lgas.csv')
+str(d)
+df <- data.frame()
+nd <- read.csv('sample_health_facilities.csv')
+nd
+south <- subset(nd, zone=="South-South")
+south <- subset(nd, zone, c("South-South" "Southeast", "Southwest"))
+newdata <- subset(nd, zone == "South-South" | zone == "Southwest" | zone == "Southeast")
+newdata
+newd <- c("lga_id", "pop_2006")
+newd
+newdata
+newd <- subset(d, select=c(lga_id, pop_2006, area_sq_km, pop_density_2006))
+newd
+
+south <- merge(newdata, newd, by = "lga_id")
+
+merge(newdata, newd, by = "lga_id", all=FALSE)
+
+south
+south$Dperarea <-south$area_sq_km / south$num_doctors_fulltime
+south$Dpercapita <-south$pop_2006 / south$num_doctors_fulltime
+south$Nperarea <- south$area_sq_km / south$num_nurses_fulltime
+south$Npercapita <-south$pop_2006 / south$num_nurses_fulltime
+south 
+
+south$Dperarea <- as.character(south$Dperarea)
+south$Dperarea[south$Dperarea == "Inf"] <- "0"
+
+south$Dpercapita <- as.character(south$Dpercapita)
+south$Dpercapita[south$Dpercapita == "Inf"] <- "0"
+
+south$Nperarea <- as.character(south$Nperarea)
+south$Nperarea[south$Nperarea == "Inf"] <- "0"
+
+south$Npercapita <- as.character(south$Npercapita)
+south$Npercapita[south$Npercapita == "Inf"] <- "0"
+
+south 
+south$Dperarea <- as.numeric(south$Dperarea)
+south$Dpercapita <- as.numeric(south$Dpercapita)
+south$Nperarea <- as.numeric(south$Nperarea)
+south$Npercapita <- as.numeric(south$Npercapita)
+south
+
+#south <- transform(south, Dperarea = area_sq_km/ num_doctors_fulltime)
+
+#aggregate( cbind( num_nurses_fulltime , num_doctors_fulltime ) ~ state , data = south , FUN=sum )
+
+
+summing <-  data.frame(south$state,south$num_doctors_fulltime,south$num_nurses_fulltime, south$pop_2006, south$area_sq_km, south$pop_density_2006, south$Dperarea, south$Dpercapita, south$Nperarea, south$Npercapita)
+summing
+
+
+
+#summary(summing)
+#sum(summing$Delta$south.num_nurses_fulltime)
+#aggregate(x = summing, list(state = south.state), FUN = "sum")
+#aggregate(south.num_doctors_fulltime ~ south.state, data = summing, sum)
+
+
+#install.packages("plyr")
+#install.packages("reshape2")
+library(plyr)
+library(reshape2)
+
+summing2 <- ddply(summing, .(south.state), numcolwise(sum), na.rm=TRUE)
+summing2
+
+summing2[order(summing2$south.pop_2006, decreasing=TRUE), ]
+
+
+
+
+```
+
+

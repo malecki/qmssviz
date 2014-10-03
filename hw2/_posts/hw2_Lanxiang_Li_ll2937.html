@@ -56,27 +56,325 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 <p>title: “hw2_Lanxiang_Li_ll2937” author: “Lanxiang Li” date: “October 1, 2014” output: html_document published:false tags:hw2</p>
 <div id="importing-data" class="section level1">
 <h1>1.importing data</h1>
-<p>setwd(“~/Desktop/qmssviz/hw2”) lgas &lt;- read.csv(“lgas.csv”) sample &lt;- read.csv(“sample_health_facilities.csv”)</p>
+<pre class="r"><code>setwd(&quot;~/Desktop/qmssviz/hw2&quot;)
+lgas &lt;- read.csv(&quot;lgas.csv&quot;)
+sample &lt;- read.csv(&quot;sample_health_facilities.csv&quot;)</code></pre>
 <div id="finding-zone-classifications" class="section level2">
 <h2>finding zone classifications</h2>
-<p>summary(lgas<span class="math">\(zone) summary(sample\)</span>zone)</p>
+<p>``{r} summary(lgas<span class="math">\(zone) summary(sample\)</span>zone) ```</p>
 </div>
 </div>
 <div id="select-all-facilities-located-in-the-southern-zones-of-nigeria" class="section level1">
 <h1>2.Select all facilities located in the Southern zones of Nigeria</h1>
-<p>sample_southern &lt;- subset(sample, zone %in% c(“South-South”, “Southeast”, “Southwest”)) sample_southern</p>
+<pre class="r"><code>sample_southern &lt;- subset(sample, zone %in% c(&quot;South-South&quot;, &quot;Southeast&quot;, &quot;Southwest&quot;))
+sample_southern</code></pre>
+<pre><code>##                  lga lga_id       state        zone c_section_yn
+## 2            Anaocha     49     Anambra   Southeast        FALSE
+## 4               Orlu    611         Imo   Southeast        FALSE
+## 6           Ayamelum     76     Anambra   Southeast        FALSE
+## 8             Kosofe    441       Lagos   Southwest         TRUE
+## 9            Bekwara    101 Cross River South-South        FALSE
+## 11          Ise/Orun    359       Ekiti   Southwest        FALSE
+## 15        Ezinihitte    218         Imo   Southeast         TRUE
+## 16           Shagamu    671        Ogun   Southwest        FALSE
+## 17            Ihiala    312     Anambra   Southeast         TRUE
+## 19       Ndokwa-West    523       Delta South-South         TRUE
+## 20          Surulere    694       Lagos   Southwest         TRUE
+## 27          Ekwusigo    191     Anambra   Southeast         TRUE
+## 28     Umuahia North    728        Abia   Southeast         TRUE
+## 30             Ogoja    569 Cross River South-South        FALSE
+## 31         Ika South    324       Delta South-South        FALSE
+## 32       Ehime-Mbano    183         Imo   Southeast        FALSE
+## 34            Mushin    516       Lagos   Southwest        FALSE
+## 35          Odukpani    559 Cross River South-South        FALSE
+## 40 Ogba/Egbema/Ndoni    562      Rivers South-South        FALSE
+## 41       Warri South    746       Delta South-South        FALSE
+## 43        Remo North    651        Ogun   Southwest         TRUE
+## 44       Ijebu North    316        Ogun   Southwest        FALSE
+## 46   Atakunmosa West     67        Osun   Southwest        FALSE
+## 48        Uhunmwonde    722         Edo South-South        FALSE
+## 49          Ifelodun    304        Osun   Southwest         TRUE
+## 50     Ughelli South    720       Delta South-South        FALSE
+##    num_nurses_fulltime                                            gps
+## 2                    2    6.07903635 7.00366347 276.1000061035156 5.0
+## 4                    0  5.768364071846008 7.061988115310669 241.0 4.0
+## 6                    0   6.481826305389404 6.938955187797546 78.0 6.0
+## 8                    1    6.60113991 3.41806628 35.29999923706055 5.0
+## 9                    3 6.6513848304748535 8.869051337242126 151.0 4.0
+## 11                   2    7.46085228 5.4184795 390.29998779296875 5.0
+## 15                   7    5.49070932 7.28365219 165.3000030517578 5.0
+## 16                   0     6.69276612 3.49483379 92.4000015258789 5.0
+## 17                   2   5.88475837 6.89508114 110.30000305175781 5.0
+## 19                   8   5.70480295 6.43165459 34.099998474121094 5.0
+## 20                   3   6.49775137 3.35969109 42.400001525878906 5.0
+## 27                   0                5.95802932 6.84972263 148.0 5.0
+## 28                  NA     5.5224549 7.49361609 175.1999969482422 5.0
+## 30                   0   6.477068066596985 8.580247163772583 66.0 4.0
+## 31                   1  6.247004270553589 6.134732365608215 178.0 4.0
+## 32                   1  5.662475824356079 7.232480049133301 164.0 4.0
+## 34                   0                 6.52714249 3.34915425 43.5 5.0
+## 35                   0   5.494038462638855 7.967378497123718 38.0 4.0
+## 40                   2   5.36041084 6.67822917 30.399999618530273 5.0
+## 41                   0    5.5714229 5.70460127 38.400001525878906 5.0
+## 43                   0   6.98168426 3.68639208 123.19999694824219 5.0
+## 44                   0   6.97047814 3.81543107 102.19999694824219 5.0
+## 46                   0   7.52274164 4.62185659 407.20001220703125 5.0
+## 48                   0  6.679955720901489 6.085991263389587 306.0 4.0
+## 49                   6   7.91940107 4.65994516 421.70001220703125 5.0
+## 50                   1   5.37297057 5.91941726 25.200000762939453 5.0
+##    num_lab_techs_fulltime management num_doctors_fulltime
+## 2                      NA     public                   NA
+## 4                       0     public                    0
+## 6                       1     public                    1
+## 8                       0       &lt;NA&gt;                    1
+## 9                       2     public                    0
+## 11                      0       &lt;NA&gt;                    1
+## 15                      1       &lt;NA&gt;                    0
+## 16                      0     public                    0
+## 17                      0       &lt;NA&gt;                    1
+## 19                      1       &lt;NA&gt;                    2
+## 20                      2       &lt;NA&gt;                    3
+## 27                      0       &lt;NA&gt;                    1
+## 28                     41     public                  308
+## 30                      0     public                    0
+## 31                      0     public                    0
+## 32                      0       &lt;NA&gt;                    0
+## 34                      0     public                    0
+## 35                      0       &lt;NA&gt;                    0
+## 40                      0       &lt;NA&gt;                    2
+## 41                      0     public                    0
+## 43                      1       &lt;NA&gt;                    2
+## 44                      0     public                    0
+## 46                      0     public                    0
+## 48                      0     public                    0
+## 49                      1       &lt;NA&gt;                    1
+## 50                      0     public                    0</code></pre>
 </div>
 <div id="incorporate-the-pop2006-column" class="section level1">
 <h1>3.Incorporate the pop2006 column</h1>
-<p>pop_2006 &lt;- subset(lgas, select = c(lga_id, pop_2006)) newsample &lt;- merge(sample_southern, pop_2006, by = “lga_id”) newsample</p>
+<pre class="r"><code>pop_2006 &lt;- subset(lgas, select = c(lga_id, pop_2006))
+new_sample &lt;- merge(sample_southern, pop_2006, by = &quot;lga_id&quot;)
+new_sample</code></pre>
+<pre><code>##    lga_id               lga       state        zone c_section_yn
+## 1      49           Anaocha     Anambra   Southeast        FALSE
+## 2      67   Atakunmosa West        Osun   Southwest        FALSE
+## 3      76          Ayamelum     Anambra   Southeast        FALSE
+## 4     101           Bekwara Cross River South-South        FALSE
+## 5     183       Ehime-Mbano         Imo   Southeast        FALSE
+## 6     191          Ekwusigo     Anambra   Southeast         TRUE
+## 7     218        Ezinihitte         Imo   Southeast         TRUE
+## 8     304          Ifelodun        Osun   Southwest         TRUE
+## 9     312            Ihiala     Anambra   Southeast         TRUE
+## 10    316       Ijebu North        Ogun   Southwest        FALSE
+## 11    324         Ika South       Delta South-South        FALSE
+## 12    359          Ise/Orun       Ekiti   Southwest        FALSE
+## 13    441            Kosofe       Lagos   Southwest         TRUE
+## 14    516            Mushin       Lagos   Southwest        FALSE
+## 15    523       Ndokwa-West       Delta South-South         TRUE
+## 16    559          Odukpani Cross River South-South        FALSE
+## 17    562 Ogba/Egbema/Ndoni      Rivers South-South        FALSE
+## 18    569             Ogoja Cross River South-South        FALSE
+## 19    611              Orlu         Imo   Southeast        FALSE
+## 20    651        Remo North        Ogun   Southwest         TRUE
+## 21    671           Shagamu        Ogun   Southwest        FALSE
+## 22    694          Surulere       Lagos   Southwest         TRUE
+## 23    720     Ughelli South       Delta South-South        FALSE
+## 24    722        Uhunmwonde         Edo South-South        FALSE
+## 25    728     Umuahia North        Abia   Southeast         TRUE
+## 26    746       Warri South       Delta South-South        FALSE
+##    num_nurses_fulltime                                            gps
+## 1                    2    6.07903635 7.00366347 276.1000061035156 5.0
+## 2                    0   7.52274164 4.62185659 407.20001220703125 5.0
+## 3                    0   6.481826305389404 6.938955187797546 78.0 6.0
+## 4                    3 6.6513848304748535 8.869051337242126 151.0 4.0
+## 5                    1  5.662475824356079 7.232480049133301 164.0 4.0
+## 6                    0                5.95802932 6.84972263 148.0 5.0
+## 7                    7    5.49070932 7.28365219 165.3000030517578 5.0
+## 8                    6   7.91940107 4.65994516 421.70001220703125 5.0
+## 9                    2   5.88475837 6.89508114 110.30000305175781 5.0
+## 10                   0   6.97047814 3.81543107 102.19999694824219 5.0
+## 11                   1  6.247004270553589 6.134732365608215 178.0 4.0
+## 12                   2    7.46085228 5.4184795 390.29998779296875 5.0
+## 13                   1    6.60113991 3.41806628 35.29999923706055 5.0
+## 14                   0                 6.52714249 3.34915425 43.5 5.0
+## 15                   8   5.70480295 6.43165459 34.099998474121094 5.0
+## 16                   0   5.494038462638855 7.967378497123718 38.0 4.0
+## 17                   2   5.36041084 6.67822917 30.399999618530273 5.0
+## 18                   0   6.477068066596985 8.580247163772583 66.0 4.0
+## 19                   0  5.768364071846008 7.061988115310669 241.0 4.0
+## 20                   0   6.98168426 3.68639208 123.19999694824219 5.0
+## 21                   0     6.69276612 3.49483379 92.4000015258789 5.0
+## 22                   3   6.49775137 3.35969109 42.400001525878906 5.0
+## 23                   1   5.37297057 5.91941726 25.200000762939453 5.0
+## 24                   0  6.679955720901489 6.085991263389587 306.0 4.0
+## 25                  NA     5.5224549 7.49361609 175.1999969482422 5.0
+## 26                   0    5.5714229 5.70460127 38.400001525878906 5.0
+##    num_lab_techs_fulltime management num_doctors_fulltime pop_2006
+## 1                      NA     public                   NA   285002
+## 2                       0     public                    0    68643
+## 3                       1     public                    1   158410
+## 4                       2     public                    0   105822
+## 5                       0       &lt;NA&gt;                    0   130931
+## 6                       0       &lt;NA&gt;                    1   158231
+## 7                       1       &lt;NA&gt;                    0   165593
+## 8                       1       &lt;NA&gt;                    1    96748
+## 9                       0       &lt;NA&gt;                    1   302158
+## 10                      0     public                    0   284336
+## 11                      0     public                    0   162594
+## 12                      0       &lt;NA&gt;                    1   113754
+## 13                      0       &lt;NA&gt;                    1   665393
+## 14                      0     public                    0   633009
+## 15                      1       &lt;NA&gt;                    2   149325
+## 16                      0       &lt;NA&gt;                    0   192444
+## 17                      0       &lt;NA&gt;                    2   284010
+## 18                      0     public                    0   171901
+## 19                      0     public                    0   142717
+## 20                      1       &lt;NA&gt;                    2    59911
+## 21                      0     public                    0   253412
+## 22                      2       &lt;NA&gt;                    3   503975
+## 23                      0     public                    0   213576
+## 24                      0     public                    0   120813
+## 25                     41     public                  308   220660
+## 26                      0     public                    0   303417</code></pre>
 </div>
 <div id="calculate-the-total-number-of-full-time-nurses-and-doctors-for-all-health-facilities-in-each-state" class="section level1">
 <h1>4.Calculate the total number of full time nurses and doctors for all health facilities in each state</h1>
-<p>total_nurse &lt;- tapply(newsample<span class="math">\(num_nurses_fulltime, newsample\)</span>state, sum,na.rm=T) total_nurse total_doc &lt;- tapply(newsample<span class="math">\(num_doctors_fulltime,newsample\)</span>state, sum, na.rm=T) total_doc</p>
+<pre class="r"><code>total_nurse &lt;- tapply(new_sample$num_nurses_fulltime, new_sample$state, sum,na.rm=T)
+total_nurse</code></pre>
+<pre><code>##        Abia     Adamawa     Anambra      Bauchi       Benue Cross River 
+##           0          NA           4          NA          NA           3 
+##       Delta         Edo       Ekiti         Imo      Jigawa      Kaduna 
+##          10           0           2           8          NA          NA 
+##        Kano     Katsina       Kebbi        Kogi       Lagos       Niger 
+##          NA          NA          NA          NA           4          NA 
+##        Ogun        Osun     Plateau      Rivers      Taraba     Zamfara 
+##           0           6          NA           2          NA          NA</code></pre>
+<pre class="r"><code>total_doc &lt;- tapply(new_sample$num_doctors_fulltime,new_sample$state, sum, na.rm=T)
+total_doc</code></pre>
+<pre><code>##        Abia     Adamawa     Anambra      Bauchi       Benue Cross River 
+##         308          NA           3          NA          NA           0 
+##       Delta         Edo       Ekiti         Imo      Jigawa      Kaduna 
+##           2           0           1           0          NA          NA 
+##        Kano     Katsina       Kebbi        Kogi       Lagos       Niger 
+##          NA          NA          NA          NA           4          NA 
+##        Ogun        Osun     Plateau      Rivers      Taraba     Zamfara 
+##           2           1          NA           2          NA          NA</code></pre>
 </div>
 <div id="sort-the-resulting-dataset-by-state-population-in-descending-order." class="section level1">
 <h1>5.Sort the resulting dataset by state population, in descending order.</h1>
-<p>library(plyr) state_population &lt;- ddply(newsample, “state”,summarize, population=sum(pop_2006)) final_data &lt;- merge(newsample, state_population, by=“state”) final_data &lt;- final_data[order(-final_data$population), ] final_data</p>
+<pre class="r"><code>library(plyr)
+state_population &lt;- ddply(new_sample, &quot;state&quot;,summarize, population=sum(pop_2006))
+final_data &lt;- merge(new_sample, state_population, by=&quot;state&quot;)
+final_data &lt;- final_data[order(-final_data$population), ]
+final_data</code></pre>
+<pre><code>##          state lga_id               lga        zone c_section_yn
+## 18       Lagos    441            Kosofe   Southwest         TRUE
+## 19       Lagos    516            Mushin   Southwest        FALSE
+## 20       Lagos    694          Surulere   Southwest         TRUE
+## 2      Anambra     49           Anaocha   Southeast        FALSE
+## 3      Anambra    191          Ekwusigo   Southeast         TRUE
+## 4      Anambra     76          Ayamelum   Southeast        FALSE
+## 5      Anambra    312            Ihiala   Southeast         TRUE
+## 9        Delta    324         Ika South South-South        FALSE
+## 10       Delta    746       Warri South South-South        FALSE
+## 11       Delta    523       Ndokwa-West South-South         TRUE
+## 12       Delta    720     Ughelli South South-South        FALSE
+## 21        Ogun    671           Shagamu   Southwest        FALSE
+## 22        Ogun    316       Ijebu North   Southwest        FALSE
+## 23        Ogun    651        Remo North   Southwest         TRUE
+## 6  Cross River    101           Bekwara South-South        FALSE
+## 7  Cross River    569             Ogoja South-South        FALSE
+## 8  Cross River    559          Odukpani South-South        FALSE
+## 15         Imo    218        Ezinihitte   Southeast         TRUE
+## 16         Imo    183       Ehime-Mbano   Southeast        FALSE
+## 17         Imo    611              Orlu   Southeast        FALSE
+## 26      Rivers    562 Ogba/Egbema/Ndoni South-South        FALSE
+## 1         Abia    728     Umuahia North   Southeast         TRUE
+## 24        Osun    304          Ifelodun   Southwest         TRUE
+## 25        Osun     67   Atakunmosa West   Southwest        FALSE
+## 13         Edo    722        Uhunmwonde South-South        FALSE
+## 14       Ekiti    359          Ise/Orun   Southwest        FALSE
+##    num_nurses_fulltime                                            gps
+## 18                   1    6.60113991 3.41806628 35.29999923706055 5.0
+## 19                   0                 6.52714249 3.34915425 43.5 5.0
+## 20                   3   6.49775137 3.35969109 42.400001525878906 5.0
+## 2                    2    6.07903635 7.00366347 276.1000061035156 5.0
+## 3                    0                5.95802932 6.84972263 148.0 5.0
+## 4                    0   6.481826305389404 6.938955187797546 78.0 6.0
+## 5                    2   5.88475837 6.89508114 110.30000305175781 5.0
+## 9                    1  6.247004270553589 6.134732365608215 178.0 4.0
+## 10                   0    5.5714229 5.70460127 38.400001525878906 5.0
+## 11                   8   5.70480295 6.43165459 34.099998474121094 5.0
+## 12                   1   5.37297057 5.91941726 25.200000762939453 5.0
+## 21                   0     6.69276612 3.49483379 92.4000015258789 5.0
+## 22                   0   6.97047814 3.81543107 102.19999694824219 5.0
+## 23                   0   6.98168426 3.68639208 123.19999694824219 5.0
+## 6                    3 6.6513848304748535 8.869051337242126 151.0 4.0
+## 7                    0   6.477068066596985 8.580247163772583 66.0 4.0
+## 8                    0   5.494038462638855 7.967378497123718 38.0 4.0
+## 15                   7    5.49070932 7.28365219 165.3000030517578 5.0
+## 16                   1  5.662475824356079 7.232480049133301 164.0 4.0
+## 17                   0  5.768364071846008 7.061988115310669 241.0 4.0
+## 26                   2   5.36041084 6.67822917 30.399999618530273 5.0
+## 1                   NA     5.5224549 7.49361609 175.1999969482422 5.0
+## 24                   6   7.91940107 4.65994516 421.70001220703125 5.0
+## 25                   0   7.52274164 4.62185659 407.20001220703125 5.0
+## 13                   0  6.679955720901489 6.085991263389587 306.0 4.0
+## 14                   2    7.46085228 5.4184795 390.29998779296875 5.0
+##    num_lab_techs_fulltime management num_doctors_fulltime pop_2006
+## 18                      0       &lt;NA&gt;                    1   665393
+## 19                      0     public                    0   633009
+## 20                      2       &lt;NA&gt;                    3   503975
+## 2                      NA     public                   NA   285002
+## 3                       0       &lt;NA&gt;                    1   158231
+## 4                       1     public                    1   158410
+## 5                       0       &lt;NA&gt;                    1   302158
+## 9                       0     public                    0   162594
+## 10                      0     public                    0   303417
+## 11                      1       &lt;NA&gt;                    2   149325
+## 12                      0     public                    0   213576
+## 21                      0     public                    0   253412
+## 22                      0     public                    0   284336
+## 23                      1       &lt;NA&gt;                    2    59911
+## 6                       2     public                    0   105822
+## 7                       0     public                    0   171901
+## 8                       0       &lt;NA&gt;                    0   192444
+## 15                      1       &lt;NA&gt;                    0   165593
+## 16                      0       &lt;NA&gt;                    0   130931
+## 17                      0     public                    0   142717
+## 26                      0       &lt;NA&gt;                    2   284010
+## 1                      41     public                  308   220660
+## 24                      1       &lt;NA&gt;                    1    96748
+## 25                      0     public                    0    68643
+## 13                      0     public                    0   120813
+## 14                      0       &lt;NA&gt;                    1   113754
+##    population
+## 18    1802377
+## 19    1802377
+## 20    1802377
+## 2      903801
+## 3      903801
+## 4      903801
+## 5      903801
+## 9      828912
+## 10     828912
+## 11     828912
+## 12     828912
+## 21     597659
+## 22     597659
+## 23     597659
+## 6      470167
+## 7      470167
+## 8      470167
+## 15     439241
+## 16     439241
+## 17     439241
+## 26     284010
+## 1      220660
+## 24     165391
+## 25     165391
+## 13     120813
+## 14     113754</code></pre>
 </div>
 
 

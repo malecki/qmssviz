@@ -7,33 +7,45 @@ published:false
 tags:hw2
 
 # 1.importing data
+```{r}
 setwd("~/Desktop/qmssviz/hw2")
 lgas <- read.csv("lgas.csv")
 sample <- read.csv("sample_health_facilities.csv")
+```
 
 ## finding zone classifications
+``{r}
 summary(lgas$zone)
 summary(sample$zone)
+```
 
 # 2.Select all facilities located in the Southern zones of Nigeria
+```{r}
 sample_southern <- subset(sample, zone %in% c("South-South", "Southeast", "Southwest"))
 sample_southern
+```
 
 # 3.Incorporate the pop2006 column
+```{r}
 pop_2006 <- subset(lgas, select = c(lga_id, pop_2006))
-newsample <- merge(sample_southern, pop_2006, by = "lga_id")
-newsample
+new_sample <- merge(sample_southern, pop_2006, by = "lga_id")
+new_sample
+```
 
 # 4.Calculate the total number of full time nurses and doctors for all health facilities in each state
-total_nurse <- tapply(newsample$num_nurses_fulltime, newsample$state, sum,na.rm=T)
+```{r}
+total_nurse <- tapply(new_sample$num_nurses_fulltime, new_sample$state, sum,na.rm=T)
 total_nurse
-total_doc <- tapply(newsample$num_doctors_fulltime,newsample$state, sum, na.rm=T)
+total_doc <- tapply(new_sample$num_doctors_fulltime,new_sample$state, sum, na.rm=T)
 total_doc
+```
 
 # 5.Sort the resulting dataset by state population, in descending order.
+```{r}
 library(plyr)
-state_population <- ddply(newsample, "state",summarize, population=sum(pop_2006))
-final_data <- merge(newsample, state_population, by="state")
+state_population <- ddply(new_sample, "state",summarize, population=sum(pop_2006))
+final_data <- merge(new_sample, state_population, by="state")
 final_data <- final_data[order(-final_data$population), ]
 final_data
+```
 

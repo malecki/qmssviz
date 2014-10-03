@@ -1,10 +1,10 @@
 ---
-title: "Assignment2-Nan-Li"
+title: "HW2-Nan-Li"
 author: "nl2482"
 date: "Monday, September 29, 2014"
 output: html_document
 published: false
-tags: assignment2
+tags: hw2
 ---
 
 ```{r}

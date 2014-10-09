@@ -1,0 +1,142 @@
+---
+title: "Homework 1 Assignment"
+author: flrnclee
+output: html_document
+published: false
+tags: hw1
+---
+
+========================================================
+
+# About the Data
+
+The data set is a subset of the complete 2004 NYC HANES dataset. All survey participants are adults, ages 20+. Because information regarding eating behaviors, occupation, and BMI were all found in different survey portions, I used SAS to merge based on uniuqe SP_ID. SAS was also used to remove survey respondents with missing values on the variables of interest and to export the data into a .CSV file. 
+
+# Importing the Data
+
+Change file directory to retrieve data set.
+```{r}
+setwd("C:/Users/Flo/Desktop/Data Viz 2014/Assignment1")
+nychanes <- read.csv("nychanes.csv", stringsAsFactors=FALSE)
+```
+
+Explore the dataset.
+
+```{r}
+head(nychanes)
+```
+
+# About the Dataset
+
+### Dataset Variables in nychanes 
+
+(1) **"eatout"** is a composite score based on DBQ090G and DBQ090Q. It is a discrete numeric variable.
+
+* Numeric value corresponds to the number of times the survey respondent ate meals prepared in a restaurant (includes take-out orders)
+* eatout=0 corresponds to not eating restaurant-prepared food OR eating restaurant-prepared food less than once per week
+
+(2) **"occgrp"** is a categorical variable based off of OCCREC and expressed numerically as a nominal numeric variable. Since there are a lot of groups, we will collapse similar categories as defined by the [Office for National Statistics Standard Occupational Classification Hierarchy](http://www.neighbourhood.statistics.gov.uk/HTMLDocs/dev3/ONS_SOC_hierarchy_view.html).
+
+* occgrp=1 corresponds to managerial and professional specialty (1)
+* occgrp=2 corresponds to sales (4)
+* occgrp=3 corresponds to technical and administrative (2)
+* occgrp=4 corresponds to service (4)
+* occgrp=5 corresponds to farming, forestry, and fishing (3)
+* occgrp=6 corresponds to precision production, craft, and repair (3)
+* occgrp=7 corresponds to operators, fabricators, and laborers (5)
+
+(3) **"BMXBMI"** is a continuous variable that corresponds to the survey respondent's BMI based off of their height and weight. Another way of looking at BMI is through ***"BMI2"***, which is an ordinal categorical variable. 
+
+* BMI2=1 corresponds to underweight
+* BMI2=2 corresponds to normal weight
+* BMI2=3 corresponds to overweight 
+* BMI2=4 corresponds to obese
+
+# Recoding & Renaming Variables of Interest in nychanes
+
+```{r}
+#Rename columns
+colnames(nychanes)
+newCol <- c("id", "eatout_bin", "eatout_num", "occ", "occgrp", "eatout", "bmi", "bmi_grp")
+colnames(nychanes) <- newCol
+colnames(nychanes)
+
+#Consolidate occgrp
+nychanes$occgrp[nychanes$occgrp==1] <- "Managerial and professional"
+nychanes$occgrp[nychanes$occgrp==3] <- "Administrative and technical"
+nychanes$occgrp[(nychanes$occgrp==5)|(nychanes$occgrp==6)] <- "High-skill workers"
+nychanes$occgrp[(nychanes$occgrp==2)|(nychanes$occgrp==4)] <- "Service"
+nychanes$occgrp[nychanes$occgrp==7] <- "Laborers"
+nychanes$occgrp<-as.factor(nychanes$occgrp)
+levels(nychanes$occgrp) <- c("Managerial and professional","Administrative and technical", "High-skill workers", "Service", "Laborers")
+
+#Label bmi_grp
+nychanes$bmi_grp[nychanes$bmi_grp==1] <- "Underweight"
+nychanes$bmi_grp[nychanes$bmi_grp==2] <- "Normal"
+nychanes$bmi_grp[nychanes$bmi_grp==3] <- "Overweight"
+nychanes$bmi_grp[nychanes$bmi_grp==4] <- "Obese"
+nychanes$bmi_grp <- as.factor(nychanes$bmi_grp)
+levels(nychanes$bmi_grp) <- c("Underweight", "Normal", "Overweight", "Obese")
+
+```
+
+# Graphs
+
+### Plot of BMI vs. Frequency of Eating Out
+
+I am primarily interested to see whether there is some association between eating out and BMI. I expect to see higher frequency of eating out with higher BMI readings due to the high sodium, high fat content of most restaurant foods. 
+
+```{r base, fig.width=15, fig.height=10, message=FALSE}
+#Call ggplot2
+install.packages('ggplot2')
+library(ggplot2)
+#Create base
+
+base <- ggplot(nychanes, aes(xmin=0, xmax=30, ymin=15, ymax=60, x=eatout, y=bmi, colour=occgrp)) + xlab("Number of Restaurant-Prepared Meals Consumed Per Week") + ylab("BMI (kg/m2)") + ggtitle("Body Mass Index (BMI) and Frequency of Eating Out")
+#Highlight Normal BMI region
+base2 <- base + geom_rect(aes(xmin=-Inf, xmax=Inf, ymin=18.5, ymax=25), fill="orange", alpha=1/100, inherit.aes=FALSE) 
+# Add points
+baseplot<-base2 + geom_point(size=4)
+# Add aesthetics
+basefinal <- baseplot + scale_colour_brewer(expression("Occupation Level")) + theme(plot.title=element_text(face="bold", size=18), axis.title=element_text(face="bold", size=15), panel.background=element_rect(fill="gray70"), panel.grid.major=element_line(colour="gray50"), panel.grid.minor=element_line(colour="gray60", linetype="dotted", size=1))
+# Format legend
+final <- basefinal + theme(legend.background=element_rect(fill='gray60', colour='gray60', size=1.25), legend.key=element_rect(fill='gray70'), legend.position=c(0.88, 0.85))
+final
+```
+In the plot, I do not see a clear association, mostly because most of the data is concentrated between 0 to 10 meals per week. Even within this region, BMI varies widely. 
+
+The orange region of the graph highlights individuals that are within a normal BMI region (between 18.5 and 25). We see that fewer people fall in this normal BMI region as number of restaruant-prepared meal increases. (This may be due to the fact that there weren't as many data points after 10 meals.)
+
+The colors of the point indicate the occupation level of the survey respondent. Individuals with lighter colored points are considered upper-level workers (managers and supervisors), while individuals with darker colored points are considered lower-level workers (general laborers). 
+
+### Looking at Occupation 
+
+Lower-level workers and higher-level workers probably have different lifestyles due to income earned and physical demand of their respective jobs. This can influence BMI and frequency of eating restaurant-prepared foods. 
+
+To observe the effect of occupation on my association of interest, I created separate graphs for each occupation group.
+
+```{r grid, fig.width=15, fig.height=10, message=FALSE}
+#Create facet grid with default legend placement
+grid <- basefinal + facet_grid(. ~ occgrp)
+grid2 <- grid + theme(legend.background=element_rect(fill='gray60', colour='gray60', size=1.25), legend.key=element_rect(fill='gray70'))
+grid2
+```
+
+The association between BMI and number of restaurant-prepared meals consumed in a week does not seem to differ visually from occupation group to occupation group. It is interesting to note that respondents who worked in services and sales seem to eat out more frequently, on average, than respondents in other occupational groups.
+
+### Another view: Bargraph
+
+On a second pass, I decided to create a bar plot in an additional exercise to choose a sensible color scheme. Here, I try to look at distribution of BMIs within each occupational group. 
+
+``` {r grid2, fig.width=15, message=FALSE}
+# Stacked bar graph
+stack <- qplot(factor(nychanes$occgrp), data=nychanes, geom="bar", binwidth=0.3, fill=factor(bmi_grp), ylim=c(0, 500))+ 
+  xlab("Occupational Group") + ylab("Number of Survey Respondents") + ggtitle("BMI Within Occupational Groups")
+cbPalette <- c("#67CDEB", "#78E12B", "#E99523", "#E62C26")
+colors <- scale_fill_manual(values=cbPalette) 
+look <- theme_classic(base_size = 12, base_family = "")+theme(plot.title=element_text(face="bold", size=18), axis.title=element_text(face="bold", size=15))
+finstack <- stack + colors + look
+finstack
+```
+
+On a future iteration of this code, I would like to (1) change legend title, and (2) think about a better way to convey a comparison.

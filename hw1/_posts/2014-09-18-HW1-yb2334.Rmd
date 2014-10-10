@@ -1,0 +1,135 @@
+---
+title: "Homework 1 assignment"
+author: yb2334
+output: html_document
+published: false
+tags: hw1
+---
+
+# Data Visualization Homework 1
+
+## Yannan Bu (yb2334)
+========================================================
+
+### Dataset: 
+    responses-2014-09-05.csv
+
+### Description: 
+    This dataset contains information about students of QMSS Data Visualization course collected in the first session on Sept 5, 2014 (http://bit.ly/qmssvizt0). Most of the questions concern about students' basic information and software experience. 
+
+### 1. Preparation: Getting and Cleaning Data
+
+1.1 Read data and have a sense of the general picture. 
+```{r}
+setwd("E:/QMSS/Everything abt R/qmssviz/labs/questionnaire")
+data <- read.csv("responses-2014-09-05.csv", header = T, stringsAsFactors = F)
+str(data)
+```
+
+1.2 Clena data
+
+```{r}
+#Change classe of variable "Program" from character to factor. 
+data$Program <- as.factor(data$Program)
+
+table(data$Program)
+
+#Combine "EdD" into the catogory of "Other PhD", "Statistics" into "Stat", and QMSS third semester students to the group "QMSS Second semester+"
+
+data <- as.data.frame(sapply(data, gsub, pattern = "EdD", replacement = "Other PhD"))
+data <- as.data.frame(sapply(data, gsub, pattern = "Statistics", replacement = "Stat"))
+data <- as.data.frame(sapply(data, gsub, pattern = "QMSS third semester", replacement = "QMSS Second semester +"))
+data <- as.data.frame(sapply(data, gsub, pattern = "QMSS Third semester", replacement = "QMSS Second semester +"))
+
+
+#Tranform multiple choice variable "Baseline.experience" into dichotomous variables.
+
+data <- as.data.frame(sapply(data, gsub, pattern = "cvs, svn, hg, bzr", replacement = "cvs; svn; hg; bzr"))
+data <- as.data.frame(sapply(data, gsub, pattern = "ec2, s3", replacement = "ec2; s3"))
+data <- as.data.frame(sapply(data, gsub, pattern = "html, css, js", replacement = "html; css; js"))
+lev <- levels(factor(data$Baseline.experience))
+lev <- unique(unlist(strsplit(lev, ", ")))
+name <- gsub(" ", "_", paste(lev, sep = "."))
+result <- matrix(data = 0, nrow = length(data$Baseline.experience), ncol = length(lev))
+char <- as.character(data$Baseline.experience)
+for (i in 1:length(lev)) {
+  result[grep(lev[i], char, fixed = T), i] <- 1
+}
+result <- data.frame(result, stringsAsFactors = T)
+colnames(result) <- name
+data <- cbind(data, result)
+
+
+#Create a new variable named "TotalBE" indicating the total number of baseline experience softwares or languages.
+
+data$TotalBE <- rowSums(data[14:45])
+
+#Create a new data frame to sum up the number of students that have previous experience with each software or language.
+
+tools <- as.data.frame(sapply(data[, 14:45], function(v) {
+  sel <- as.numeric(v==1)
+  sum(sel)
+}))
+colnames(tools) <- "count"
+
+#And sort the data frame by descending order
+tools <- tools[ order(-tools[, 1]), , drop = F]
+tools$name <- rownames(tools)
+
+```
+
+### 2. Exploratory Analysis
+
+Note: All the analysis are done with the "ggplot2" package.
+```{r, warning = FALSE}
+library(ggplot2)
+```
+
+
+2.1 Student Background Summary
+The first plot shows a histogram of the number of students from each program.
+```{r, fig.align='center'}
+plot1 <- qplot(Program, data = data, color = Program, size = I(1.5), main = "Student Background Summary", ylab = " ")
+last_plot() + theme(axis.text.x = element_blank(), title = element_text(size = 12)) + coord_fixed(ratio = 0.3)
+```
+
+2.2 Baseline Experience Analysis
+
+The second plot demonstrates top 10 most popular computer tools among Data Visualization students.
+```{r}
+sub_tool <- tools[10:1, ]
+plot2 <- ggplot(sub_tool, aes(x= factor(name, levels=unique(name)), y = count)) +
+  geom_bar(stat="identity", alpha = 1, position = "identity") +
+  coord_flip() +
+  xlab(" ") +
+  ylab(" ") +
+  ggtitle("Top 10 Most Popular Computer Tools") +
+  guides(fill = FALSE)
+print(plot2)
+```
+
+The third plot displays number of tools used before of each student, grouped by program.
+```{r, fig.align='center'}
+plot3 <- qplot(Program, TotalBE, data = data, color = Program, geom = "point", ylab = "Total Number of Baseline Experience Tools", main = "Baseline Experience Summary")
+last_plot() + theme(axis.text.x = element_blank()) + coord_fixed(ratio = 0.25)
+```
+
+2.3 Software Experience Analysis
+
+The fourth plot shows distribution of level of students' experience with R graphics.
+```{r, fig.height=6,fig.width=6, fig.align='center'}
+plot4 <- qplot(data[, 6], data = data, xlab = "Level of Experience with R Graphics", ylab = " ", main = "Distribution of R Graphics Experience") +
+  facet_wrap(~Program, ncol = 3)
+print(plot4)
+#last_plot() + coord_fixed(ratio = 0.1)
+```
+
+The fifth plot is a pie chart of students' version control experience.
+```{r, fig.align='center'}
+plot5 <- ggplot(data, aes(x = factor(1), fill = factor(data[, 9]))) + 
+  geom_bar(width = 1) +
+  xlab(" ") +
+  ylab(" ") +
+  ggtitle("Proportional Distribution of Version Control Experience") +
+  scale_fill_discrete("Level of Experience")
+plot5 + coord_polar(theta = "y")

@@ -6,6 +6,12 @@
      - [Git intro](http://skli.se/2012/09/22/introduction-to-git/)
      - [Git workflow for beginners](http://skli.se/2012/10/07/git-workflow-beginner/)
      - [Git branching game!](http://pcottle.github.io/learnGitBranching/)
+     - [Git intro](http://skli.se/2012/09/22/introduction-to-git/)
+     - [Another intro video](https://www.youtube.com/watch?v=LXoWxrTdXkM)
+     - [Forking](https://help.github.com/articles/fork-a-repo)
+     - [Training and Guides](https://www.youtube.com/channel/UCP7RrmoueENv9TZts3HXXtw)
+     - [Sharing and Collaborating](https://www.youtube.com/watch?v=ifAEho6BmH0&list=PLg7s6cbtAD17uAwaZwiykDci_q3te3CTY)
+
 
 - date: 2014-09-11
   before: |
@@ -13,7 +19,7 @@
     - [Yann LeCun on Data Science](https://plus.google.com/+YannLeCunPhD/posts/i8Xs9AGgCQW)
     - Tufte ch. 1–3
   during: |
-    - Lab: gentle R intro, by Yang
+    - Lab: gentle R intro, by Yang & Huei-yi
     - Lab: gentle git intro, by Malecki
 
 - date: 2014-09-18
@@ -24,6 +30,7 @@
     - [Climate change, crowbars, and strikeouts](http://chartsnthings.tumblr.com/post/47670081904/climate-change-crowbars-and-strikeouts)
     - [Heer et al, Visualization Zoo](http://queue.acm.org/detail.cfm?id=1805128) (note: fixed link)
   during: |
+    - Code review of Homework 1
     - [knitr doc](http://yihui.name/knitr/)
     - discuss reproducible research, publishing replication data, versioning, &c
   due: Homework 1— Rmarkdown, ggplot2, and github

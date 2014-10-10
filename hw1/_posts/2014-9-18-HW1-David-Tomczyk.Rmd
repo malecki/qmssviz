@@ -1,0 +1,95 @@
+---
+title: "hw1"
+author: "David Tomczyk"
+date: "September 18 2014"
+output: html_document
+published: FALSE
+tags: hw1
+---
+```{r init, include=FALSE}
+
+library(ggplot2)
+
+setwd("~/qmssviz/Labs/questionnaire")
+responses <- read.csv("responses-2014-09-05.csv",stringsAsFactors=F)
+```
+---
+
+# Visualizing data from the Questionnaire
+
+---
+
+## Who is in the class?
+
+I thought it would be useful to take a look at who is taking this class. Its a QMSS class, but how many non-QMSS students are here?
+
+First creating the data frame:
+```{r}
+program.df <-as.data.frame.table(table(responses[[2]]),stringsAsFactors=FALSE)
+program.df #look at the data frame created
+
+program.df <- program.df[-8,]
+program.df[8,"Freq"] <- 2
+program.df <- program.df[-6,]
+program.df[6,"Freq"] <- 2
+names(program.df)[1] <- "Program"
+names(program.df)[2] <- "Count"
+program.df[4,"Program"] <- "QMSS 1st sem."
+program.df[5,"Program"] <- "QMSS 2nd Sem.+"
+program.df[6,"Program"] <- "QMSS 3rd Sem."
+```
+
+# Visualizing the data
+
+```{r ggplot, fig.width=16, fig.height=5, message=FALSE}
+x.axis <- theme(axis.title.x = element_text(face="bold", colour="#990000", size=20), axis.text.x  = element_text(colour="#000000", angle=0, size=14))
+y.axis <- theme(axis.title.y = element_text(colour="#000000", size=16), axis.text.y  = element_text(angle=0, vjust=0.5, size=14))
+title.settings <- ggtitle("Class Make Up")+theme(plot.title=element_text(face="bold", size=28))#why is my tital disappearing????
+bar.text <- geom_text(data=program.df,aes(x=Program,y=Count,label=Count),vjust=0)
+
+ggplot(data=program.df, aes(x=Program, y=Count, fill=Program)) + geom_bar(stat="identity")+guides(fill=FALSE)+bar.text+x.axis+y.axis+title.settings
+
+```
+---
+
+#Twitter users among the class, by program
+
+Which program/cohort has the highest proportion of twitter users?
+
+Creating the data frame:
+```{r}
+ library(plyr)
+
+progtwit <- responses[,c(2,4)]
+
+progtwit[14,"Program"] <- "Stat"
+progtwit[28,"Program"] <- "QMSS Third semester"
+colnames(progtwit)[2] <- "Twitter"
+
+progtwit$Program[progtwit$Program == "QMSS First semester"] <- "QMSS 1st Sem."
+progtwit$Program[progtwit$Program == "QMSS Second semester +"] <- "QMSS 2nd Sem. +"
+progtwit$Program[progtwit$Program == "QMSS Third semester"] <- "QMSS 3rd Sem."
+```
+
+#Visualizing data
+
+```{r ggplot2, fig.width=18, fig.height=12, message=FALSE}
+
+twit.title <- ggtitle("Twitter Users by Program")
+twit.legend <- theme(legend.text = element_text(size = 20)) + theme(legend.title = element_text(size = 25))
+legend.order <- guides(fill = guide_legend(reverse=TRUE))
+colors.custom <- scale_fill_manual(values=c("#999999", "#1dcaff"))
+
+#Stacked bar chart
+ggplot(progtwit, aes(Program, fill=Twitter))+ geom_bar()+ legend.order + colors.custom + twit.title + x.axis + y.axis + twit.legend
+
+#Dot plot
+dotplot <- geom_dotplot(stackgroups=TRUE, binpositions="all")
+ggplot(progtwit, aes(Program, fill=Twitter))+ dotplot + legend.order + colors.custom + twit.title + x.axis + y.axis+twit.legend
+
+```
+---
+
+Suggestions:
+look into Rcharts, have a button to switch between yes/no's in each category. Also think about adding proportions and/or frequency to the top of the bars. USE TWITTER BLUE(for users)/GREY(for not)! Consider: Dot plot, not bar chart
+---

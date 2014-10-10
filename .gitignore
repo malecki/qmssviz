@@ -1,0 +1,20 @@
+_site
+
+# Logs
+*.vimlog
+*.log
+
+# OS weirdness
+*.DS_Store
+.DS_Store
+
+.RData
+.Rhistory
+Thumbs.db
+.Rproj.user
+
+## Rproj is seriously annoying. Sorry.
+*.Rproj
+*.Rbuildignore
+.Rproj.user
+*cache

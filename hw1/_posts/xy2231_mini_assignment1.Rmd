@@ -1,0 +1,48 @@
+---
+title: "Mini_assignment"
+author: "Xiaoyao Yang"
+date: "October 9, 2014"
+output: html_document
+---
+
+This homework is shown on slide and sorry for late submit. I am going to show how I do simple data wrangling here.
+
+
+1. First, read data, and subset data that located in the southern zones of Nigeria.
+
+```{r}
+dat <- read.csv("sample_health_facilities.csv")
+lgas <- read.csv('lgas.csv')
+require(stringr)
+index <- str_detect(string = dat$zone,pattern = 'South')
+dat_south <- dat[index,]
+head(dat_south$zone)
+```
+
+2. Second, incorporate LGA metadata into this new dataframe.
+
+```{r,message=FALSE}
+require(plyr)
+datn <- join(x = dat_south, y= lgas ,by = 'lga_id',type = 'left')
+dim(datn)
+
+```
+
+
+3. Calculate total number of doctors and nurses by state, and also per area,
+
+```{r}
+(datnn <- ddply(datn,.variables = 'state',summarise,num_doctor=sum(num_doctors_fulltime,na.rm=T),num_nurse=sum(num_nurses_fulltime,na.rm=T),num_doctor_per_area=sum(num_doctors_fulltime/area_sq_km,na.rm=T),num_nurse_per_area=sum(num_nurses_fulltime/area_sq_km,na.rm=T)))
+
+popu_state <- ddply(lgas,.variables='state',summarise,population=sum(pop_2006,na.rm=T))
+datnn <- join(datnn,popu_state,by = 'state')
+datnn$num_doctor_per_capita <- datnn$num_doctor/datnn$population
+datnn$num_nurse_per_capita <- datnn$num_nurse/datnn$population
+
+```
+
+4. Sort result by population with descending order and show result.
+
+```{r}
+(datnn <- datnn[order(datnn$population,decreasing = T),])
+```

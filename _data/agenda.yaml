@@ -72,13 +72,6 @@
     - [Building R Extensions](http://cran.r-project.org/doc/manuals/r-release/R-exts.html)
 
 - date: 2014-10-16
-  topic: Gentle introduction to D3
-  before: |
-    - [D3 paper](http://idl.cs.washington.edu/papers/d3)
-    - [Murray, Interative data Visualization for the Web](http://proquest.safaribooksonline.com.ezproxy.cul.columbia.edu/book/web-design-and-development/9781449340223) (O'Reilly Safari)
-  during: js, json, svg; tips and tricks; lightning talks
-
-- date: 2014-10-23
   topic: Mapping
   during: "Lab: Choropleths"
   before: |
@@ -87,7 +80,16 @@
     - [Choropleth](http://bl.ocks.org/mbostock/4060606)
     - [Rmaps](http://rmaps.github.io/)
     - [Malecki's quick Notes on maps](https://sites.google.com/site/malecki/map-notes)
-  due: Homework 2— R package *or* Shiny app
+
+- date: 2014-10-23
+  topic: Gentle introduction to D3; Beaker
+  before: |
+    - [D3 paper](http://idl.cs.washington.edu/papers/d3)
+    - [Murray, Interative data Visualization for the Web](http://proquest.safaribooksonline.com.ezproxy.cul.columbia.edu/book/web-design-and-development/9781449340223) (O'Reilly Safari)
+    - [beaker notebook](http://beakernotebook.com/) / [source](https://github.com/twosigma/beaker-notebook)
+  during: Gentle introduction to d3; demo and discussion of Beaker Notebook
+  due: Homework 3, survey analysis
+
 
 - date: 2014-10-30
   topic: Interactivity and Animation

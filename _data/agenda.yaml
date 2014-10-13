@@ -75,6 +75,7 @@
   topic: Mapping
   during: "Lab: Choropleths"
   before: |
+    - The rest of Tufte, VDQI
     - [Roth et al., Value-by-Alpha Maps](http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3173776/)
     - [Bostock, Let’s Make a Map](http://bost.ocks.org/mike/map/)
     - [Choropleth](http://bl.ocks.org/mbostock/4060606)

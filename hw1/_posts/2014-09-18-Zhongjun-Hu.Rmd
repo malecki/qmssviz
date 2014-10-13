@@ -1,7 +1,7 @@
 ---
 title: "hw1 huzhongjun"
 author: "Zhongjun Hu"
-date: "2014年9月17日"
+date: "2014-09-17"
 output: html_document
 ---
 # Assignment1 

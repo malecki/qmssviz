@@ -31,6 +31,7 @@
     - [Climate change, crowbars, and strikeouts](http://chartsnthings.tumblr.com/post/47670081904/climate-change-crowbars-and-strikeouts)
     - [Heer et al, Visualization Zoo](http://queue.acm.org/detail.cfm?id=1805128) (note: fixed link)
   during: |
+    - Code review of Homework 1
     - [knitr doc](http://yihui.name/knitr/)
     - discuss reproducible research, publishing replication data, versioning, &c
   due: Homework 1— Rmarkdown, ggplot2, and github

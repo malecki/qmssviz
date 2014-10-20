@@ -7,8 +7,6 @@ published: false
 tags: hw1
 ---
 
-comments from class: use mean ratio, make things square, compare side by side, and use a dot plot instead of arbitrary columns.
-
 ## Bboy Injury Data
 
 The data used in the narrative below was obtained from the American Journal of Sports Medicine article, "Breakdance Injuries and Overuse Syndromes in Amateurs and Professionals," by Max Daniel Kauther. The sample size for the study was 144 bboys (breakdancers, 40 professional, 104 amateur).

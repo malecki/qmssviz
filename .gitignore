@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 _site
 
 # Logs
@@ -10,3 +11,18 @@ _site
 .RData
 .Rhistory
 Thumbs.db
+=======
+_site
+
+# Logs
+*.vimlog
+*.log
+
+# OS weirdness
+*.DS_Store
+
+.RData
+.Rhistory
+Thumbs.db
+.Rproj.user
+>>>>>>> e967ee8... hw1 commit

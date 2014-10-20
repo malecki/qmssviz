@@ -1,0 +1,269 @@
+---
+title: "R Basics"
+author: "Yang Yang"
+---
+
+
+Brief intro of RStudio, an integrated development environment (IDE)
+
+Anything following a # is a comment
+
+```{r}
+# This is a comment, which is not executed.
+# You can take notes this way, e.g.Commom dataset structure:each variable is a column, each observation is a row, and each type of observational unit is a table. 
+```
+
+R as a calculator
+-------------------------
+
+#### Basic Math
+```{r}
+1 + 1
+4 / 2 * 3
+```
+
+
+#### R follows the order of operations PEMDAS Parenthesis Exponents Multiplication Division Addition Subtraction
+```{r}
+4 / (2*3)
+```
+
+#### R has built in math functions 
+```{r}
+sqrt(4)
+```
+
+
+
+Assign a variable
+-------------------------
+```{r}
+a <- 1
+b <- 2   ## you can also try b=2, which is another way of assigning a variable, but arrow is generally preferred
+c <- a + b 
+```
+
+```{r}
+c
+```
+
+
+#### R is case sensitive
+```{r}
+A <- 10
+```
+
+```{r}
+A
+a    ##remember, R is case sensitive! 
+```
+
+#### Remove objects 
+```{r}
+ls()  # R stores both data and data analysis output as objects. ls() returns a list of all objects in the current session
+rm(a) 
+```
+
+
+Vectors
+----------------------------------------
+
+#### Create vectors *Note: R is case sensitive*
+```{r}
+A <- c(1,2,3,4,5)  ##Overwrite an object by assigning it something new
+A
+B <- 1:5; B #Commands are separated either by a ; or by a newline
+C <- c(100, 40:30); C 
+```
+
+
+#### Logical (hints for vector operations) 
+[More about operators](http://www.statmethods.net/management/operators.html)
+```{r}
+A < 2
+
+##check length
+length(A); length(B)
+
+A == B
+A != 5
+```
+
+
+#### Vector Operations
+```{r}
+# add 1 to every element
+A + 1
+
+# multiplty 2 to every element
+A * 2
+
+# raise every element to second power
+A ^ 2
+```
+
+
+#### More about Vector Operations (for vectors have the same length)
+```{r}
+# +, -, *, /
+A+B
+
+A/B 
+
+```
+
+
+```{r}
+##get a specific element from vector C
+A[3]
+
+##remove a specific element from vector C
+A[-3]
+
+D<-A[-3]
+D
+length(D)
+```
+
+
+Introduction to data types and data.frame 
+----------------------------------------
+
+#### Set working directory and read dataset
+It should be your own working directory in "..."; if you are using a R script, you should be fine to do as following two steps to read data: set working directory and read dataset
+** Today we will learn how to get data from you Git. **
+
+```{r}
+#setwd("/Users/timz/Downloads")
+demo <- read.csv("Donation-Disease.csv",
+                 stringsAsFactors=F,
+                # arg2=blah,
+                # more args
+                )
+```
+
+#### read.table and read.csv can read data stored as text files, delimited by nearly everything, e.g. comma delimited and tab delimited. 
+
+```{r}
+# give dataset a name as a R dataframe object 
+demo<-read.csv("Donation-Disease.csv",stringsAsFactors=F)
+```
+
+
+```{r}
+# class of demo
+class(demo) # data frames have a matrix structure. Obs are arranged as rows and columns
+
+# Structure of demo, including data types for variables
+str(demo)
+
+# Look at the dataset 
+head(demo)
+
+# Dimensions of demo
+dim(demo)   #output: row column
+
+# Summary demo, returns distributional summaries of variables in the dataset
+summary(demo)
+
+```
+
+#### indexing rows, columns and cells in a dataframe. 
+* object[row,column]
+* object[[selector]] ## integer or character
+* object$column.name
+
+```{r}
+# Extract a specific cell
+demo[2,2]
+
+# Extract values of the column "Name" #
+demo[["Name"]]  #this is a preferred approach
+demo[[1]]     #the number of the column
+demo$Name     #another commom alternative 
+demo[ ,1]
+
+# Extract values of specific rows
+demo[2:5, ]
+demo[2:5, 1:2]
+
+```
+
+Install R Packages
+----------------------------------------
+#### To use packages in R, we must first install them using install.packages function, which downloads the packages. 
+You just need to install a package once for your RStudio, you only need to call this package in the future. 
+
+```{r}
+# install.packages("ggplot2") #package for elegant data visualization using the Grammar of Graphics
+library(ggplot2)
+```
+
+####Intro to ggplot2 [More Examples](http://docs.ggplot2.org/current/)
+```{r}
+
+?ggplot #Get R on-line help 
+
+ggplot(demo, aes(x=MoneyRaised, y=Death)) +
+    geom_point(shape=1) 
+
+```
+
+2nd try:
+1) change the scale of y-axis Death, because people in general don't like "4e+05"
+2) give informative main, x-axis, y-axis labels 
+```{r}
+demo$Death<-as.numeric(demo$Death)
+demo$Death<-demo$Death/1000
+ggplot(demo, aes(x=MoneyRaised, y=Death)) +
+    geom_point(shape=1) +xlab("Money Raised million US$") + 
+    ylab("Recent Record of Annual Death in US") + 
+    ggtitle("Should we rethink where to donate?")
+```
+
+3rd try:
+Label the dots, make it clear for the readers 
+```{r}
+ggplot(demo, aes(x=MoneyRaised, y=Death,label=Name)) +
+    geom_point(shape=1) +
+    xlab("Money Raised million US$") + 
+    ylab("Recent Record of Annual Death in US") + 
+    ggtitle("Should we rethink where to donate?")+
+    geom_text(aes(label=Name))
+```
+
+Final: 
+Adjust the point label  
+```{r}
+ggplot(demo, aes(x=MoneyRaised, y=Death,label=Name)) +
+    geom_point(shape=1,size=0.3) +
+    geom_text(aes(label=Name),size=1.8,position=position_jitter(width=-8, height=21))+
+    xlab("Money Raised million US$") + 
+    ylab("Recent Record of Annual Death in US") + 
+    ggtitle("Should we rethink where to donate?") 
+```
+
+
+Brief intro R Markdown
+-------------------------
+
+
+Wrap-up:
+-------------------------
+ * Always remember to check working directory getwd or set the right working directory setwd
+ * Use on-line help, get used to read tutorials on CRAN; also Google and Stack Overflow
+ * Define meaningful&easy names for datasets and variables, remember R is case sensitive
+ * Practice and create your own cheatsheet 
+ * Quiz: To read dataset from other statistical analysis software, like Stata and SPSS, what packages shall we use? 
+
+Useful Resources: 
+-------------------------
+* [R basic](http://cran.r-project.org/manuals.html)
+* [R for Beginners](http://cran.r-project.org/doc/contrib/Paradis-rdebuts_en.pdf)
+* [R in a Nutshell](http://web.udl.es/Biomath/Bioestadistica/R/Manuals/r_in_a_nutshell.pdf)
+* [Quick R](http://www.statmethods.net)
+* [Data Analysis Examples with R](http://www.ats.ucla.edu/stat/dae/)
+* [Rseek](http://www.rseek.org/) * I just heard about this cool website from this morning * 
+
+
+

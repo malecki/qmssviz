@@ -1,6 +1,6 @@
 ---
 title: "2014-09-18-fchen-hw1"
-author: "fchen"
+author: "Frank Chen"
 date: "Thursday, September 11, 2014"
 output: html_document
 published: false

@@ -1,0 +1,195 @@
+---
+title: "Homework 3"
+author: "rcquan"
+date: "October 19, 2014"
+output: html_document
+---
+
+## A. Identify two surveys that you want to compare.
+
+For this homework, I will be looking at the World Values Survey and will be comparing the same uestion in two different waves - before and after the global financial crisis. 
+
+```{r}
+meaning <- df$F001
+country <- df$S003
+useful <- df$C024
+year <- df$S020
+wave <- df$S002
+happy <- df$A008
+retire <- df$C004
+health <- df$A009
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(reshape2)
+setwd("~/mailman/qmssviz/hw3/_posts/")
+
+loadSurvey <- function(filename) {
+#   Loads survey data into dataframe
+#   
+#   Args:
+#     filename: filepath to .Rdata
+#   Returns:
+#     df: a data.frame object
+  df <- load(filename)
+  df <- `WVS_Longitudinal_1981-2014_spss_v_2014_06_17_(beta)`
+  df
+}
+
+selectVariables <- function(df, code, name) {
+  
+    if (length(code) != length(name)) {
+    stop("Length of code and name vectors do not match.")
+    }
+    ## pre-allocate size of list
+    variableList <- vector("list", length(code))
+    variableList <- df[code]
+    ## create data.frame from list
+    dfNames <- data.frame(variableList)
+    names(dfNames) <- name
+    dfNames
+}
+
+factorizeVariables <- function(df) {
+    data.frame(apply(df, 2, as.factor))
+}
+
+labelValues <- function(variable, df, sep = ":") {
+    
+    filename <- paste(variable, ".txt", sep = "")
+    
+    if(file.exists(filename)) {
+        dfLabels <- read.delim(filename, header = FALSE, sep = sep)
+        labeledVariable <- factor(df[, variable],
+                              levels = dfLabels$V1,
+                              labels = dfLabels$V2)
+        labeledVariable
+    } else {
+        cat(sprintf("%s does not exist in the current directory. \n", filename))
+        cat(sprintf("No labeling done for %s.", variable))
+        df[, variable]
+    }
+}
+
+labelDataFrame <- function(df, sep = ":") {
+    listLabeled <- sapply(colnames(df), function(variable) {
+        labelValues(variable, df, sep = sep)
+    })
+    dfLabeled <- data.frame(listLabeled)
+    dfLabeled
+}
+
+df <- load("~/Downloads/WVS_Longitudinal.rdata")
+df <- `WVS_Longitudinal_1981-2014_spss_v_2014_06_17_(beta)`
+
+survey <- selectVariables(df,
+                code = c("S002", "S003", "S020", "F001", "A008"),
+                name = c("wave", "country", "year", "meaning", "happy"))
+survey <- factorizeVariables(survey)
+survey <- labelDataFrame(survey, sep = ":")
+
+survey$meaning <- factor(survey$meaning,
+                       levels = c("Don´t know", "Missing: Unknown",
+                                  "Not asked in survey", "No answer",
+                                  "Never", "Rarely", "Sometimes", "Often"))
+survey$meaning <- factor(survey$meaning,
+                       levels = rev(levels(survey$meaning)))
+
+
+dude <- survey %>%
+    filter(!(meaning %in% c("Not asked in survey", "Missing: Unknown"))) %>%
+    group_by(wave, country, meaning) %>%
+    summarise(count = n()) %>%
+    mutate(Proportion = count/sum(count)) %>%
+    arrange(meaning, desc(Proportion))
+
+first <- dude %>%
+    filter(wave == "2005-2009")
+second <- dude %>%
+    filter(wave == "2010-2014")
+
+first <- first[which(first$country %in% second$country), ]
+second <- second[which(second$country %in% first$country), ]
+
+
+dude <- rbind(first, second)
+           
+idx <- dude %>%
+    group_by(meaning) %>%
+    filter(wave == "2005-2009") %>%
+    filter(meaning == "Often") %>%
+    arrange(desc(Proportion))
+
+
+idx <- data.frame(idx)
+dude$country <- factor(dude$country, levels = idx$country)
+
+g <- ggplot(dude, aes(country, Proportion, fill = meaning)) +
+geom_bar(stat = "identity") + facet_grid(~wave) +
+coord_flip() + scale_color_brewer() + theme_bw() + 
+    ggtitle("Thinking about meaning and purpose in life") +
+    xlab("Country")
+
+g
+
+```
+
+```{r}
+df2 <- df1 %>%
+    filter(!(happy %in% c("-1", "-2", "-4", "-5"))) %>%
+    group_by(wave, country, happy) %>%
+    summarise(count = n()) %>%
+    mutate(prop = count/sum(count))
+
+
+ggplot(df2, aes(country, prop, fill = happy)) + 
+  geom_bar(stat = "identity") + facet_grid(~wave) +
+  coord_flip()
+
+
+df3 <- df1 %>%
+  filter(!(meaning %in% c("-1", "-2", "-4", "-5"))) %>%
+  group_by(wave, country, meaning) %>%
+  summarise(count = n()) %>%
+  mutate(prop = count/sum(count))
+#   filter(country %in% c(840, 826, 410, 392, 196, 643))
+
+ggplot(df3, aes(country, prop, fill = meaning)) + 
+  geom_bar(stat = "identity") + facet_grid(~wave) +
+  coord_flip()
+
+df4 <- df1 %>%
+  filter(!(useful %in% c("-1", "-2", "-4", "-5"))) %>%
+  group_by(wave, country, useful) %>%
+  summarise(count = n()) %>%
+  mutate(prop = count/sum(count))
+
+ggplot(df4, aes(country, prop, fill = useful)) + 
+  geom_bar(stat = "identity") + facet_grid(~wave) +
+  coord_flip()
+
+
+df5 <- df1 %>%
+  filter(!(retire %in% c("-1", "-2", "-4", "-5"))) %>%
+  group_by(wave, country, retire) %>%
+  summarise(count = n()) %>%
+  mutate(prop = count/sum(count))
+
+ggplot(df5, aes(country, prop, fill = retire)) + 
+  geom_bar(stat = "identity") + facet_grid(~wave) +
+  coord_flip()
+
+
+df6 <- df1 %>%
+  filter(!(health %in% c("-1", "-2", "-4", "-5"))) %>%
+  group_by(wave, country, health) %>%
+  summarise(count = n()) %>%
+  mutate(prop = count/sum(count))
+         
+ggplot(df6, aes(country, prop, fill = health)) + 
+  geom_bar(stat = "identity") + facet_grid(~wave) +
+  coord_flip() + scale_fill_brewer()
+
+```

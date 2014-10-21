@@ -1,0 +1,106 @@
+library("foreign")
+library("plyr")
+library("ggplot2")
+library("ggvis")
+setwd("/Users/knarf/Copy/datasets/columbia/4_dv/")
+
+gesis.1999 <- read.dta("ZA3777_v3-0-1.dta")
+gesis.2008 <- read.dta("ZA4752_v1-0-0.dta")
+g99.job <- gesis.1999[,83:100]
+g08.job <- gesis.2008[,81:99]
+
+# write.table(g99.job, file = "g99_job.csv")
+# write.table(g08.job, file = "g08_job.csv")
+# g99.job <- read.table(g99.job, file = "g99_job.txt")
+# g08.job <- read.table(g08.job, file = "g08_job.txt")
+
+# The purpose of this assignment is to compare the responses of two similar survey questions from the European Values survey database. The corresponding question from 1999 (question 13) and 2008 (question 14) ask Great Britianers which aspects of a job they think are especially significant. The respondents would give their answer, and their answers would be compared to approximately 20 groups of themes (e.g "good pay", "pleasant people to work with", "not too much pressure", "good job security"...etc). Each theme would be labeled with a binary classification of "mentioned" or "not mentioned."
+
+# The graph that I would like to make would be a series of histogram or dotplot comparisons. In addition to these static histograms, a histogram with a slider, utilizing ggplot and ggvis, where one could observe the differences in aggregated frequency response counts for the question between the two time periods of each survey can also be made.  
+
+# functions
+hate.factors <- function(x) { # turn factors into characters
+	x <- sapply(x, as.character)
+	return(x)
+}
+
+love.numbers <- function(x) { # changes characters to binary 1/0 
+	x[x == "mentioned"] <- 1
+	x[x == "not mentioned"] <- 0
+	x[x == "job aspect mentioned"] <- 1
+	x[x == "no job aspect mentioned"] <- 0
+	x[x == "consistent"] <- 1
+	return(x)
+}
+
+evict.na <- function(x) { # handling missing data in 2008
+	x[x == "inconsistent 7"] <- 0
+	x[x == "inconsistent 6"] <- 0
+	x[x == "inconsistent 1"] <- 0
+	x[, ncol(x)][is.na(x[, ncol(x)])] <- 0
+	x <- x[complete.cases(x),]
+	return(x)
+}
+
+proportionize <- function(x) { 
+	rows <- nrow(x)
+	x <- colSums(x)
+	x <- x/rows
+	x <- t(as.data.frame(x))
+	return(x)
+}
+
+name.1999 <- function(x) { # question naming
+	colnames(x) <- c("date", "good pay", "pleasant co-workers", "less pressure", "good security", "promotion chance", "respect", "good hours", "uses initiative", "useful", "generous holidays", "meeting people", "feeling achievement", "responsibility", "interesting", "uses abilities", "good conditions", "weekends off", "job aspect")
+	return(x)
+}
+
+name.2008 <- function(x) { # question naming
+	colnames(x) <- c("date", "good pay", "pleasant co-workers", "less pressure", "good security", "good hours", "uses initiative", "useful", "generous holidays", "meeting people", "feeling achievement", "responsibility", "interesting", "uses abilities", "learning skills", "family friendly", "leadership role", "equal treatment", "consistency", "job aspect")
+	return(x)
+}
+
+# commands
+g99.job <- hate.factors(g99.job)
+g99.job <- love.numbers(g99.job)
+g99.job <- as.matrix(as.numeric(g99.job))
+dim(g99.job) <- c(1000, 18)
+g99.job <- proportionize(g99.job)
+g99.date <- matrix(1999, nrow=1, ncol=1)
+g99.job <- cbind(g99.date, g99.job)
+g99.job <- name.1999(g99.job)
+g99.job <- as.data.frame(g99.job)
+
+g08.job <- hate.factors(g08.job)
+g08.job <- love.numbers(g08.job)
+g08.job <- evict.na(g08.job)
+g08.job <- as.matrix(as.numeric(g08.job))
+dim(g08.job) <- c(1533, 19)
+g08.job <- proportionize(g08.job)
+g08.date <- matrix(2008, nrow=1, ncol=1)
+g08.job <- cbind(g08.date, g08.job)
+g08.job <- name.2008(g08.job)
+g08.job <- as.data.frame(g08.job)
+
+agg.val <- merge(g08.job, g99.job, all.x = TRUE, all.y = TRUE)
+agg.val[, 1:ncol(agg.val)][is.na(agg.val[, 1:ncol(agg.val)])] <- 0
+agg.val <- melt(agg.val, id.var = "date")
+
+# plotting the data
+ggplot(agg.val, aes(variable, value, fill=as.factor(date))) +
+	geom_bar(data = agg.val, position="dodge", stat="identity") +
+	coord_flip() +
+	ylab("Proportion") + 
+	xlab("Survey Question") + 
+	ggtitle("Important Job Aspects in Great Britain") + 
+	scale_fill_manual(values = c("red", "blue")) +
+	theme_bw() #+ facet_wrap(~variable)
+
+ggplot(agg.val, aes(variable, value)) +
+	geom_point(aes(color = as.factor(date))) +
+	coord_flip() + 
+	ylab("Proportion") + 
+	xlab("Survey Question") + 
+	ggtitle("Important Job Aspects in Great Britain") +
+	scale_color_manual(values = c("red", "blue")) +
+	theme_bw() #+ facet_wrap(~variable)

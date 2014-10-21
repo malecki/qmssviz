@@ -2,6 +2,7 @@
 title: "Homework 3"
 author: "Chen, Frank fc2451"
 date: "October 14, 2014"
+output: html_document
 ---
 
 ```{r, warning = FALSE, message = FALSE}
@@ -21,7 +22,7 @@ g08.job <- gesis.2008[,81:99]
 
 The purpose of this assignment is to compare the responses of two similar survey questions from the European Values survey database. The corresponding question from 1999 (question 13) and 2008 (question 14) ask Great Britianers which aspects of a job they think are especially significant. The respondents would give their answer, and their answers would be compared to approximately 20 groups of themes (e.g "good pay", "pleasant people to work with", "not too much pressure", "good job security"...etc). Each theme would be labeled with a binary classification of "mentioned" or "not mentioned."
 
-The graph that I would like to make would be a series of histogram or dotplot comparisons. In addition to these static histograms, a histogram with a slider, utilizing ggplot and ggvis, where one could observe the differences in aggregated frequency response counts for the question between the two time periods of each survey can also be made. 
+The graph that I would like to make would be a series of paired histogram or paired point comparisons. In addition to these static histograms, a histogram with a slider, utilizing ggplot and ggvis, where one could observe the differences in aggregated frequency response counts for the question between the two time periods of each survey can also be made. 
 
 ![sketch](https://raw.githubusercontent.com/frankchen07/qmssviz/hw3/hw3/_posts/2014-10-23-hw3-fc2451-sketch.JPG)
 
@@ -97,6 +98,7 @@ g08.job <- as.data.frame(g08.job)
 agg.val <- merge(g08.job, g99.job, all.x = TRUE, all.y = TRUE)
 agg.val[, 1:ncol(agg.val)][is.na(agg.val[, 1:ncol(agg.val)])] <- 0
 agg.val <- melt(agg.val, id.var = "date")
+agg.val
 ```
 
 # Plots

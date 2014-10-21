@@ -14,7 +14,7 @@ Question wording: Do you agree or disagree with the following statement? Marriag
 
 **B. Preliminary Graph Description**
 
-I plan to plot two maps showing the mean value of respondents' answers to this question of each country, and another bar plot demonstrating the difference between two waves. I expect that there is a contrast between the West and the East, yet this difference will shrink in Wave 5. 
+I plan to plot two maps showing the distribution of respondents' answers to this question of each country, and another bar plot demonstrating the difference between two waves. I expect that there is a contrast between the West and the East, yet this difference will shrink in Wave 5. 
 
 **C. Data Target Shape**
 
@@ -34,6 +34,7 @@ library(reshape2)
 library(ggplot2)
 library(RColorBrewer)
 library(plyr)
+library(sp)
 library(rCharts)
 library(rworldmap)
 ```
@@ -83,6 +84,15 @@ setdiff(name1, name2)
 ## Subset data
 wv3_sub <- subset(wv3, select = c(V2, V94), V94 > 0)
 wv5_sub <- subset(wv5, select = c(V2, V58), V58 > 0)
+
+## Recode variable so that 1 indicates "agree" and 0 indicates "disagree" and the mean value of each country shows the proportion of people agree that marriage in an out-dated institution.
+table(wv3_sub$V94)
+wv3_sub$V94[wv3_sub$V94 == 2] <- 0
+table(wv3_sub$V94)
+
+table(wv5_sub$V58)
+wv5_sub$V58[wv5_sub$V58 == 2] <- 0
+table(wv5_sub$V58)
 ```
 
 ```{r}
@@ -127,20 +137,21 @@ wv3_agg$Country[wv3_agg$Country == "Czech Rep."] <- "Czech Republic"
 wv3_agg$Country[wv3_agg$Country == "Dominican Rep."] <- "Dominican Republic"
 plot1 <- joinCountryData2Map( wv3_agg, joinCode = "NAME", nameJoinColumn = "Country", verbose = F)
 par(mai=c(0,0,0.2,0),xaxs="i",yaxs="i")
-map1 <- mapCountryData(plot1, nameColumnToPlot = "MarrOut", colourPalette = color, addLegend = F, mapTitle = "Marriage is an out-dated institution? (Wave 3) 1 - agree, 2 - disagree")
+map1 <- mapCountryData(plot1, nameColumnToPlot = "MarrOut", colourPalette = color, addLegend = F, mapTitle = "Proportion of People Agree Marriage is an Out-Dated Institution (Wave 3)")
 do.call(addMapLegend
         , c(map1
+            ,legendLabels="all"
             ,legendWidth = 0.4))
 ```
 
 ```{r}
 ## Plot 2 for Wave 5 data
-color <- brewer.pal(7, "Reds")
 plot2 <- joinCountryData2Map( wv5_agg, joinCode = "NAME", nameJoinColumn = "Country", verbose = T)
 par(mai=c(0,0,0.2,0),xaxs="i",yaxs="i")
-map2 <- mapCountryData(plot2, nameColumnToPlot = "MarrOut", colourPalette = color, addLegend = F, mapTitle = "Marriage is an out-dated institution? (Wave 5) 1 - agree, 2 - disagree")
+map2 <- mapCountryData(plot2, nameColumnToPlot = "MarrOut", colourPalette = color, addLegend = F, mapTitle = "Proportion of People Agree Marriage is an Out-Dated Institution (Wave 5)")
 do.call(addMapLegend
         , c(map2
+            ,legendLabels="all"
             ,legendWidth = 0.4))
 ```
 
@@ -148,10 +159,9 @@ do.call(addMapLegend
 ## Plot 3 for comparing Wave 3 and Wave 5
 plot3 <- ggplot(data_all, aes(x = Country, y = value, group = Wave, fill = Wave)) +
   geom_bar(stat = "identity", position="dodge") +
-  scale_y_discrete(limits = c(1, 2), label = c("Agree", "Disagree")) +
   xlab(" ") +
   ylab(" ") +
-  ggtitle("Marriage is an out-dated institution?") +
+  ggtitle("Proportion of People Agree Marriage is an Out-Dated Institution") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   facet_wrap(~ Continent, scales = "free_x")
 print(plot3)
@@ -186,7 +196,8 @@ loadData2 <- function(filepath) {
 }
 
 selectVariables <- function(Survey, variable) {
-  subset(Survey, select = c(V2, variable), variable > 0)
+  Survey <- subset(Survey, select = c(V2, variable), variable > 0)
+  Survey$variable[Survey$variable == 2] <- 0
 }
 
 transformData <- function(Survey, variable) {
@@ -209,9 +220,10 @@ plotData <- function(Survey) {
   Survey$Country[Survey$Country == "Dominican Rep."] <- "Dominican Republic"
   plot <- joinCountryData2Map( Survey, joinCode = "NAME", nameJoinColumn = "Country", verbose = F)
   par(mai=c(0,0,0.2,0),xaxs="i",yaxs="i")
-  map <- mapCountryData(plot, nameColumnToPlot = "MarrOut", colourPalette = color, addLegend = F, mapTitle = "Marriage is an out-dated institution? 1 - agree, 2 - disagree")
+  map <- mapCountryData(plot, nameColumnToPlot = "MarrOut", colourPalette = color, addLegend = F, mapTitle = "Proportion of People Agree Marriage is an Out-Dated Institution")
 do.call(addMapLegend
-        , c(map1
+        , c(map2
+            ,legendLabels="all"
             ,legendWidth = 0.4))
   return(map)
 }
@@ -237,10 +249,9 @@ combineData <- function(Survey1, Survey2) {
 
 plot3 <- ggplot(data_all, aes(x = Country, y = value, group = Wave, fill = Wave)) +
   geom_bar(stat = "identity", position="dodge") +
-  scale_y_discrete(limits = c(1, 2), label = c("Agree", "Disagree")) +
   xlab(" ") +
   ylab(" ") +
-  ggtitle("Marriage is an out-dated institution?") +
+  ggtitle("Proportion of People Agree Marriage is an Out-Dated Institution") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   facet_wrap(~ Continent, scales = "free_x")
 print(plot3)

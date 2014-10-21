@@ -19,7 +19,7 @@ library(ggplot2)
 library(grid)
 library(gridExtra)
 library(reshape2)
-setwd("~/Documents/Data Visualization/surveys")
+setwd("~/Documents/qmssviz/hw3/surveys")
 ```
 
 This is the function that I wrote to melt/cast dataset as well as plot the two panals and the axis together for each importance level. 
@@ -85,12 +85,14 @@ ggmid <- function(df, clr){
 
 We may want to test our functions by creating the graph for the level of Very Important.
 ```{r, echo=FALSE}
+setwd("~/Documents/qmssviz/hw3/surveys")
 test<- compare("10.csv", "#454545")
 grid.arrange(test, ncol = 1, main = "Things Very Important for Happiness")
 ```
 
 At last we want to line up all four graphs vertically, give them colors by their importance level (red = very important, ..., yellow = not important) as well as a main title.
 ```{r, echo=FALSE}
+setwd("~/Documents/qmssviz/hw3/surveys")
 a <- compare("10.csv","#FF3300")
 b <- compare("7-9.csv","#FF6600")
 c <- compare("5-6.csv","#FF9933")

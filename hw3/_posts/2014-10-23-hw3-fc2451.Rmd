@@ -23,7 +23,7 @@ The purpose of this assignment is to compare the responses of two similar survey
 
 The graph that I would like to make would be a series of histogram or dotplot comparisons. In addition to these static histograms, a histogram with a slider, utilizing ggplot and ggvis, where one could observe the differences in aggregated frequency response counts for the question between the two time periods of each survey can also be made. 
 
-![sketch](/Users/knarf/Copy/columbia/4_dv/homework/hw3/_posts/gesis_rough.jpg)
+![sketch](https://raw.githubusercontent.com/frankchen07/qmssviz/hw3/hw3/_posts/2014-10-23-hw3-fc2451-sketch.JPG)
 
 # Functions
 

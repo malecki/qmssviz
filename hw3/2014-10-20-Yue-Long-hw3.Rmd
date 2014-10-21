@@ -1,0 +1,108 @@
+---
+title: "Assignment 3"
+author: "Yue Long"
+date: "October 19, 2014"
+output: html_document
+---
+Fos this assignment, I decide to visualize two waves from the same survey (Princeton Survey Research Associates) that examines the difference between year 1997 and 2007 about things that people value to be very important, important, not so important, not important for happiness. The same set of questions were asked in the survey with the only difference in that in year 1997, 1101 people participated while in 2007, 2020 people participated. The results were recorded in percentiles and below is the survey questions:
+
+#####I'd like to ask you about some different aspects of your life. As I read the following list, please tell me how important each aspect is to your personal happiness and fulfillment using a scale from zero to 10, where 10 means very important and zero means not important at all. Your relationship with spouse, relatioinship with (chil/children) under 18, relationship with adult children, job and career, relationship with mother, relationship with father, the things you do in your free time, relationship with friends. 
+
+I want to make a graph for each importance level and includes two bar charts by lining them up back to back horizontally. This way we note only can compare the percentages of people who choose different things at the same importance leve, we can also compare between two years to observe any trend.
+
+There are four steps to achieve this goal: first we need to melt/cast the dataset for each importance level into the desirable form with 3 columns and 8 rows: the first ID column lists the different items such as relationship with spouse, and the other two list the percentages of respondents for each item in year 1997 and 2007. Next we create the functions to plot the two panals (one for 1997 and one for 2007) as well as the axis for both panels. Third we write the function to put these three parts together and lastly, we put all four comparison charts in the same frame.
+
+Below are the packages that I need to run my code.
+```{r}
+rm(list=ls())
+library(ggplot2)
+library(grid)
+library(gridExtra)
+library(reshape2)
+setwd("~/Documents/Data Visualization/surveys")
+```
+
+This is the function that I wrote to melt/cast dataset as well as plot the two panals and the axis together for each importance level. 
+
+```{r,echo=TRUE}
+compare <- function(name, clr){
+  df <- read.csv(name)
+  df <- melt(df, id.vars = c("QuestionTxt", "ReleaseDate"), measure.vars = "RespPct")
+  df <- dcast(df, QuestionTxt + ReleaseDate ~ variable)
+  df <- dcast(df, QuestionTxt ~ ReleaseDate, value = "ReleaseDate")
+  colnames(df)[2] <- "a"
+  colnames(df)[3] <- "b" 
+  return (arrangeGrob(gg1(df, clr),ggmid(df, clr),gg2(df, clr),ncol=3,widths=c(4/10,2/10,4/10)))
+}
+```
+
+The three functions that I used to plot each panal and the axis between them are below:
+```{r}
+gg1 <- function(df, clr){ 
+  g1 <- ggplot(data = df, aes(x = QuestionTxt, y = a)) +
+        geom_bar(stat = "identity", fill = clr) + 
+        geom_text(aes(label = paste(a, " ", " "),size=2.3), show_guide = FALSE)+
+          theme(axis.title.x = element_blank(),
+          axis.title.y = element_blank(), 
+          axis.text.y = element_blank(), 
+          axis.ticks.y = element_blank(),
+          plot.margin = unit(c(1,-1,0,0), "mm")) +
+          scale_y_reverse(lim = c(100,0)) + 
+          coord_flip() 
+  return(ggplotGrob(g1))
+}
+
+gg2 <- function(df,clr, resp07){
+  g2 <- ggplot(data = df, aes(x = QuestionTxt, y = b)) +
+        geom_bar(stat = "identity", fill = clr) + 
+        geom_text(aes(label = paste(" ", " ", b),size=2.3), show_guide = FALSE)+
+        theme(axis.title.x = element_blank(), 
+          axis.title.y = element_blank(), 
+          axis.text.y = element_blank(), 
+          axis.ticks.y = element_blank(),
+          plot.margin = unit(c(1,1.5,0,0), "mm")) +
+          coord_flip() + ylim(c(0, 100))
+  return(ggplotGrob(g2))
+}
+
+ggmid <- function(df, clr){
+  g.mid <- ggplot(df, aes(x=1, y=QuestionTxt)) + geom_text(aes(label=QuestionTxt), size = 3) +
+    geom_segment(aes(x=0.94, xend=0.96, yend=QuestionTxt)) +
+    geom_segment(aes(x=1.04, xend=1.065, yend=QuestionTxt)) +
+    ylab(NULL)+
+    scale_x_continuous(expand=c(0,0),limits=c(0.94,1.065))+
+    theme(axis.title=element_blank(),
+          panel.grid=element_blank(),
+          axis.text.y=element_blank(),
+          axis.ticks.y=element_blank(),
+          panel.background=element_blank(),
+          axis.text.x=element_text(color=NA),
+          axis.ticks.x=element_line(color=NA),
+          plot.margin = unit(c(1,-1,1,-1), "mm"))
+  return(ggplotGrob(g.mid))
+}
+```
+
+We may want to test our functions by creating the graph for the level of Very Important.
+```{r, echo=FALSE}
+test<- compare("10.csv", "#454545")
+grid.arrange(test, ncol = 1, main = "Things Very Important for Happiness")
+```
+
+At last we want to line up all four graphs vertically, give them colors by their importance level (red = very important, ..., yellow = not important) as well as a main title.
+```{r, echo=FALSE}
+a <- compare("10.csv","#FF3300")
+b <- compare("7-9.csv","#FF6600")
+c <- compare("5-6.csv","#FF9933")
+d <- compare("0-4.csv","#FFFF33")
+
+grid.arrange(a, b, c, d, ncol = 1, main = "What are the important (or not) things for Happiness?")
+```
+
+From this graph we observe that both in year 1997 and 2007, relationship with spouse and relationship with <18 children were most often selected as very-important contributers to happiness. On the other hand, compared to the results in 1997, a lot less percentage of respondents in 2007 claimed that job, relationship with friends and things to do in free-time were very-important contributers to happiness. Instead, more percentage of respondents in 2007 said that these three things were only important contributers to their happiness. Results from the last panel show that relationship with father remains the most commonly selected option that is not important for happiness.
+
+If we observe across different importance levels, we realize that while the percentages between 1997 and 2007 for not-so-important and not-important panels remain about the same, there is a right skew for percentages in the important panel and a left skew in the very-important panel. People seem to be more conservative in year 2007 in evaluating things that are important for their happiness, and a little less conservative when evaluating things that are not important for that. 
+
+
+
+

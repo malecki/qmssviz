@@ -1,0 +1,135 @@
+---
+title: "HW3"
+author: "Ruowei Yang"
+date: "October 16, 2014"
+output: html_document
+tags: hw3
+published: false
+---
+**a. Identify survey**<br>
+I used two data set in European Value study conducted in Great Britain in year 1999 and year 2008. I choose the question asking how satisfied the respondent is considering all the factors in his or her life. I also try to see if the marriage status is effects it.
+<br><br>
+**b. Describe graphes**<br>
+I would plot one graph that shows the porpotion of people for each rating in the two survey years and see the difference between them. I would expect more people choose high rating in 2008 than 1999. I would find the average rating for different marriage status to see if there is significant difference.
+<br><br>
+**c. Target shape**<br>
+The data will have three variables: rating of satisfaction, marriage status and year of the survey.
+<br><br>
+**d. Read, transfer and prepare for graph**
+```{r, warning=FALSE}
+## Read data
+setwd("/Users/Evelyn/Desktop/hw3")
+library(foreign)
+survey1 <- read.dta("ZA3777_v3-0-1.dta")
+survey2 <- read.dta("ZA4752_v1-0-0.dta")
+```
+
+```{r}
+str(survey1$v68)
+sum(is.na(survey1$v68))
+str(survey2$v66)
+sum(is.na(survey2$v66))
+```
+
+```{r}
+str(survey1$v296)
+summary(survey1$v296)
+str(survey2$v313)
+summary(survey2$v313)
+```
+
+
+```{r}
+## subset data
+survey1_sub <- survey1[c("v68","v296")]
+survey2_sub <- survey2[c("v66","v313")]
+
+## Remove missing data
+survey1_sub <- na.omit(survey1_sub)
+survey2_sub <- na.omit(survey2_sub)
+
+## Gruop values to make the two datasets consistent
+levels(survey2_sub$v313) <- c(levels(survey2_sub$v313), "never married")
+survey2_sub$v313[survey2_sub$v313=="never married or registered partnership"] <-"never married"
+survey2_sub$v313[survey2_sub$v313=="registered partnership"] <-"never married"
+survey1_sub$v296 <- as.factor(as.character(survey1_sub$v296))
+survey2_sub$v313 <- as.factor(as.character(survey2_sub$v313))
+
+## Add new variable year to each data
+survey1_sub$year <- "1999"
+survey2_sub$year <- "2008"
+
+## Change the column names
+colnames(survey1_sub) <- c("rating", "marriage_status", "year")
+colnames(survey2_sub) <- c("rating", "marriage_status", "year")
+
+## Combine the two datasets
+combinedData <- rbind(survey1_sub, survey2_sub)
+
+## Find porpotion of people for each rating
+table1 <- table(survey1_sub$rating)/nrow(survey1_sub)
+table2 <- table(survey2_sub$rating)/nrow(survey2_sub)
+table1 <- as.data.frame(table1)
+colnames(table1) <- c("rating","prob")
+table1$year <- "1999"
+table2 <- as.data.frame(table2)
+colnames(table2) <- c("rating", "prob")
+table2$year <- "2008"
+combinedtable <- rbind(table1, table2)
+
+## Calculate average rating for different marriage status by years
+agg_table <- aggregate(combinedData$rating, by = list(combinedData$marriage_status, combinedData$year), FUN="mean")
+colnames(agg_table) <- c("marriage_status", "year", "mean")
+```
+<br>
+**e. Make graph**
+```{r}
+library(ggplot2)
+ggplot(combinedtable, aes(x=rating, y=prob, group=year))+geom_line(aes(colour = year), size=2) + scale_color_manual("Year",values = c('#0023a0', '#f9a635')) + ggtitle("Porpotion of people choosing certain rating")
+
+ggplot(agg_table, aes(x=marriage_status, y=mean, fill=year)) + geom_bar(stat = "identity", position="dodge")+scale_fill_manual("Year",values = c('#0023a0', '#f9a635')) + coord_flip() + ggtitle("Average rating for people with different marriage status")
+```
+<br>
+**f. Write expressive functions**
+```{r, eval=FALSE}
+survey1 <- loaddata(data1)
+survey1_sub <- SelectVariable(survey1, ...)
+VariableSummary <- SummaryStatistics(variable1, ...)
+survey1_sub <- RemoveMissingData(survey1,...)
+survey1_sub <- GroupData(variable1,...)
+survey1_sub <- AddVariable(survey1, ...)
+survey1_sub <- RenameColumn(survey1, ...)
+
+survey2 <- loaddata(data2)
+CombinedData <- rbind(survey1_sub, survey2_sub)
+```
+<br>
+**g. Write the functions**
+```{r}
+loaddata <- function(data=a) {
+  read.dta(data)
+}
+
+SelectVariable <- function(data=b, variable=x) {
+  data[c(variable)]
+}
+
+SummaryStatistics <- function(variable=y) {
+  str(variable) 
+  sum(is.na(variable))
+}
+
+RemoveMissingData <- function(data=c){
+  na.omit(data)
+}
+
+GroupData<- function(variabl){
+  levels(variabl) <- c(levels(variabl), "never married")
+  variabl[variabl=="never married or registered partnership"] <-"never married"
+  variabl[variabl=="registered partnership"] <-"never married"
+}
+
+CombinedData <- function(data1,data2){
+  rbind(data1, data2)
+}
+```

@@ -1,0 +1,76 @@
+---
+title: "Homework 3"
+author: "Lu Han: lh2659"
+date: "October 20, 2014"
+output: html_document
+---
+
+In this homework, I looked into the questionnaires from AsiaBarometer, who conducts yearly comparative survey on daily lives of ordinary people (bumi putra) and their relationships to family, neighborhood, workplace, social and political institutions and market place covering East, Southeast, South and Central Asia.
+
+After comparing the questionnaire of 2006 and 2005, I noticed that Question 18 in 2005's questionnaire is slightly different from Question 19 in 2006's questionnaire in that they offered different options. (The detailed questions are shown as follows.) 
+
+*Q18 of Questionnaire 2005:*
+```
+Throughout the world, some people also see themselves as belonging to a transnational group
+(such as Asian, people of Chinese ethnicity, people who speak the same language or practice the same religion). Do you identify with any transnational group?
+1. Asian
+2. Other transnational identity (please specify: )
+3. No, I don’t identify particularly with any transnational group
+9. Don’t know
+```
+*Q19 of Questionnaire 2006:*
+```
+Throughout the world, some people also see themselves as belonging to a transnational
+group (such as Asian, people of Chinese ethnicity, people who speak the same language or practice the same religion). Do you identify with any transnational group? (SA)
+1. Asian
+2. Ethnic group that has common genealogy or ancestry
+3. Language group that I am speaking
+4. Religious group that I am believing in and practicing
+5. Other transnational identity (please specify: )
+6. No, I don’t identify particularly with any transnational group
+9. Don’t know
+```
+This difference is likely to lead to different responses from the audience. In order to show the difference, I make use of ggplot to visualize the survey results.
+
+```{r load-survey}
+Survey2005 <- read.csv("hw3/AsiaBarometer2005.csv", header=T, stringsAsFactors=F)
+Survey2006 <- read.csv("hw3/AsiaBarometer2006.csv", header=T, stringsAsFactors=F)
+
+Q18.2005 <- Survey2005[Q18.2005$Q18!="#NULL!",c(1,118)]
+Q18.2005$Q18 <- as.numeric(Q18.2005$Q18)
+colnames(Q18.2005) <- NULL
+Q18.2005$Year <- rep(2005, dim(Q18.2005)[1])
+
+Q19.2006 <- Survey2006[Q19.2006$Q19!="#NULL!",c(2,117)]
+Q19.2006$Q19 <- as.numeric(Q19.2006$Q19)
+colnames(Q19.2006) <- NULL
+Q19.2006$Year <- rep(2006, dim(Q19.2006)[1])
+
+CQ1819 <- rbind(Q18.2005, Q19.2006)
+colnames(CQ1819) <- c("Country", "Answer", "Year")
+table(CQ1819$Answer, CQ1819$Year)
+
+library(ggplot2)
+ggplot(data=CQ1819, aes(factor(Year), fill=factor(Answer)))+geom_bar(width=0.5)+xlab("Year")+scale_fill_discrete("Answer")
+ggplot(data=CQ1819, aes(factor(Year), fill=factor(Answer)))+geom_bar(width=0.5, position="fill")+xlab("Year")+scale_fill_discrete("Answer")
+ggplot(data=CQ1819, aes(x=Answer))+geom_histogram(aes(y=..density.., fill=..density..), binwidth=1)+scale_fill_gradient("Density", low = "green", high = "red")+facet_wrap(~Year)
+```
+
+Besides this difference, these two questionnaires also investiageted different countries: in 2006, they investigated China, Hong Kong, Japan, Korea, Singapore, Taiwan and Vietnam, while in 2005, they investigated Kazakhstan, Indaia, Pakistan, Afghanistan, Sir Lanka, Bangladesh, Maldives, Bhhutan, Mongolia, Nepal, Tajikistan, Turkmenistan, Kyrgyzstan and Uzbekistan.
+
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+summary(cars)
+```
+
+You can also embed plots, for example:
+
+```{r, echo=FALSE}
+plot(cars)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

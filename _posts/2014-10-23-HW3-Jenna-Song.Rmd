@@ -1,0 +1,181 @@
+---
+title: "2014-10-23-HW3-Jenna-Song"
+output: html_document
+published: false
+tags: hw3
+---
+
+I used the 5th and 6th waves of the World Values Survey data. I wanted to look at whether the measures of gender equality beliefs differed for males and for females and also compare the 5th and 6th waves against each other. I also wanted to do the same comparisons (male vs. female, 5th vs. 6th) for the importance of personal goals measures. As a result, I decided to create multiple side-by-side boxplots to look at the data. I hypothesized that gender equality beliefs would increase from the 5th to 6th waves and that females would score higher on gender equality beliefs than males for both waves. I also hypothesized that the goals would not differ much for the 5th to 6th waves but that females would be more group-oriented and males would be more individualistic.
+
+Before plotting the boxplots for sex and gender equality beliefs, I needed to recode the sex variable so that all the negative values would become NA values and thus not appear on the plots.
+
+```{r}
+setwd("~/qmssviz")
+load("WV5_Data_rdata_v_2014_04_28.rdata")
+load("WV6_Data_rdata_v_2014_06_04.rdata")
+wvs1 <- WV5_Data_spss_v_2014_04_28
+wvs2 <- WV6_Data_spss_v_2014_06_04
+# recoding sex variable for WVS1 and WVS2
+wvs1$sex[wvs1$V235<=0] <- NA
+wvs1$sex[wvs1$V235==1] <- 1
+wvs1$sex[wvs1$V235==2] <- 2
+wvs2$sex[wvs2$V235<=0] <- NA
+wvs2$sex[wvs2$V235==1] <- 1
+wvs2$sex[wvs2$V235==2] <- 2
+```
+
+Once the sex variables were recoded for both waves, I created the boxplots for sex and gender equality beliefs. I stored each plot separately and then combined them into two sets of multiple boxplots. I put the "Males are not better leaders" and "Males are not better execs" plots on one plot because those two measures seemed more comparable to each other, and put the "Housewifes are unfulfilled" and "University is not more important for boys" measures on one plot because those were related to work and education.
+```{r, echo=FALSE}
+library(ggplot2)
+# Plotting Measures of Gender Equality beliefs by sex
+gp1 <- ggplot(wvs1, aes(x=sex, y=V60)) + geom_boxplot(aes(fill = as.factor(sex))) + 
+  ggtitle("Wave 5") + xlab("Sex of Respondent") + ylab("Housewife Unfulfilled") + 
+  scale_fill_discrete(breaks=c("Male", "Female"), labels=c("Male", "Female")) + 
+  theme_bw()
+gp2 <- ggplot(wvs2, aes(x=sex, y=V60)) + geom_boxplot(aes(fill = as.factor(sex))) + 
+  ggtitle("Wave 6") + xlab("Sex of Respondent") + ylab("Housewife Unfulfilled") + 
+  scale_fill_discrete(breaks=c("Male", "Female"), labels=c("Male", "Female")) + 
+  theme_bw()
+gp3 <- ggplot(wvs1, aes(x=sex, y=V61)) + geom_boxplot(aes(fill = as.factor(sex))) + 
+  ggtitle("Wave 5") + xlab("Sex of Respondent") + ylab("Men Not Better Leaders") + 
+  scale_fill_discrete(breaks=c("Male", "Female"), labels=c("Male", "Female")) + 
+  theme_bw()
+gp4 <- ggplot(wvs2, aes(x=sex, y=V61)) + geom_boxplot(aes(fill = as.factor(sex))) + 
+  ggtitle("Wave 6") + xlab("Sex of Respondent") + ylab("Men Not Better Leaders") + 
+  scale_fill_discrete(breaks=c("Male", "Female"), labels=c("Male", "Female")) + 
+  theme_bw()
+gp5 <- ggplot(wvs1, aes(x=sex, y=V62)) + geom_boxplot(aes(fill = as.factor(sex))) + 
+  ggtitle("Wave 5") + xlab("Sex of Respondent") + ylab("University Not More Impt for Boys") + 
+  scale_fill_discrete(breaks=c("Male", "Female"), labels=c("Male", "Female")) + 
+  theme_bw()
+gp6 <- ggplot(wvs2, aes(x=sex, y=V62)) + geom_boxplot(aes(fill = as.factor(sex))) + 
+  ggtitle("Wave 6") + xlab("Sex of Respondent") + ylab("University Not More Impt for Boys") + 
+  scale_fill_discrete(breaks=c("Male", "Female"), labels=c("Male", "Female")) + 
+  theme_bw()
+gp7 <- ggplot(wvs1, aes(x=sex, y=V63)) + geom_boxplot(aes(fill = as.factor(sex))) + 
+  ggtitle("Wave 5") + xlab("Sex of Respondent") + ylab("Men Not Better Execs") + 
+  scale_fill_discrete(breaks=c("Male", "Female"), labels=c("Male", "Female")) + 
+  theme_bw()
+gp8 <- ggplot(wvs2, aes(x=sex, y=V63)) + geom_boxplot(aes(fill = as.factor(sex))) + 
+  ggtitle("Wave 6") + xlab("Sex of Respondent") + ylab("Men Not Better Execs") + 
+  scale_fill_discrete(breaks=c("Male", "Female"), labels=c("Male", "Female")) + 
+  theme_bw()
+# Putting multiple plots together
+library("grid")
+library("gridExtra")
+grid.arrange(gp1, gp2, gp5, gp6, ncol = 2)
+grid.arrange(gp3, gp4, gp7, gp8, ncol = 2)
+```
+In the first set of plots, concerning housewives and university, we can see that those in Wave 6 actually score lower than in Wave 5, contrary to what I predicted. Also, for the most part, men and women score pretty evenly on these measures.
+In the second set of plots, we can see that males have improved in their scores from Wave 5 to Wave 6 while women remain relatively constant, but they were already high to begin with. As such, we can see that the gender gap in gender equality beliefs diminished in terms of whether or not men are considered better political leaders or executives.
+Next, I recoded the goal variables, first for the WVS1 and then for the WVS2. The original variables were coded so that the values went from strongly agree to strongly disagree, which can be confusing, so I reversed the order and made the smaller numbers indicate disagreement and the larger numbers indicate agreement. 
+```{r}
+# Recoding Goal Variables for WVS1, reversing order to make disagree->agree
+wvs1$goal1[wvs1$V64<=0] <- NA
+wvs1$goal1[wvs1$V64==1] <- 4
+wvs1$goal1[wvs1$V64==2] <- 3
+wvs1$goal1[wvs1$V64==3] <- 2
+wvs1$goal1[wvs1$V64==4] <- 1
+wvs1$goal2[wvs1$V65<=0] <- NA
+wvs1$goal2[wvs1$V65==1] <- 4
+wvs1$goal2[wvs1$V65==2] <- 3
+wvs1$goal2[wvs1$V65==3] <- 2
+wvs1$goal2[wvs1$V65==4] <- 1
+wvs1$goal3[wvs1$V66<=0] <- NA
+wvs1$goal3[wvs1$V66==1] <- 4
+wvs1$goal3[wvs1$V66==2] <- 3
+wvs1$goal3[wvs1$V66==3] <- 2
+wvs1$goal3[wvs1$V66==4] <- 1
+wvs1$goal4[wvs1$V67<=0] <- NA
+wvs1$goal4[wvs1$V67==1] <- 4
+wvs1$goal4[wvs1$V67==2] <- 3
+wvs1$goal4[wvs1$V67==3] <- 2
+wvs1$goal4[wvs1$V67==4] <- 1
+# Recoding Goal Variables for WVS2, reversing order to make disagree->agree
+wvs2$goal1[wvs2$V64<=0] <- NA
+wvs2$goal1[wvs2$V64==1] <- 4
+wvs2$goal1[wvs2$V64==2] <- 3
+wvs2$goal1[wvs2$V64==3] <- 2
+wvs2$goal1[wvs2$V64==4] <- 1
+wvs2$goal2[wvs2$V65<=0] <- NA
+wvs2$goal2[wvs2$V65==1] <- 4
+wvs2$goal2[wvs2$V65==2] <- 3
+wvs2$goal2[wvs2$V65==3] <- 2
+wvs2$goal2[wvs2$V65==4] <- 1
+wvs2$goal3[wvs2$V66<=0] <- NA
+wvs2$goal3[wvs2$V66==1] <- 4
+wvs2$goal3[wvs2$V66==2] <- 3
+wvs2$goal3[wvs2$V66==3] <- 2
+wvs2$goal3[wvs2$V66==4] <- 1
+wvs2$goal4[wvs2$V67<=0] <- NA
+wvs2$goal4[wvs2$V67==1] <- 4
+wvs2$goal4[wvs2$V67==2] <- 3
+wvs2$goal4[wvs2$V67==3] <- 2
+wvs2$goal4[wvs2$V67==4] <- 1
+```
+
+I used the same method of boxplots as with the gender equality belief plots, and combined the plots that looked at measures of communal tendencies, like "Make Parents Proud" and "Meet Friends' Expectations" on one plot and put the individualistic plots like "Be Myself Not Follow Others" and "Decide Goals Myself" on another.
+
+```{r, echo=FALSE}
+# Plotting goals by sex
+g1 <- ggplot(wvs1, aes(x=sex, y=goal1)) + geom_boxplot(aes(fill = as.factor(sex))) + 
+  ggtitle("Wave 5") + xlab("Sex of Respondent") + ylab("Make Parents Proud") + 
+  scale_fill_discrete(breaks=c("Male", "Female"), labels=c("Male", "Female")) + 
+  theme_bw()
+g2 <- ggplot(wvs2, aes(x=sex, y=goal1)) + geom_boxplot(aes(fill = as.factor(sex))) + 
+  ggtitle("Wave 6") + xlab("Sex of Respondent") + ylab("Make Parents Proud") + 
+  scale_fill_discrete(breaks=c("Male", "Female"), labels=c("Male", "Female")) + 
+  theme_bw()
+g3 <- ggplot(wvs1, aes(x=sex, y=goal2)) + geom_boxplot(aes(fill = as.factor(sex))) + 
+  ggtitle("Wave 5") + xlab("Sex of Respondent") + ylab("Be Myself Not Follow Others") + 
+  scale_fill_discrete(breaks=c("Male", "Female"), labels=c("Male", "Female")) + 
+  theme_bw()
+g4 <- ggplot(wvs2, aes(x=sex, y=goal2)) + geom_boxplot(aes(fill = as.factor(sex))) + 
+  ggtitle("Wave 6") + xlab("Sex of Respondent") + ylab("Be Myself Not Follow Others") + 
+  scale_fill_discrete(breaks=c("Male", "Female"), labels=c("Male", "Female")) + 
+  theme_bw()
+g5 <- ggplot(wvs1, aes(x=sex, y=goal3)) + geom_boxplot(aes(fill = as.factor(sex))) + 
+  ggtitle("Wave 5") + xlab("Sex of Respondent") + ylab("Meet Friends' Expectations") + 
+  scale_fill_discrete(breaks=c("Male", "Female"), labels=c("Male", "Female")) + 
+  theme_bw()
+g6 <- ggplot(wvs2, aes(x=sex, y=goal3)) + geom_boxplot(aes(fill = as.factor(sex))) + 
+  ggtitle("Wave 6") + xlab("Sex of Respondent") + ylab("Meet Friends' Expectations") + 
+  scale_fill_discrete(breaks=c("Male", "Female"), labels=c("Male", "Female")) + 
+  theme_bw()
+g7 <- ggplot(wvs1, aes(x=sex, y=goal4)) + geom_boxplot(aes(fill = as.factor(sex))) + 
+  ggtitle("Wave 5") + xlab("Sex of Respondent") + ylab("Decide Goals Myself") + 
+  scale_fill_discrete(breaks=c("Male", "Female"), labels=c("Male", "Female")) + 
+  theme_bw()
+g8 <- ggplot(wvs2, aes(x=sex, y=goal4)) + geom_boxplot(aes(fill = as.factor(sex))) + 
+  ggtitle("Wave 6") + xlab("Sex of Respondent") + ylab("Decide Goals Myself") + 
+  scale_fill_discrete(breaks=c("Male", "Female"), labels=c("Male", "Female")) + 
+  theme_bw()
+# Putting plots together
+grid.arrange(g1, g2, g5, g6, ncol = 2)
+grid.arrange(g3, g4, g7, g8, ncol = 2)
+```
+
+In the first set of plots, concerning communal goals, we can see that the respondents in Wave 6 are much centered around higher agreement with communal goals than those in Wave 5. Also, contrary to my hypothesis, if anything, men are more communal than women on some measures.
+In the second set of plots, perhaps consistently with the first set, those in Wave 6 score lower on individualistic measures than those in Wave 5. Here, there is no observable difference between men and women.
+These are the fantasy function calls that show the logic behind my previous code.
+
+```{r,eval=FALSE}
+wvs5 <- loadSurvey(1)
+wvs6 <- loadSurvey(2)
+newvariable1[variable1 = targetvalue] <- newvalue
+# repeat for all values of all variables
+plot1 <- plotData(variable1, variable2)
+# repeat for all plots of interest
+combinedplot1 <- combineplot(plot1, plot2...)
+```
+
+I think what you're asking for in the bonus question is to take a stab at writing an actual function, so I decided to make a function for the recoding that I did for the sex variable. It loops through the variable and changes negative values to NA values.
+
+```{r,eval=FALSE}
+recode <- function(a) {
+  for (i in 1:length(a))
+  if (a[i]<=0)
+    a[i] <- NA
+  a
+}
+```

@@ -171,10 +171,52 @@ df$Index[df$iechr==&quot;7&quot;]&lt;- 7
 df$Index[df$iechr==&quot;8&quot;]&lt;- 8
 df$Index[df$iechr==&quot;9&quot;]&lt;- 9
 library(data.table)
-dmean &lt;- aggregate(df$Index, by = list(df$Country, df$year), mean)
-dmean &lt;- rename(dmean,c(&quot;Group.1&quot;=&quot;Country&quot;, &quot;Group.2&quot;= &quot;year&quot;, &quot;x&quot;= &quot;Mean&quot;)) #Get the means#
+
 dp &lt;- data.table(df)
-dp &lt;- dp[, list(ie = unique(ie), percentage = as.numeric(table(ie)/length(ie))), by = c(&quot;year&quot;, &quot;Country&quot;)] #Get percentages#</code></pre>
+dp &lt;- dp[, list(ie = unique (ie), percentage = as.numeric(table(ie)/length(ie), by=c(&quot;year&quot;, &quot;Country&quot;))), by=c(&quot;year&quot;, &quot;Country&quot;)] #Get percentages#
+dp</code></pre>
+<pre><code>##     year     Country                         ie percentage
+##  1: 1990       China                 Very Equal    0.33869
+##  2: 1990       China                      Equal    0.04121
+##  3: 1990       China                    Inequal    0.10352
+##  4: 1990       China Totally neutral about that    0.46332
+##  5: 1990       China               Very Inequal    0.05327
+##  6: 2012       China                    Inequal    0.18216
+##  7: 2012       China                      Equal    0.25305
+##  8: 2012       China Totally neutral about that    0.16291
+##  9: 2012       China               Very Inequal    0.09343
+## 10: 2012       China                 Very Equal    0.30845
+## 11: 1990       Japan Totally neutral about that    0.25590
+## 12: 1990       Japan               Very Inequal    0.13090
+## 13: 1990       Japan                      Equal    0.43042
+## 14: 1990       Japan                    Inequal    0.08844
+## 15: 1990       Japan                 Very Equal    0.09434
+## 16: 2012       Japan                      Equal    0.22347
+## 17: 2012       Japan Totally neutral about that    0.20279
+## 18: 2012       Japan                    Inequal    0.41187
+## 19: 2012       Japan               Very Inequal    0.05126
+## 20: 2012       Japan                 Very Equal    0.11061
+## 21: 1990 South Korea Totally neutral about that    0.21036
+## 22: 1990 South Korea                 Very Equal    0.17638
+## 23: 1990 South Korea                      Equal    0.15858
+## 24: 1990 South Korea                    Inequal    0.18204
+## 25: 1990 South Korea               Very Inequal    0.27265
+## 26: 2012 South Korea Totally neutral about that    0.41771
+## 27: 2012 South Korea                      Equal    0.16959
+## 28: 2012 South Korea                    Inequal    0.17210
+## 29: 2012 South Korea                 Very Equal    0.16876
+## 30: 2012 South Korea               Very Inequal    0.07185
+##     year     Country                         ie percentage</code></pre>
+<pre class="r"><code>dmean &lt;- aggregate(df$Index, by = list(df$Country, df$year), mean)
+dmean &lt;- rename(dmean,c(&quot;Group.1&quot;=&quot;Country&quot;, &quot;Group.2&quot;= &quot;year&quot;, &quot;x&quot;= &quot;Mean&quot;)) #Get the means#
+dmean</code></pre>
+<pre><code>##       Country year  Mean
+## 1       China 1990 7.870
+## 2       Japan 1990 5.692
+## 3 South Korea 1990 5.147
+## 4       China 2012 4.452
+## 5       Japan 2012 5.199
+## 6 South Korea 2012 6.389</code></pre>
 </div>
 <div id="e.-make-it-actually-make-your-graph." class="section level2">
 <h2>E. Make it actually make your graph.</h2>

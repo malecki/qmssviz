@@ -120,10 +120,14 @@ df$Index[df$iechr=="7"]<- 7
 df$Index[df$iechr=="8"]<- 8
 df$Index[df$iechr=="9"]<- 9
 library(data.table)
+
+dp <- data.table(df)
+dp <- dp[, list(ie = unique (ie), percentage = as.numeric(table(ie)/length(ie), by=c("year", "Country"))), by=c("year", "Country")] #Get percentages#
+dp
+
 dmean <- aggregate(df$Index, by = list(df$Country, df$year), mean)
 dmean <- rename(dmean,c("Group.1"="Country", "Group.2"= "year", "x"= "Mean")) #Get the means#
-dp <- data.table(df)
-dp <- dp[, list(ie = unique(ie), percentage = as.numeric(table(ie)/length(ie))), by = c("year", "Country")] #Get percentages#
+dmean
 ```
 
 ##E. Make it actually make your graph. 

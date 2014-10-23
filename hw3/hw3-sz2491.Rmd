@@ -29,7 +29,7 @@ IF STUDENT, CODE HIGHEST LEVEL HE/SHE EXPECTS TO COMPLETE):
  0. DK/NA 
 
 ####B. Sketch and/or describe the graph(s) that you intend to make; these amount to informal research hypotheses.
-
+I intend to make pictures of the mean value education level of different countries varies along with time, i.e. 1995 to 2010. I expect the curve to be upwards for both countries while the curve for China is lower than that for the US. 
 
 ####C. Write down the target shape of the data
 {country:"China, United States", year:"1995,1996,...,2014", wave:"3,6", hiedu:"No formal education,...")
@@ -128,12 +128,15 @@ print(educall2)
 
 ####F. Write expressive fantasy function calls 
 
-```{r}
+
 readdata <- readdata() #read the data we need
+
 selectdata <- selectwave3and6(wave3,wave6) #select the part we want in the data
+
 compare <- compareplot(mean)
-#to be continued
-```
+
+addlabel <- addlabel(waveto) 
+
 
 ####G. (Bonus) Write (some or all of) the functions to read, transform, and analyze the data.
 
@@ -158,5 +161,19 @@ educall <- ggplot(a,aes(x=year,y=educmean))+
   stat_smooth(method="lm",se=F,fullrange=T)
 print(educall)
 }
+
+addlabel <- function(x){
+  x$educlevel[x$hieduc==1] <- "No formal education"
+x$educlevel[x$hieduc==2] <- "Incomplete primary school"
+x$educlevel[x$hieduc==3] <- "Complete primary school"
+x$educlevel[x$hieduc==4] <- "Incomplete secondary school: technical/vocational type"
+x$educlevel[x$hieduc==5] <- "Complete secondary school: technical/vocational type"
+x$educlevel[x$hieduc==6] <- "Incomplete secondary: university-preparatory type"
+x$educlevel[x$hieduc==7] <- "Complete secondary: university-preparatory type"
+x$educlevel[x$hieduc==8] <- "Some university-level education, without degree"
+x$educlevel[x$hieduc==9] <- "University-level education, with degree"
+x$educlevel[x$hieduc==0] <- "Don'w know/NA"
+} #add a label variable, a new variable, to a table
+  
 #to be continued
 ```

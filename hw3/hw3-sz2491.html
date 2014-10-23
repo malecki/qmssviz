@@ -69,6 +69,7 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 </div>
 <div id="b.-sketch-andor-describe-the-graphs-that-you-intend-to-make-these-amount-to-informal-research-hypotheses." class="section level4">
 <h4>B. Sketch and/or describe the graph(s) that you intend to make; these amount to informal research hypotheses.</h4>
+<p>I intend to make pictures of the mean value education level of different countries varies along with time, i.e. 1995 to 2010. I expect the curve to be upwards for both countries while the curve for China is lower than that for the US.</p>
 </div>
 <div id="c.-write-down-the-target-shape-of-the-data" class="section level4">
 <h4>C. Write down the target shape of the data</h4>
@@ -158,8 +159,10 @@ print(educall2)</code></pre>
 </div>
 <div id="f.-write-expressive-fantasy-function-calls" class="section level4">
 <h4>F. Write expressive fantasy function calls</h4>
-<pre class="r"><code>readdata &lt;- readdata()
-#to be continued</code></pre>
+<p>readdata &lt;- readdata() #read the data we need</p>
+<p>selectdata &lt;- selectwave3and6(wave3,wave6) #select the part we want in the data</p>
+<p>compare &lt;- compareplot(mean)</p>
+<p>addlabel &lt;- addlabel(waveto)</p>
 </div>
 <div id="g.-bonus-write-some-or-all-of-the-functions-to-read-transform-and-analyze-the-data." class="section level4">
 <h4>G. (Bonus) Write (some or all of) the functions to read, transform, and analyze the data.</h4>
@@ -171,6 +174,32 @@ load(&quot;~/Documents/columbia/study/2014fall/datavisualization/github/qmssviz/
 wave3&lt;-WV3_Data_rdata_v_2014_09_21
 }
 
+selectwave3and6 &lt;- function(x,y){ 
+wave3a &lt;- subset(x,select=c(V1,V2,V238,V217),V2==840|V2==156)
+wave6a &lt;- subset(y,select=c(V1,V2,V262,V248),V2==840|V2==156)
+}
+
+compareplot &lt;- function(a){
+educall &lt;- ggplot(a,aes(x=year,y=educmean))+
+  geom_point(size=4,aes(color=factor(countryname)))+
+  facet_wrap(~countryname)+
+  stat_smooth(method=&quot;lm&quot;,se=F,fullrange=T)
+print(educall)
+}
+
+addlabel &lt;- function(x){
+  x$educlevel[x$hieduc==1] &lt;- &quot;No formal education&quot;
+x$educlevel[x$hieduc==2] &lt;- &quot;Incomplete primary school&quot;
+x$educlevel[x$hieduc==3] &lt;- &quot;Complete primary school&quot;
+x$educlevel[x$hieduc==4] &lt;- &quot;Incomplete secondary school: technical/vocational type&quot;
+x$educlevel[x$hieduc==5] &lt;- &quot;Complete secondary school: technical/vocational type&quot;
+x$educlevel[x$hieduc==6] &lt;- &quot;Incomplete secondary: university-preparatory type&quot;
+x$educlevel[x$hieduc==7] &lt;- &quot;Complete secondary: university-preparatory type&quot;
+x$educlevel[x$hieduc==8] &lt;- &quot;Some university-level education, without degree&quot;
+x$educlevel[x$hieduc==9] &lt;- &quot;University-level education, with degree&quot;
+x$educlevel[x$hieduc==0] &lt;- &quot;Don'w know/NA&quot;
+} #add a label variable, a new variable, to a table
+  
 #to be continued</code></pre>
 </div>
 </div>

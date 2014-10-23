@@ -143,11 +143,18 @@ infoins08$ins <- infoins08$q16j
 for (i in which(infoins08$q16j==8|infoins08$q16j==9,)){
   infoins08$ins[i]=NA
 }
+for (i in which(infoins08$q16j==2)){
+  infoins08$ins[i]=0
+}
+
 missVal(infoins08)
 
 infoins12$ins <- infoins12$q6c
 for (i in which(infoins12$q6c==8|infoins12$q6c==9,)){
   infoins12$ins[i]=NA
+}
+for (i in which(infoins12$q6c==2)){
+  infoins12$ins[i]=0
 }
 missVal(infoins12)
 ```
@@ -174,8 +181,6 @@ Right now, age is a numeric value, and I would want to group them by meaningful 
 + 65 and older
 
 I want to create a side-by-side barplot comparing % searched for insurance information online for each age group between the two different survey years. 
-
-
 
 ```{r}
 infoins08$agegrp <- infoins08$age
@@ -223,22 +228,19 @@ There are 1611 observations in the final 2008 data set and 2341 observations in 
 
 ## Creating a Tidy Dataset
 
-```{r eval=FALSE}
-install.packages("reshape")
-```
-
 I will first prepare to set my data sets on top of one another:
 
 ```{r}
+infoins08$yr <- rep(2008, length(infoins08$psraid))
+infoins12$yr <- rep(2012, length(infoins12$psraid))
 
+dat08 <- aggregate(infoins08$ins, list(infoins08$agegrp), mean)
+names(dat08) <- c('agegrp', 'pct08')
+dat08$agegrp <- as.factor(dat08$agegrp)
 
-
-
-
-
-strYou can also embed plots, for example:
-
-```{r fig.width=7, fig.height=6}
-plot(cars)
+dat12 <- aggregate(infoins12$ins, list(infoins12$agegrp), mean)
+names(dat12) <- c('agegrp', 'pct12')
+dat12$agegrp <- as.factor(dat12$agegrp)
+datFin <- merge(dat08, dat12, by = "agegrp")
+datFin
 ```
-

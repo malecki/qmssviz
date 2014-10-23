@@ -54,7 +54,44 @@ I am specifically interested in responses to Option C:
 * 8 = Don't know
 * 9 = Refused
 
-It is worth noting that Q16 was only asked for people labeled as "Internet users". "Internet users" were identified as those who responded positively (1) to questions ```INTUSE```, ```EMLOCC```, or ```INTMOB```.
+It is worth noting that Q16 was only asked for people labeled as "Internet users". "Internet users" were identified as those who responded positively (1) to questions ```intuse```, ```emlocc```, or ```intmob```.
+
+### Demographic Variables
+
+A comparison of the data dictionaries for the 2008 and 2012 health surveys reveal that the demographic variables I will include (```hisp```, ```race```, ```age```, ```inc```) are all coded the same. 
+
+(1) ```age ``` is a numeric value that corresponds to the age of the respondent if the respondent is 18 to 96 years old. 
++ "97" is used for individuals 97 years or older
++ "98" is used for "Don't know"
++ "99" is used for "Refused"
+
+(2) ```hisp``` corresponds to a question asking whether the respondent is Hispanic or Latino.
++ 1 = "Yes"
++ 2 = "No"
++ 9 = "Don't know/refused"
+
+(3) ```race``` corresponds to a question asking for the respondent's race. 
++ 1 = "White"
++ 2 = "Black or African-American"
++ 3 = "Asian or Pacific Islander"
++ 4 = "Mixed race"
++ 5 = "Native American/American Indian
++ 6 = "Other (specify)"
++ 7 = "Don't know/refused"
+
+(4) ```inc``` corresponds to a self-reported total family income. 
++ 1 = "Less than $10,000"
++ 2 = "$10,000 to < $20,000"
++ 3 = "$20,000 to < $30,000"
++ 4 = "$30,000 to < $40,000"
++ 5 = "$40,000 to < $50,000"
++ 6 = "$50,000 to < $75,000"
++ 7 = "$75,000 to < $100,000"
++ 8 = "$100,000 to < $150,000"
++ 9 = "$150,000 or more"
++ 10 = "Don't know/refused"
+
+(In the 2012 data set, "Don't know/refused" for ```inc``` are separated into 98 and 99.)
 
 ## Preparing the Data
 
@@ -67,30 +104,139 @@ str(wave1)
 str(wave2)
 ```
 
-For wave1, I want to keep the unique identifier ```psraid```, gender ```sex``` (where 1=Male), the Internet use questions ```q6a``` and ```q6b```, and the question of interest ```q16j```. I want to subset by the Internet use questions.
+For wave1, I want to keep the unique identifier ```psraid```,  some demographic variables, the Internet use questions ```q6a``` and ```q6b```, and the question of interest ```q16j```. I want to subset by the Internet use questions to include only Internet users.
 
-For wave2, I want to keep the unique identifier ```psraid```, gender ```sex``` (where 1=Male), the Internet use questions ```intuse```, ```emlocc```, and ```intmob```, in addition to the question of interest ```q6c```. I want to subset by the Internet use questions.
+For wave2, I want to keep the unique identifier ```psraid```, some demographic variables, the Internet use questions ```intuse```, ```emlocc```, and ```intmob```, in addition to the question of interest ```q6c```. I want to subset by the Internet use questions to include only Internet users.
 
 
 ```{r eval=FALSE}
-vars08 <- c('psraid', 'sex', 'q6a', 'q6b', 'q16j')
-vars12 <- c('psraid', 'sex', 'intuse', 'emlocc', 'intmob', 'q6c')
+vars08 <- c('psraid', 'sex', 'q6a', 'q6b', 'q16j', 'hisp', 'race', 'inc', 'age')
+vars12 <- c('psraid', 'sex', 'intuse', 'emlocc', 'intmob', 'q6c', 'hisp', 'race', 'inc', 'age')
 infoins08 <- subset(wave1, q6a==1|q6b==1, select=vars08)
 infoins12 <- subset(wave2, intuse==1|emlocc==1|intmob==1, select=vars12)
 str(infoins08)
 str(infoins12)
 ```
 
-Here, we see that 1650 of the 2253 survey participants in wave1 and 2392 out of the 3014 survey participants in wave2 were Internet users. Now, to deal with missing values. Here, we treat people who responded '8' or '9' as missing as well.
+Here, we see that 1650 of the 2253 survey participants in wave1 and 2392 out of the 3014 survey participants in wave2 were Internet users. Now, to deal with missing values. 
+
+```{r}
+missVal <- function(data) {
+  if(sum(is.na(data))>0) {
+    naSum <- sum(is.na(data))
+    paste("There are", naSum, "missing values.")
+  }
+  else {
+    print("There are no missing values.")
+  }
+}
+
+missVal(infoins08)
+missVal(infoins12)
+```
+
+There are no missing values. Even so, we want to treat people who answered "Don't know" or "Refused" as missing and remove them from our analysis.
+
+
+```{r}
+infoins08$ins <- infoins08$q16j
+for (i in which(infoins08$q16j==8|infoins08$q16j==9,)){
+  infoins08$ins[i]=NA
+}
+missVal(infoins08)
+
+infoins12$ins <- infoins12$q6c
+for (i in which(infoins12$q6c==8|infoins12$q6c==9,)){
+  infoins12$ins[i]=NA
+}
+missVal(infoins12)
+```
+
+At most, we would be deleting 1 observation from the 2008 data set and 5 observations from the 2012 data set. This isn't huge number, so I am comfortable with doing that.
+
+```{r}
+infoins08 <- na.omit(infoins08)
+infoins12 <- na.omit(infoins12)
+missVal(infoins08)
+missVal(infoins12)
+str(infoins08)
+str(infoins12)
+```
+
+## Conceptualizing a Visualization
+I have a lot of demographc variables to work with, so I will explore one that really interests me. I am interested to compare the percentage of people in each age group that searched for information about health insurance. This is driven by the fact that (1) young adults are the most prolific Internet users, and (2) the expansion of onliner resources might actually inspire older adults to also find health information online.
+
+Right now, age is a numeric value, and I would want to group them by meaningful age categories. All survey participants are 18 years or older. These are the categories I am interested in:
+
++ Under 25 
++ 25 to < 45
++ 45 to < 65
++ 65 and older
+
+I want to create a side-by-side barplot comparing % searched for insurance information online for each age group between the two different survey years. 
+
+
+
+```{r}
+infoins08$agegrp <- infoins08$age
+for (i in which(infoins08$age<25)) {
+  infoins08$agegrp[i]="Under 25"
+}
+for (i in which(infoins08$age>=25 & infoins08$age<45)) {
+  infoins08$agegrp[i]="25 to 44"
+}
+for (i in which(infoins08$age>=45 & infoins08$age<65)) {
+  infoins08$agegrp[i]="45 to 64"
+}
+for (i in which(infoins08$age>=65 & infoins08$age<=97)) {
+    infoins08$agegrp[i]="65 and older"
+  }
+for (i in which(infoins08$age==98|infoins08$age==99)) {
+  infoins08$agegrp[i]=NA
+}
+
+infoins12$agegrp <- infoins12$age
+for (i in which(infoins12$age<25)) {
+  infoins12$agegrp[i]="Under 25"
+}
+for (i in which(infoins12$age>=25 & infoins12$age<45)) {
+  infoins12$agegrp[i]="25 to 44"
+}
+for (i in which(infoins12$age>=45 & infoins12$age<65)) {
+  infoins12$agegrp[i]="45 to 64"
+}
+for (i in which(infoins12$age>=65 & infoins12$age<=97)) {
+    infoins12$agegrp[i]="65 and older"
+  }
+for (i in which(infoins12$age==98|infoins12$age==99)) {
+  infoins12$agegrp[i]=NA
+}
+
+infoins08 <- na.omit(infoins08)
+infoins12 <- na.omit(infoins12)
+
+str(infoins08)
+str(infoins12)
+```
+
+There are 1611 observations in the final 2008 data set and 2341 observations in the final 2012 data set.
+
+## Creating a Tidy Dataset
+
+```{r eval=FALSE}
+install.packages("reshape")
+```
+
+I will first prepare to set my data sets on top of one another:
+
+```{r}
 
 
 
 
 
 
-
-
-You can also embed plots, for example:
+strYou can also embed plots, for example:
 
 ```{r fig.width=7, fig.height=6}
 plot(cars)

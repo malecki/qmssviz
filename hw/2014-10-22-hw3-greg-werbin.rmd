@@ -1,0 +1,210 @@
+---
+title: "Homework 3"
+author: "Greg Werbin"
+output: html_document
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+setwd("/Users/hotdog2/class/data viz/hw 3")
+```
+
+## Part A
+
+I'll be comparing Question 5 of the 1999 and 2008 European Values Surveys &ndash; Great Britain, which has the same exact wording in both versions:
+> Please look carefully at the following list of voluntary organisations and activities and say ...
+a) which, if any, do you belong to? (Code all mentioned under (a) as ‘1’)
+b) which, if any, are you currently doing unpaid voluntary work for? (Code all mentioned under (b) as ‘1’)
+
+with options:
+
+> * Social welfare services for elderly, handicapped or deprived people
+* Religious or church organisations
+* Education, arts, music or cultural activities
+* Trade unions 
+* Political parties or groups
+* Local community action on issues like poverty, employment, housing, racial equality
+* Third world development or human rights
+* Conservation, the environment, ecology, animal rights
+* Professional associations
+* Youth work (e.g. scouts, guides, youth clubs etc.)
+* Sports or recreation
+* Women's groups
+* Peace movement
+* Voluntary organisations concerned with health
+* Other groups
+* None<br><br>
+_(Source: p. 5 of each Field Questionnaire)_
+
+## Part B
+
+I'm going to graph the log-base-10 proportion of respondents who answer "yes" to each question. There will be two panels, one for each question. In each panel, I'll draw a horizontal dot chart with the 1999 an 2008 values plotted on the same row, distinguished by the plotting character. If it helps clarity, I'll draw straight lines to connect points from the same year. The goal is to compare the popularity of volunteer activities between 1999 and 2008. I'm using a log scale because I'm expecting that some groups will be more popular than others.
+
+## Part C
+
+I'll use `ggplot2` in R, so I'll need a data.frame that looks like:
+
+|Category |Question |Year |Proportion |
+|:--------|:--------|:----|:----------|
+|Welfare  |A        |1999 |0.15       |
+
+## Part D
+
+```{r, echo = -(5:6)}
+library(foreign)
+library(reshape2)
+library(memisc)
+pdt <- data.table:::print.data.table
+
+setwd("/Users/hotdog2/class/data viz/hw 3")
+
+d1999 <- read.dta("ZA3777_v3-0-1.dta")
+d2008 <- read.dta("ZA4752_v1-0-0.dta")
+
+## Checking out the structure of the file
+
+dim(d1999)
+dim(d2008)
+
+head(names(d1999), 20)
+head(names(d2008), 20)
+
+pdt(d1999[1:5, 1:8])
+pdt(d2008[1:5, 1:14])
+
+unique(d2008$year) # just checking, 2008/2009 difference looked suspicious
+
+## Saving the columns I want and dumping the rest
+
+select <- function(...) paste0("v", unlist(lapply(as.list(sys.call())[-1], eval)))
+a99 <- select(12:27)
+b99 <- select(30:45)
+a08 <- select(10:25)
+b08 <- select(28:43)
+# c(length(a99), length(b99), length(a08), length(b08))
+# 16 categories
+
+d1999 <- d1999[, c("id_cocas", "year", a99, b99)]
+d2008 <- d2008[, c("id_cocas", "year", a08, b08, "f25", "f43")]
+```
+
+Variables `f25` and `f43` are for flagging inconsistencies in the 2008 survey. Unfortunately there aren't any flags for the 1999 survey. The inconsistency codes for `f43` are:
+
+> * Inconsistent 1: If respondent mentiones at least one organisation and "none". if v43=1 and any of v28 to v42=1 then f43=1
+* Inconsistent 2: If respondent does not know for at least one organization whether s/he works for it and mentiones "none". if v43=1 and none of v28 to v42=1 and any of v28 to v42=8 then f43=2
+* Inconsistent 3: If respondent does not know for at least one organization whether s/he works for it and does not mention "none". if v43=2 and none of v28 to v42=1 and any of v28 to v42=8 then f43=3
+* Inconsistent 4: If respondent does not mention any organisation and does not mention "none". if v43=2 and all of v28 to v42=2 then f43=4
+* Inconsistent 5: If respondent mentions at least one organization and does not know whether s/he works for "none". if v43=8 and any of v28 to v42=1 then f43=5
+* Inconsistent 6: If respondent does not mention any organization and does not know whether s/he works for "none". if v43=8 and all of v28 to v42=2 then f43=6
+* Inconsistent 7: If respondent mentions at least one organization and does not answer whether s/he works for "none". if v43=9 and any of v28 to v42=1 then f43=7
+* Inconsistent 8: If respondent does not mention any organization and does not answer whether s/he works for "none". if v43=9 and all of v28 to v42=2 then f43=8<br><br>
+_(Source: p. 57 of the 2008 Variable Report)_
+
+```{r, results='asis'}
+knitr::kable(rbind("belong to" = table(d2008$f25),"work for" = table(d2008$f43)))
+```
+
+There are so few inconsistent responses in the 2008 survey that in my opinion it's not even worth deleting them. Hopefully the 1999 survey is equally clean. In principle, I should reconstruct the consistency checks and apply them to both questions in both surveys. Then I could decide what to do with each type of inconsistency and recode accordingly.
+
+```{r}
+reset <- function() {
+  d1999 <<- read.dta("ZA3777_v3-0-1.dta")
+  d2008 <<- read.dta("ZA4752_v1-0-0.dta")
+
+  d1999 <<- d1999[, c("id_cocas", "year", a99, b99)]
+  d2008 <<- d2008[, c("id_cocas", "year", a08, b08, "f25", "f43")]
+}
+# for fixing stuff in case I mess up
+
+categories <- c(
+  "Social welfare",
+  "Religious",
+  "Education, arts, music or cultural",
+  "Trade unions",
+  "Political",
+  "Local community action",
+  "Third world development or human rights",
+  "Conservation, the environment, ecology, animal rights",
+  "Professional associations",
+  "Youth work",
+  "Sports or recreation",
+  "Women's groups",
+  "Peace movement",
+  "Organization concerned with health",
+  "Other groups",
+  "None"
+  )
+varnames <- apply(expand.grid(categories, c("A", "B")), 1, paste, collapse = "_")
+
+names(d1999)[seq.int(3, length.out=2*16)] <- varnames
+
+names(d2008)[seq.int(3, length.out=2*16)] <- c(varnames)
+d2008$f25 <- d2008$f43 <- NULL
+d2008$year <- 2008
+
+calc_proportions <- function(x) {
+  x <- as.character(x)
+  x[x %nin% c("mentioned", "not mentioned")] <- NA
+  x[x == "mentioned"] <- 1
+  x[x == "not mentioned"] <- 0
+  x <- as.numeric(x)
+  mean(x, na.rm = TRUE)
+}
+
+melt_and_split <- function(DF) {
+  DF <- melt(DF, id.vars = "year",
+             variable.name = "category", value.name = "proportion")
+  # it's not a "proportion" column yet, but it will be
+  tmp <- do.call(rbind, strsplit(as.character(DF$category), "_"))
+  DF[c("category", "question")] <- tmp
+  DF
+}
+
+calc_melt_split <- function(DF) {
+  out <- c(year = as.character(DF$year[1]), lapply(DF[-(1:2)], calc_proportions))
+  out <- melt_and_split(data.frame(out, check.names = FALSE))
+  out$question <- recode(out$question, "member" <- "A", "volunteer" <- "B")
+  out
+}
+
+d <- rbind(calc_melt_split(d1999), calc_melt_split(d2008))
+pdt(d, 5)
+```
+
+## Part E
+
+```{r, fig.width=9}
+library(grid)
+library(ggplot2)
+
+d$year <- factor(d$year)
+
+ord <- order(d[d$year == "2008" & d$question == "member", "proportion"])
+d$category <- factor(d$category, levels = unique(d$category)[ord])
+
+g <- ggplot(d, aes(x = proportion, y = category)) +
+  geom_point(aes(shape = year), color = NA) +
+  geom_hline(aes(yintercept = as.numeric(category)), color = "lightgray") +
+  geom_point(aes(shape = year), size = 3) +
+  scale_x_log10() +
+  scale_shape_manual(values = c(1, 16)) +
+  facet_grid(~ question) +
+  theme_classic() + theme(
+    axis.line = element_line(color = NA),
+    legend.position = "top",
+    panel.border = element_rect(fill = NA),
+    plot.title = element_text(size = 11, face = "bold")
+    ) +
+  ylab("") + xlab("log10 proportion") +
+  ggtitle("Proportion of EVS 1999 and 2008 respondents\nwho belong to or volunteer in each of sixteen organizations")
+
+## Draw the graph with the title centered properly
+# from http://stackoverflow.com/a/10976398/2954547
+gt <- ggplot_gtable(ggplot_build(g))
+gt$layout[which(gt$layout$name == "title"), c("l", "r")] <- c(1, max(gt$layout$r))
+plot.new()
+grid.draw(gt)
+```
+
+## Part F, G
+I think this is plenty encapsulated as-is.
+

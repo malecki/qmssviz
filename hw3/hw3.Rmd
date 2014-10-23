@@ -8,9 +8,7 @@ tags: hw3
 Citizen Percieved Threat
 ========================================================
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring web pages (click the **Help** toolbar button for more details on using R Markdown).
-
-When you click the **Knit HTML** button a web page will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+Load data of Pew Research and Fox news Surveys.
 
 ```{r}
 
@@ -18,7 +16,7 @@ survey5 <- read.csv("/Users/JonathanCampbell/Desktop/report.csv")
 
 
 
-factdate <- function(dfvar){
+factdate <- function(dfvar){ #fuction to change data type from function to date
   dfvar <- as.character(dfvar)
   dfvar <- as.Date(dfvar, "%m/%d/%Y")
   str(dfvar)
@@ -29,7 +27,7 @@ factdate(survey5$ReleaseDate)
 
 ```
 
-You can also embed plots, for example:
+Data Vizualizations:
 
 ```{r fig.width=7, fig.height=6}
 library(ggplot2)

@@ -181,15 +181,13 @@ hljs.initHighlightingOnLoad();
 <body>
 <h1>Citizen Percieved Threat</h1>
 
-<p>This is an R Markdown document. Markdown is a simple formatting syntax for authoring web pages (click the <strong>Help</strong> toolbar button for more details on using R Markdown).</p>
-
-<p>When you click the <strong>Knit HTML</strong> button a web page will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:</p>
+<p>Load data of Pew Research and Fox news Surveys.</p>
 
 <pre><code class="r">survey5 &lt;- read.csv(&quot;/Users/JonathanCampbell/Desktop/report.csv&quot;)
 
 
 
-factdate &lt;- function(dfvar){
+factdate &lt;- function(dfvar){ #fuction to change data type from function to date
   dfvar &lt;- as.character(dfvar)
   dfvar &lt;- as.Date(dfvar, &quot;%m/%d/%Y&quot;)
   str(dfvar)
@@ -206,7 +204,7 @@ str(survey5$ReleaseDate)
 <pre><code>##  Date[1:18], format: &quot;0007-02-15&quot; &quot;0007-02-15&quot; &quot;0007-02-15&quot; &quot;0007-02-15&quot; ...
 </code></pre>
 
-<p>You can also embed plots, for example:</p>
+<p>Data Vizualizations:</p>
 
 <pre><code class="r">library(ggplot2)
 ggplot(survey5, aes(x=RespTxt, y=RespPct, fill=SurveyOrg)) +

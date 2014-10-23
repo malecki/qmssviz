@@ -1,14 +1,20 @@
 ---
-title: "102314-HW3-kg2445"
+title: "Homework 3 - Kevin Gong"
 output: html_document
+date: "October 23, 2014"
+published: false
+tag: hw3
 ---
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+###**A**###
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+The survey I will be examining is the World Values Survey. Specifically, we'll be looking at 
 
 ```{r}
-summary(cars)
+load("~/qmssviz/hw3/WV3.RData")
+WV3 = WV3_Data_rdata_v_2014_09_21
+load("~/qmssviz/hw3/WV6.RData")
+WV6 = WV6_Data_rdata_v_2014_09_21
 ```
 
 You can also embed plots, for example:
@@ -17,4 +23,3 @@ You can also embed plots, for example:
 plot(cars)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

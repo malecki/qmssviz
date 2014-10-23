@@ -14,23 +14,35 @@ The question about income equality in those 2 waves are almost the same:
 
       "Now I'd like you to tell me your views on various issues. How would you place your views on this scale? 1 means you agree completely with the statement on the left; 10 means you agree completely with the statement on the right; and if your views fall somewhere in between, you can choose any number in between 'Incomes should be made more equal' vs. 'We need larger income differences as incentives for individual effort'".
       
-If one really thought that incomes should be made more equal, and gave a score of 1 or 2, it probably demonstrated that the income inequality at that time was really severe, vice versa. Thus, we could find out the changes of the social equality from the answers of respondents.
+For instance, if one really thought that incomes should be made more equal, and gave a score of 1 or 2, it probably demonstrated that the income inequality at that time was really severe, vice versa. Thus, we could find out the changes of the social equality from the answers of respondents.
 
 ##B. Sketch and/or describe the graph(s) 
 
+I want to plot two pictures.
+
+The first is a segment-point plot. X-axis is "country" and Y-axis is the mean of each country. There are two segments above each country to indicate the mean value in different waves, namely the year of 1990 and 2000. This one is designed to demonstrate the comparison of average level of 2 waves in each country. 
+
+Another one is a bar graph. X-axis is "answer scale"", which contains "1" to "10". Y-axis is "percentage", which means the percentage of prequency of an answer (like "5") in the total sum of answers in a country in one wave. Above the X-axis is the "percentage" in the year of 1990, while beneath the X-axis is "percentage" in the year of 2012.
+
+#####(I tried to import my sketch but failed.
+      "Error : .onLoad failed in loadNamespace() for 'Cairo', details:call: dyn.load(file, DLLpath = DLLpath, ...)error: unable to load shared object '/Library/Frameworks/R.framework/Versions/3.1/Resources/library/Cairo/libs/Cairo.so':dlopen(/Library/Frameworks/R.framework/Versions/3.1/Resources/library/Cairo/libs/Cairo.so, 6): Library not loaded: /opt/X11/lib/libXrender.1.dylib.Referenced from: /Library/Frameworks/R.framework/Versions/3.1/Resources/library/Cairo/libs/Cairo.so Reason: image not found. Error: package or namespace load failed for 'Cairo'")
+
+
+```{r}
+
+#Not able to library(Cairo)#
+jpeg("/Users/huzhongjun/Downloads/IMG_2706.jpg")
+```
 
 ##C. Write down the target shape
 
+I would like to 
+
+In my target shape of data, I would like to include the year of two waves, 3 countries:China, Japan, South Korea, all the answers ("1" to "10"), average scores to this questions of 2 waves in each countries:
+
+  {Year:"1990, 2012", Country:"China, Japan, South Korea", Mean(c("Country, Year"), Values of Income Equality("1~10")}""
 
 ##D. Write a script
-
-ReadData <- function(route) {
-  read.spss(route)
-}
-
-Subset <- function(data, var1, var2){
-  subset(data, select = c(var1, var2))
-}
 
 ```{r,warning=FALSE}
 #Read 2 datasets about China from WVS Database#
@@ -117,7 +129,7 @@ d <- d[, list(ie = unique(ie), percentage = as.numeric(table(ie)/length(ie))), b
 ##E. Make it actually make your graph. 
 
 1. 
-```{r}
+```{r,fig.height=7,fig.width=12}
 library(ggplot2)
 ggplot(dmean, aes(x= Mean, y= Country)) +
         geom_segment(stat="identity",aes(yend=Country), xend = 0, colour="black") +
@@ -130,7 +142,7 @@ ggplot(dmean, aes(x= Mean, y= Country)) +
         facet_grid(year ~ ., scales="free_y", space="free_y")
 ```
 2. 
-```{r,fig.height=9,fig.width=14.562}
+```{r,fig.height=7,fig.width=12}
 library(ggplot2)
 library(RColorBrewer)
 color <- brewer.pal(5, "Greens")
@@ -169,4 +181,14 @@ df <- calculate(incomeequality)
 #Plot#
 ggplot(df, aes()...) + ...
 
+```
+
+```{r}
+ReadData <- function(route) {
+  read.spss(route)
+}
+
+Subset <- function(data, var1, var2){
+  subset(data, select = c(var1, var2))
+}
 ```

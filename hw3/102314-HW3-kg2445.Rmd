@@ -1,4 +1,16 @@
 ---
+<<<<<<< HEAD
+title: "102314-HW3-kg2445"
+output: html_document
+---
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+summary(cars)
+=======
 title: "Homework 3 - Kevin Gong"
 output: html_document
 date: "October 23, 2014"
@@ -65,6 +77,7 @@ library(ggplot2)
 load("~/qmssviz/hw3/WV4.RData")
 WV4 = `WV4_Data_rdata_v_2014-04-28`
 load("~/qmssviz/hw3/WV6.RData")
+<<<<<<< HEAD
 WV6 = WV6_Data_spss_v_2014_06_04
 #head(WV6)
 dim(WV3)
@@ -73,6 +86,10 @@ s
 
 
 
+=======
+WV6 = WV6_Data_rdata_v_2014_09_21
+>>>>>>> 958113da41c77e59382742994564c51108be1f84
+>>>>>>> d2ea69191db1d6ec86b464ccc503361609671325
 ```
 
 You can also embed plots, for example:
@@ -81,3 +98,7 @@ You can also embed plots, for example:
 plot(cars)
 ```
 
+<<<<<<< HEAD
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+=======
+>>>>>>> 958113da41c77e59382742994564c51108be1f84

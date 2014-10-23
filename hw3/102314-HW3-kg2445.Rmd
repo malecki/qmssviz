@@ -81,7 +81,6 @@ country_wv4
 country_wv6
 
 country_wv4==country_wv6
-which(sapply(sc, `%in%`, x = 8))
 
 country_list = vector()
 
@@ -92,7 +91,7 @@ for(i in 1:length(country_wv4)) {
   }
   
 }
-country_list = vector(country_list,na.rm=TRUE)
+
 country_list2 = country_list[!is.na(country_list)]
 country_list2
 
@@ -152,11 +151,7 @@ country_matrix4
 country_matrix4[,2] = country_matrix3[,2]
 country_matrix4
 
-country_matrix5 = matrix(nrow=18,ncol=3)
-country_matrix5[,1]=country_matrix4[,1]
-country_matrix5[,2]=country_matrix3[,2]
-country_matrix5[,3]=country_matrix3[,3]
-country_matrix5
+
 #use country_matrix3 for now
 ```
 
@@ -167,20 +162,20 @@ country_matrix3
 Now we graph it!
 
 ```{r}
-country_matrix6 = read.table(country_matrix3)
+#country_matrix6 = read.table(country_matrix3)
 
-cm = structure( c(country_matrix3[,1], country_matrix3[,2], country_matrix3[,3]) ,.Dim=c(18,3))
-cm2 = melt(country_matrix3,id.vars=c("Country","Wave4","Wave6"))
-cm2
+#cm = structure( c(country_matrix3[,1], country_matrix3[,2], country_matrix3[,3]) ,.Dim=c(18,3))
+#cm2 = melt(country_matrix3,id.vars=c("Country","Wave4","Wave6"))
+#cm2
 
 
-country_matrix3
-plot(country_matrix3)
+#country_matrix3
+#plot(country_matrix3)
 
 a=as.factor(country_matrix4[,1])
-a
 
-plot(a,country_matrix3[,2],type="p",col="blue"x)
+
+plot(a,country_matrix3[,2],type="p",col="blue",labels=FALSE,main="Unwillingness to have Homosexual Neighbors during 1999-2004 (blue) vs 2010-2014 (green)")
 points(a,country_matrix3[,3],col="green")
 axis(1, at=seq(1, 18, by=1), labels = FALSE)
 text(seq(1, 18, by=1), par("usr")[3] - 0.2, labels = newnames, srt = 90, pos = 1, xpd = TRUE)
@@ -188,6 +183,8 @@ text(seq(1, 18, by=1), par("usr")[3] - 0.2, labels = newnames, srt = 90, pos = 1
 
 
 ```
+
+For most countries, we see that unwillingness to have homosexual neighbors decreases from Wave 4 (blue dot) to Wave 6 (green dot), which makes sense due to the general decrease of homophobia in the past decade. However, note that some countries, such as Kyrgyzstan and Zimbabwe, actually experienced notable increases in unwillingness to have homosexual neighbors.
 
 
 

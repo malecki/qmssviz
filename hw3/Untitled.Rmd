@@ -1,0 +1,172 @@
+---
+title: "ZhongjunHu_hw3_20141022"
+author: "Zhongjun Hu"
+---
+##Income Equality in China, Japan, and South Korea (1990 & 2012)
+
+###A. Identify two surveys that you want to compare.
+
+I am interested in the issues of income distribution in Asia in the past 20 years. China, Japan, and South Korea are top 3 properous countries in east Asia. So I choose the 3 countries to analyze what I am interested in. 
+
+Two waves from World Values Survey are selected, wave 6 (2010-2014) and wave 2 (1990-1994). I intend to find out what changes of people's feelings about social equality have happenned in the 20 years.
+
+The question about income equality in those 2 waves are almost the same: 
+
+      "Now I'd like you to tell me your views on various issues. How would you place your views on this scale? 1 means you agree completely with the statement on the left; 10 means you agree completely with the statement on the right; and if your views fall somewhere in between, you can choose any number in between 'Incomes should be made more equal' vs. 'We need larger income differences as incentives for individual effort'".
+      
+If one really thought that incomes should be made more equal, and gave a score of 1 or 2, it probably demonstrated that the income inequality at that time was really severe, vice versa. Thus, we could find out the changes of the social equality from the answers of respondents.
+
+##B. Sketch and/or describe the graph(s) 
+
+
+##C. Write down the target shape
+
+
+##D. Write a script
+
+ReadData <- function(route) {
+  read.spss(route)
+}
+
+Subset <- function(data, var1, var2){
+  subset(data, select = c(var1, var2))
+}
+
+```{r,warning=FALSE}
+#Read 2 datasets about China from WVS Database#
+library(foreign)
+wv2cn<-read.spss("/Users/huzhongjun/Desktop/HW3/WV2_Data_China_1990_spss_v_2014_04_28.sav",to.data.frame = TRUE)
+wv6cn<-read.spss("/Users/huzhongjun/Desktop/HW3/WV6_Data_China_2012_spss_v_2014_04_28.sav",to.data.frame = TRUE)
+
+#Get variables of Income Equality#
+eqin1<-subset(wv2cn, select = c("v2","v250"))
+eqin2<-subset(wv6cn, select = c("V2","V96"))
+
+#Trasform and merge#
+eqin1990<-cbind(year=1990, eqin1)
+eqin2012<-cbind(year=2012,eqin2)
+library(plyr)
+eqin1990<-rename(eqin1990, c("v2"="Country","v250"="IncomeEquality"))
+eqin2012<-rename(eqin2012, c("V2"="Country","V96"="IncomeEquality"))
+incomeequalitycn<-rbind(eqin1990, eqin2012)
+
+#Read 2 datasets about Japan from WVS Database#
+wv2jp<-read.spss("/Users/huzhongjun/Desktop/HW3/WV2_Data_Japan_1990_spss_v_2014_04_28.sav",to.data.frame = TRUE)
+wv6jp<-read.spss("/Users/huzhongjun/Desktop/HW3/WV6_Data_Japan_2010_spss_v_2014_04_28.sav",to.data.frame = TRUE)
+
+#Get Variables of Income Equality, transform them and merge#
+eqin1jp<-subset(wv2jp,select=c("v2","v250"))
+eqin1990jp<-cbind(year=1990,eqin1jp)
+eqin1990jp<-rename(eqin1990jp,c("v2"="Country","v250"="IncomeEquality"))
+eqin2jp<-subset(wv6jp,select=c("V2","V96"))
+eqin2012jp<-cbind(year=2012,eqin2jp)
+eqin2012jp<-rename(eqin2012jp,c("V2"="Country","V96"="IncomeEquality"))
+incomeequalityjp<-rbind(eqin1990jp,eqin2012jp)
+
+#Read 2 databases about South Korea from WVS Database#
+wv2sk<-read.spss("/Users/huzhongjun/Desktop/HW3/WV2_Data_SouthKorea_1990_spss_v_2014_04_28.sav",to.data.frame = TRUE)
+wv6sk<-read.spss("/Users/huzhongjun/Desktop/HW3/WV6_Data_South_Korea_2010_spss_v_2014_04_28.sav",to.data.frame = TRUE)
+
+#Get Variables of Income Equality, transform them and merge#
+eqin1sk<-subset(wv2sk,select=c("v2","v250"))
+eqin2sk<-subset(wv6sk,select=c("V2","V96"))
+eqin1990sk<-cbind(year=1990,eqin1sk)
+eqin2012sk<-cbind(year=2012,eqin2sk)
+eqin1990sk<-rename(eqin1990sk,c("v2"="Country","v250"="IncomeEquality"))
+eqin2012sk<-rename(eqin2012sk,c("V2"="Country","V96"="IncomeEquality"))
+incomeequalitysk<-rbind(eqin1990sk,eqin2012sk)
+
+#Merge dataframes of 3 countries and clean the NAs#
+cjkinceq<-rbind(incomeequalitycn,incomeequalityjp,incomeequalitysk)
+d<-cjkinceq
+df<-na.omit(d)
+
+#Get the target dataframe#
+df$iechr<-as.character(df$IncomeEquality)
+df$ie[df$iechr=="Individ"]<- "Income differences are incentives"
+df$ie[df$iechr=="Equal"]<- "Incomes should be equal"
+df$ie[df$iechr=="Incomes should be made more equal"]<- "Incomes should be equal"
+df$ie[df$iechr=="We need larger income differences as incentives for individu"]<- "Income differences are incentives"
+df$ie[df$iechr=="2"]<- "Incomes should be equal"
+df$ie[df$iechr=="3"]<- "Incomes perhaps could be more equal"
+df$ie[df$iechr=="4"]<- "Incomes perhaps could be more equal"
+df$ie[df$iechr=="5"]<- "Totally neutral about that"
+df$ie[df$iechr=="6"]<- "Totally neutral about that"
+df$ie[df$iechr=="7"]<- "Income differences may be incentives"
+df$ie[df$iechr=="8"]<- "Income differences may be incentives"
+df$ie[df$iechr=="9"]<- "Income differences are incentives"
+df$Index[df$iechr=="Individ"]<- 10
+df$Index[df$iechr=="Equal"]<- 1
+df$Index[df$iechr=="Incomes should be made more equal"]<- 1
+df$Index[df$iechr=="We need larger income differences as incentives for individu"]<- 10
+df$Index[df$iechr=="2"]<- 2
+df$Index[df$iechr=="3"]<- 3
+df$Index[df$iechr=="4"]<- 4
+df$Index[df$iechr=="5"]<- 5
+df$Index[df$iechr=="6"]<- 6
+df$Index[df$iechr=="7"]<- 7
+df$Index[df$iechr=="8"]<- 8
+df$Index[df$iechr=="9"]<- 9
+library(data.table)
+dmean <- aggregate(df$Index, by = list(df$Country, df$year), mean)
+dmean <- rename(dmean,c("Group.1"="Country", "Group.2"= "year", "x"= "Mean")) #Get the means#
+d <- data.table(df)
+d <- d[, list(ie = unique(ie), percentage = as.numeric(table(ie)/length(ie))), by = c("year", "Country")] #Get percentages#
+```
+
+##E. Make it actually make your graph. 
+
+1. 
+```{r}
+library(ggplot2)
+ggplot(dmean, aes(x= Mean, y= Country)) +
+        geom_segment(stat="identity",aes(yend=Country), xend = 0, colour="black") +
+        geom_point(size=3.5, aes(colour=factor(year))) +
+        scale_colour_brewer(palette="Set1", guide=FALSE) +
+        theme_bw() +
+        theme(panel.grid.major.y = element_blank(),
+              panel.grid.minor.x = element_blank(),
+              panel.grid.major.x = element_line(colour = "grey", linetype="dashed")) +
+        facet_grid(year ~ ., scales="free_y", space="free_y")
+```
+2. 
+```{r,fig.height=9,fig.width=14.562}
+library(ggplot2)
+library(RColorBrewer)
+color <- brewer.pal(5, "Greens")
+ggplot(d, aes(x=Country, y=percentage, fill=ie))+
+  geom_bar(stat= "identity",position="dodge")+
+  facet_grid(year ~. )+
+  theme_bw() +
+  theme(panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        panel.grid.major.x = element_line(colour="white", linetype="dashed"))+
+  guides(fill=guide_legend(title=NULL))+
+  scale_fill_manual(values=color)
+```
+
+##F. Write expressive fantasy function calls
+
+```{r,eval=FALSE}
+#Choose 6 datasets, 3 countries from 2 waves#
+1990 <- read.data.in1990(china1990, japan1990, southkorea1990)
+2012 <- read.data.in2012(china2012, japan2012, southkorea2012)
+
+#Select the variable of income equality from both waves#
+1990 <- selectvariable(1990)
+2012 <- selectvariable(2012)
+
+#Transform the dataframes, ready for merging#
+1990 <- data.transform(1990)
+2012 <- data.transform(2012)
+
+#Merge 2 waves into a single dataframe#
+incomeequality <- d.merge(1990,2012)
+
+#Calculate the percentage and other statistics#
+df <- calculate(incomeequality)
+
+#Plot#
+ggplot(df, aes()...) + ...
+
+```

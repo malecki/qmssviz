@@ -9,6 +9,7 @@ tags: hw3
 ========================================================
 
 ## About the Data
+
 **Data set 1:** The Pew Research Center's Internet & American Life Project, 2008 Health Questionnaire  
 * N=3030
 * Field dates: November 17 to December 17, 2008
@@ -19,7 +20,7 @@ tags: hw3
 
 ## Goal 
 
-I am interested in exploring whether information-seeking behaviors changed among Internet users between the years of 2008 and 2012, especially in regards to health insurance information. The survey waves conveniently sandwich the implementation of the Affordable Care Act, which expanded healthcare coverage for uninsured and underinsured Americans. I am curious to see whether major changes in public insurance plans and the approaching launch of [Healthcare.gov](http://www.healthcare.gov/) had a noticable impact on self-reported information-seeking behavior.
+I am interested in exploring whether information-seeking behaviors changed among Internet users of different ages between the years of 2008 and 2012, especially in regards to health insurance information. The two surveys conveniently sandwich the implementation of the Affordable Care Act, which expanded healthcare coverage for uninsured and underinsured Americans. Major changes in public insurance plans and the approaching launch of [Healthcare.gov](http://www.healthcare.gov/) may have had a noticable impact on self-reported information-seeking behavior.
 
 ## About the Survey Questions
 
@@ -58,7 +59,7 @@ It is worth noting that Q16 was only asked for people labeled as "Internet users
 
 ### Demographic Variables
 
-A comparison of the data dictionaries for the 2008 and 2012 health surveys reveal that the demographic variables I will include (```hisp```, ```race```, ```age```, ```inc```) are all coded the same. 
+A comparison of the data dictionaries for the 2008 and 2012 health surveys reveals that the demographic variables I will include (```hisp```, ```race```, ```age```, ```inc```) are all coded the same. I have purposely included more demographic variables than I will use in case I want to stratify by other characteristics.
 
 (1) ```age ``` is a numeric value that corresponds to the age of the respondent if the respondent is 18 to 96 years old. 
 + "97" is used for individuals 97 years or older
@@ -95,32 +96,30 @@ A comparison of the data dictionaries for the 2008 and 2012 health surveys revea
 
 ## Preparing the Data
 
-```{r eval=FALSE}
+```{r}
 setwd("C:/Users/Flo/Desktop/Data Viz 2014/Assignment3")
 wave1 <- read.csv("December_2008_Health_csv.csv", stringsAsFactors=FALSE)
 wave2 <- read.csv("September_2012_health_csv.csv", stringsAsFactors=FALSE)
-
 str(wave1)
 str(wave2)
 ```
 
-For wave1, I want to keep the unique identifier ```psraid```,  some demographic variables, the Internet use questions ```q6a``` and ```q6b```, and the question of interest ```q16j```. I want to subset by the Internet use questions to include only Internet users.
+For wave1, I want to keep the unique identifier ```psraid```,  some demographic variables I can explore, the Internet use questions ```q6a``` and ```q6b```, and the question of interest ```q16j```. I want to subset by the Internet use questions to include only Internet users.
 
-For wave2, I want to keep the unique identifier ```psraid```, some demographic variables, the Internet use questions ```intuse```, ```emlocc```, and ```intmob```, in addition to the question of interest ```q6c```. I want to subset by the Internet use questions to include only Internet users.
+For wave2, I want to keep the unique identifier ```psraid```, some demographic variables I can explore, the Internet use questions ```intuse```, ```emlocc```, and ```intmob```, in addition to the question of interest ```q6c```. I want to subset by the Internet use questions to include only Internet users.
 
 
-```{r eval=FALSE}
+```{r}
 vars08 <- c('psraid', 'sex', 'q6a', 'q6b', 'q16j', 'hisp', 'race', 'inc', 'age')
 vars12 <- c('psraid', 'sex', 'intuse', 'emlocc', 'intmob', 'q6c', 'hisp', 'race', 'inc', 'age')
 infoins08 <- subset(wave1, q6a==1|q6b==1, select=vars08)
 infoins12 <- subset(wave2, intuse==1|emlocc==1|intmob==1, select=vars12)
-str(infoins08)
-str(infoins12)
 ```
 
-Here, we see that 1650 of the 2253 survey participants in wave1 and 2392 out of the 3014 survey participants in wave2 were Internet users. Now, to deal with missing values. 
+We have 1650 participating Internet users in the 2008 survey and 2392 in the 2012 survey. Now, to handle missing values. 
 
 ```{r}
+# Create function to spit out number of missing values.
 missVal <- function(data) {
   if(sum(is.na(data))>0) {
     naSum <- sum(is.na(data))
@@ -137,7 +136,6 @@ missVal(infoins12)
 
 There are no missing values. Even so, we want to treat people who answered "Don't know" or "Refused" as missing and remove them from our analysis.
 
-
 ```{r}
 infoins08$ins <- infoins08$q16j
 for (i in which(infoins08$q16j==8|infoins08$q16j==9,)){
@@ -147,8 +145,6 @@ for (i in which(infoins08$q16j==2)){
   infoins08$ins[i]=0
 }
 
-missVal(infoins08)
-
 infoins12$ins <- infoins12$q6c
 for (i in which(infoins12$q6c==8|infoins12$q6c==9,)){
   infoins12$ins[i]=NA
@@ -156,31 +152,31 @@ for (i in which(infoins12$q6c==8|infoins12$q6c==9,)){
 for (i in which(infoins12$q6c==2)){
   infoins12$ins[i]=0
 }
+missVal(infoins08)
 missVal(infoins12)
 ```
 
-At most, we would be deleting 1 observation from the 2008 data set and 5 observations from the 2012 data set. This isn't huge number, so I am comfortable with doing that.
+At most, we would be deleting 1 observation from the 2008 data set and 5 observations from the 2012 data set. This isn't huge number, so I am comfortable with removing those observations.
 
 ```{r}
 infoins08 <- na.omit(infoins08)
 infoins12 <- na.omit(infoins12)
 missVal(infoins08)
 missVal(infoins12)
-str(infoins08)
-str(infoins12)
 ```
 
 ## Conceptualizing a Visualization
-I have a lot of demographc variables to work with, so I will explore one that really interests me. I am interested to compare the percentage of people in each age group that searched for information about health insurance. This is driven by the fact that (1) young adults are the most prolific Internet users, and (2) the expansion of onliner resources might actually inspire older adults to also find health information online.
 
-Right now, age is a numeric value, and I would want to group them by meaningful age categories. All survey participants are 18 years or older. These are the categories I am interested in:
+I have a lot of demographc variables to work with, so I will explore one that really interests me. I am interested in comparing the proportion of Internet users who searched insurance information across age groups. This is driven by the fact that (1) young adults are the most prolific Internet users, and (2) the expansion of online resources might actually inspire older adults to also find health information online.
 
-+ Under 25 
-+ 25 to < 45
+Right now, age is a numeric value, so I want to group them by meaningful age categories. All survey participants are 18 years or older.
+
++ Under 25 #group that may be covered by parents health insurance
++ 25 to < 45 
 + 45 to < 65
-+ 65 and older
++ 65 and older #group that would be enrolled into Medicaid
 
-I want to create a side-by-side barplot comparing % searched for insurance information online for each age group between the two different survey years. 
+I want to create a side-by-side barplot comparing % who searched for insurance information online for each age group between the two different survey years. 
 
 ```{r}
 infoins08$agegrp <- infoins08$age
@@ -219,28 +215,96 @@ for (i in which(infoins12$age==98|infoins12$age==99)) {
 
 infoins08 <- na.omit(infoins08)
 infoins12 <- na.omit(infoins12)
-
-str(infoins08)
-str(infoins12)
 ```
 
 There are 1611 observations in the final 2008 data set and 2341 observations in the final 2012 data set.
 
 ## Creating a Tidy Dataset
 
-I will first prepare to set my data sets on top of one another:
-
 ```{r}
-infoins08$yr <- rep(2008, length(infoins08$psraid))
-infoins12$yr <- rep(2012, length(infoins12$psraid))
+install.packages("reshape")
+library("reshape")
 
+# Rework 2008 survey
 dat08 <- aggregate(infoins08$ins, list(infoins08$agegrp), mean)
 names(dat08) <- c('agegrp', 'pct08')
-dat08$agegrp <- as.factor(dat08$agegrp)
+dat08$agegrp <- factor(dat08$agegrp, levels=c("Under 25", "25 to 44", "45 to 64", "65 and older"))
+dat08$agegrp
 
+# Rework 2012 survey
 dat12 <- aggregate(infoins12$ins, list(infoins12$agegrp), mean)
 names(dat12) <- c('agegrp', 'pct12')
-dat12$agegrp <- as.factor(dat12$agegrp)
+dat12$agegrp <- factor(dat12$agegrp, levels=c("Under 25", "25 to 44", "45 to 64", "65 and older"))
+
+# Merge surveys
 datFin <- merge(dat08, dat12, by = "agegrp")
-datFin
+datFinSort <- datFin[order(datFin$agegrp),]
+datFinSort
+
+# Reshape data
+dataTransf <- melt(datFinSort, id="agegrp")
+levels(dataTransf$variable) <- c("2008", "2012")
+names(dataTransf) <- c("agegrp", "year", "percent")
+dataTransf
 ```
+
+## Visualize Data
+
+```{r}
+library(ggplot2)
+
+base <- ggplot(dataTransf, aes(ymin=0, ymax=0.5, x=factor(agegrp), y=percent, fill=factor(year))) + geom_bar(stat="identity", position="dodge", width=0.3) + xlab("Age Group") + ylab("Proportion") + ggtitle("Proportion Who Searched Online for Insurance Info")
+
+look <- theme_bw() + theme(plot.title = element_text(face = "bold", size=18), axis.title=element_text(face="bold", size=15))
+
+palette <- c("#6495ed", "#a0522d")
+
+colors <- scale_fill_manual(name="Years", values=palette)
+
+axis <- ylim(0, 1.0) 
+
+dataGraph <- base + look + colors + axis 
+
+dataGraph
+```
+
+## Expressive Fantasy Function Calls
+
+```{r eval=FALSE}
+#Load surveys
+wave1 <- loadSurvey("December_2008_Health_csv.csv")
+wave2 <- loadSurvey("September_2012_health_csv.csv")
+
+#Subset to variables
+infoins08 <- subSurvey(wave1)
+infoins12 <- subSurvey(wave2)
+
+#Recode "Don't know" and "Refused" and omit these values
+infoins08 <- recodeRefuseOmit(infoins08$q16j, infoins08$ins)
+infoins12 <- recodeRefuseOmit(infoins12$q6c, infoins12$ins)
+
+#Recode age
+infoins08 <- recodeAgeOmit(infoins08$age, infoins08$agegrp)
+infoins12 <- recodeAgeOmit(infoins12$age, infoins08$agegrps)
+
+#Tidy Dataset
+dat08 <- meanAgg(infoins08$ins, infoins08$agegrp, stringsAsFactors=TRUE)
+dat08 <- meanAgg(infoins12$ins, infoins12$agegrp, stringsAsFactors=TRUE)
+dat08 <- relab(dat08, colNam, ageLev)
+dat12 <- relab(dat12, colNam, ageLev)
+datFin <- aggDatOrder(dat08, dat12, ordervar)
+dataTransf <- prepareDat(datFin)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+

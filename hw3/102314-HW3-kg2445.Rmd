@@ -45,13 +45,13 @@ For these questions, note that a 1 indicates unwillingness to have as a neighbor
 
 ###**B**###
 
-Since the responses are functionally binary (either listed or unlisted as undesirable neighbors), our visualizable statistics will be percentages (out of 100). Thus, we will use grouped bar charts to visualize Wave 4 and Wave 6 "Mentioned" percentages grouped by country. This will serve as a way to observe changes in perceptions towards homosexuals across two periods.
+Since the responses are functionally binary (either listed or unlisted as undesirable neighbors), our visualizable statistics will be percentages (out of 100). Thus, we will use a scatterplot to visualize Wave 4 and Wave 6 "Mentioned" percentages grouped by country. This will serve as a way to observe changes in perceptions towards homosexuals across two periods.
 
 
 
 ###**C**###
 
-I'll be using ggplot2 to create my grouped bar graph, so I will need the data to look like this: 
+I'll be using the basic plot() to create my scatterplot, so I will need the data to look like this: 
 
 Country  |  Wave 4 % Mentioned  | Wave 6 % Mentioned
 
@@ -65,6 +65,7 @@ We produce the table in the format we specified above. In this step, we need to 
 
 ```{r}
 library(ggplot2)
+library(reshape2)
 load("~/qmssviz/hw3/WV4.RData")
 WV4 = `WV4_Data_rdata_v_2014-04-28`
 load("~/qmssviz/hw3/WV6.RData")
@@ -159,22 +160,33 @@ country_matrix5
 #use country_matrix3 for now
 ```
 
-
+country_matrix3
 
 ###**E**###
 
 Now we graph it!
 
 ```{r}
-ggplot(country_matrix3, aes(x=Country,y=WV4_percent)) 
+country_matrix6 = read.table(country_matrix3)
 
-+
-  xlab("Number of Cities") + 
-  ylab("Average Population") + 
+cm = structure( c(country_matrix3[,1], country_matrix3[,2], country_matrix3[,3]) ,.Dim=c(18,3))
+cm2 = melt(country_matrix3,id.vars=c("Country","Wave4","Wave6"))
+cm2
 
-)
 
-help(ggplot)
+country_matrix3
+plot(country_matrix3)
+
+a=as.factor(country_matrix4[,1])
+a
+
+plot(a,country_matrix3[,2],type="p",col="blue"x)
+points(a,country_matrix3[,3],col="green")
+axis(1, at=seq(1, 18, by=1), labels = FALSE)
+text(seq(1, 18, by=1), par("usr")[3] - 0.2, labels = newnames, srt = 90, pos = 1, xpd = TRUE)
+
+
+
 ```
 
 

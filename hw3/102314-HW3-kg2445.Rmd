@@ -1,4 +1,5 @@
 ---
+<<<<<<< HEAD
 title: "102314-HW3-kg2445"
 output: html_document
 ---
@@ -9,6 +10,24 @@ When you click the **Knit** button a document will be generated that includes bo
 
 ```{r}
 summary(cars)
+=======
+title: "Homework 3 - Kevin Gong"
+output: html_document
+date: "October 23, 2014"
+published: false
+tag: hw3
+---
+
+###**A**###
+
+The survey I will be examining is the World Values Survey. Specifically, we'll be looking at 
+
+```{r}
+load("~/qmssviz/hw3/WV3.RData")
+WV3 = WV3_Data_rdata_v_2014_09_21
+load("~/qmssviz/hw3/WV6.RData")
+WV6 = WV6_Data_rdata_v_2014_09_21
+>>>>>>> 958113da41c77e59382742994564c51108be1f84
 ```
 
 You can also embed plots, for example:
@@ -17,4 +36,7 @@ You can also embed plots, for example:
 plot(cars)
 ```
 
+<<<<<<< HEAD
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+=======
+>>>>>>> 958113da41c77e59382742994564c51108be1f84

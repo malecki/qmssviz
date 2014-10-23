@@ -9,9 +9,12 @@ tags: hw3
 
 ###Assignment 3
 
-####Decribe the question
+####A. Identify two surveys that you want to compare
+I choose to look at two waves in the same survey, wave3 and wave 6 in World Values Survey. The time range for wave 3 is from 1995 to 1999 and wave 6 is conducted between 2010 to 2014. Basically, these two waves are 15 years away from each other. The question to be analysed is "What is the highest educational level that you have attained?". I am curious about change in people's education level in China and the United States as time pass by.
 
-V217. What is the highest educational level that you have attained? 
+The question was asked with the wording and options below:
+
+What is the highest educational level that you have attained?
 (use functional equivalent of the following, in given society; 
 IF STUDENT, CODE HIGHEST LEVEL HE/SHE EXPECTS TO COMPLETE):
  1. No formal education 
@@ -24,8 +27,16 @@ IF STUDENT, CODE HIGHEST LEVEL HE/SHE EXPECTS TO COMPLETE):
  8. Some university-level education, without degree 
  9. University-level education, with degree 
  0. DK/NA 
- 
-####set working directory and load packages
+
+####B. Sketch and/or describe the graph(s) that you intend to make; these amount to informal research hypotheses.
+
+
+####C. Write down the target shape of the data
+{country:"China, United States", year:"1995,1996,...,2014", wave:"3,6", hiedu:"No formal education,...")
+
+####D. Write a script that reads, transforms, prepares data for your graph.
+
+#####set working directory and load packages
 
 ```{r}
 
@@ -36,8 +47,8 @@ library(reshape2)
 library(ggplot2)
 ```
 
-####read data
-
+#####read data
+wave3 and wave6 have all the countries.
 ```{r}
 readdata <- function(){
 load("~/Documents/columbia/study/2014fall/datavisualization/github/qmssviz/hw3/WV6_Data_rdata_v_2014_06_04.rdata")
@@ -52,32 +63,86 @@ readdata()
 ```
 
 
-####sort data
+#####sort data
 choose two countries to look at. Their codes are US:840 and CN:156.
+wave3a and wave6a only have variables for China and the US.
 ```{r}
 wave3a <- subset(wave3,select=c(V1,V2,V238,V217),V2==840|V2==156)
 wave6a <- subset(wave6,select=c(V1,V2,V262,V248),V2==840|V2==156)
 ```
 
-
-####name the data and make it ready for making graphs
+#####name the data and make it ready for making graphs
 
 ```{r}
-colnames(wave3a) <- c("wave","country","name","hieduc") #rename the variables
-colnames(wave6a) <- c("wave","country","name","hieduc") #rename the variables
+
+colnames(wave3a) <- c("wave","country","year","hieduc") #rename the variables
+colnames(wave6a) <- c("wave","country","year","hieduc") #rename the variables
+
 row.names(wave3a) <- NULL #delete the column row.names
 row.names(wave6a) <- NULL #delete the column row.names
-waveto=rbind(wave3a,wave6a) # Merge the two waves by column 
+
+wave3a$hieduc=ifelse(wave3a$hieduc==-2|wave3a$hieduc==-1,0,wave3a$hieduc)
+wave6a$hieduc=ifelse(wave6a$hieduc==-2|wave6a$hieduc==-1,0,wave6a$hieduc)
+
+waveto=rbind(wave3a,wave6a) # Merge the two waves by column
+
+waveto$educlevel[waveto$hieduc==1] <- "No formal education"
+waveto$educlevel[waveto$hieduc==2] <- "Incomplete primary school"
+waveto$educlevel[waveto$hieduc==3] <- "Complete primary school"
+waveto$educlevel[waveto$hieduc==4] <- "Incomplete secondary school: technical/vocational type"
+waveto$educlevel[waveto$hieduc==5] <- "Complete secondary school: technical/vocational type"
+waveto$educlevel[waveto$hieduc==6] <- "Incomplete secondary: university-preparatory type"
+waveto$educlevel[waveto$hieduc==7] <- "Complete secondary: university-preparatory type"
+waveto$educlevel[waveto$hieduc==8] <- "Some university-level education, without degree"
+waveto$educlevel[waveto$hieduc==9] <- "University-level education, with degree"
+waveto$educlevel[waveto$hieduc==0] <- "Don'w know/NA"
+table(waveto$hieduc)
+
+waveto$countryname=ifelse(waveto$country==840,"US","China")
+
+mean <- aggregate(waveto$hieduc, by = list(waveto$country,waveto$countryname, waveto$year), mean)
+colnames(mean) <- c("country","countryname","year","educmean")
+
 ```
 
 
-####plot data
+####E. Make it actually make your graph.
+
+#####plot data
 
 ```{r}
+educall <- ggplot(mean,aes(x=year,y=educmean))+
+  geom_point(size=4,aes(color=factor(countryname)))+
+  facet_wrap(~countryname)+
+  stat_smooth(method="lm",se=F,fullrange=T)
+print(educall)
 
-
+mean$newyear=ifelse(mean$year==1995,1995,2010)
+educall2 <- ggplot(mean,aes(x=newyear,y=educmean))+
+  geom_point(size=4,aes(color=factor(countryname)))+
+  facet_wrap(~countryname)+
+  xlab("year")+
+  stat_smooth(method="lm",se=F,fullrange=T)
+print(educall2)
 ```
 
-```{r}
+####F. Write expressive fantasy function calls 
 
+```{r}
+readdata <- readdata()
+#to be continued
+```
+
+####G. (Bonus) Write (some or all of) the functions to read, transform, and analyze the data.
+
+```{r}
+readdata <- function(){
+load("~/Documents/columbia/study/2014fall/datavisualization/github/qmssviz/hw3/WV6_Data_rdata_v_2014_06_04.rdata")
+wave6<-WV6_Data_spss_v_2014_06_04
+
+load("~/Documents/columbia/study/2014fall/datavisualization/github/qmssviz/hw3/WV3_Data_rdata_v_2014_09_21.rdata")
+wave3<-WV3_Data_rdata_v_2014_09_21
+}
+
+#to be continued
 ```

@@ -133,12 +133,12 @@ dp <- dp[, list(ie = unique(ie), percentage = as.numeric(table(ie)/length(ie))),
 To make the second plot more readable, I reagrrange the results of answers of respondents into 5 levels:
 
 First: "1" and "2" are labeled as "very inequal"; 
-Secound: "3" and "4" are labeled as "inequal"; 
+Second: "3" and "4" are labeled as "inequal"; 
 Third: "5" and "6" are labeled as "Totally neutral about that"; 
 Fourth: "7" and "8" are "equal"; 
 Fifth: "9" and "10" are "very equal"
 
-We can see the changes in those 3 pictures below, the means, percentage, and the sum total. It is easy to compare them together. For example, the level of income equality in China has delined quite a lot in the past 20 years, from nearly 8 to almost 4. But South Korea is totally the opposite. Japan has not changed a lot. The result could be explained by the development in those 3 countries. China has developed dramatically in recent decades. Along with the increasing wealths, problems of income distribution are very commom around the world. In constrast with Japan, the economy in Japan is relatively stable. The growth is slow, so is the changes of wealth distribution. South Korea had suffered from the financial crisis twince in recent 14 years, during which people were more sensitive to the recovery of economy rather than income equality.
+We can see the changes in those 3 pictures below, the means, percentage, and the sum total. It is easy to compare them together. For example, the level of income equality in China has declined quite a lot in the past 20 years, from nearly 8 to almost 4. But South Korea is totally the opposite. Japan has not changed a lot. The result could be explained by the development in those 3 countries. China has developed dramatically in recent decades. Along with the increasing wealth, problems of income distribution are very common around the world. In contrast with Japan, the economy in Japan is relatively stable. The growth is slow, so is the changes of wealth distribution. South Korea had suffered from the financial crisis twice in recent 14 years, during which people were more sensitive to the recovery of economy rather than income equality.
 
 ```{r,fig.height=7,fig.width=12}
 library(ggplot2)
@@ -179,7 +179,7 @@ ggplot(df, aes(x = Country, fill=as.character(Index)))+geom_bar(position="dodge"
 ```
       
       1. The first group of plots in my mind, as I mentioned in step B, is so annoying for read and difficult to plot, thus I abandoned them
-      2. I think there are some bugs in my second and third graphs, but I cannot find out what goes wrong. In the second graph, the distribtion doesn't match with the result in the first and third graph very well. I think the order of labels is not consistent. In the third graph, the guide in the right is strange that "10" ranks in the second order. Anyone could help me?
+      2. I think there are some bugs in my second and third graphs, but I cannot find out what goes wrong. In the second graph, the distribution doesn't match with the result in the first and third graph very well. I think the order of labels is not consistent. In the third graph, the guide in the right is strange that "10" ranks in the second order. Anyone could help me?
 
 ##F. Write expressive fantasy function calls
 

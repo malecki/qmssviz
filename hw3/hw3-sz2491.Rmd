@@ -7,7 +7,10 @@ published: false
 tags: hw3
 ---
 
-Decribe the question
+###Assignment 3
+
+####Decribe the question
+
 V217. What is the highest educational level that you have attained? 
 (use functional equivalent of the following, in given society; 
 IF STUDENT, CODE HIGHEST LEVEL HE/SHE EXPECTS TO COMPLETE):
@@ -22,7 +25,7 @@ IF STUDENT, CODE HIGHEST LEVEL HE/SHE EXPECTS TO COMPLETE):
  9. University-level education, with degree 
  0. DK/NA 
  
-set working directory and load packages
+####set working directory and load packages
 
 ```{r}
 
@@ -33,7 +36,7 @@ library(reshape2)
 library(ggplot2)
 ```
 
-read data
+####read data
 
 ```{r}
 readdata <- function(){
@@ -49,26 +52,37 @@ readdata()
 ```
 
 
-sort data
-choose countries in Asia, i.e. China, India, South Korea and Taiwan
+####sort data
+choose two countries to look at. Their codes are US:840 and CN:156.
 ```{r}
 wave3a <- subset(wave3,select=c(V1,V2,V238,V217),V2==840|V2==156)
 wave6a <- subset(wave6,select=c(V1,V2,V262,V248),V2==840|V2==156)
-
-
 ```
 
 
-plot data
+####name the data and make it ready for making graphs
+
+```{r}
+colnames(wave3a) <- c("wave","country","name","hieduc") #rename the variables
+colnames(wave6a) <- c("wave","country","name","hieduc") #rename the variables
+row.names(wave3a) <- NULL #delete the column row.names
+row.names(wave6a) <- NULL #delete the column row.names
+waveto=rbind(wave3a,wave6a) # Merge the two waves by column 
+```
+
+
+####plot data
 
 ```{r}
 
 
 ```
 
-trial
-
 ```{r}
-
-
+abc=data.frame(
+  "name"=c("a","b","c"),
+  "gender"=c("F","M","F"),
+  "weight"=c("40","50","60")
+  )
+View(abc)
 ```

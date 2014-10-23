@@ -8,22 +8,22 @@ tag: hw3
 
 ###**A**###
 
-The survey I will be examining is the World Values Survey. Specifically, we'll be looking at the willingness of survey respondents to have homosexual neighbours in Wave 3 (1995-1998) and Wave 6 (2010-2014). The question appears on Card G in both waves and is labeled Question V60 in Wave 3 and V40 in Wave 6. There is a very slight different in working between the two waves, though we are not primarily concerned with the difference in wording.
+The survey I will be examining is the World Values Survey. Specifically, we'll be looking at the willingness of survey respondents to have homosexual neighbours in Wave 4 (1999-2004) and Wave 6 (2010-2014). The question appears on Card G in both waves and is labeled Question V76 in Wave 4 and V40 in Wave 6. There is a very slight difference in wording between the two waves, though we are not primarily concerned with the difference in wording.
 
-**Wave 3:**
+**Wave 4:**
 "On this list are various groups of people. Could you please sort out any that you would 
 not like to have as neighbors? (CODE AN ANSWER FOR EACH) 
-** Mentioned Not Mentioned
-V51 People with a criminal record 1 2 
-V52 People of a different race 1 2 
-V53 Political extremists 1 2 
-V54 Heavy drinkers 1 2 
-V55 Emotionally unstable people 1 2 
-V56 Muslims* 1 2 
-V57 Immigrants/foreign workers 1 2 
-V58 People who have AIDS 1 2 
-V59 Drug addicts 1 2 
-V60 Homosexuals 1 2"
+MENTIONED  NOT MENTIONED 
+V68 People with a criminal record 1 2 
+V69 People of a different race 1 2 
+V70 Heavy drinkers 1 2
+V71 Emotionally unstable people 1 2 
+V72 Muslims 1 2
+V73 Immigrants/foreign workers 1 2
+V74 People who have AIDS 2 
+V75 Drug addicts 1
+V76 Homosexuals 1 2
+V77 Jews 1 2"
 
 **Wave 6:**
 "On this list are various groups of people. Could you please mention any that you would not like to have as neighbors? (Code an answer for each group):
@@ -39,16 +39,37 @@ V42. Heavy drinkers 1 2
 V43. Unmarried couples living together 1 2
 V44. People who speak a different language 1 2"
 
-For these questions, note that a 1 indicates unwillingness to have as a neighbor. Also note that the groups of people listed across the two waves are different.
+For these questions, note that a 1 indicates unwillingness to have as a neighbor. Also note that the groups of people listed across the two waves are different as well as being listed in different order.
 
 
+
+###**B**###
+
+Since the responses are functionally binary (either listed or unlisted as undesirable neighbors), our visualizable statistics will be percentages (out of 100). Thus, we will use grouped bar charts to visualize Wave 4 and Wave 6 "Mentioned" percentages grouped by country. This will serve as a way to observe changes in perceptions towards homosexuals across two periods.
+
+
+
+###**C**###
+
+I'll be using ggplot2 to create my grouped bar graph, so I will need the data to look like this: 
+
+Country  |  Wave 4 % Mentioned  | Wave 6 % Mentioned
+
+Where the 60,000-70,000+ individual survey respondents are aggregated by country to produce a single proportion. We will try to retain only countries that appear in both waves of the survey, though if there are insufficient countries, more may be plotted.
+
+
+###**D**###
 
 ```{r}
-load("~/qmssviz/hw3/WV3.RData")
-WV3 = WV3_Data_rdata_v_2014_09_21
+library(ggplot2)
+load("~/qmssviz/hw3/WV4.RData")
+WV4 = `WV4_Data_rdata_v_2014-04-28`
 load("~/qmssviz/hw3/WV6.RData")
 WV6 = WV6_Data_spss_v_2014_06_04
-head(WV6)
+#head(WV6)
+dim(WV3)
+dim(WV6)
+
 
 
 

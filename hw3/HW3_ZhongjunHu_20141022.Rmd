@@ -177,10 +177,9 @@ ggplot(df, aes(x = Country, fill=as.character(Index)))+geom_bar(position="dodge"
   
   
 ```
- 
-      ####HELP!!!!
-      1. The firt group of plots in my mind, as I mentioned in step B, is so annoying for read and difficult to plot, thus I abandoned them
-      2. I think there are some bugs in my second and third graphs, but I cannot find out what goes wrong. In the second graph, the distribtion doesn't match with the result in the first and third graph. In the third graph, the guide in the right is strange that "10" ranks in the second order. Anyone could help me?
+      
+      1. The first group of plots in my mind, as I mentioned in step B, is so annoying for read and difficult to plot, thus I abandoned them
+      2. I think there are some bugs in my second and third graphs, but I cannot find out what goes wrong. In the second graph, the distribtion doesn't match with the result in the first and third graph very well. I think the order of labels is not consistent. In the third graph, the guide in the right is strange that "10" ranks in the second order. Anyone could help me?
 
 ##F. Write expressive fantasy function calls
 

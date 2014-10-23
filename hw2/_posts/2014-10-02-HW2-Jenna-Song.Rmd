@@ -1,0 +1,38 @@
+---
+title: "2014-10-02-HW2-Jenna-Song"
+output: html_document
+published: false
+tags: hw2
+---
+
+I imported the two datasets and then merged them using the "unique_lga" variable.
+```{r}
+setwd("~/Documents/Columbia QMSS/QMSS Fall/QMSS G4063 Data Visualization")
+lgas <- read.csv("lgas.csv")
+nmis <- read.csv("Health_Mopup_and_Baseline_NMIS_Facility.csv")
+nmis2 <- merge(nmis, lgas, by = "unique_lga")
+```
+
+Next, I subsetted the rows that contained the southern regions and made the dataset a data frame.
+
+```{r}
+south <- subset(nmis2, zone == "South-South" | zone == "Southeast" | zone =="Southwest")
+south <- data.frame(south)
+```
+
+I then added the numbers of nurses and doctors in each state so that there was a row of medical personnel variables for each state.
+
+```{r}
+library(plyr)
+medper <- ddply(south, "state",  summarise, Nurses = sum(num_nurses_fulltime, na.rm = T), Doctors = sum(num_doctors_fulltime, na.rm = T))
+```
+
+Next, I created a dataset that only contained the state variable and the state population variable, aggregating both so that there was only one row for each state. I then renamed the column names so that the column name would match in both datasets when I merged them. Finally, I merged the medical personnel data and the state population data so that they were in one dataset. Finally, I ordered the merged dataset so that the medical personnel and state population data were displayed in descending order of state population.
+
+```{r}
+statepop <- aggregate(lgas$pop_2006 ~ lgas$state, FUN = sum)
+colnames(statepop) <- c("state", "pop_2006")
+medper2 <- merge(medper, statepop, by = "state")
+medper.order <- medper2[order(medper2$pop_2006, decreasing = TRUE), ]
+```
+

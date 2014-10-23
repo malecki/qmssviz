@@ -1,0 +1,52 @@
+
+title: "hw3_Lanxiang_Li_ll2937"
+author: "Lanxiang Li"
+date: "October 21, 2014"
+output: html_document
+published:false
+tags:hw2
+
+# A. Identify two surveys
+I'm going to use two waves (wave2 and wave6)in the World Values Survey to examine the same survey question, simple but never out-dated:
+Are you happy?
+
+# B.Describe the graph(s)
+
+# C.Write down the target shape
+## year(wave):"1990-1994", "2010-2014"
+## country: "United States","Sweden", "Spain"...
+## survey answer: "very happy","rather happy","not very happy","not at all happy","no answer","don't know"
+## proportion:
+
+## D.
+
+```{r}
+setwd("~/Desktop/qmssviz/hw3")
+load("/Users/carolineli/Desktop/qmssviz/hw3/WV2_Data_rdata_v_2014_04_28.rdata")
+load("/Users/carolineli/Desktop/qmssviz/hw3/WV6_Data_rdata_v_2014_06_04.rdata")
+dwv2 <- WV2_Data_rdata_v_2014_04_28
+dwv6 <- WV6_Data_spss_v_2014_06_04
+```
+
+```{r}
+str(dwv2$v18)
+str(dwv6$V10)
+dwv2$v18[dwv2$v18==1] <- "very happy"
+dwv2$v18[dwv2$v18==2] <- "rather happy"
+dwv2$v18[dwv2$v18==3] <- "not very happy"
+dwv2$v18[dwv2$v18==4] <- "not at all happy"
+dwv2$v18[dwv2$v18==-1] <- "don't know"
+dwv2$v18[dwv2$v18==-2] <- "no answer"
+dwv2$v18[dwv2$v18==-3] <- "not applicable"
+dwv6$V10[dwv6$V10==1] <- "very happy"
+dwv6$V10[dwv6$V10==2] <- "rather happy"
+dwv6$V10[dwv6$V10==3] <- "not very happy"
+dwv6$V10[dwv6$V10==4] <- "not at all happy"
+dwv6$V10[dwv6$V10==-1] <- "don't know"
+dwv6$V10[dwv6$V10==-2] <- "no answer"
+dwv6$V10[dwv6$V10==-3] <- "not applicable"
+
+
+```
+
+

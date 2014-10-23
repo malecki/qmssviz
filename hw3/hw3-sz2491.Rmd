@@ -129,7 +129,9 @@ print(educall2)
 ####F. Write expressive fantasy function calls 
 
 ```{r}
-readdata <- readdata()
+readdata <- readdata() #read the data we need
+selectdata <- selectwave3and6(wave3,wave6) #select the part we want in the data
+compare <- compareplot(mean)
 #to be continued
 ```
 
@@ -144,5 +146,17 @@ load("~/Documents/columbia/study/2014fall/datavisualization/github/qmssviz/hw3/W
 wave3<-WV3_Data_rdata_v_2014_09_21
 }
 
+selectwave3and6 <- function(x,y){ 
+wave3a <- subset(x,select=c(V1,V2,V238,V217),V2==840|V2==156)
+wave6a <- subset(y,select=c(V1,V2,V262,V248),V2==840|V2==156)
+}
+
+compareplot <- function(a){
+educall <- ggplot(a,aes(x=year,y=educmean))+
+  geom_point(size=4,aes(color=factor(countryname)))+
+  facet_wrap(~countryname)+
+  stat_smooth(method="lm",se=F,fullrange=T)
+print(educall)
+}
 #to be continued
 ```

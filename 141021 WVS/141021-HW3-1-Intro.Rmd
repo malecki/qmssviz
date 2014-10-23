@@ -1,0 +1,66 @@
+---
+title: "Dataviz Assignment 3: Introduction Page"
+author: "Ben Chow"
+date: "22 October, 2014"
+output: html_document
+---
+
+### **A** ###
+The surveys I am using are the World Values Survey (WVS). I am aware that the purpose of this assignment is to enable us to practise merging and reshaping new datasets. However, my topic of interest which developed along the course of the assignment ended up being more about comparisons using an aggregate dataset rather than separating the data by time. Partly this was due to the fact that after extracting the data I realized to my dismay that the demographic makeup was rather uneven across the 3 waves and any comparisons would be likely to have resulted from these underlying structural factors.
+
+Hence, I ended up amalgamating the data from last 3 waves of the WVS, and to using that for my analysis. I however focus on comparisons of another kind in my visualizations themselves.
+
+**Topic**
+I am primarily interested in characterizing differences in people who identify themselves as being religious. Operationally, my population is defined as people living in the US (who answered the WVS) who identify with (at least) a religion, henceforth termed "religious people". Thus, anyone whose denomination (`denom`) is either 'None' or missing will be excluded from the analysis.
+
+The differences I mentioned refer to various dimensions of their 'religious lifestyle'. I have identified 5 such categories for exploration, which are elaborated on in the "Questions" section below. Essentially, my hypothesis is that even under the umbrella of being a "religious person" there may exist a wide spectrum of conceptions and applications of religion in everyday life. I do not formally test this hypothesis but use a few simple graphs to make my point.   
+
+**Questions**
+I chose 6 questions from the World Values Survey, which capture a general sentiment about religion and the 5 other dimensions:
+
+* `prvblf`: Private beliefs [Coded on a scale from 1-10]
+    + _How important is God in your life?_
+* `othblf`: Other beliefs [Coded on a scale from 1-10]
+    + _How often is cheating on taxes justified, if you have the chance?_
+* `pubact`: Public activities [Coded on a scale from 1-7]
+    + _Apart from weddings and funerals, about how often do you attend religious services these days?_
+* `prvact`: Private activities [Coded as a binary Yes/No]
+    + _Do you have moments of prayer and meditation from time to time?_
+    + This question was recoded due to the question being different between waves
+* `iden1`: Religious identification [Coded on a scale from 1-3]
+    + _Independently of whether you attend religious services, how religious would you say you are?_
+* `iden2`: General question [Coded on a scale from 1-4]
+    + _How important is religion in your life?_
+
+** Analysis **
+I am using clustering analysis to categorize individuals with similar religious scores across the 6 categories. The actual algorithm used is k-means clustering, and I have chosen k = 5 for the visualization. I have duplicated the code for k = 4 but will not be presenting the graphs since the general trends are the same.
+
+### **B** ###
+
+I intend to visualize the data using grouped line graphs. The three dimensions to the graph are a respondent's scores, the cluster he belongs to, and the different categorical variables mentioned above. I note that there are possibly more creative ways of visualizing the data but fanciness aside, the line graph achieves what I want to show.
+
+Seeing as I will be actually producing some of the graphs, I will not elaborate too much on them here.
+
+### **C** ###
+So the target shape of my data is simply one line for each respondent, with responses to each of the questions, other religious questions (for possible further analysis) and demographic characteristics available. I also wanted a column indicating the wave the individual belonged to.
+
+### **F** ###
+
+** Outline **
+
+I'm not sure why or how writing fantasy function calls would be useful. If the purpose of this segment is to demonstrate a knowledge of how to use R functions, then I have already used many functions and loops to simplify my code. If the purpose of this segment is to outline the process for the rest of the assignment, then this is presented below:
+
+
+```{r, eval = FALSE}
+data <- ExtractandMergeData("WVS Wave 6.csv", "WVS Wave 5.csv", "WVS Wave 4.csv")
+data <- RenameandAddLabels(data)
+data <- data[data$denom!="None"] # Kick out nonreligious respondents
+data <- data[!is.na(data$denom)] # Conveniently get rid of missing data
+data <- StandardizeVariables(data) # Positive scores for more religious people
+data <- NormalizeVariables(data) # All measured on a 0-1 scale
+table <- ClusteringAnalysis(data)
+table <- OrderinMeaningfulWay(table)
+color <- GetColorsfromIWantHue(6)
+CreatePlotfromScratch(table)
+```
+

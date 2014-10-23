@@ -6,8 +6,15 @@ _site
 
 # OS weirdness
 *.DS_Store
+.DS_Store
 
 .RData
 .Rhistory
 Thumbs.db
 .Rproj.user
+
+## Rproj is seriously annoying. Sorry.
+*.Rproj
+*.Rbuildignore
+.Rproj.user
+*cache

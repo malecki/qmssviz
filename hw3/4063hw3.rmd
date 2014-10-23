@@ -1,0 +1,143 @@
+---
+title: "Assignment3"
+author: "Xiaoyao Yang"
+date: "October 21, 2014"
+output: html_document
+---
+
+### Introduction
+This article use 'National Annenberg Election Survey 2008' from The Annenberg Public Policy Center. This survey is a public opinion survey conducted via the Internet and designed to track the dynamics of political attitudes, perceptions, and behavior over the 2008 US primary and general presidential election campaigns. To be noted, The whole interview was segmented into five multi-month waves, numbered 1 – 5 and corresponding to the major divisions of the campaign: pre-primary, primary election, spring and summer, general election, and post-election. 
+
+A. One of main features of this survey is that many questions remained constant throughout the survey and were asked in multiple waves. So our goal here is try to see what kind of questions people tend to give different answers, and how this would affect final conclusion.
+
+B. Graphs like histogram/ bar plot will be used. Also, I want to add a group factor to compare between people or waves. I also very
+
+
+
+```{r,echo=FALSE,message=FALSE,cache=FALSE}
+require(plyr)
+require(reshape2)
+require(ggplot2)
+require(stringr)
+require(maps)
+```
+
+### 1. Data Preparation
+
+First, read data. 'dat_online_ttl' contains five waves survey data.
+
+```{r,cache=T}
+dat_online_ttl <- read.table('naes08-online-all-waves-data-compact.txt',sep='\t',header=TRUE)
+dim(dat_online_ttl)
+```
+
+### 2. Favorite Level Analysis Across Time (different waves)
+
+Now, let's visual our data!
+
+Let's create a function to see people's favorite change acrossing five waves. The variable 'ABp02_1' to 'ABo02_5' represents favorite score for five waves. We can see that for Barack Obama, there is an obvious increase of favorite score between wave 4 and 5. Specifically, in wave 5, people tend to like Obama. While John McCain seems to have advantage in wave 4, people tend to feel just so so about him in wave 5. It is really interesting, do people feel good about Obama just for he won president campaign? One might need to figure out what happened between wave 4 and wave 5.
+
+
+
+```{r,cache=TRUE}
+#study favorite of specific person across different wave
+fill_bar_favorite <- function(data=dat_online_ttl,
+                              group_vars=c('ABo02_1','ABo02_2','ABo02_3','ABo02_4','ABo02_5'),
+                              group_vars_name='wave',
+                              value_name='fav',
+                              group_vars_labels=c('1','2','3','4','5'),
+                              titles='Favorite Score Across Five Waves'
+){
+  ##create ploting data
+  plot_fav <-melt(data = data,id.vars=1,measure.vars=group_vars, 
+                  value.name='fav',variable.name='wave',na.rm = TRUE)
+  plot_fav <- plot_fav[plot_fav$fav>=0 & plot_fav$fav<=100,]
+  
+  #see distribution
+  if (length(group_vars)==1) {
+    ggplot(data=plot_fav) + geom_histogram(aes(x = fav),binwidth=5) +
+      ggtitle(titles) + xlab(value_name) + theme_bw()
+  }
+  else {
+      ggplot(data=plot_fav) + geom_histogram(aes(x = fav,fill=wave),binwidth=5 ,position='fill') +
+      scale_fill_discrete(name=group_vars_name,labels=group_vars_labels) +
+    ggtitle(titles) + xlab(value_name)
+  }
+}
+
+
+#plot
+fill_bar_favorite(group_vars=c('AAm01_1','AAm01_2','AAm01_3','AAm01_4','AAm01_5'),
+                  titles='Favorite Score Across Five Waves for John McCain')
+fill_bar_favorite(titles='Favorite Score Across Five Waves for Barack Obama')
+
+fill_bar_favorite(group_vars=c('ABo02_5','AAm01_5'),group_vars_name='Candidate',group_vars_labels=c('Barack Obama','John McCain'),titles='Comparison at Wave 5')
+
+
+```
+
+### 3. Answers of similar questions in same Survey
+
+This part is also interesting. We all know that in order to obtain true answer, people always ask similar questions in one survey to see if answers are consistant. Now, we pick two question: 'Favorite of Obama' and 'Trustworthy of Obama' to compare. We ignore missing answers and noninformative answers in original dataset, keeping score from 0 to 100 for our analysis. As a result, there is no strange indicated that people give random answers. However, we can still see noise lying 
+
+```{r}
+fill_bar_favorite(group_vars=c('ABo06_4','ABo02_4'),group_vars_name='Candidate',group_vars_labels=c('Favorite','Trustworthy'),titles='Answers of Similiar Question in Wave 4 for Obama')
+
+```
+
+
+
+### 4. Visualization using Map
+
+One might interested in how many respondent for each state, and further see the supporting rate for specific candidate of each state. To do this, we use ggplot2 and maps packages in R.
+
+a. Mapping index -> state by using single file that generated from data description.
+b. Calculate number of respondents by state(state is represented by number in original dataset) (response all 5 waves) and combine result with real state name.
+c. Using ggplot2 to visualizing it!
+
+Next, I try to put code into one function and basically what this function can do is to visualize any score by state, as long as we have a dataframe that have 56 index and 56 coresponding score. As an example, I visualize favorite score of Obama by state.
+
+
+```{r}
+#prepare population data
+Heat_map <- function(var_by_state=count(dat_online_ttl$WFc01_a),
+                                        var_name='Population',
+                                        map_title='Number of Respondent by state'){
+population <- var_by_state
+names(population) <- c('index','Population')
+states <- map_data("state")
+state_name <- read.table('state_name.csv',sep=',',stringsAsFactors = F)
+names(state_name) <- c('index','region')
+state_name$region <- tolower(str_replace_all(state_name$region,pattern = ' \\(.+?\\)',replacement = ''))
+population <- join(population,state_name,by='index')
+##draw map
+choro <- merge(states, population, sort = FALSE, by = "region")
+choro <- choro[order(choro$order), ]
+qplot(long, lat, data = choro, group = group, fill = Population,
+  geom = "polygon",main=map_title,xlab='',ylab='') + 
+  theme(panel.background = element_blank(),axis.text = element_blank(),
+        axis.ticks =element_blank()) +
+  scale_fill_continuous(name=var_name)
+  
+}
+
+Heat_map()
+
+#Visual fav_score by map
+fav_score_w4_Obama <- aggregate(data=dat_online_ttl,ABo02_4 ~ WFc01_a,mean,na.omit=TRUE)
+head(fav_score_w4_Obama)
+Heat_map(var_by_state = fav_score_w4_Obama,var_name = 'Favorite Score',
+         map_title = 'Favorite Score of Barack Obama in Wave 4')
+
+fav_score_w4_Jm <- aggregate(data=dat_online_ttl,AAm01_4 ~ WFc01_a,mean,na.omit=TRUE)
+Heat_map(var_by_state = fav_score_w4_Jm,var_name = 'Favorite Score',
+         map_title = 'Favorite Score of John McCain in Wave 4')
+   
+```
+
+
+Well, it seems John McCain lead in wave 4, however, situation changed during wave 5 ! 
+
+
+
+

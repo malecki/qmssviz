@@ -1,0 +1,340 @@
+---
+title: "HW3"
+author: "Claire Kelley"
+date: "Monday, October 20, 2014"
+output: html_document
+---
+
+I aim to examine how attitudes towards gay people have changed over time by comparing wave 6 and wave 5 of the world values study. 
+
+A) The questions I am comparing ask (in both waves) "On this list are various groups of people. Can you please mention any that you would not like to have as neighbors?" I aim to compare the change in the percent of respondents who listed homosexuals as one of the groups they would not like to live near between wave 5 and wave 6 of the world values survey. 
+
+B) I aim to show three main things. Which countries became more tolerant, which countries became less tolerant and how the countries compare in overall levels of support. 
+
+For ease of understanding I want to transform the variable so it is percent of people who do not mind having gay neighbors. 
+
+I envision the graph being a modified bar plot - showing a point for the wave 5 level of support and a point for the wave 6 level of support (for all countries). I want to order the countries in order of supportiveness so that the order of the axis is conveying additional information. 
+
+Followng Tufte's rules on non data ink, I want to include minimal ink to convey the data as clearly as possible. So will instead of a bar plot use dots for the wave 5 and wave 6 results for each country, and perhaps connect the dots with a line so that it is easier for readers to compare the change over time between countries. 
+
+C) Eventually the Data frame will be of the form 
+{"Country","Wave Number","Percent Supporting"}
+
+This is how I originally thought the data frame would look. Eventaully due to the aesthetics I descided to use (ie arrows showing both size and direction of change in attitudes in two different graphs) the data ended up being in two different data frames (separate data frames for positve change and for negative change) each in the form 
+{"Country","Approval in wave 5","Approval in Wave 6"}
+
+D) 
+
+First, Load the data sets 
+
+```{r,echo=FALSE}
+##this is wave 6 
+load("C:/Users/Esmail/Desktop/Claire/Columbia/4_Data Visualization/World Values Study/WV6_Data_rdata_v_2014_06_04/WV6_Data_rdata_v_2014_06_04.rdata")
+
+d<-WV6_Data_spss_v_2014_06_04
+
+##this is wave 5 
+load("C:/Users/Esmail/Desktop/Claire/Columbia/4_Data Visualization/World Values Study/WV5_Data_rdata_v_2014_04_28/WV5_Data_rdata_v_2014_04_28.rdata")
+
+e<-WV5_Data_spss_v_2014_04_28
+
+```
+Next find out which countries appear in both waves, and subset both data sets to include only those countries 
+
+```{r}
+#First find out which countries are in both
+ctd<-unique(d$V2)
+cte<-unique(e$V2)
+countries<- intersect(ctd,cte)
+
+#Now subset data sets to only include countries that appear in both waves
+d1<-subset(d,d$V2%in%countries)
+e1<-subset(e,e$V2%in%countries)
+
+
+```
+
+The variable we are interested is scored 1 (For yes, they would mind) and 2 for no. Before preparing the data further, we remove all cases whose answers are not  1 or 2.
+
+```{r}
+d2<-d1[which(d1$V40>0),]
+e2<-e1[which(e1$V38>0),]
+#how many do we lose: 
+lostd<-dim(d1)[1]-dim(d2)[1]
+loste<-dim(e1)[1]-dim(e2)[1]
+
+#We only lose: 
+lostd
+loste
+
+```
+
+
+Now make a new data frame with just the columns we are interested, and add a varaible for wave number:
+
+```{r}
+e3<-e2[,c(4,41)]
+e3<-cbind(e3,rep(5,dim(e3)[1]))
+colnames(e3)<-c("Country","Gay","Wave")
+
+##do the same for wave 6 
+d3<-d2[,c(2,41)]
+d3<-cbind(d3,rep(6,dim(d3)[1]))
+colnames(d3)<-c("Country","Gay","Wave")
+```
+
+Now we need to calculate percent disapproval in each country
+
+```{r}
+l<-length(countries)
+n<-matrix(nrow=l,ncol=3)
+colnames(n)<-c("country", "GayW6", "GayW5")
+n[,1]<-countries
+##for loop calculates the number approving/total number of respondsens in that country) 
+for (i in 1:31){
+  n[i,2]<-100*as.numeric(table(d3[d3$Country==countries[i],]$Gay)[1]/(table(d3[d3$Country==countries[i],]$Gay)[1]+table(d3[d3$Country==countries[i],]$Gay)[2]))
+  n[i,3]<-100*as.numeric(table(e3[e3$Country==countries[i],]$Gay)[1]/(table(e3[e3$Country==countries[i],]$Gay)[1]+table(e3[e3$Country==countries[i],]$Gay)[2]))
+}
+
+```
+Now we label country names, and remove any countries in whcih the question wasnt asked 
+
+```{r}
+n2<-n[-c(6,9,10,14,16),]
+library(ggplot2)
+
+##melt 
+library(reshape2)
+
+n2<-data.frame(n2)
+
+##define country names 
+names<-c("Australia","Columbia","Cyprus","Chile","China","Germany","Ghana","Jordan","Malaysia","Mexico","Netherlands", "Peru","Poland","Romania","Russia","Rwanda","Slovenia","South Korea","Guinea-Bissau","Sweden","Taiwan","Trinidad", "Turkey","Ukraine","United States","Uruguay")
+
+n2<-data.frame(n2)
+n2[,1]<-names
+
+```
+
+Looking up the country codes in the code books, we find the countries represented are 
+```{r}
+names
+```
+
+Now reoder the data set to be in order of  approval during wave 5 (ie at the baseline). Also alter numbers so they are precent approving 
+
+```{r}
+colnames(n2)<-c("country","Wave_6","Wave_5")
+n3<-n2[order(n2$Wave_5),]
+n4<-melt(n3,id.vars="country",measure.vars=c("Wave_6","Wave_5"))
+n4[,3]<-(100-n4[,3])
+```
+
+Exploratory dot plot to begin 
+
+```{r}
+names(n4)<-c("country","survey","value")
+levels<-as.character(n4[,1][1:26])
+
+ggplot(n4, aes(x=value, y=country,shape=survey,color=survey)) +geom_point()+
+  scale_shape_manual(values=c(3,4))+
+  scale_y_discrete(limits=levels)+
+  xlab("Percent Supporting")+
+ylab("")+
+  ggtitle("Tolerance for Gay Neighbors")+
+theme(plot.title = element_text(size=20, face="bold"))+
+theme(legend.title=element_blank())
+```
+Now add arrows to tell direction of change
+
+
+```{r}
+library(grid)
+n3<-data.frame(n3)
+n3[,2]<-100-n3[,2]
+n3[,3]<-100-n3[,3]
+h<-ggplot(n3, aes(x=Wave_6, y=country))+
+  scale_shape_manual(values=c(3,4))+
+  scale_y_discrete(limits=levels)+
+  xlab("Percent Supporting")+
+  ylab("")+
+  ggtitle("Tolerance for Gay Neighbors")+
+  theme(plot.title = element_text(size=20, face="bold"))+
+  theme(legend.title=element_blank())+geom_segment(aes(x=n3$Wave_5, y=n3$country,xend = n3$Wave_6, yend = n3$country), arrow = arrow(length = unit(0.3,"cm")))
+h
+```
+
+
+Final plot, separated the plots into positive and negative
+
+```{r,fig.width = 10, fig.height = 5}
+library(lattice)
+##make separate vectors
+neg<-which(n3$Wave_6<n3$Wave_5)
+neg2<-n3[neg,]
+levelN<-neg2$country
+
+pos<-n3[-neg,]
+levelP<-pos$country
+
+PP<-ggplot(pos, aes(x=Wave_6, y=country))+
+  scale_shape_manual(values=c(3,4))+
+  scale_y_discrete(limits=levelP)+
+  scale_x_continuous(limits=c(0,100))+
+  xlab("Percent Supporting")+
+  ylab("")+coord_fixed(ratio=4)+
+  ggtitle("Increasing Tolerance")+
+  theme(plot.title = element_text(size=15))+
+  theme(legend.title=element_blank())+geom_segment(aes(x=pos$Wave_5, y=pos$country,xend = pos$Wave_6, yend = pos$country), arrow = arrow(length = unit(0.2,"cm")))
+
+NN<-ggplot(neg2, aes(x=Wave_6, y=country))+
+  scale_shape_manual(values=c(3,4))+
+  scale_y_discrete(limits=levelN)+
+  scale_x_continuous(limits=c(0,100))+
+  xlab("Percent Supporting")+
+  ylab("")+
+  coord_fixed(ratio=10)+
+  ggtitle("Decreasing Tolerance")+
+  theme(plot.title = element_text(size=15))+
+  theme(legend.title=element_blank())+geom_segment(aes(x=neg2$Wave_5, y=neg2$country,xend = neg2$Wave_6, yend = neg2$country), arrow = arrow(length = unit(0.2,"cm")))
+
+
+##THE above makes wierdly narrow graphs. Fix this this?
+require(gridExtra)
+grid.arrange(NN, PP,ncol=2,main=textGrob("Attitudes towards Gay Neighbors, 2005 to 2014",vjust=4,hjust=.45,gp=gpar(fontsize=20,font=1)))
+
+```
+
+E) Functions. These all work if pasted into the console. For some reason will not evaluate in markdown. 
+
+
+```{r,eval=FALSE}
+Getdata6<-function(df1){
+  load("C:/Users/Esmail/Desktop/Claire/Columbia/4_Data Visualization/World Values Study/WV6_Data_rdata_v_2014_06_04/WV6_Data_rdata_v_2014_06_04.rdata")
+  df1<-WV6_Data_spss_v_2014_06_04
+
+
+Getdata5<-function(ef1){
+  load("C:/Users/Esmail/Desktop/Claire/Columbia/4_Data Visualization/World Values Study/WV5_Data_rdata_v_2014_04_28/WV5_Data_rdata_v_2014_04_28.rdata") 
+  ef1<-WV5_Data_spss_v_2014_04_28
+}
+
+Prep6<-function(df1){Levels<-intersect(unique(df1$V2),unique(ef1$V2))##ie what countries are in both waves
+                            ###remove missing data
+                            df2<-df1[which(df1$V40>0),]
+                           
+                            df2<-df2[,c(2,41)]##select only the variable of interest
+                            df2Clean<-subset(df2,df2$V2%in%Levels)###select only rows
+                           colnames(df2Clean)<-c("country","gay")
+                                df2Clean
+                                  }
+
+Prep5<-function(ef1){Levels<-intersect(unique(df1$V2),unique(ef1$V2))##ie what countries are in both waves
+                      ef2<-ef1[which(ef1$V38>0),]
+
+
+                      ef2<-ef2[,c(4,41)]##select only the variable of interest
+                      ef2Clean<-subset(ef2,ef2$V2%in%Levels)###select only rows
+                       colnames(ef2Clean)<-c("country","gay")
+                     ef2Clean
+}
+
+##works 
+
+MySummary<-function(df1Clean,df2Clean){
+                              ####collect results agregated by country (rather than individual)
+  l<-length(Levels)
+  n<-matrix(nrow=l,ncol=3)
+  colnames(n)<-c("country", "GayW6", "GayW5")
+  n[,1]<-countries
+  ##for loop calculates the number approving/total number of respondsens in that country) 
+  for (i in 1:31){
+    n[i,2]<-100*as.numeric(table(d3[d3$Country==countries[i],]$Gay)[1]/(table(d3[d3$Country==countries[i],]$Gay)[1]+table(d3[d3$Country==countries[i],]$Gay)[2]))
+    n[i,3]<-100*as.numeric(table(e3[e3$Country==countries[i],]$Gay)[1]/(table(e3[e3$Country==countries[i],]$Gay)[1]+table(e3[e3$Country==countries[i],]$Gay)[2]))
+  }
+  ###Add country names 
+  n<-na.omit(n)
+  names<-c("Australia","Columbia","Cyprus","Chile","China","Germany","Ghana","Jordan","Malaysia","Mexico","Netherlands", "Peru","Poland","Romania","Russia","Rwanda","Slovenia","South Korea","Guinea-Bissau","Sweden","Taiwan","Trinidad", "Turkey","Ukraine","United States","Uruguay")
+  n<-cbind(n,names)
+  ##reorder n to be n order from least to most supportive (and flip from negative to positive)
+  n<-data.frame(n)
+  n <- n[order(n$GayW5),] 
+  n<-na.omit(n)
+  n
+}
+
+Negative<-function(n){
+  n<-data.frame(n)
+  neg<-which(as.numeric(n$GayW6)>as.numeric(n$GayW5))
+  dfneg<-n[neg,]
+}
+
+Positive<-function(n){
+  n<-data.frame(n)
+  pos<-which(as.numeric(n$GayW6)<as.numeric(n$GayW5))
+  dfpos<-n[pos,]
+}
+
+MyMelt<-function(Data){
+  library(reshape2)
+  #Change from percent disapporval to percent approval 
+  Data<-data.frame(Data)
+  
+  ##remove the country number variable
+  Data<-Data[2:4,]
+  Final<-melt(Data,id.vars="names",measure.vars=c("GayW6", "GayW5"))
+  Final               
+}
+
+
+```
+
+
+```{r,eval=FALSE}
+
+##functions to get data 
+df1<-Getdata6(df1)
+ef1<-Getdata5(ef1)
+
+##functions to remove NAs, extra columns and non-used countries 
+ef2Clean<-Prep5(ef1)
+df2Clean<-Prep6(df1)
+
+##melt data 
+n<-MySummary(df1Clean,df2Clean)
+
+##separated pos and neg
+dfpos<-Positive(n)
+dfneg<-Negative(n)
+
+pos<-MyMelt(dfpos)
+neg<-MyMelt(dfneg)
+```
+
+```{r,eval=FALSE}
+
+ArrowPlot<-function(df){
+  library(lattice)
+  
+  levelN<-df$names
+  
+NN<-ggplot(dfneg, aes(x=GayW6, y=names))+
+    scale_y_discrete(limits=levelN)+
+    #scale_x_continuous(limits=c(0,100))+
+    xlab("Percent Supporting")+
+    ylab("")+
+    coord_fixed(ratio=10)+
+    ggtitle("Decreasing Tolerance")+
+    theme(plot.title = element_text(size=15))+
+    theme(legend.title=element_blank())+geom_segment(aes(x=dfneg$GayW5, y=dfneg$names,xend = dfneg$GayW6, yend = dfneg$names), arrow = arrow(length = unit(0.2,"cm")))
+  
+  NN
+}
+
+NN<-ArrowPlot(dfneg)
+PP<-ArrowPlot(dfpos)
+
+require(gridExtra)
+
+grid.arrange(NN, PP,ncol=2,main=textGrob("Attitudes towards Gay Neighbors, 2005 to 2014",vjust=4,hjust=.45,gp=gpar(fontsize=20,font=1)))
+

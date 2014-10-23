@@ -1,0 +1,61 @@
+Opinions on the Proposed Mosque Near Ground Zero
+========================================================
+Two surveys, the CBS News/New York Times Poll and the Secure America Now Jewish Voters Survey, both asked about the proposed Mosque and Islamic Community Center near Ground Zero in late 2011.
+
+The CBS/New York Times Poll surveyed NYC residents and those who said a friend or close family member died on 9/11. They asked "How much have you heard or read about the mosque and Islamic community center that has been proposed for two blocks from Ground Zero (the site of the September 11, 2001 terrorist attacks on the World Trade Center in New York City)--a lot, some, not much, or nothing at all?"
+
+The Secure America Noew Jewish Voters Survey surveyed Jewish voters who said they were likely/somewhat likely to vote for President in 2012. They asked "Do you approve or disapprove of building a mosque near the site of Ground Zero (the site of the terrorist attack September 11, 2001 on the World Trade Center in New York City which is funded by wealthy foreign Arabs)?". Choices were strongly approve, somewhat approve, somewhat disapprove, strongly disapprove.
+
+I'm interested in comparing the opinions of these groups.
+
+R Code:
+
+Load, clean, and sort data:
+```{r}
+data <- read.csv("data_mosque.csv")
+data_needed <- data[1:10,1:3] ##select data needed for chart, keep other survey for question wording
+
+data_needed$Survey <- factor(data_needed$QuestionID, #label surveys
+                             levels=c("USMCLAUG.11JEWS.R25","USCBSNYT.090811.R36"),
+                             labels=c("Jewish People", "New Yorkers & Survivors"))
+
+##recode answers to match between surveys
+data_needed$RespLvl[data_needed$RespTxt=="Strongly approve" | data_needed$RespTxt=="Favor strongly"] <- 1
+data_needed$RespLvl[data_needed$RespTxt=="Somewhat approve" | data_needed$RespTxt=="Favor not strongly"] <- 2
+data_needed$RespLvl[data_needed$RespTxt=="Don't know/Refused" | data_needed$RespTxt=="Don't know/No answer"] <- 3
+data_needed$RespLvl[data_needed$RespTxt=="Somewhat disapprove" | data_needed$RespTxt=="Oppose not strongly"] <- 4
+data_needed$RespLvl[data_needed$RespTxt=="Strongly disapprove" | data_needed$RespTxt=="Oppose strongly"] <- 5
+
+data_needed$RespLvl <- factor(data_needed$RespLvl,
+                              levels=c(1,2,3,4,5),
+                              labels=c("Strongly approve/favor", "Somewhat approve/favor", "Don't know/No answer/Refused", "Somewhat disapprove/oppose", "Strongly disapprove/oppose"))
+
+##sort data
+data_needed <- data_needed[order(data_needed$RespLvl),]
+```
+
+Plot:
+```{r fig.width=12, fig.height=6}
+library(ggplot2)
+mosque_table <- ggplot(data_needed, aes(x=data_needed$Survey, y=data_needed$RespPct, fill=data_needed$RespLvl)) +
+  geom_bar(stat="identity") +
+  coord_flip() +
+  theme_classic() +
+  theme(axis.line = element_blank()) +
+  xlab("") +
+  ylab("") +
+  guides(fill=guide_legend(title=NULL)) +
+  ggtitle("Opinions on the Mosque Near Ground Zero") +
+  scale_fill_manual(values=c("#666633", "#93933F", "#C6C6C6", "#9A5C64", "#990033")
+)
+mosque_table
+```
+
+Since there was very little data transformation involved, I had trouble thinking of many fantasy functions that would have come in handy. The only one I could think of takes the two names of similar but not matching variables and makes a new combined level in a new column in the dataframe.
+```{r}
+match_data <- function (frame, column, var1, var2, newcol, newlevel) { ##see description above
+frame$newcol[frame$column==var1 | frame$column==var2] <- newlevel
+}
+##test, doesn't quite work yet
+match_data(frame=data_needed, column=RespTxt, var1="Strongly approve", var2="Favor Strongly", newcol=RespLvlTest, newlevel=1)
+```

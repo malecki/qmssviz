@@ -1,16 +1,4 @@
 ---
-<<<<<<< HEAD
-title: "102314-HW3-kg2445"
-output: html_document
----
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r}
-summary(cars)
-=======
 title: "Homework 3 - Kevin Gong"
 output: html_document
 date: "October 23, 2014"
@@ -82,7 +70,7 @@ WV6 = WV6_Data_spss_v_2014_06_04
 #head(WV6)
 dim(WV3)
 dim(WV6)
-s
+s2
 
 
 

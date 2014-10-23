@@ -69,7 +69,7 @@ WV6 = WV6_Data_spss_v_2014_06_04
 #head(WV6)
 dim(WV3)
 dim(WV6)
-
+s
 
 
 

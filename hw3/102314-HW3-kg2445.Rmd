@@ -55,38 +55,130 @@ I'll be using ggplot2 to create my grouped bar graph, so I will need the data to
 
 Country  |  Wave 4 % Mentioned  | Wave 6 % Mentioned
 
-Where the 60,000-70,000+ individual survey respondents are aggregated by country to produce a single proportion. We will try to retain only countries that appear in both waves of the survey, though if there are insufficient countries, more may be plotted.
+Where the 60,000-70,000+ individual survey respondents are aggregated by country to produce a single proportion. Since the country codes are different across the two waves, we will manually select the countries we will plot and will try to retain only countries that appear in both waves of the survey, though if there are insufficient countries, more may be plotted.
+
 
 
 ###**D**###
+
+We produce the table in the format we specified above. In this step, we need to manually remove countries that existed in both survey waves but were not asked the neighbor question regarding homosexuality.
 
 ```{r}
 library(ggplot2)
 load("~/qmssviz/hw3/WV4.RData")
 WV4 = `WV4_Data_rdata_v_2014-04-28`
 load("~/qmssviz/hw3/WV6.RData")
-<<<<<<< HEAD
 WV6 = WV6_Data_spss_v_2014_06_04
 #head(WV6)
-dim(WV3)
+dim(WV4)
 dim(WV6)
-s2
 
 
+country_wv4 = unique(WV4$v2)
+country_wv6 = unique(WV6$V2)
+country_wv4
+country_wv6
 
-=======
-WV6 = WV6_Data_rdata_v_2014_09_21
->>>>>>> 958113da41c77e59382742994564c51108be1f84
->>>>>>> d2ea69191db1d6ec86b464ccc503361609671325
+country_wv4==country_wv6
+which(sapply(sc, `%in%`, x = 8))
+
+country_list = vector()
+
+for(i in 1:length(country_wv4)) {
+
+  if (is.element(country_wv4[i], country_wv6)) {
+    country_list[i] = country_wv4[i]
+  }
+  
+}
+country_list = vector(country_list,na.rm=TRUE)
+country_list2 = country_list[!is.na(country_list)]
+country_list2
+
+length(country_list2)
+
+country_matrix = matrix(nrow=21, ncol=3)
+country_matrix[,1]=country_list2
+country_matrix
+
+
+sum(WV4$v2==country_wv4[2])
+
+
+sum(WV4$v76[WV4$v2==country_wv4[2]]==2)
+sum(WV6$V40[WV6$V2==country_wv6[1]]==2)
+
+for(i in 1:length(country_list2)){
+  mention_wv4 = sum(WV4$v76[WV4$v2==country_list2[i]]==1)
+  total_wv4 = sum(WV4$v2==country_list2[i])
+  proportion_wv4 = mention_wv4/total_wv4
+  country_matrix[i,2] = proportion_wv4
+  
+  mention_wv6 = sum(WV6$V40[WV6$V2==country_list2[i]]==1)
+  total_wv6 = sum(WV6$V2==country_list2[i])
+  proportion_wv6 = mention_wv6/total_wv6
+  country_matrix[i,3] = proportion_wv6
+  
+}
+country_matrix
+
+country_matrix2 = country_matrix[-c(4:6),]
+country_matrix2
+colnames(country_matrix2)[1:3] = c("Country","WV4_percent","WV6_percent")
+country_matrix2
+
+country_matrix3 = country_matrix2
+
+newnames=c("Algeria","Chile","China","Jordan","Kyrgyzstan","Mexico","Morocco","Nigeria","Pakistan","Peru","Philippines","Singapore","South Korea","Spain","Sweden","Turkey","United States","Zimbabwe")
+newnames
+newnames2 = as.factor(newnames)
+newnames2
+
+country_matrix3[,1]=newnames
+country_matrix3[,1]
+
+country_matrix3[,1]=as.factor(country_matrix3[,1])
+country_matrix3
+
+newnames3 = as.matrix(newnames2)
+
+country_matrix4 = cbind(newnames3,as.numeric(country_matrix3[,2]),country_matrix3[,3])
+country_matrix4[,2] = as.numeric(country_matrix4[,2])
+country_matrix4[,3] = as.numeric(country_matrix4[,3])
+colnames(country_matrix4)[1:3] = c("Country","Wave 4 % Mention","Wave 6 % Mention")
+country_matrix4
+
+country_matrix4[,2] = country_matrix3[,2]
+country_matrix4
+
+country_matrix5 = matrix(nrow=18,ncol=3)
+country_matrix5[,1]=country_matrix4[,1]
+country_matrix5[,2]=country_matrix3[,2]
+country_matrix5[,3]=country_matrix3[,3]
+country_matrix5
+#use country_matrix3 for now
 ```
 
-You can also embed plots, for example:
 
-```{r, echo=FALSE}
-plot(cars)
+
+###**E**###
+
+Now we graph it!
+
+```{r}
+ggplot(country_matrix3, aes(x=Country,y=WV4_percent)) 
+
++
+  xlab("Number of Cities") + 
+  ylab("Average Population") + 
+
+)
+
+help(ggplot)
 ```
 
-<<<<<<< HEAD
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
-=======
->>>>>>> 958113da41c77e59382742994564c51108be1f84
+
+
+###**F**###
+
+See loops, if statements, etc used in code blocks above.

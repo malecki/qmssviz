@@ -1,0 +1,109 @@
+---
+title: "HW3_Jinho_Lee"
+author: "JL4204"
+date: "Wednesday, October 22, 2014"
+output: html_document
+---
+
+```{r}
+setwd("C:/Users/lakefonger/qmssviz/qmssviz")
+
+
+#A.
+#I will use the Korean General Social Survey (KGSS) from the years 2008 and 2010 and see how people's perception on North Korea changed during that period.
+
+#B.
+#I'd like to see whether the military clash between the two Koreas produced pushed people's opinion towards hostility towards North Korea.
+#I will make histograms for both years for the question that asked "Attitudes towards North Korea" and had the following choices: 1. A country to support, 2.A country to cooperate with, 3.A country to guard against, 4.A country to fight against
+
+#C.
+#(year)(view on north korea)(sex)
+
+#D.
+
+#bring in the surveys
+t08 <- read.table("C:/Users/lakefonger/qmssviz/qmssviz/k08.tsv", header = TRUE)
+str(t08)
+
+t10 <- read.table("C:/Users/lakefonger/qmssviz/qmssviz/k10.tsv", header = TRUE)
+
+#get rid of unnecessary variables
+data08 <- data.frame(t08$NORTHWHO, t08$SEX,t08$AGE)
+str(data08)
+colnames(data08) <- c('NORTH', 'SEX', 'AGE')
+data08$YEAR <- 2008
+head(data08)
+
+data10 <- data.frame(t10$NORTHWHO, t10$SEX, t10$AGE)
+str(data10)
+colnames(data10) <- c('NORTH', 'SEX', 'AGE')
+data10$YEAR <- 2010
+head(data10)
+
+#row bind them to append the datasets
+data <- rbind(data08, data10)
+str(data)
+
+# 'don't know' is coded as 888 for AGE, so recode them to be NA
+data$AGE[data$AGE == 888] <- NA
+# 'don't know' is coded as 8 for NORTH, so recode them to be NA
+data$NORTH[data$NORTH == 8] <- NA
+
+
+#Now ready for graphics
+
+#E
+library(ggplot2)
+
+
+data$SEX <- factor(data$SEX)
+data$YEAR <- factor(data$YEAR)
+
+data$NORTH[data$NORTH=="1"] <- "1.Support"
+data$NORTH[data$NORTH=="2"] <- "2.Cooperate With"
+data$NORTH[data$NORTH=="3"] <- "3.Guard Against"
+data$NORTH[data$NORTH=="4"] <- "4.Fight Against"
+data$NORTH[data$NORTH=="NA"] <- "Don't Know"
+data$NORTH <- factor(data$NORTH)
+
+
+head(data)
+g1 <- ggplot(data, aes(x=NORTH, fill=YEAR))+geom_histogram(position="dodge") + xlab("View on North Korea")
+g1
+
+#We can see that the attitude shifted more towards the hostile side
+```
+
+
+```{r,eval=FALSE}
+
+#F
+#read int he tables
+t08 <- read.table("C:/Users/lakefonger/qmssviz/qmssviz/k08.tsv", header = TRUE)
+t10 <- read.table("C:/Users/lakefonger/qmssviz/qmssviz/k10.tsv", header = TRUE)
+
+#keep and add whats necessary
+data08 <- data.frame(t08$NORTHWHO, t08$SEX,t08$AGE)
+colnames(data08) <- c('NORTH', 'SEX', 'AGE')
+data08$YEAR <- 2008
+data10 <- data.frame(t10$NORTHWHO, t10$SEX, t10$AGE)
+colnames(data10) <- c('NORTH', 'SEX', 'AGE')
+data10$YEAR <- 2010
+
+data <- rbind(data08, data10)
+data$AGE[data$AGE == 888] <- NA
+data$NORTH[data$NORTH == 8] <- NA
+data$SEX <- factor(data$SEX)
+data$YEAR <- factor(data$YEAR)
+data$NORTH[data$NORTH=="1"] <- "1.Support"
+data$NORTH[data$NORTH=="2"] <- "2.Cooperate With"
+data$NORTH[data$NORTH=="3"] <- "3.Guard Against"
+data$NORTH[data$NORTH=="4"] <- "4.Fight Against"
+data$NORTH[data$NORTH=="NA"] <- "Don't Know"
+data$NORTH <- factor(data$NORTH)
+
+#plot it
+g1 <- ggplot(data, aes(x=NORTH, fill=YEAR))+geom_histogram(position="dodge") + xlab("View on North Korea")
+g1
+
+```

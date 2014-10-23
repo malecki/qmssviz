@@ -138,7 +138,7 @@ Third: "5" and "6" are labeled as "Totally neutral about that";
 Fourth: "7" and "8" are "equal"; 
 Fifth: "9" and "10" are "very equal"
 
-We can see the changes in those 3 pictures below, the means, percentage, and the sum total. It is easy to compare them together. For example, the level of income equality in China has delined quite a lot in the past 20 years, from nearly 8 to almost 4. But South Korea is totally the opposite. Japan has not changed a lot. The result could be explained by the development in those 3 countries. China has developed dramatically in recent decades. Along with the increasing wealths, problems of income distribution are very commom around the world. In constrast with Japan, the economy in Japan is relatively stable. The growth is slow, so is the changes of wealth distribution. South Korea had suffered from the financial crisis twince in recent 14 years, during which people were more sensitive to the recovery of economy rather than income equality.
+The average level of income equality in China has delined quite a lot in the past 20 years, from nearly 8 to almost 4. But South Korea is totally the opposite. Japan has not changed a lot. The result could be explained by the development in those 3 countries. China has developed dramatically in recent decades. Along with the increasing wealths, problems of income distribution are very commom around the world. In constrast with Japan, the economy in Japan is relatively stable. The growth is slow, so is the changes of wealth distribution. South Korea had suffered from the financial crisis twince in recent 14 years, during which people were more sensitive to the recovery of economy rather than income equality.
 
 ```{r,fig.height=7,fig.width=12}
 library(ggplot2)
@@ -152,10 +152,13 @@ ggplot(dmean, aes(x= Mean, y= Country)) +
               panel.grid.major.x = element_line(colour = "grey", linetype="dashed")) +
         facet_grid(year ~ ., scales="free_y", space="free_y")+
         ggtitle("Average Level of Each Country")
+```
 
+```{r,fig.height=7,fig.width=12}
+library(ggplot2)
 library(RColorBrewer)
 color <- brewer.pal(5, "Greens")
-ggplot(dp, aes(x=Country, y= percentage,fill=ie))+
+ggplot(dp, aes(x=Country, y=percentage, fill=ie))+
   geom_bar(stat= "identity",position="dodge")+
   facet_grid(year ~. )+
   theme_bw() +
@@ -165,22 +168,9 @@ ggplot(dp, aes(x=Country, y= percentage,fill=ie))+
   guides(fill=guide_legend(title=NULL))+
   scale_fill_manual(values=color)+
   ggtitle("Income Equality: Percentage of Each level")
-
-ggplot(df, aes(x = Country, fill=as.character(Index)))+geom_bar(position="dodge")+
-  facet_grid(year ~ .)+
-  theme_bw() +
-  theme(panel.grid.major.y = element_blank(),
-        panel.grid.minor.y = element_blank(),
-        panel.grid.major.x = element_line(colour="white", linetype="dashed"))+
-   ggtitle("Income Equality: Sums of Each level")+
-    guides(fill=guide_legend(title=NULL))
-  
-  
 ```
  
-      ####HELP!!!!
-      1. The firt group of plots in my mind, as I mentioned in step B, is so annoying for read and difficult to plot, thus I abandoned them
-      2. I think there are some bugs in my second and third graphs, but I cannot find out what goes wrong. In the second graph, the distribtion doesn't match with the result in the first and third graph. In the third graph, the guide in the right is strange that "10" ranks in the second order. Anyone could help me?
+ (#The firt group of plots in my mind, as I mentioned in step B, is so annoying for read and difficult to plot, thus I abandoned them#)
 
 ##F. Write expressive fantasy function calls
 
@@ -216,9 +206,5 @@ ReadData <- function(route) {
 
 Subset <- function(data, var1, var2){
   subset(data, select = c(var1, var2))
-}
-
-Merge <- function(df1,df2){
-  rbind(df1,df2)
 }
 ```

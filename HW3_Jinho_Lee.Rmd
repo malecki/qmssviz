@@ -1,0 +1,46 @@
+---
+title: "HW3_Jinho_Lee"
+author: "JL4204"
+date: "Wednesday, October 22, 2014"
+output: html_document
+---
+
+```{r}
+#A.
+#I will use the Korean General Social Survey (KGSS) from the years 2008 and 2010 and see how people'sperception on North Korea and other politic related opinions changed during that period.
+
+#B.
+#I'd like to see whether the military clash between the two Koreas produced pushed people's opinion towards hostility towards North Korea.
+
+#C.
+#(year)(view on north korea)(sex)(age)
+
+#D.
+
+#bring in the surveys
+t08 <- read.table("C:/Users/lakefonger/qmssviz/qmssviz/k08.tsv", header = TRUE)
+str(t08)
+
+t10 <- read.table("C:/Users/lakefonger/qmssviz/qmssviz/k10.tsv", header = TRUE)
+
+#get rid of unnecessary variables
+data08 <- data.frame(t08$NORTHWHO, t08$SEX,t08$AGE)
+str(data8)
+colnames(data08) <- c('NORTHWHO', 'SEX', 'AGE')
+head(data08)
+
+data10 <- data.frame(t10$NORTHWHO, t10$SEX, t10$AGE)
+str(data10)
+colnames(data10) <- c('NORTHWHO', 'SEX', 'AGE')
+head(data10)
+
+#row bind them to append the datasets
+data <- rbind(data08, data10)
+str(data)
+
+#Now ready for graphics
+
+
+
+```=
+rm(list=ls())

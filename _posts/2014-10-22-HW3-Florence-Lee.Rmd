@@ -1,0 +1,98 @@
+---
+title: "Homework 3 Assignment"
+author: flrnclee
+output: html_document
+published: false
+tags: hw3
+---
+
+========================================================
+
+## About the Data
+**Data set 1:** The Pew Research Center's Internet & American Life Project, 2008 Health Questionnaire  
+* N=3030
+* Field dates: November 17 to December 17, 2008
+
+**Data set 2:** The Pew Research Center's Internet & American Life Project, 2012 Health Questionnaire
+* N=3000
+* Field dates: August 7 to September 4, 2012
+
+## Goal 
+
+I am interested in exploring whether information-seeking behaviors changed among Internet users between the years of 2008 and 2012, especially in regards to health insurance information. The survey waves conveniently sandwich the implementation of the Affordable Care Act, which expanded healthcare coverage for uninsured and underinsured Americans. I am curious to see whether major changes in public insurance plans and the approaching launch of [Healthcare.gov](http://www.healthcare.gov/) had a noticable impact on self-reported information-seeking behavior.
+
+## About the Survey Questions
+
+### 2008 Survey 
+In the 2008 survey, the question of interest is Q16. It reads: 
+
+> "Q16) Now, we'd like to ask if you've looked for information ONLINE about certain health or medical issues. Specifically, have you ever looked online for...". 
+
+I am specifically interested in responses to Option J:
+
+> "J. Information related to health insurance, including private insurance, Medicare or Medicaid". Survey respondents can either answer""
+
+Possible responses include: 
+* 1 = Yes, have done this
+* 2 = No, have not done this
+* 8 = Don't know
+* 9 = Refused
+
+It is worth noting that Q6 was only asked for people labeled as "Internet users". "Internet users" were identified as those who responded positively (1) to questions ```Q6a``` or ```Q6b```.
+
+### 2012 Survey
+In the 2012 survey, the corresponding question is Q6. It reads:
+
+> "Q6) Now, we'd like to know if you've looked for information ONLINE about certain health or medical issues, either for yourself or someone else. Specifically, in the last 12 months, have you looked online for information about..."
+
+I am specifically interested in responses to Option C:
+
+> "C. Health insurance, including private insurance, Medicare or Medicaid."
+
+* 1 = Yes, have done this
+* 2 = No, have not done this
+* 8 = Don't know
+* 9 = Refused
+
+It is worth noting that Q16 was only asked for people labeled as "Internet users". "Internet users" were identified as those who responded positively (1) to questions ```INTUSE```, ```EMLOCC```, or ```INTMOB```.
+
+## Preparing the Data
+
+```{r eval=FALSE}
+setwd("C:/Users/Flo/Desktop/Data Viz 2014/Assignment3")
+wave1 <- read.csv("December_2008_Health_csv.csv", stringsAsFactors=FALSE)
+wave2 <- read.csv("September_2012_health_csv.csv", stringsAsFactors=FALSE)
+
+str(wave1)
+str(wave2)
+```
+
+For wave1, I want to keep the unique identifier ```psraid```, gender ```sex``` (where 1=Male), the Internet use questions ```q6a``` and ```q6b```, and the question of interest ```q16j```. I want to subset by the Internet use questions.
+
+For wave2, I want to keep the unique identifier ```psraid```, gender ```sex``` (where 1=Male), the Internet use questions ```intuse```, ```emlocc```, and ```intmob```, in addition to the question of interest ```q6c```. I want to subset by the Internet use questions.
+
+
+```{r eval=FALSE}
+vars08 <- c('psraid', 'sex', 'q6a', 'q6b', 'q16j')
+vars12 <- c('psraid', 'sex', 'intuse', 'emlocc', 'intmob', 'q6c')
+infoins08 <- subset(wave1, q6a==1|q6b==1, select=vars08)
+infoins12 <- subset(wave2, intuse==1|emlocc==1|intmob==1, select=vars12)
+str(infoins08)
+str(infoins12)
+```
+
+Here, we see that 1650 of the 2253 survey participants in wave1 and 2392 out of the 3014 survey participants in wave2 were Internet users. Now, to deal with missing values. Here, we treat people who responded '8' or '9' as missing as well.
+
+
+
+
+
+
+
+
+You can also embed plots, for example:
+
+```{r fig.width=7, fig.height=6}
+plot(cars)
+```
+

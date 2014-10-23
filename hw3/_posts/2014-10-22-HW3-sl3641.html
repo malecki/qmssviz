@@ -132,7 +132,7 @@ summ$year &lt;- ifelse(summ$wave==5, &quot;2005&quot;, &quot;2010&quot;)</code><
 wave6 &lt;- read.csv(&quot;filepath&quot;)   # read Wave 6 data
 
 wave5 &lt;- getVariables(wave5, listOfVariables)  # extract variables of interest (from Wave 5)
-wave6 &lt;- getVariables(wave5, listOfVariables)  # extract variables of interest (from Wave 6)
+wave6 &lt;- getVariables(wave6, listOfVariables)  # extract variables of interest (from Wave 6)
 
 renameValues(wave5, wave6, nameOfVariables)  # rename variables in both wave5 and wave6 dataframes
 
@@ -146,6 +146,18 @@ final &lt;- makeFinalDataSet(year, question)
 
 # generate final dot chart
 visualization &lt;- makeFinalChart(question, percent, ...)</code></pre>
+<p>This is my attempt at writing a function that renames the columns (i.e. variables) for the two datasets, combines them, and then produces the combined dataset.</p>
+<pre class="r"><code>variablenames &lt;- c(&quot;wave&quot;, &quot;Q1&quot;)
+
+renameAndCombine &lt;- function(econwv5, econwv6, variablenames){
+  colnames(econwv5) &lt;- variablenames
+  colnames(econwv6) &lt;- variablenames
+  all &lt;- rbind(econwv5, econwv6)
+  assign(&quot;all&quot;, all, envir=globalenv())
+}
+
+# Testing my function to see if it produces 'all' dataset
+renameAndCombine(econwv5, econwv6, variablenames)</code></pre>
 References:
 <li> 
 <a href="http://www.worldvaluessurvey.org/WVSDocumentationWV6.jsp">http://www.worldvaluessurvey.org/WVSDocumentationWV6.jsp</a>

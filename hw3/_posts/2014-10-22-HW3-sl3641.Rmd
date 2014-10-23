@@ -79,7 +79,7 @@ wave5 <- read.csv("filepath")   # read Wave 5 data
 wave6 <- read.csv("filepath")   # read Wave 6 data
 
 wave5 <- getVariables(wave5, listOfVariables)  # extract variables of interest (from Wave 5)
-wave6 <- getVariables(wave5, listOfVariables)  # extract variables of interest (from Wave 6)
+wave6 <- getVariables(wave6, listOfVariables)  # extract variables of interest (from Wave 6)
 
 renameValues(wave5, wave6, nameOfVariables)  # rename variables in both wave5 and wave6 dataframes
 
@@ -93,6 +93,21 @@ final <- makeFinalDataSet(year, question)
 
 # generate final dot chart
 visualization <- makeFinalChart(question, percent, ...)
+```
+
+This is my attempt at writing a function that renames the columns (i.e. variables) for the two datasets, combines them, and then produces the combined dataset.
+```{r}
+variablenames <- c("wave", "Q1")
+
+renameAndCombine <- function(econwv5, econwv6, variablenames){
+  colnames(econwv5) <- variablenames
+  colnames(econwv6) <- variablenames
+  all <- rbind(econwv5, econwv6)
+  assign("all", all, envir=globalenv())
+}
+
+# Testing my function to see if it produces 'all' dataset
+renameAndCombine(econwv5, econwv6, variablenames)
 ```
 
 References:

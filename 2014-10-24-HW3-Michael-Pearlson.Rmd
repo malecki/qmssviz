@@ -1,0 +1,91 @@
+---
+title: "Homework 3 Assignment"
+author: mm3940
+output: html_document
+published: false
+tags: hw1
+---
+Assignment 3: Surveys
+========================================================
+## Acquire and familiarize yourself with the data
+#### A. Identify two surveys that you want to compare. This part involves skimming the codebooks and questionnaires.
+
+I will compare the same question within two waves.  For the assignment, I turned to the European Values Survey (EVS) to compare how discussion of politics has changed between waves 1981 and 2008.  Specifically, the questions asks, "How often do you discuss politics with friends?"  Responses are categorical and include never, ocassionaly, and frequently.  I was originally interested in Northern Ireland, but decided to broaden it out in an attempt at multiple comparisons.    
+
+#### B. Sketch and/or describe the graph(s) that you intend to make; these amount to informal research hypotheses.
+
+I will attempt to make bar graphs for a variety of countries comparing how the answers to the questions have differed across the two waves.  I imagine two bar stacked bar graphs for each country that differ in color across the categorical responses.  I believe that, in most countries, people will have talked more about politics in that past with friends that currently.  I am going to use Great Britain, Sweden, Spain, Italy, France, in addition to Northern Ireland.  A dot plot and perhaps a density plot are also appealing.  I'm not sure what I would get out of a density plot, but I'd just like to see it! 
+
+
+#### C. Write down the target shape of the data (a complete typical row of a melted or denormalized data frame for plotting. This is also before you write anything inside a code chunk! What do you eventually need to fulfill your graph's data contract? e.g., {country: "", value: "", survey: "", year: ""}
+
+My target shaped would be as follows: ${year:"", country:"", response:"", color:""}
+
+## Write code to analyze and visualize it
+
+#### D. Write a script that reads, transforms, prepares data for your graph.
+```{r}
+library(ggplot2)
+library(plyr)
+setwd("~/Desktop")
+evs08 <- read.csv("2008_EVS.csv")
+evs81<- read.csv("1981_EVS.csv")
+evs088 <- evs08[ which(evs08$c_abrv=='GB-NIR'| evs08$c_abrv=='GB-GBN'| evs08$c_abrv=='IT'|
+                       evs08$c_abrv=='FR'|evs08$c_abrv=='DE' | evs08$c_abrv=='SE'| 
+                       evs08$c_abrv=='ER'| evs08$c_abrv=='ES'), ]
+evs811 <- evs81[ which(evs81$c_abrv=='GB-NIR'| evs81$c_abrv=='GB-GBN'| evs81$c_abrv=='IT'|
+                               evs81$c_abrv=='FR'|evs81$c_abrv=='DE' | evs81$c_abrv=='SE'| 
+                               evs81$c_abrv=='ER'| evs81$c_abrv=='ES'), ]
+names(evs811)[names(evs811)=="v530"] <- "politics"
+names(evs088)[names(evs088)=="v7"] <- "politics"
+d <- evs811[c("year", "country", "politics", "c_abrv")]
+d2 <- evs088[c("year", "country", "politics", "c_abrv")]
+dall <- rbind(d,d2)
+str(dall)
+dall <- subset(dall, politics=='never' | politics=='NEVER' | politics=='OCCASIONALLY' | politics=='occasionally'
+               | politics=='frequently' | politics=='FREQUENTLY')
+dall$politics2 <- revalue(dall$politics,
+                          c("never"=3, "occasionally"=4, "frequently"=2, "NEVER"=3, 
+                            "OCCASIONALLY"=4, "FREQUENTLY"=2))
+dall$politics3[dall$politics2==3] <- "Never"
+dall$politics3[dall$politics2==4] <- "Occasionally"
+dall$politics3[dall$politics2==2] <- "Frequently"
+
+dall$country[dall$country=="NORTHERN IRELAND"] <- "Northern Ireland"
+dall$country[dall$country=="FRANCE"] <- "France"
+dall$country[dall$country=="ITALY"] <- "Italy"
+dall$country[dall$country=="SPAIN"] <- "Spain"
+dall$country[dall$country=="SWEDEN"] <- "Sweden"
+dall$country[dall$country=="RUSSIAN FEDERATION"] <- "Russian Federation"
+dall$country[dall$country=="GERMANY"] <- "Germany"
+dall$country[dall$country=="GREAT BRITAIN"] <- "Great Britain"
+```
+
+#### E. Make it actually make your graph. (Or something. If your sketch is out of reach right now, put something else on the page. Note also we will be discussing some map plotting soon.)
+
+```{r fig.width=9, fig.height=9}
+ggplot(dall, aes(x=year, fill=politics3)) + geom_bar(position="fill", binwidth=10) + facet_wrap(~country) + xlab("Years") + ylab("Count") + ggtitle("Bargraphs Showing Differences in Political Conversations with Friends Over Two Waves") + scale_fill_discrete(name="Frequency of\nConversation")
+
+ggplot(dall, aes(x=year, fill=politics3)) + geom_density(position="fill", binwidth=10) + facet_wrap(~country) + xlab("Years") + ylab("Density") + ggtitle("Density Plots Showing Differences in Political Conversations with Friends Over Two Waves") + scale_fill_discrete(name="Frequency of\nConversation")
+```
+
+These graphs seem a bit pedestrian, but I attempted some other line graphs and dotplots and I had trouble with the factor variables.  I tried to aggregate, yet this still do not result in proper graphs.  Hopefully, I can get some feedback in class or office hours.
+
+#### F & G. Write expressive fantasy function calls that describe how you read, transformed, and prepared the data for the graph. You can initially put these in a eval=FALSE code chunk:
+
+```{r, eval=FALSE}
+varnames <- function(var, data, newvar) {names(data)[names(data)=="var"] <- "newvar"
+
+caplet<- function(x,data,cat) {y <- tolower(x)
+                      z<- toupper(x)
+                      str <-  y
+                      letters <-  strsplit(y,'')
+                      theletters<-letters[[1]]
+                      wh<-c(1,which(theletters == ' ') + 1)
+                      theletters[wh] <-toupper(theletters[wh])
+                      final <- paste(theletters,collapse='')
+                      data$cat[data$cat==z] <- final}
+
+country<- function(country,data) {data[which(data$c_abrv==country), ]}
+```
+

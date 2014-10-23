@@ -1,0 +1,102 @@
+code,country
+1,France
+2,Britain
+3,W Germany
+4,Italy
+5,Netherlands
+6,Denmark
+7,Belgium
+8,Spain
+9,Ireland
+10,N Ireland
+11,USA
+12,Canada
+13,Japan
+14,Mexico
+15,S Africa
+16,Hungary
+17,Australia
+18,Norway
+19,Sweden
+20,Tambov
+21,Iceland
+22,Argentina
+23,Finland
+24,S Korea
+25,Poland
+26,Switzerland
+27,Puerto Rico
+28,Brazil
+29,Nigeria
+30,Chile
+31,Belarus
+32,India
+33,Czech
+34,E Germany 
+35,Slovenia
+36,Bulgaria 
+37,Romania
+38,Pakistan
+39,China
+40,Taiwan
+41,Portugal
+42,Austria
+43,Greece
+44,Turkey
+45,Moscow
+46,Lithuania
+47,Latvia
+48,Estonia
+49,Ukraine
+50,Russia
+51,Peru
+52,El Salvador 
+53,Venezuela 
+54,Uruguay 
+55,Costa Rica 
+56,Ghana 
+57,Zimbabwe 
+58,Philippines 
+59,Israel 
+60,Tanzania 
+61,Moldova 
+62,Georgia 
+63,Armenia 
+64,Azerbaijan 
+65,Thailand 
+65,Cameroon 
+66,Saudi 
+67,Arabia
+68,Dominic Rep
+69,Bangladesh
+70,Indonesia
+71,Vietnam
+72,Albania
+73,Colombia
+74,Uganda
+75,Basque
+76,Malta
+77,Singapore
+78,Andalusia
+79,Galicia
+80,Valencia
+81,Serbia
+82,Montenegro
+83,Macedonia
+84,Croatia
+85,Slovakia
+86,Luxembourg
+87,Sri Lanka
+88,New Zealand
+89,Egypt
+90,Morocco
+91,Iran
+92,Jordan
+93,Bosnia
+94,Cuba
+95,Cyprus
+96,Algeria
+97,Kyrgyzstan
+98,Guatemala
+99,Iraq
+

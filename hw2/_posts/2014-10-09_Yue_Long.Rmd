@@ -1,0 +1,87 @@
+---
+title: "ECREEE_R_Training_1_Assignment"
+author: "Yue Long"
+date: "September 19, 2014"
+output: html_document
+---
+First we recall the package plyr and read data from sample_health_facilities:
+```{r}
+library(plyr)
+sample_health <- read.csv("~/Documents/qmssviz/Lab1/sample_health_facilities.csv")
+```
+Next we take out the data for places in the Southern areas:
+```{r}
+south <-subset(sample_health, zone%in%c("South-South", "Southeast", "Southwest"))
+```
+Then we read data from lgas and merge the population column in 2006 to the data before:
+```{r}
+lgas <- read.csv("~/Documents/qmssviz/lgas.csv", header=FALSE)
+south_match <- subset(lgas, V1%in%south$lga_id)
+pop_2006 <-data.frame(south_match$V1, south_match$V3)
+colnames(pop_2006) <- "lga_id"
+colnames(pop_2006)[2] <- "pop_2006" 
+new <- merge(south, pop_2006, by="lga_id")
+```
+
+Since we are interested in summing up the number of fulltime nurses and doctors by state and sort the states using population, we may want to simplify things a little bit by taking out onlyl the four columns with information about states, nurses, doctors and population. 
+```{r}
+facilities <- data.frame(new$state, new$num_nurses_fulltime, new$num_doctors_fulltime, new$pop_2006)
+```
+
+Next we create a column for each different state and put the number of nurses, doctors and population in the vector. I want to know a different and easier way to this instead of inputing values for each single state.
+
+```{r}
+Abia<-subset(facilities, facilities$new.state=="Abia")
+Abia<-c(sum(Abia$new.num_nurses_fulltime,na.rm=TRUE), sum(Abia$new.num_doctors_fulltime,na.rm=TRUE), sum(as.numeric(as.character(Abia$new.pop_2006)),na.rm=TRUE))
+Abia_name <- "Abia"
+
+Anambra<-subset(facilities, facilities$new.state=="Anambra")
+Anambra<-c(sum(Anambra$new.num_nurses_fulltime,na.rm=TRUE), sum(Anambra$new.num_doctors_fulltime,na.rm=TRUE), sum(as.numeric(as.character(Anambra$new.pop_2006)),na.rm=TRUE))
+Anambra_name <- "Anambra"
+
+Cross_River<-subset(facilities, facilities$new.state=="Cross River")
+Cross_River<-c(sum(Cross_River$new.num_nurses_fulltime,na.rm=TRUE), sum(Cross_River$new.num_doctors_fulltime,na.rm=TRUE), sum(as.numeric(as.character(Cross_River$new.pop_2006)),na.rm=TRUE))
+Cross_River_name <- "Cross_River"
+
+Delta<-subset(facilities, facilities$new.state=="Delta")
+Delta<-c(sum(Delta$new.num_nurses_fulltime,na.rm=TRUE), sum(Delta$new.num_doctors_fulltime,na.rm=TRUE), sum(as.numeric(as.character(Delta$new.pop_2006)),na.rm=TRUE))
+Delta_name <-"Delta" 
+
+Edo<-subset(facilities, facilities$new.state=="Edo")
+Edo<-c(sum(Edo$new.num_nurses_fulltime,na.rm=TRUE), sum(Edo$new.num_doctors_fulltime,na.rm=TRUE), sum(as.numeric(as.character(Edo$new.pop_2006)),na.rm=TRUE))
+Edo_name <- "Edo" 
+
+Ekiti<-subset(facilities, facilities$new.state=="Ekiti")
+Ekiti<-c(sum(Ekiti$new.num_nurses_fulltime,na.rm=TRUE), sum(Ekiti$new.num_doctors_fulltime,na.rm=TRUE), sum(as.numeric(as.character(Ekiti$new.pop_2006)),na.rm=TRUE))
+Ekiti_name <- "Ekiti"
+
+Imo<-subset(facilities, facilities$new.state=="Imo")
+Imo<-c(sum(Imo$new.num_nurses_fulltime,na.rm=TRUE), sum(Imo$new.num_doctors_fulltime,na.rm=TRUE), sum(as.numeric(as.character(Imo$new.pop_2006)),na.rm=TRUE))
+Imo_name <- "Imo"
+
+Lagos<-subset(facilities, facilities$new.state=="Lagos")
+Lagos<-c(sum(Lagos$new.num_nurses_fulltime,na.rm=TRUE), sum(Lagos$new.num_doctors_fulltime,na.rm=TRUE), sum(as.numeric(as.character(Lagos$new.pop_2006)),na.rm=TRUE))
+Lagos_name <- "Lagos"
+
+Ogun<-subset(facilities, facilities$new.state=="Ogun")
+Ogun<-c(sum(Ogun$new.num_nurses_fulltime,na.rm=TRUE), sum(Ogun$new.num_doctors_fulltime,na.rm=TRUE), sum(as.numeric(as.character(Ogun$new.pop_2006)),na.rm=TRUE))
+Ogun_name <- "Ogun"
+
+Osun<-subset(facilities, facilities$new.state=="Osun")
+Osun<-c(sum(Osun$new.num_nurses_fulltime,na.rm=TRUE), sum(Osun$new.num_doctors_fulltime,na.rm=TRUE), sum(as.numeric(as.character(Osun$new.pop_2006)),na.rm=TRUE))
+Osun_name <- "Osun"
+
+Rivers<-subset(facilities, facilities$new.state=="Rivers")
+Rivers<-c(sum(Rivers$new.num_nurses_fulltime,na.rm=TRUE), sum(Rivers$new.num_doctors_fulltime,na.rm=TRUE), sum(as.numeric(as.character(Rivers$new.pop_2006)),na.rm=TRUE))
+Rivers_name <- "Rivers"
+```
+
+In the end we combine these vectors into a dataframe and sort them by population:
+```{r}
+summary <- rbind(Abia, Anambra, Cross_River, Delta, Edo, Ekiti, Imo, Lagos, Osun, Ogun, Rivers)
+colnames(summary)[3] <- "pop_2006"
+final <- summary[order(-summary[ ,3]),] 
+final
+```
+
+

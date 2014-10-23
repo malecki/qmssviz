@@ -1,14 +1,14 @@
 ---
 title: "ZhongjunHu_hw3_20141022"
-author: "Zhongjun Hu"
+author: "Zhongjun Hu (UNI:zh2223)"
 ---
 ##Income Equality in China, Japan, and South Korea (1990 & 2012)
 
 ###A. Identify two surveys that you want to compare.
 
-I am interested in the issues of income distribution in Asia in the past 20 years. China, Japan, and South Korea are top 3 properous countries in east Asia. So I choose the 3 countries to analyze what I am interested in. 
+I am interested in the issues of income distribution in Asia in the past 20 years. China, Japan, and South Korea are top 3 prosperous countries in east Asia. So I choose the 3 countries to analyze what I am interested in. 
 
-Two waves from World Values Survey are selected, wave 6 (2010-2014) and wave 2 (1990-1994). I intend to find out what changes of people's feelings about social equality have happenned in the 20 years.
+Two waves from World Values Survey are selected, wave 6 (2010-2014) and wave 2 (1990-1994). I intend to find out what changes of people's feelings about social equality have happened in the 20 years.
 
 The question about income equality in those 2 waves are almost the same: 
 
@@ -18,29 +18,28 @@ For instance, if one really thought that incomes should be made more equal, and 
 
 ##B. Sketch and/or describe the graph(s) 
 
-I want to plot two pictures.
+I want to plot 3 pictures.
 
-The first is a segment-point plot. X-axis is "country" and Y-axis is the mean of each country. There are two segments above each country to indicate the mean value in different waves, namely the year of 1990 and 2000. This one is designed to demonstrate the comparison of average level of 2 waves in each country. 
+The first one is a group of 3 histogram plots of the answers in each country, in each of which there are two lines labeling different waves of 1990 and 2000.
 
-Another one is a bar graph. X-axis is "answer scale"", which contains "1" to "10". Y-axis is "percentage", which means the percentage of prequency of an answer (like "5") in the total sum of answers in a country in one wave. Above the X-axis is the "percentage" in the year of 1990, while beneath the X-axis is "percentage" in the year of 2012.
+The second is a segment-point plot. X-axis is "country" and Y-axis is the mean of each country. There are two segments above each country to indicate the mean value in different waves, namely the year of 1990 and 2000. This one is designed to demonstrate the comparison of average level of 2 waves in each country. 
 
-#####(I tried to import my sketch but failed.
-      "Error : .onLoad failed in loadNamespace() for 'Cairo', details:call: dyn.load(file, DLLpath = DLLpath, ...)error: unable to load shared object '/Library/Frameworks/R.framework/Versions/3.1/Resources/library/Cairo/libs/Cairo.so':dlopen(/Library/Frameworks/R.framework/Versions/3.1/Resources/library/Cairo/libs/Cairo.so, 6): Library not loaded: /opt/X11/lib/libXrender.1.dylib.Referenced from: /Library/Frameworks/R.framework/Versions/3.1/Resources/library/Cairo/libs/Cairo.so Reason: image not found. Error: package or namespace load failed for 'Cairo'")
+The last one is a bar graph. X-axis is "answer scale"", which contains "1" to "10". Y-axis is "percentage", which means the percentage of frequency of an answer (like "5") in the total sum of answers in a country in one wave. Above the X-axis is the "percentage" in the year of 1990, while beneath the X-axis is "percentage" in the year of 2012. This is designed to show the changes in each answer.
 
-
+##### #I tried to import my sketch but failed.Below are the Error and warnings, when I tried "library(Cairo)" and importing jpg :
+      Error : .onLoad failed in loadNamespace() for 'Cairo', details:call: dyn.load(file, DLLpath = DLLpath, ...)error: unable to load shared object '/Library/Frameworks/R.framework/Versions/3.1/Resources/library/Cairo/libs/Cairo.so':dlopen(/Library/Frameworks/R.framework/Versions/3.1/Resources/library/Cairo/libs/Cairo.so, 6): Library not loaded: /opt/X11/lib/libXrender.1.dylib.Referenced from: /Library/Frameworks/R.framework/Versions/3.1/Resources/library/Cairo/libs/Cairo.so Reason: image not found. Error: package or namespace load failed for 'Cairo'
 ```{r}
-
 #Not able to library(Cairo)#
 jpeg("/Users/huzhongjun/Downloads/IMG_2706.jpg")
 ```
 
 ##C. Write down the target shape
 
-I would like to 
+I would like to select data about the same question from two waves of survey.
 
 In my target shape of data, I would like to include the year of two waves, 3 countries:China, Japan, South Korea, all the answers ("1" to "10"), average scores to this questions of 2 waves in each countries:
 
-  {Year:"1990, 2012", Country:"China, Japan, South Korea", Mean(c("Country, Year"), Values of Income Equality("1~10")}""
+      {Year:"1990, 2012", Country:"China, Japan, South Korea", Mean(c("Country, Year"), Values of Income Equality("1~10")}
 
 ##D. Write a script
 
@@ -128,7 +127,7 @@ d <- d[, list(ie = unique(ie), percentage = as.numeric(table(ie)/length(ie))), b
 
 ##E. Make it actually make your graph. 
 
-1. 
+1. Average Level of Each Country
 ```{r,fig.height=7,fig.width=12}
 library(ggplot2)
 ggplot(dmean, aes(x= Mean, y= Country)) +
@@ -139,9 +138,10 @@ ggplot(dmean, aes(x= Mean, y= Country)) +
         theme(panel.grid.major.y = element_blank(),
               panel.grid.minor.x = element_blank(),
               panel.grid.major.x = element_line(colour = "grey", linetype="dashed")) +
-        facet_grid(year ~ ., scales="free_y", space="free_y")
+        facet_grid(year ~ ., scales="free_y", space="free_y")+
+        ggtitle("Average Level of Each Country")
 ```
-2. 
+2. Income Equality: Percentage of Each level
 ```{r,fig.height=7,fig.width=12}
 library(ggplot2)
 library(RColorBrewer)
@@ -154,7 +154,8 @@ ggplot(d, aes(x=Country, y=percentage, fill=ie))+
         panel.grid.minor.y = element_blank(),
         panel.grid.major.x = element_line(colour="white", linetype="dashed"))+
   guides(fill=guide_legend(title=NULL))+
-  scale_fill_manual(values=color)
+  scale_fill_manual(values=color)+
+  ggtitle("Income Equality: Percentage of Each level")
 ```
 
 ##F. Write expressive fantasy function calls

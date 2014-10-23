@@ -136,7 +136,7 @@ Heat_map(var_by_state = fav_score_w4_Jm,var_name = 'Favorite Score',
 ```
 
 
-Well, it seems John McCain lead in wave 4, however, situation changed during wave 5! 
+Well, it seems John McCain lead in wave 4, however, situation changed during wave 5 ! 
 
 
 

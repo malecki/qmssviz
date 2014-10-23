@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<!-- saved from url=(0014)about:internet -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=9" >
+
+<title></title>
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 12px;
+   margin: 8px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 { 
+   font-size:2.2em; 
+}
+
+h2 { 
+   font-size:1.8em; 
+}
+
+h3 { 
+   font-size:1.4em; 
+}
+
+h4 { 
+   font-size:1.0em; 
+}
+
+h5 { 
+   font-size:0.9em; 
+}
+
+h6 { 
+   font-size:0.8em; 
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre {	
+   margin-top: 0;
+   max-width: 95%;
+   border: 1px solid #ccc;
+   white-space: pre-wrap;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code.r, code.cpp {
+   background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * { 
+      background: transparent !important; 
+      color: black !important; 
+      filter:none !important; 
+      -ms-filter: none !important; 
+   }
+
+   body { 
+      font-size:12pt; 
+      max-width:100%; 
+   }
+       
+   a, a:visited { 
+      text-decoration: underline; 
+   }
+
+   hr { 
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote { 
+      padding-right: 1em; 
+      page-break-inside: avoid; 
+   }
+
+   tr, img { 
+      page-break-inside: avoid; 
+   }
+
+   img { 
+      max-width: 100% !important; 
+   }
+
+   @page :left { 
+      margin: 15mm 20mm 15mm 10mm; 
+   }
+     
+   @page :right { 
+      margin: 15mm 10mm 15mm 20mm; 
+   }
+
+   p, h2, h3 { 
+      orphans: 3; widows: 3; 
+   }
+
+   h2, h3 { 
+      page-break-after: avoid; 
+   }
+}
+
+</style>
+
+<!-- Styles for R syntax highlighter -->
+<style type="text/css">
+   pre .operator,
+   pre .paren {
+     color: rgb(104, 118, 135)
+   }
+
+   pre .literal {
+     color: rgb(88, 72, 246)
+   }
+
+   pre .number {
+     color: rgb(0, 0, 205);
+   }
+
+   pre .comment {
+     color: rgb(76, 136, 107);
+   }
+
+   pre .keyword {
+     color: rgb(0, 0, 255);
+   }
+
+   pre .identifier {
+     color: rgb(0, 0, 0);
+   }
+
+   pre .string {
+     color: rgb(3, 106, 7);
+   }
+</style>
+
+<!-- R syntax highlighter -->
+<script type="text/javascript">
+var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
+hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+</head>
+
+<body>
+<h1></h1>
+
+<h2>About the Data</h2>
+
+<p><strong>Data set 1:</strong> The Pew Research Center&#39;s Internet &amp; American Life Project, 2008 Health Questionnaire  </p>
+
+<ul>
+<li>N=3030</li>
+<li>Field dates: November 17 to December 17, 2008</li>
+</ul>
+
+<p><strong>Data set 2:</strong> The Pew Research Center&#39;s Internet &amp; American Life Project, 2012 Health Questionnaire</p>
+
+<ul>
+<li>N=3000</li>
+<li>Field dates: August 7 to September 4, 2012</li>
+</ul>
+
+<h2>Goal</h2>
+
+<p>I am interested in exploring whether information-seeking behaviors changed among Internet users of different ages between the years of 2008 and 2012, especially in regards to health insurance information. The two surveys conveniently sandwich the implementation of the Affordable Care Act, which expanded healthcare coverage for uninsured and underinsured Americans. Major changes in public insurance plans and the approaching launch of <a href="http://www.healthcare.gov/">Healthcare.gov</a> may have had a noticable impact on self-reported information-seeking behavior.</p>
+
+<h2>About the Survey Questions</h2>
+
+<h3>2008 Survey</h3>
+
+<p>In the 2008 survey, the question of interest is Q16. It reads: </p>
+
+<blockquote>
+<p>&ldquo;Q16) Now, we&#39;d like to ask if you&#39;ve looked for information ONLINE about certain health or medical issues. Specifically, have you ever looked online for&hellip;&rdquo;. </p>
+</blockquote>
+
+<p>I am specifically interested in responses to Option J:</p>
+
+<blockquote>
+<p>&ldquo;J. Information related to health insurance, including private insurance, Medicare or Medicaid&rdquo;. Survey respondents can either answer&quot;&ldquo;</p>
+</blockquote>
+
+<p>Possible responses include: </p>
+
+<ul>
+<li>1 = Yes, have done this</li>
+<li>2 = No, have not done this</li>
+<li>8 = Don&#39;t know</li>
+<li>9 = Refused</li>
+</ul>
+
+<p>It is worth noting that Q6 was only asked for people labeled as &quot;Internet users&rdquo;. &ldquo;Internet users&rdquo; were identified as those who responded positively (1) to questions <code>Q6a</code> or <code>Q6b</code>.</p>
+
+<h3>2012 Survey</h3>
+
+<p>In the 2012 survey, the corresponding question is Q6. It reads:</p>
+
+<blockquote>
+<p>&ldquo;Q6) Now, we&#39;d like to know if you&#39;ve looked for information ONLINE about certain health or medical issues, either for yourself or someone else. Specifically, in the last 12 months, have you looked online for information about&hellip;&rdquo;</p>
+</blockquote>
+
+<p>I am specifically interested in responses to Option C:</p>
+
+<blockquote>
+<p>&ldquo;C. Health insurance, including private insurance, Medicare or Medicaid.&rdquo;</p>
+</blockquote>
+
+<ul>
+<li>1 = Yes, have done this</li>
+<li>2 = No, have not done this</li>
+<li>8 = Don&#39;t know</li>
+<li>9 = Refused</li>
+</ul>
+
+<p>It is worth noting that Q16 was only asked for people labeled as &ldquo;Internet users&rdquo;. &ldquo;Internet users&rdquo; were identified as those who responded positively (1) to questions <code>intuse</code>, <code>emlocc</code>, or <code>intmob</code>.</p>
+
+<h3>Demographic Variables</h3>
+
+<p>A comparison of the data dictionaries for the 2008 and 2012 health surveys reveals that the demographic variables I will include (<code>hisp</code>, <code>race</code>, <code>age</code>, <code>inc</code>) are all coded the same. I have purposely included more demographic variables than I will use in case I want to stratify by other characteristics.</p>
+
+<p>(1) <code>age</code> is a numeric value that corresponds to the age of the respondent if the respondent is 18 to 96 years old. </p>
+
+<ul>
+<li>&ldquo;97&rdquo; is used for individuals 97 years or older</li>
+<li>&ldquo;98&rdquo; is used for &ldquo;Don&#39;t know&rdquo;</li>
+<li>&ldquo;99&rdquo; is used for &ldquo;Refused&rdquo;</li>
+</ul>
+
+<p>(2) <code>hisp</code> corresponds to a question asking whether the respondent is Hispanic or Latino.</p>
+
+<ul>
+<li>1 = &ldquo;Yes&rdquo;</li>
+<li>2 = &ldquo;No&rdquo;</li>
+<li>9 = &ldquo;Don&#39;t know/refused&rdquo;</li>
+</ul>
+
+<p>(3) <code>race</code> corresponds to a question asking for the respondent&#39;s race. </p>
+
+<ul>
+<li>1 = &ldquo;White&rdquo;</li>
+<li>2 = &ldquo;Black or African-American&rdquo;</li>
+<li>3 = &ldquo;Asian or Pacific Islander&rdquo;</li>
+<li>4 = &ldquo;Mixed race&rdquo;</li>
+<li>5 = &ldquo;Native American/American Indian</li>
+<li>6 = &quot;Other (specify)&rdquo;</li>
+<li>7 = &ldquo;Don&#39;t know/refused&rdquo;</li>
+</ul>
+
+<p>(4) <code>inc</code> corresponds to a self-reported total family income. </p>
+
+<ul>
+<li>1 = &ldquo;Less than $10,000&rdquo;</li>
+<li>2 = &ldquo;$10,000 to &lt; $20,000&rdquo;</li>
+<li>3 = &ldquo;$20,000 to &lt; $30,000&rdquo;</li>
+<li>4 = &ldquo;$30,000 to &lt; $40,000&rdquo;</li>
+<li>5 = &ldquo;$40,000 to &lt; $50,000&rdquo;</li>
+<li>6 = &ldquo;$50,000 to &lt; $75,000&rdquo;</li>
+<li>7 = &ldquo;$75,000 to &lt; $100,000&rdquo;</li>
+<li>8 = &ldquo;$100,000 to &lt; $150,000&rdquo;</li>
+<li>9 = &ldquo;$150,000 or more&rdquo;</li>
+<li>10 = &ldquo;Don&#39;t know/refused&rdquo;</li>
+</ul>
+
+<p>(In the 2012 data set, &ldquo;Don&#39;t know/refused&rdquo; for <code>inc</code> are separated into 98 and 99.)</p>
+
+<h2>Preparing the Data</h2>
+
+<pre><code class="r">setwd(&quot;C:/Users/Flo/Desktop/Data Viz 2014/Assignment3&quot;)
+wave1 &lt;- read.csv(&quot;December_2008_Health_csv.csv&quot;, stringsAsFactors = FALSE)
+wave2 &lt;- read.csv(&quot;September_2012_health_csv.csv&quot;, stringsAsFactors = FALSE)
+str(wave1)
+</code></pre>
+
+<pre><code>## &#39;data.frame&#39;:    2253 obs. of  181 variables:
+##  $ psraid    : int  100012 100014 100025 100032 100038 100040 100044 100045 100047 100048 ...
+##  $ sample    : int  1 1 1 1 1 1 1 1 1 1 ...
+##  $ usr       : chr  &quot;S&quot; &quot;U&quot; &quot;S&quot; &quot;S&quot; ...
+##  $ usr1      : int  2 1 2 2 3 1 1 2 3 2 ...
+##  $ cregion   : int  3 2 1 1 3 2 1 2 3 1 ...
+##  $ lang      : int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ qs1       : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ sex       : int  2 1 1 1 2 1 1 1 1 2 ...
+##  $ q1        : int  2 4 4 3 3 5 5 2 1 1 ...
+##  $ q5        : int  2 2 2 2 2 2 2 2 2 2 ...
+##  $ q6a       : int  2 2 2 2 2 2 2 2 2 2 ...
+##  $ q6b       : int  2 2 2 2 2 2 2 2 2 2 ...
+##  $ q7        : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q8a       : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q8b       : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q8c       : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q9a       : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q9b       : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q9c       : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q9d       : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q9e       : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q10a      : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q10b      : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q10c      : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q10d      : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q10e      : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q11       : int  2 2 2 2 3 2 2 3 2 2 ...
+##  $ q12       : int  2 2 3 3 1 2 4 2 1 2 ...
+##  $ q13a      : int  2 2 2 2 2 2 2 2 2 2 ...
+##  $ q13b      : int  2 2 2 2 2 1 2 2 2 2 ...
+##  $ q13c      : int  2 2 2 2 2 2 2 2 2 2 ...
+##  $ q13d      : int  2 2 2 2 2 2 2 2 2 2 ...
+##  $ q13e      : int  2 1 2 1 2 2 2 2 2 2 ...
+##  $ q14       : int  2 2 2 1 2 1 1 2 2 2 ...
+##  $ q15       : int  2 2 2 2 2 2 1 2 2 2 ...
+##  $ q16a      : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q16b      : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q16c      : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q16d      : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q16e      : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q16f      : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q16g      : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q16h      : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q16i      : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q16j      : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q16k      : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q16l      : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q16m      : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q17       : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q18       : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q19a      : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q19b      : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q19c      : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q19d      : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q19e      : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q19f      : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q20a      : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q20b      : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q20c      : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q20d      : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q20e      : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q20f      : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q21a      : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q21b      : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q21c      : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q21d      : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q21e      : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q21f      : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q22a      : int  2 2 1 1 2 2 8 2 2 1 ...
+##  $ q22b      : int  1 1 1 1 1 1 1 1 1 1 ...
+##  $ q22c      : int  2 2 2 2 2 2 2 2 2 2 ...
+##  $ q22d      : int  1 1 2 1 2 2 1 2 1 1 ...
+##  $ q22e      : int  1 1 2 1 2 2 2 2 2 1 ...
+##  $ q22f      : int  2 2 2 2 2 2 9 2 2 2 ...
+##  $ q23       : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q24       : int  1 2 NA NA 2 2 2 2 2 NA ...
+##  $ q25       : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q25b1     : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q25b2     : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q26       : int  4 2 4 8 8 4 1 8 4 4 ...
+##  $ q27       : int  4 2 4 4 4 4 9 4 4 4 ...
+##  $ act01a    : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ act03a    : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ act21a    : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ act24a    : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ act32a    : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ act58a    : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ act71a    : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ act87a    : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ act103a   : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ act112a   : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ act01b    : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ act03b    : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ act21b    : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ act24b    : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ act32b    : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ act58b    : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ act71b    : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ act87b    : int  NA NA NA NA NA NA NA NA NA NA ...
+##   [list output truncated]
+</code></pre>
+
+<pre><code class="r">str(wave2)
+</code></pre>
+
+<pre><code>## &#39;data.frame&#39;:    3014 obs. of  131 variables:
+##  $ psraid    : int  100001 100003 100006 100007 100018 100025 100028 100030 100032 100040 ...
+##  $ sample    : int  1 1 1 1 1 1 1 1 1 1 ...
+##  $ lang      : int  1 1 1 1 1 1 1 1 1 1 ...
+##  $ FIPS      : int  37019 34029 13045 34039 12086 45007 12095 13103 51009 9001 ...
+##  $ state     : int  37 34 13 34 12 45 12 13 51 9 ...
+##  $ cregion   : int  3 1 3 1 3 3 3 3 3 1 ...
+##  $ usr       : chr  &quot;S&quot; &quot;S&quot; &quot;S&quot; &quot;S&quot; ...
+##  $ form      : int  1 1 2 2 1 2 2 1 2 1 ...
+##  $ sex       : int  2 1 2 2 1 2 2 2 2 2 ...
+##  $ q1        : int  1 2 4 2 4 2 4 1 2 5 ...
+##  $ intuse    : int  1 1 1 1 2 1 2 1 1 1 ...
+##  $ emlocc    : int  1 1 1 1 2 1 2 2 1 1 ...
+##  $ intmob    : int  1 2 2 2 2 1 2 1 1 2 ...
+##  $ ql1       : int  1 2 1 1 2 1 2 1 1 2 ...
+##  $ smph      : int  2 NA 2 2 NA 1 NA 2 1 NA ...
+##  $ cell1a    : int  2 NA 2 2 NA 1 NA 2 1 NA ...
+##  $ cell1b    : int  2 NA 1 2 NA 1 NA 1 1 NA ...
+##  $ cell1c    : int  2 NA 1 2 NA 1 NA 1 1 NA ...
+##  $ cell1d    : int  2 NA 2 1 NA 2 NA 2 1 NA ...
+##  $ cell1e    : int  2 NA 2 2 NA 2 NA 2 2 NA ...
+##  $ cell1f    : int  2 NA 1 2 NA 2 NA 2 2 NA ...
+##  $ q2        : int  1 2 2 1 1 1 3 2 2 4 ...
+##  $ q3a       : int  2 2 2 2 1 2 2 2 2 2 ...
+##  $ q3b       : int  2 1 1 2 2 2 2 2 2 2 ...
+##  $ q3c       : int  2 1 2 2 1 2 1 1 2 2 ...
+##  $ q3d       : int  2 2 2 2 1 2 2 2 2 1 ...
+##  $ q3e       : int  2 2 2 2 2 2 2 2 2 2 ...
+##  $ q3f       : int  2 2 2 2 2 2 2 2 2 1 ...
+##  $ q4a       : int  2 2 2 2 2 2 2 2 2 1 ...
+##  $ q4b       : int  2 2 2 2 1 2 2 2 2 2 ...
+##  $ q4c       : int  2 2 2 2 2 2 2 2 2 2 ...
+##  $ q5a       : int  4 2 4 2 2 2 2 2 2 2 ...
+##  $ q5b       : int  4 2 2 2 4 4 4 2 2 4 ...
+##  $ q5c       : int  4 4 2 4 4 4 4 8 4 4 ...
+##  $ care2     : int  2 2 1 1 2 2 2 2 2 2 ...
+##  $ care3     : int  NA NA 1 1 NA NA NA NA NA NA ...
+##  $ care4     : int  NA NA 1 2 NA NA NA NA NA NA ...
+##  $ care5     : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ care6     : int  2 2 2 2 2 2 2 2 2 2 ...
+##  $ care7     : int  NA NA 2 2 NA NA NA NA NA NA ...
+##  $ care8     : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ care9a    : int  NA NA 2 2 NA NA NA NA NA NA ...
+##  $ care9b    : int  NA NA 2 2 NA NA NA NA NA NA ...
+##  $ q6a       : int  2 2 1 2 NA 1 NA 2 1 1 ...
+##  $ q6b       : int  2 2 2 2 NA 2 NA 2 1 1 ...
+##  $ q6c       : int  2 2 2 2 NA 1 NA 2 2 2 ...
+##  $ q6d       : int  2 2 2 2 NA 2 NA 2 2 2 ...
+##  $ q6e       : int  2 2 2 1 NA 2 NA 2 2 2 ...
+##  $ q6f       : int  2 2 2 2 NA 1 NA 2 2 1 ...
+##  $ q6g       : int  2 2 2 2 NA 2 NA 2 2 2 ...
+##  $ q6h       : int  2 2 2 2 NA 1 NA 2 1 2 ...
+##  $ q6i       : int  2 2 2 2 NA 1 NA 2 2 1 ...
+##  $ q6j       : int  2 2 2 2 NA 1 NA 2 2 2 ...
+##  $ q6k       : int  2 2 2 2 NA 2 NA 2 2 1 ...
+##  $ q6l       : int  2 2 2 2 NA 2 NA 2 2 1 ...
+##  $ q7        : int  NA NA 2 2 NA 2 NA NA 1 3 ...
+##  $ q8        : int  NA NA 8 2 NA 1 NA NA 1 1 ...
+##  $ q10       : int  NA NA 2 2 NA 2 NA NA 2 1 ...
+##  $ q11       : int  NA NA NA NA NA NA NA NA NA 2 ...
+##  $ q12       : int  NA NA 2 1 NA 2 NA NA 1 2 ...
+##  $ q13       : int  NA NA NA 1 NA NA NA NA 3 NA ...
+##  $ q14       : int  NA NA NA 2 NA NA NA NA 1 NA ...
+##  $ q15       : int  NA NA NA 3 NA NA NA NA 2 NA ...
+##  $ q16a      : int  2 2 2 2 NA 2 NA 2 2 1 ...
+##  $ q16b      : int  2 2 2 2 NA 2 NA 2 2 1 ...
+##  $ q16c      : int  2 2 2 2 NA 2 NA 2 2 1 ...
+##  $ q16d      : int  2 2 2 2 NA 1 NA 2 2 2 ...
+##  $ q17       : int  2 2 2 2 NA 2 NA 2 2 1 ...
+##  $ q18       : int  NA NA NA NA NA NA NA NA NA 1 ...
+##  $ q19       : int  NA NA NA NA NA NA NA NA NA 2 ...
+##  $ q20a      : int  2 2 2 2 NA 2 NA 2 2 2 ...
+##  $ q20b      : int  2 2 2 2 NA 2 NA 2 2 1 ...
+##  $ q20c      : int  2 2 2 2 NA 2 NA 2 2 1 ...
+##  $ q20d      : int  2 2 2 2 NA 2 NA 2 2 2 ...
+##  $ q20e      : int  2 2 1 2 NA 2 NA 2 2 1 ...
+##  $ q20f      : int  2 2 2 2 NA 2 NA 2 2 2 ...
+##  $ q21       : int  NA NA 2 NA NA 2 NA 2 2 NA ...
+##  $ q22       : int  2 NA 2 2 NA 2 NA 2 2 NA ...
+##  $ q23m1     : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q23m2     : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q23m3     : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q23m4     : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q23m5     : logi  NA NA NA NA NA NA ...
+##  $ q23m6     : logi  NA NA NA NA NA NA ...
+##  $ q23m7     : logi  NA NA NA NA NA NA ...
+##  $ q23m8     : logi  NA NA NA NA NA NA ...
+##  $ q23m9     : logi  NA NA NA NA NA NA ...
+##  $ q23m10    : logi  NA NA NA NA NA NA ...
+##  $ q24       : int  1 1 2 1 2 2 1 2 1 2 ...
+##  $ q25       : int  2 1 2 2 1 1 2 2 2 1 ...
+##  $ care10    : int  NA NA 2 2 NA NA NA NA NA NA ...
+##  $ q26m1     : int  6 1 NA 1 6 1 6 NA 1 1 ...
+##  $ q26m2     : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q26m3     : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ q27       : int  2 1 NA 2 1 1 9 NA 1 1 ...
+##  $ q27a      : int  NA 2 NA NA 4 4 NA NA 2 1 ...
+##  $ q28       : int  2 1 NA 2 2 2 2 NA 2 1 ...
+##  $ q29m1     : int  NA 6 NA NA NA NA NA NA NA 6 ...
+##  $ q29m2     : int  NA NA NA NA NA NA NA NA NA NA ...
+##   [list output truncated]
+</code></pre>
+
+<p>For wave1, I want to keep the unique identifier <code>psraid</code>,  some demographic variables I can explore, the Internet use questions <code>q6a</code> and <code>q6b</code>, and the question of interest <code>q16j</code>. I want to subset by the Internet use questions to include only Internet users.</p>
+
+<p>For wave2, I want to keep the unique identifier <code>psraid</code>, some demographic variables I can explore, the Internet use questions <code>intuse</code>, <code>emlocc</code>, and <code>intmob</code>, in addition to the question of interest <code>q6c</code>. I want to subset by the Internet use questions to include only Internet users.</p>
+
+<pre><code class="r">vars08 &lt;- c(&quot;psraid&quot;, &quot;sex&quot;, &quot;q6a&quot;, &quot;q6b&quot;, &quot;q16j&quot;, &quot;hisp&quot;, &quot;race&quot;, &quot;inc&quot;, &quot;age&quot;)
+vars12 &lt;- c(&quot;psraid&quot;, &quot;sex&quot;, &quot;intuse&quot;, &quot;emlocc&quot;, &quot;intmob&quot;, &quot;q6c&quot;, &quot;hisp&quot;, &quot;race&quot;, 
+    &quot;inc&quot;, &quot;age&quot;)
+infoins08 &lt;- subset(wave1, q6a == 1 | q6b == 1, select = vars08)
+infoins12 &lt;- subset(wave2, intuse == 1 | emlocc == 1 | intmob == 1, select = vars12)
+</code></pre>
+
+<p>We have 1650 participating Internet users in the 2008 survey and 2392 in the 2012 survey. Now, to handle missing values. </p>
+
+<pre><code class="r"># Create function to spit out number of missing values.
+missVal &lt;- function(data) {
+    if (sum(is.na(data)) &gt; 0) {
+        naSum &lt;- sum(is.na(data))
+        paste(&quot;There are&quot;, naSum, &quot;missing values.&quot;)
+    } else {
+        print(&quot;There are no missing values.&quot;)
+    }
+}
+
+missVal(infoins08)
+</code></pre>
+
+<pre><code>## [1] &quot;There are no missing values.&quot;
+</code></pre>
+
+<pre><code class="r">missVal(infoins12)
+</code></pre>
+
+<pre><code>## [1] &quot;There are no missing values.&quot;
+</code></pre>
+
+<p>There are no missing values. Even so, we want to treat people who answered &ldquo;Don&#39;t know&rdquo; or &ldquo;Refused&rdquo; as missing and remove them from our analysis.</p>
+
+<pre><code class="r">infoins08$ins &lt;- infoins08$q16j
+for (i in which(infoins08$q16j == 8 | infoins08$q16j == 9, )) {
+    infoins08$ins[i] = NA
+}
+for (i in which(infoins08$q16j == 2)) {
+    infoins08$ins[i] = 0
+}
+
+infoins12$ins &lt;- infoins12$q6c
+for (i in which(infoins12$q6c == 8 | infoins12$q6c == 9, )) {
+    infoins12$ins[i] = NA
+}
+for (i in which(infoins12$q6c == 2)) {
+    infoins12$ins[i] = 0
+}
+missVal(infoins08)
+</code></pre>
+
+<pre><code>## [1] &quot;There are 1 missing values.&quot;
+</code></pre>
+
+<pre><code class="r">missVal(infoins12)
+</code></pre>
+
+<pre><code>## [1] &quot;There are 5 missing values.&quot;
+</code></pre>
+
+<p>At most, we would be deleting 1 observation from the 2008 data set and 5 observations from the 2012 data set. This isn&#39;t huge number, so I am comfortable with removing those observations.</p>
+
+<pre><code class="r">infoins08 &lt;- na.omit(infoins08)
+infoins12 &lt;- na.omit(infoins12)
+missVal(infoins08)
+</code></pre>
+
+<pre><code>## [1] &quot;There are no missing values.&quot;
+</code></pre>
+
+<pre><code class="r">missVal(infoins12)
+</code></pre>
+
+<pre><code>## [1] &quot;There are no missing values.&quot;
+</code></pre>
+
+<h2>Conceptualizing a Visualization</h2>
+
+<p>I have a lot of demographc variables to work with, so I will explore one that really interests me. I am interested in comparing the proportion of Internet users who searched insurance information across age groups. This is driven by the fact that (1) young adults are the most prolific Internet users, and (2) the expansion of online resources might actually inspire older adults to also find health information online.</p>
+
+<p>Right now, age is a numeric value, so I want to group them by meaningful age categories. All survey participants are 18 years or older.</p>
+
+<ul>
+<li>Under 25 #group that may be covered by parents health insurance</li>
+<li>25 to &lt; 45 </li>
+<li>45 to &lt; 65</li>
+<li>65 and older #group that would be enrolled into Medicaid</li>
+</ul>
+
+<p>I want to create a side-by-side barplot comparing % who searched for insurance information online for each age group between the two different survey years. </p>
+
+<pre><code class="r">infoins08$agegrp &lt;- infoins08$age
+for (i in which(infoins08$age &lt; 25)) {
+    infoins08$agegrp[i] = &quot;Under 25&quot;
+}
+for (i in which(infoins08$age &gt;= 25 &amp; infoins08$age &lt; 45)) {
+    infoins08$agegrp[i] = &quot;25 to 44&quot;
+}
+for (i in which(infoins08$age &gt;= 45 &amp; infoins08$age &lt; 65)) {
+    infoins08$agegrp[i] = &quot;45 to 64&quot;
+}
+for (i in which(infoins08$age &gt;= 65 &amp; infoins08$age &lt;= 97)) {
+    infoins08$agegrp[i] = &quot;65 and older&quot;
+}
+for (i in which(infoins08$age == 98 | infoins08$age == 99)) {
+    infoins08$agegrp[i] = NA
+}
+
+infoins12$agegrp &lt;- infoins12$age
+for (i in which(infoins12$age &lt; 25)) {
+    infoins12$agegrp[i] = &quot;Under 25&quot;
+}
+for (i in which(infoins12$age &gt;= 25 &amp; infoins12$age &lt; 45)) {
+    infoins12$agegrp[i] = &quot;25 to 44&quot;
+}
+for (i in which(infoins12$age &gt;= 45 &amp; infoins12$age &lt; 65)) {
+    infoins12$agegrp[i] = &quot;45 to 64&quot;
+}
+for (i in which(infoins12$age &gt;= 65 &amp; infoins12$age &lt;= 97)) {
+    infoins12$agegrp[i] = &quot;65 and older&quot;
+}
+for (i in which(infoins12$age == 98 | infoins12$age == 99)) {
+    infoins12$agegrp[i] = NA
+}
+
+infoins08 &lt;- na.omit(infoins08)
+infoins12 &lt;- na.omit(infoins12)
+</code></pre>
+
+<p>There are 1611 observations in the final 2008 data set and 2341 observations in the final 2012 data set.</p>
+
+<h2>Creating a Tidy Dataset</h2>
+
+<pre><code class="r">install.packages(&quot;reshape&quot;)
+</code></pre>
+
+<pre><code>## Installing package(s) into &#39;C:/Program Files/R/R-2.15.1/library&#39;
+## (as &#39;lib&#39; is unspecified)
+</code></pre>
+
+<pre><code>## Error: trying to use CRAN without setting a mirror
+</code></pre>
+
+<pre><code class="r">library(&quot;reshape&quot;)
+</code></pre>
+
+<pre><code>## Warning: package &#39;reshape&#39; was built under R version 2.15.3
+</code></pre>
+
+<pre><code>## Loading required package: plyr
+</code></pre>
+
+<pre><code>## Warning: package &#39;plyr&#39; was built under R version 2.15.3
+</code></pre>
+
+<pre><code>## 
+## Attaching package: &#39;reshape&#39;
+## 
+## The following object(s) are masked from &#39;package:plyr&#39;:
+## 
+##     rename, round_any
+</code></pre>
+
+<pre><code class="r">
+# Rework 2008 survey
+dat08 &lt;- aggregate(infoins08$ins, list(infoins08$agegrp), mean)
+names(dat08) &lt;- c(&quot;agegrp&quot;, &quot;pct08&quot;)
+dat08$agegrp &lt;- factor(dat08$agegrp, levels = c(&quot;Under 25&quot;, &quot;25 to 44&quot;, &quot;45 to 64&quot;, 
+    &quot;65 and older&quot;))
+dat08$agegrp
+</code></pre>
+
+<pre><code>## [1] 25 to 44     45 to 64     65 and older Under 25    
+## Levels: Under 25 25 to 44 45 to 64 65 and older
+</code></pre>
+
+<pre><code class="r">
+# Rework 2012 survey
+dat12 &lt;- aggregate(infoins12$ins, list(infoins12$agegrp), mean)
+names(dat12) &lt;- c(&quot;agegrp&quot;, &quot;pct12&quot;)
+dat12$agegrp &lt;- factor(dat12$agegrp, levels = c(&quot;Under 25&quot;, &quot;25 to 44&quot;, &quot;45 to 64&quot;, 
+    &quot;65 and older&quot;))
+
+# Merge surveys
+datFin &lt;- merge(dat08, dat12, by = &quot;agegrp&quot;)
+datFinSort &lt;- datFin[order(datFin$agegrp), ]
+datFinSort
+</code></pre>
+
+<pre><code>##         agegrp  pct08  pct12
+## 4     Under 25 0.3115 0.1915
+## 1     25 to 44 0.4149 0.3015
+## 2     45 to 64 0.3498 0.2667
+## 3 65 and older 0.2458 0.2039
+</code></pre>
+
+<pre><code class="r">
+# Reshape data
+dataTransf &lt;- melt(datFinSort, id = &quot;agegrp&quot;)
+levels(dataTransf$variable) &lt;- c(&quot;2008&quot;, &quot;2012&quot;)
+names(dataTransf) &lt;- c(&quot;agegrp&quot;, &quot;year&quot;, &quot;percent&quot;)
+dataTransf
+</code></pre>
+
+<pre><code>##         agegrp year percent
+## 1     Under 25 2008  0.3115
+## 2     25 to 44 2008  0.4149
+## 3     45 to 64 2008  0.3498
+## 4 65 and older 2008  0.2458
+## 5     Under 25 2012  0.1915
+## 6     25 to 44 2012  0.3015
+## 7     45 to 64 2012  0.2667
+## 8 65 and older 2012  0.2039
+</code></pre>
+
+<h2>Visualize Data</h2>
+
+<pre><code class="r">library(ggplot2)
+</code></pre>
+
+<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 2.15.3
+</code></pre>
+
+<pre><code class="r">
+base &lt;- ggplot(dataTransf, aes(ymin = 0, ymax = 0.5, x = factor(agegrp), y = percent, 
+    fill = factor(year))) + geom_bar(stat = &quot;identity&quot;, position = &quot;dodge&quot;, 
+    width = 0.3) + xlab(&quot;Age Group&quot;) + ylab(&quot;Proportion&quot;) + ggtitle(&quot;Proportion Who Searched Online for Insurance Info&quot;)
+
+look &lt;- theme_bw() + theme(plot.title = element_text(face = &quot;bold&quot;, size = 18), 
+    axis.title = element_text(face = &quot;bold&quot;, size = 15))
+
+palette &lt;- c(&quot;#6495ed&quot;, &quot;#a0522d&quot;)
+
+colors &lt;- scale_fill_manual(name = &quot;Years&quot;, values = palette)
+
+axis &lt;- ylim(0, 1)
+
+dataGraph &lt;- base + look + colors + axis
+
+dataGraph
+</code></pre>
+
+<p><img src="data:image/png;base64,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" alt="plot of chunk unnamed-chunk-8"/> </p>
+
+<h2>Expressive Fantasy Function Calls</h2>
+
+<pre><code class="r"># Load surveys
+wave1 &lt;- loadSurvey(&quot;December_2008_Health_csv.csv&quot;)
+wave2 &lt;- loadSurvey(&quot;September_2012_health_csv.csv&quot;)
+
+# Subset to variables
+infoins08 &lt;- subSurvey(wave1)
+infoins12 &lt;- subSurvey(wave2)
+
+# Recode &#39;Don&#39;t know&#39; and &#39;Refused&#39; and omit these values
+infoins08 &lt;- recodeRefuseOmit(infoins08$q16j, infoins08$ins)
+infoins12 &lt;- recodeRefuseOmit(infoins12$q6c, infoins12$ins)
+
+# Recode age
+infoins08 &lt;- recodeAgeOmit(infoins08$age, infoins08$agegrp)
+infoins12 &lt;- recodeAgeOmit(infoins12$age, infoins08$agegrps)
+
+# Tidy Dataset
+dat08 &lt;- meanAgg(infoins08$ins, infoins08$agegrp, stringsAsFactors = TRUE)
+dat08 &lt;- meanAgg(infoins12$ins, infoins12$agegrp, stringsAsFactors = TRUE)
+dat08 &lt;- relab(dat08, colNam, ageLev)
+dat12 &lt;- relab(dat12, colNam, ageLev)
+datFin &lt;- aggDatOrder(dat08, dat12, ordervar)
+dataTransf &lt;- prepareDat(datFin)
+</code></pre>
+
+</body>
+
+</html>
+

@@ -1,25 +1,74 @@
 ---
-title: "hw3-2014/10/23-sz2491"
+title: "hw3-2014-10-23-sz2491"
 author: "Siqian Zhu"
-date: "2014/10/23"
+date: "2014-10-23"
 output: html_document
 published: false
 tags: hw3
 ---
 
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+Decribe the question
+V217. What is the highest educational level that you have attained? 
+(use functional equivalent of the following, in given society; 
+IF STUDENT, CODE HIGHEST LEVEL HE/SHE EXPECTS TO COMPLETE):
+ 1. No formal education 
+ 2. Incomplete primary school 
+ 3. Complete primary school 
+ 4. Incomplete secondary school: technical/vocational type 
+ 5. Complete secondary school: technical/vocational type 
+ 6. Incomplete secondary: university-preparatory type 
+ 7. Complete secondary: university-preparatory type 
+ 8. Some university-level education, without degree 
+ 9. University-level education, with degree 
+ 0. DK/NA 
+ 
+set working directory and load packages
 
 ```{r}
-summary(cars)
+
+setwd("/Users/ac/Documents/columbia/study/2014fall/datavisualization/github/qmssviz/hw3")
+
+library(plyr)
+library(reshape2)
+library(ggplot2)
 ```
 
-You can also embed plots, for example:
+read data
 
-```{r, echo=FALSE}
-plot(cars)
+```{r}
+readdata <- function(){
+load("~/Documents/columbia/study/2014fall/datavisualization/github/qmssviz/hw3/WV6_Data_rdata_v_2014_06_04.rdata")
+wave6<-WV6_Data_spss_v_2014_06_04
+
+load("~/Documents/columbia/study/2014fall/datavisualization/github/qmssviz/hw3/WV3_Data_rdata_v_2014_09_21.rdata")
+wave3<-WV3_Data_rdata_v_2014_09_21
+}
+
+readdata()
+
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+sort data
+choose countries in Asia, i.e. China, India, South Korea and Taiwan
+```{r}
+wave3a <- subset(wave3,select=c(V1,V2,V238,V217),V2==840|V2==156)
+wave6a <- subset(wave6,select=c(V1,V2,V262,V248),V2==840|V2==156)
+
+
+```
+
+
+plot data
+
+```{r}
+
+
+```
+
+trial
+
+```{r}
+
+
+```

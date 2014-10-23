@@ -53,7 +53,24 @@ data$NORTH[data$NORTH == 8] <- NA
 
 #E
 library(ggplot2)
-qplot(AGE, NORTH, data=data)
+
+
+data$SEX <- factor(data$SEX)
+data$YEAR <- factor(data$YEAR)
+
+data$NORTH[data$NORTH=="1"] <- "1.Support"
+data$NORTH[data$NORTH=="2"] <- "2.Cooperate With"
+data$NORTH[data$NORTH=="3"] <- "3.Guard Against"
+data$NORTH[data$NORTH=="4"] <- "4.Fight Against"
+data$NORTH[data$NORTH=="NA"] <- "Don't Know"
+data$NORTH <- factor(data$NORTH)
+
+
+
+g1 <- ggplot(data, aes(x=NORTH, fill=YEAR))+geom_histogram(position="dodge") + xlab("View on North Korea")
+g1
+
+
 
 
 ```=

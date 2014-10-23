@@ -10,6 +10,7 @@ tag: hw3
 
 The survey I will be examining is the World Values Survey. Specifically, we'll be looking at the willingness of survey respondents to have homosexual neighbours in Wave 3 (1995-1998) and Wave 6 (2010-2014). The question appears on Card G in both waves and is labeled Question V60 in Wave 3 and V40 in Wave 6. There is a very slight different in working between the two waves, though we are not primarily concerned with the difference in wording.
 
+Wave 3:
 
 
 

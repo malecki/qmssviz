@@ -79,10 +79,5 @@ waveto=rbind(wave3a,wave6a) # Merge the two waves by column
 ```
 
 ```{r}
-abc=data.frame(
-  "name"=c("a","b","c"),
-  "gender"=c("F","M","F"),
-  "weight"=c("40","50","60")
-  )
-View(abc)
+
 ```

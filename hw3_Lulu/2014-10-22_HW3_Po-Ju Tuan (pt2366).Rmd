@@ -1,0 +1,84 @@
+---
+title: "2014-10-22_HW3_Po-Ju Tuan (pt2366)"
+author: pt2366
+output: html_document
+published: false
+tags: hw3
+---
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+getwd()
+setwd("C:/Users/user/Documents/qmssviz/hw3_Lulu")
+
+
+
+# Load 2010 dataset into R#
+d2010 <- load("C:/Users/user/Documents/qmssviz/hw3_Lulu/WV6_2010.rdata")
+View(d2010)
+d2010 <- `WV6_Data_spss_v_2014_06_04`
+str(d2010)
+
+## find info about V46 
+
+summary(d2010$V46)
+unique(d2010$V46)
+
+sum(d2010$V46==-5)
+sum(d2010$V46==-4)
+sum(d2010$V46==-3)
+sum(d2010$V46==-2)
+sum(d2010$V46==-1)
+sum(d2010$V46==1)
+sum(d2010$V46==2)
+sum(d2010$V46==3)
+
+## subset 1,2,3 make them into one new variable job 2010
+
+job2010 <- d2010$V46[d2010$V46==1|d2014$V46==2|d2014$V46==3]
+summary(job2010)
+str(job2010)
+hist(job2010)
+
+
+# Load 2005 dataset into R#
+
+d2005 <- load("C:/Users/user/Documents/qmssviz/hw3_Lulu/WV5_2005.rdata")
+View(d2005)
+d2005 <- `WV5_Data_spss_v_2014_04_28`
+View(d2005)
+
+## find info of v45 in 2005
+
+summary(d2005$V45)
+unique(d2005$V45)
+
+## subset 1,2,3 into new variable job2005
+
+job2005 <- d2005$V45[d2005$V45==1|d2005$V45==2|d2005$V45==3]
+summary(job2005)
+
+hist(job2005)
+
+## Plot (1) histogram for 2005 & 2010
+library(ggplot2)
+str(job2010)
+qplot(d2010$job2010, data= d2010)
+
+ggplot(d2010, aes(x=job2010)) + geom_histogram(binwidth=.5)
+
+attributes(job2010)
+
+
+```
+
+You can also embed plots, for example:
+
+```{r, echo=FALSE}
+plot(cars)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

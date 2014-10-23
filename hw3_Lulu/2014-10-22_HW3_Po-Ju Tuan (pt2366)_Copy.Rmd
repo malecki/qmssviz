@@ -1,0 +1,87 @@
+---
+title: "2014-10-22_HW3_Po-Ju Tuan (pt2366)"
+author: pt2366
+output: html_document
+published: false
+tags: hw3
+---
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+getwd()
+setwd("C:/Users/user/Documents/qmssviz/hw3_Lulu")
+
+##Load 2010 dataset into R#
+
+d2010 <- load("C:/Users/user/Documents/qmssviz/hw3_Lulu/WV6_2010.rdata")
+d2010 <- `WV6_Data_spss_v_2014_06_04`
+
+##find info about V2
+unique(d2010$V2)
+country <- d2010$V2
+
+##find info about V46 
+
+summary(d2010$V46)
+unique(d2010$V46)
+opinion <- factor(d2010$V46)
+names(opinion ) <- c("1"="Agree","2"="Neither","3"="Disagree")
+
+## (1) find info about V240 (gender) (2)create new variable gender
+summary(d2010$V240)
+unique(d2010$V240)
+
+gender <- factor(d2010$V240)
+names(gender) <- c("1"="Male","2"="Female")
+
+## (1) create new data frame for opinion,gender,counrty 
+## (2)subset opinion as factor (3)subset gender as factor
+
+new2010 <- data.frame(opinion, gender, country)
+new2010 <- subset(new2010, opinion=="1" |opinion=="2"|opinion=="3" , select= c(opinion,country,gender))
+new2010 <- subset(new2010, gender=="1" | gender=="2", select=c(opinion,country,gender))
+
+View(new2010)
+
+# Load 2005 dataset into R#
+
+d2005 <- load("C:/Users/user/Documents/qmssviz/hw3_Lulu/WV5_2005.rdata")
+d2005 <- `WV5_Data_spss_v_2014_04_28`
+View(d2005)
+
+## find info of V2/v45/V235 in 2005
+country5 <- d2005$V2
+opinion5 <- factor(d2005$V45)
+gender5 <- factor(d2005$V235)
+
+## (1) create new data frame for opinion,gender,counrty 2005
+## (2)subset opinion as factor (3)subset gender as factor
+
+new2005 <- data.frame(opinion5, gender5, country5)
+new2005 <- subset(new2005, opinion5=="1" |opinion5=="2"|opinion5=="3" , select= c(opinion5,country5,gender5))
+new2005 <- subset(new2005, gender5=="1" | gender5=="2", select=c(opinion5,country5,gender5))
+
+
+## Plot (1) histogram for 2010
+library(ggplot2)
+
+ggplot(new2010, aes(opinion, fill=gender))+geom_histogram()+labs(title="2010-2014 Opinion Toward Immigrants' Work Right")##ok
+
+
+## Plot (1) histogram for 2005
+library(ggplot2)
+
+ggplot(new2005, aes(opinion5, fill=gender5))+geom_histogram()+labs(title="2005-2009 Opinion Toward Immigrants' Work Right") ##ok
+
+```
+
+You can also embed plots, for example:
+
+```{r, echo=FALSE}
+plot(cars)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

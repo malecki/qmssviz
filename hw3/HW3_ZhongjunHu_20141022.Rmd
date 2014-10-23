@@ -94,18 +94,19 @@ df<-na.omit(d)
 
 #Get the target dataframe#
 df$iechr<-as.character(df$IncomeEquality)
-df$ie[df$iechr=="Individ"]<- "Income differences are incentives"
-df$ie[df$iechr=="Equal"]<- "Incomes should be equal"
-df$ie[df$iechr=="Incomes should be made more equal"]<- "Incomes should be equal"
-df$ie[df$iechr=="We need larger income differences as incentives for individu"]<- "Income differences are incentives"
-df$ie[df$iechr=="2"]<- "Incomes should be equal"
-df$ie[df$iechr=="3"]<- "Incomes perhaps could be more equal"
-df$ie[df$iechr=="4"]<- "Incomes perhaps could be more equal"
+df$ie[df$iechr=="Individ"]<- "Very Equal"
+df$ie[df$iechr=="Equal"]<- "Very Inequal"
+df$ie[df$iechr=="Incomes should be made more equal"]<- "Very Inequal"
+df$ie[df$iechr=="We need larger income differences as incentives for individu"]<- "Very Equal"
+df$ie[df$iechr=="2"]<- "Very Inequal"
+df$ie[df$iechr=="3"]<- "Inequal"
+df$ie[df$iechr=="4"]<- "Inequal"
 df$ie[df$iechr=="5"]<- "Totally neutral about that"
 df$ie[df$iechr=="6"]<- "Totally neutral about that"
-df$ie[df$iechr=="7"]<- "Income differences may be incentives"
-df$ie[df$iechr=="8"]<- "Income differences may be incentives"
-df$ie[df$iechr=="9"]<- "Income differences are incentives"
+df$ie[df$iechr=="7"]<- "Equal"
+df$ie[df$iechr=="8"]<- "Equal"
+df$ie[df$iechr=="9"]<- "Very Equal"
+
 df$Index[df$iechr=="Individ"]<- 10
 df$Index[df$iechr=="Equal"]<- 1
 df$Index[df$iechr=="Incomes should be made more equal"]<- 1
@@ -121,13 +122,24 @@ df$Index[df$iechr=="9"]<- 9
 library(data.table)
 dmean <- aggregate(df$Index, by = list(df$Country, df$year), mean)
 dmean <- rename(dmean,c("Group.1"="Country", "Group.2"= "year", "x"= "Mean")) #Get the means#
-d <- data.table(df)
-d <- d[, list(ie = unique(ie), percentage = as.numeric(table(ie)/length(ie))), by = c("year", "Country")] #Get percentages#
+dp <- data.table(df)
+dp <- dp[, list(ie = unique(ie), percentage = as.numeric(table(ie)/length(ie))), by = c("year", "Country")] #Get percentages#
 ```
 
 ##E. Make it actually make your graph. 
 
-1. Average Level of Each Country
+"1" means that a person totally agreed that in this society income should be more equal, which shows that he or she thought at that time the society was not equal. So the lower the score is, the more serious inequality of income is. "10" means the opposite situation that the social welfare was so good that we need some differences in income to make people work harder!
+
+To make the second plot more readable, I reagrrange the results of answers of respondents into 5 levels:
+
+First: "1" and "2" are labeled as "very inequal"; 
+Secound: "3" and "4" are labeled as "inequal"; 
+Third: "5" and "6" are labeled as "Totally neutral about that"; 
+Fourth: "7" and "8" are "equal"; 
+Fifth: "9" and "10" are "very equal"
+
+The average level of income equality in China has delined quite a lot in the past 20 years, from nearly 8 to almost 4. But South Korea is totally the opposite. Japan has not changed a lot. The result could be explained by the development in those 3 countries. China has developed dramatically in recent decades. Along with the increasing wealths, problems of income distribution are very commom around the world. In constrast with Japan, the economy in Japan is relatively stable. The growth is slow, so is the changes of wealth distribution. South Korea had suffered from the financial crisis twince in recent 14 years, during which people were more sensitive to the recovery of economy rather than income equality.
+
 ```{r,fig.height=7,fig.width=12}
 library(ggplot2)
 ggplot(dmean, aes(x= Mean, y= Country)) +
@@ -141,12 +153,12 @@ ggplot(dmean, aes(x= Mean, y= Country)) +
         facet_grid(year ~ ., scales="free_y", space="free_y")+
         ggtitle("Average Level of Each Country")
 ```
-2. Income Equality: Percentage of Each level
+
 ```{r,fig.height=7,fig.width=12}
 library(ggplot2)
 library(RColorBrewer)
 color <- brewer.pal(5, "Greens")
-ggplot(d, aes(x=Country, y=percentage, fill=ie))+
+ggplot(dp, aes(x=Country, y=percentage, fill=ie))+
   geom_bar(stat= "identity",position="dodge")+
   facet_grid(year ~. )+
   theme_bw() +
@@ -157,6 +169,8 @@ ggplot(d, aes(x=Country, y=percentage, fill=ie))+
   scale_fill_manual(values=color)+
   ggtitle("Income Equality: Percentage of Each level")
 ```
+ 
+ (#The firt group of plots in my mind, as I mentioned in step B, is so annoying for read and difficult to plot, thus I abandoned them#)
 
 ##F. Write expressive fantasy function calls
 
@@ -184,6 +198,7 @@ ggplot(df, aes()...) + ...
 
 ```
 
+##G. (Bonus) Write (some or all of) the functions to read, transform, and analyze the data.
 ```{r}
 ReadData <- function(route) {
   read.spss(route)

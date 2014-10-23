@@ -1,0 +1,39 @@
+Title: "Homework 3 Assignment"
+author: Andy Tang, awt2118
+output: html_document
+published: false
+tags: hw3
+========================================================
+
+```{r }
+library(ggplot2)
+```
+Q18 in 2006 AsiaBarometer Survey (asia1) and Q19 in 2007 AsiaBarometer Survey (asia2)
+How proud are you of being [YOUR COUNTRY’S PEOPLE]? (SA)
+1 Very proud
+2 Somewhat proud
+3 Not really proud
+4 Not proud at all
+9􀃧 Don’t know
+
+
+```{r fig.width=7, fig.height=6}
+readsurvey <- function(name){ location <- paste("/Users/awtang/Desktop/qmssviz/qmssviz",name, sep="/")
+survey <- read.table (location, header=T)
+return(survey)}
+
+asia2006<-readsurvey("AsiaBarometer2006.txt")
+asia2007<-readsurvey("AsiaBarometer2007.txt")
+```
+
+
+
+```{r}
+qplot(Q18, data = asia2006, fill = Country) + labs(title = "Proudness of Being Your Country's People in Asia 2006" ) + 
+    labs(x = ("Proudness"), y = "Count")
+
+qplot(Q19, data = asia2007, fill = Country) + labs(title = "Proudness of Being Your Country's People in Asia 2007") + 
+    labs(x = ("Proudness"), y = "Count")
+
+```
+

@@ -35,7 +35,7 @@ ggplot(survey5, aes(x=RespTxt, y=RespPct, fill=SurveyOrg)) +
   xlab("Threat") + 
   ylab("Percent") + 
   ggtitle("Greatest Percieved Danger to the USA - Feb 20007")+
-  geom_bar(stat="identity", position="dodge") + 
+  geom_bar(stat="identity", position="dodge") + theme_bw() +
   coord_flip()
 
 ```

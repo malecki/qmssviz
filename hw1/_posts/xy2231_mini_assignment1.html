@@ -83,17 +83,17 @@ dim(datn)</code></pre>
 </ol>
 <pre class="r"><code>(datnn &lt;- ddply(datn,.variables = 'state',summarise,num_doctor=sum(num_doctors_fulltime,na.rm=T),num_nurse=sum(num_nurses_fulltime,na.rm=T),num_doctor_per_area=sum(num_doctors_fulltime/area_sq_km,na.rm=T),num_nurse_per_area=sum(num_nurses_fulltime/area_sq_km,na.rm=T)))</code></pre>
 <pre><code>##          state num_doctor num_nurse num_doctor_per_area num_nurse_per_area
-## 1         Abia        308         0            1.259207           0.000000
-## 2      Anambra          3         4            0.014256           0.027102
-## 3  Cross River          0         3            0.000000           0.009818
-## 4        Delta          2        10            0.002450           0.013365
-## 5          Edo          0         0            0.000000           0.000000
-## 6        Ekiti          1         2            0.002313           0.004627
-## 7          Imo          0         8            0.000000           0.069956
-## 8        Lagos          4         4            0.142518           0.142518
-## 9         Ogun          2         0            0.010021           0.000000
-## 10        Osun          1         6            0.008731           0.052388
-## 11      Rivers          2         2            0.002062           0.002062</code></pre>
+## 1         Abia        308         0         1.259206634        0.000000000
+## 2      Anambra          3         4         0.014255618        0.027102215
+## 3  Cross River          0         3         0.000000000        0.009817730
+## 4        Delta          2        10         0.002449646        0.013364736
+## 5          Edo          0         0         0.000000000        0.000000000
+## 6        Ekiti          1         2         0.002313352        0.004626703
+## 7          Imo          0         8         0.000000000        0.069956262
+## 8        Lagos          4         4         0.142518172        0.142518172
+## 9         Ogun          2         0         0.010020717        0.000000000
+## 10        Osun          1         6         0.008731276        0.052387654
+## 11      Rivers          2         2         0.002062365        0.002062365</code></pre>
 <pre class="r"><code>popu_state &lt;- ddply(lgas,.variables='state',summarise,population=sum(pop_2006,na.rm=T))
 datnn &lt;- join(datnn,popu_state,by = 'state')
 datnn$num_doctor_per_capita &lt;- datnn$num_doctor/datnn$population
@@ -103,29 +103,29 @@ datnn$num_nurse_per_capita &lt;- datnn$num_nurse/datnn$population</code></pre>
 </ol>
 <pre class="r"><code>(datnn &lt;- datnn[order(datnn$population,decreasing = T),])</code></pre>
 <pre><code>##          state num_doctor num_nurse num_doctor_per_area num_nurse_per_area
-## 8        Lagos          4         4            0.142518           0.142518
-## 11      Rivers          2         2            0.002062           0.002062
-## 2      Anambra          3         4            0.014256           0.027102
-## 4        Delta          2        10            0.002450           0.013365
-## 7          Imo          0         8            0.000000           0.069956
-## 9         Ogun          2         0            0.010021           0.000000
-## 10        Osun          1         6            0.008731           0.052388
-## 5          Edo          0         0            0.000000           0.000000
-## 3  Cross River          0         3            0.000000           0.009818
-## 1         Abia        308         0            1.259207           0.000000
-## 6        Ekiti          1         2            0.002313           0.004627
+## 8        Lagos          4         4         0.142518172        0.142518172
+## 11      Rivers          2         2         0.002062365        0.002062365
+## 2      Anambra          3         4         0.014255618        0.027102215
+## 4        Delta          2        10         0.002449646        0.013364736
+## 7          Imo          0         8         0.000000000        0.069956262
+## 9         Ogun          2         0         0.010020717        0.000000000
+## 10        Osun          1         6         0.008731276        0.052387654
+## 5          Edo          0         0         0.000000000        0.000000000
+## 3  Cross River          0         3         0.000000000        0.009817730
+## 1         Abia        308         0         1.259206634        0.000000000
+## 6        Ekiti          1         2         0.002313352        0.004626703
 ##    population num_doctor_per_capita num_nurse_per_capita
-## 8     9013534             4.438e-07            4.438e-07
-## 11    5185400             3.857e-07            3.857e-07
-## 2     4182032             7.174e-07            9.565e-07
-## 4     4098391             4.880e-07            2.440e-06
-## 7     3934899             0.000e+00            2.033e-06
-## 9     3728098             5.365e-07            0.000e+00
-## 10    3423535             2.921e-07            1.753e-06
-## 5     3218332             0.000e+00            0.000e+00
-## 3     2856581             0.000e+00            1.050e-06
-## 1     2833999             1.087e-04            0.000e+00
-## 6     2384212             4.194e-07            8.389e-07</code></pre>
+## 8     9013534          4.437771e-07         4.437771e-07
+## 11    5185400          3.856983e-07         3.856983e-07
+## 2     4182032          7.173546e-07         9.564728e-07
+## 4     4098391          4.879964e-07         2.439982e-06
+## 7     3934899          0.000000e+00         2.033089e-06
+## 9     3728098          5.364666e-07         0.000000e+00
+## 10    3423535          2.920957e-07         1.752574e-06
+## 5     3218332          0.000000e+00         0.000000e+00
+## 3     2856581          0.000000e+00         1.050207e-06
+## 1     2833999          1.086803e-04         0.000000e+00
+## 6     2384212          4.194258e-07         8.388516e-07</code></pre>
 
 
 </div>

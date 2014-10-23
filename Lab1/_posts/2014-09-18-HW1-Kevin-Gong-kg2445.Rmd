@@ -1,0 +1,58 @@
+---
+title: "Homework 1"
+output: html_document
+date: "September 24, 2014"
+published: false
+tag: hw1
+---
+
+We'll visualize several bathymetric datasets. Bathymetry data documents the terrain of the floors of water bodies. In our case, we'll produce maps of the ocean floor in several parts of the Atlantic Ocean.
+
+These datasets come in XYZ coordinate formats and must be converted to .bathy formats before they can be visualized using the wireframe function from the lattice library. The two packages we use in this exercise are marmap and lattice.
+
+
+First, we look at an included dataset of the marmap package.
+
+```{r,echo=FALSE}
+
+library(marmap)
+
+library(lattice)
+data(nw.atlantic)
+atl <- as.bathy(nw.atlantic)
+wireframe(unclass(atl), shade = TRUE, aspect = c(1/2, 0.1), xlab="",ylab="",zlab="")
+```
+
+
+Now, we look at three randomly sampled patches of ocean floor, taken from UCSD Scripps Institution of Oceanography's global topography data extractor (link: http://topex.ucsd.edu/cgi-bin/get_data.cgi)
+
+```{r,echo=FALSE}
+bathy1 <- read.csv("~/qmssviz/Lab1/_posts/bathy.csv")
+
+head(bathy1)
+bathy1 <- as.bathy(bathy1)
+wireframe(unclass(bathy1), shade = TRUE,aspect = c(1, 1), xlab="",ylab="",zlab="",scales = list(arrows = FALSE))
+
+bathy3 <- read.csv("~/qmssviz/Lab1/_posts/bathy3.csv")
+
+head(bathy3)
+bathy3 <- as.bathy(bathy3)
+wireframe(unclass(bathy3), shade = TRUE,aspect = c(1, 1), xlab="",ylab="",zlab="",scales = list(arrows = FALSE))
+```
+
+
+The last bathymetric map looks particularly interesting, so we expanded our coordinates for the area where it was sampled from and produce the map below. We can clearly see some sort of trench feature, as well as a potential underwater mountain.
+
+
+```{r,echo=FALSE}
+bathy4 <- read.csv("~/qmssviz/Lab1/_posts/bathy4.csv")
+
+head(bathy4)
+bathy4 <- as.bathy(bathy4)
+wireframe(unclass(bathy4), shade = TRUE,aspect = c(1, 1), xlab="",ylab="",zlab="",scales = list(arrows = FALSE))
+
+help(wireframe)
+
+
+
+```

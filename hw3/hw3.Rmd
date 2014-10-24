@@ -1,0 +1,66 @@
+---
+title: "Assignment 3"
+author: "Nan Li (nl2482)"
+date: "October 16, 2014"
+output: html_document
+tags: hw3
+published: false
+---
+
+**a. Identify survey**<br>
+I chose the dataset from World Value Survey which conducted from 1993 to 2014 in 51 different countries. I'm interested in the comparison of the feeling of happiness between the United States and China during 1009-2014.
+<br><br>
+**b. Describe graphes**<br>
+I would plot a graph, showing the difference of the propotion of people reagrding to hapiness in two countries over years. I expect general increase in happiness, with some decrease in 2008 due to financial crisis.
+<br><br>
+**c. Target shape**<br>
+Two variables are included: felling of happiness and year of the survey.
+<br><br>
+**d. Read, transfer and prepare for graph**
+```{r,warning=FALSE}
+setwd("D:/1st-semster/dataviz/hw3/dataset")
+library(foreign)
+d1 <- read.dta("WV5_Data_stata_dta_v_2014_04_28.dta")
+d2 <- read.dta("WV6_Data_stata_dta_v_2014_06_04.dta")
+```
+
+```{r}
+## subset data ##
+d1_sub <- d1[c("V1","V2","V10")]
+d2_sub <- d2[c("V1","V2","V10")]
+
+d1_sub1 <- subset(d1_sub, V2=="China")
+d2_sub1 <- subset(d2_sub, V2=="China")
+
+d2_sub1$V10[d2_sub1$V10=="Rather happy"] <-"Quite happy"
+
+## remove missing data ##
+d1_sub1 <- na.omit(d1_sub1)
+d2_sub1 <- na.omit(d2_sub1)
+
+## add column name ##
+colnames(d1_sub1) <- c("year","country","happiness")
+colnames(d2_sub1) <- c("year","country","happiness")
+```
+
+```{r}
+## make prob table ##
+table1 <- table(d1_sub1$happiness)/nrow(d1_sub1)
+table2 <- table(d2_sub1$happiness)/nrow(d2_sub1)
+table1 <- as.data.frame(table1)
+table2 <- as.data.frame(table2)
+colnames(table1) <- c("happiness","prob")
+colnames(table2) <- c("happiness","prob")
+table1$year <- "2009"
+table2$year <- "2014"
+combine <- rbind(table1, table2)
+```
+<br><br>
+**e. Make graph**
+```{r,warning=FALSE}
+library(ggplot2)
+ggplot(combine, aes(x=happiness, y=prob, fill=year)) + geom_bar(stat="identity", position="stack")+ coord_flip() +ggtitle("comparison of happiness between 2009 and 2014")
+
+```
+
+

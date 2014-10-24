@@ -29,10 +29,14 @@ d2 <- read.dta("WV6_Data_stata_dta_v_2014_06_04.dta")
 d1_sub <- d1[c("V1","V2","V10")]
 d2_sub <- d2[c("V1","V2","V10")]
 
+## change values for comparision ##
+levels(d2_sub$V10) <- c(levels(d2_sub$V10), "Quite happy")
+d2_sub$V10[d2_sub$V10=="Rather happy"] <-"Quite happy"
+
 d1_sub1 <- subset(d1_sub, V2=="China")
 d2_sub1 <- subset(d2_sub, V2=="China")
-
-d2_sub1$V10[d2_sub1$V10=="Rather happy"] <-"Quite happy"
+d1_sub1 <- subset(d1_sub1, V10=="Not at all happy" | V10=="Not very happy" | V10=="Quite happy" | V10=="Very happy")
+d2_sub1 <- subset(d2_sub1, V10=="Not at all happy" | V10=="Not very happy" | V10=="Quite happy" | V10=="Very happy")
 
 ## remove missing data ##
 d1_sub1 <- na.omit(d1_sub1)
@@ -41,6 +45,11 @@ d2_sub1 <- na.omit(d2_sub1)
 ## add column name ##
 colnames(d1_sub1) <- c("year","country","happiness")
 colnames(d2_sub1) <- c("year","country","happiness")
+
+## summary variables ##
+summary(d1_sub1$happiness)
+summary(d2_sub1$happiness)
+
 ```
 
 ```{r}
@@ -61,6 +70,34 @@ combine <- rbind(table1, table2)
 library(ggplot2)
 ggplot(combine, aes(x=happiness, y=prob, fill=year)) + geom_bar(stat="identity", position="stack")+ coord_flip() +ggtitle("comparison of happiness between 2009 and 2014")
 
+ggplot(combine, aes(x=happiness, y=prob, fill=year)) + geom_bar(stat="identity", position="dodge")+ coord_flip() +ggtitle("comparison 2 of happiness between 2009 and 2014")
+
+ggplot(combine, aes(x=happiness, y=prob, fill=year)) + geom_bar(stat="identity")+ coord_flip() + facet_wrap("year") + ggtitle("comparison 3 of happiness between 2009 and 2014")
 ```
+<br>
+**f. Write expressive functions**
+```{r,eval=FALSE}
+d1 <- loaddata(data1)
+d1 <- changevalues(d1)
+d1_sub1 <- selectvariables(d1, ...)
+d1_sub1 <-handlemissingdata(d1_sub1, ...)
+summary <- summaryvariables(variable1, ...)
+d1_sub1 <- addvariable(d1_sub1, ...)
+
+d2 <- loaddata(data2)
+combine <- rbind(d1_sub1, d2_sub1)
+ggplot(,aes(...))+...
+```
+<br>
+**g. Write the functions**
+```{r}
 
 
+
+
+
+
+
+
+
+```

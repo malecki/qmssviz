@@ -61,8 +61,7 @@ US<-survey[country %in% "U.S.",]
 
 E. Make it actually make your graph. (Or something. If your sketch is out of reach right now, put something else on the page. Note also we will be discussing some map plotting soon.)
 
-
-Overall, the proportion of people who are willing to trust others doesn't change at all after 30 years among these three countries.
+Overall, the proportion of people who are willing to trust others doesn't change at all after 30 years among these three countries.  
 
 ```{r}
  ggplot(data=survey,aes(x=year,fill=factor(trust))) +geom_bar(position = "fill") + ggtitle("Can most people be trusted?")

@@ -26,12 +26,8 @@ The second is a segment-point plot. X-axis is "country" and Y-axis is the mean o
 
 The last one is a bar graph. X-axis is "answer scale"", which contains "1" to "10". Y-axis is "percentage", which means the percentage of frequency of an answer (like "5") in the total sum of answers in a country in one wave. Above the X-axis is the "percentage" in the year of 1990, while beneath the X-axis is "percentage" in the year of 2012. This is designed to show the changes in each answer.
 
-##### #I tried to import my sketch but failed.Below are the Error and warnings, when I tried "library(Cairo)" and importing jpg :
-      Error : .onLoad failed in loadNamespace() for 'Cairo', details:call: dyn.load(file, DLLpath = DLLpath, ...)error: unable to load shared object '/Library/Frameworks/R.framework/Versions/3.1/Resources/library/Cairo/libs/Cairo.so':dlopen(/Library/Frameworks/R.framework/Versions/3.1/Resources/library/Cairo/libs/Cairo.so, 6): Library not loaded: /opt/X11/lib/libXrender.1.dylib.Referenced from: /Library/Frameworks/R.framework/Versions/3.1/Resources/library/Cairo/libs/Cairo.so Reason: image not found. Error: package or namespace load failed for 'Cairo'
-```{r}
-#Not able to library(Cairo)#
-jpeg("/Users/huzhongjun/Downloads/IMG_2706.jpg")
-```
+
+![](/Users/huzhongjun/Downloads/IMG_2706.jpg)
 
 ##C. Write down the target shape
 

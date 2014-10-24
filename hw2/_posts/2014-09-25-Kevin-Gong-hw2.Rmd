@@ -1,0 +1,122 @@
+---
+title: "Short R Assignment"
+output: html_document
+date: "September 24, 2014"
+published: false
+tag: hw1
+---
+
+
+
+Loading the data:
+
+```{r,echo=FALSE}
+lgas <- read.csv("~/qmssviz/labs/lgas.csv")
+facilities <- read.csv("~/qmssviz/labs/tutorial/sample_health_facilities.csv")
+head(lgas)
+str(facilities)
+head(facilities)
+unique(facilities$zone)
+```
+
+
+
+
+From the Nigeria Facilities Inventory data, select all facilities located in the Southern zones of Nigeria.
+
+```{r,echo=FALSE}
+condition1 = which(facilities$zone==c("Southeast") | facilities$zone==c("South-South") | facilities$zone==c("Southwest"))
+fac2 <- facilities[condition1,]
+fac2
+
+unique(lgas$zone)[2]
+```
+
+
+
+
+Incorporate the pop2006 column from the lgas.csv file into the new data.frame containing only those facilities located in Southern Nigeria. We used lga_id in both datasets to complete the merge.
+
+
+```{r,echo=FALSE}
+fac3 <- merge(fac2, lgas, by.x="lga_id", by.y="lga_id")
+fac3
+```
+
+
+
+Calculate the total number of full time nurses and doctors for all health facilities in each state.
+
+```{r,echo=FALSE}
+unique(fac3$state.y)
+health_counts = data.frame(unique(fac3$state.y))
+health_counts[,2]=NA
+#health_counts
+
+
+for(i in 1:11) {
+  
+  tally = 0
+  temp = as.vector(NULL)
+  
+  temp = which(as.character(fac3$state.y)==as.character(health_counts[i,1]))
+  tally = sum(sum(fac3$num_nurses_fulltime[temp],na.rm=TRUE) + sum(fac3$num_doctors_fulltime[temp],na.rm=TRUE))
+  
+  
+  health_counts[i,2] = tally
+  
+  
+}
+
+names(health_counts)[1] <- paste("State")
+names(health_counts)[2] <- paste("Total Doctors + Nurses")
+health_counts
+
+
+```
+
+
+
+
+Sort the resulting dataset by state population, in descending order.
+
+```{r,echo=FALSE}
+#fac4 <- fac3[order(-fac3$pop_2006),]
+#fac4
+
+unique(fac3$state.y)
+statepop = data.frame(unique(fac3$state.y))
+statepop[,2]=NA
+#health_counts
+
+
+for(i in 1:11) {
+  
+  tally = 0
+  temp = as.vector(NULL)
+  
+  temp = which(as.character(fac3$state.y)==as.character(statepop[i,1]))
+  tally = sum(sum(fac3$pop_2006[temp],na.rm=TRUE))
+  
+  
+  statepop[i,2] = tally
+  
+  
+}
+
+names(statepop)[1] <- paste("State")
+names(statepop)[2] <- paste("State Population")
+statepop
+
+
+finalset1 <- merge(health_counts, statepop, by.x="State", by.y="State")
+#finalset1
+
+finalset2 <- finalset1[order(-finalset1[,3]),]
+finalset2
+```
+
+
+
+
+

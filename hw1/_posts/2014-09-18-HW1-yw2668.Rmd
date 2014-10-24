@@ -1,0 +1,74 @@
+---
+title: "Homework 1 Assignment"
+author: "yw2668"
+date: "September 19, 2014"
+output: html_document
+published: false
+---
+
+# I am a R beginner. I intend to make a picture showing different levels of software experience in [R, data manipulation and modeling] of people in different programs. ##
+
+##Here I go! re-knitting # 
+
+```{r}
+setwd("/Users/Emily/Documents/Columbia/Data Visualization")
+r<-read.csv("responses-2014-09-05.csv",stringsAsFactors=F)
+
+```
+
+```{r}
+
+str(r)
+```
+<br/>
+##1st try##
+```{r}
+library(ggplot2)
+ggplot(r,aes(x=Program, y=Software.experience..the.smaller.list...R..data.manipulation.and.modeling.))+geom_point(shape=1)
+```
+
+##TERRIBLE##
+ 
+ <br/>
+```{r}
+###give different levels numbers###
+r$soft.r[r$Software.experience..the.smaller.list...R..data.manipulation.and.modeling.=="Expert"]<-3
+r$soft.r[r$Software.experience..the.smaller.list...R..data.manipulation.and.modeling.=="Confident"]<-2
+r$soft.r[r$Software.experience..the.smaller.list...R..data.manipulation.and.modeling.=="A little"]<-1
+r$soft.r[r$Software.experience..the.smaller.list...R..data.manipulation.and.modeling.=="None"]<-0
+table(r$soft.r)
+```
+<br/>
+##2nd try##
+```{r}
+r$soft.r.level<-ordered(r$soft.r, level=c(0,1,2,3),labels=c("None","A little", "Confident", "Expert"))
+ggplot(r,aes(x=Program, y=soft.r.level))+geom_point(shape=1)
+
+```
+
+##Now the labels of y-axis are listed in order##
+##But it is still not what I want##
+<br/>
+#3rd try##
+```{r}
+##trying to count numbers, but it seems that I used wrong function##
+
+r$sum.soft.r<-sum(r$soft.r)
+ggplot(r,aes(x=soft.r.level, y=sum.soft.r, fill=Program))+geom_bar(stat="identity", position="dodge")
+```
+
+##Close to what I want, but the counts of levels hasn't been represented because I used wrong function##
+<br/>
+#4th try#
+```{r}
+qplot(x=soft.r.level, fill=Program,data=r,geom="bar",stat="bin")
+ggplot(r,aes(x=soft.r.level, fill=Program))+geom_bar(stat="bin", position="dodge")+xlab("Levels in R, Data Manipulation & Modeling") + 
+    ylab("Count") + 
+    ggtitle("Different Levels in R of Different Programs")
+```
+
+
+##Remaining Questions:
+1. Why the pictures are different using qplot and ggplot?
+
+2.How to add count numbers over each bar?

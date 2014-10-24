@@ -1,0 +1,59 @@
+---
+title: "hw1 huzhongjun"
+author: "Zhongjun Hu"
+date: "2014-09-17"
+output: html_document
+---
+# Assignment1 
+## Zhongjun Hu(UNI:zh2223)
+```{r}
+library(ggplot2)
+```
+### Donation-Disease:
+```{r,fig.height=7, fig.width=19}
+setwd("~/Desktop/ZhongjunHuqmssviz/qmssviz/Lab1")
+d <-read.csv("Donation-Disease.csv")
+d$Death<-as.numeric(d$Death)
+d$Death<-d$Death/1000
+qplot(data=d,x = MoneyRaised,y=Death,color=Name)+geom_point(size=4)+geom_text(aes(label=Name),vjust=-0.7,hjust=0.3,size=4)
+```
+
+As we see in the scatter, there exists an imbalance in the donation and actual threaten of diseases, which different colors and labels show to us clearly. In the low and left area in plot are disease-donation relations locating in a proper level. However, the very isolated point in the top tells us that Heart Disease has the most high rate of death while the donation to it is quite limited.Meanwhile, Breast Cancer and Prostate Cancer attract major attentions but in terms of death rate have relatively lower probability of threat to human beings. Thus we can conclude in some degree that we should focus more on those common diseases, which are too common to draw public mercy. 
+
+### UN population
+```{r, fig.height=7, fig.width=15}
+library(RColorBrewer)
+library(xlsx)
+color <- brewer.pal(5, "Reds")
+setwd("~/Desktop/ZhongjunHuqmssviz/qmssviz/Lab1")
+un2<-read.xlsx("UN3.xlsx",sheetName="sheet1")
+un2$Population_Thousand<-cut(as.numeric(un2$X2010),breaks=c(0,2000,5000,10000,20000,Inf),labels=c("<2000","2000~5000","5000~10000","10000~15000",">15000"))
+qplot(data=un2,x=Longitude,y=Latitude,color=Population_Thousand) +geom_point(size=4) +scale_color_manual(values=color)
+
+```
+
+I think this kind of picture of map is really stunning.The color can show the density of population and Latitude and Longitude makes the map. Population and location can be clearly put in one picture. In this map, different populations are seperated into 5 groups. A darker red poiont reflects more population at the spot. These points together depict the outlines of continents through which it is convenient to compare population in different areas. For instance, Darker points crowd in east coast of Asia as shown in the right area of the map while more light red points distribute in the low and middle position which is Africa actually.
+
+#####Flaws: I did not figure out how to put a real world map as a bottom layer. I thought it would be much more vivid if I achieved that.
+
+### Ages of Marriage
+#####This dataset is from "General Social Survey", which contains thousands of results of various aspects of sociologies. I would like to use this Survey to do some data analyzing in this semester. I will continuing polishing and adding more interesing data in this assignment.
+```{r}
+library(plyr)
+library(psych)
+setwd("~/Desktop/ZhongjunHuqmssviz/qmssviz/Lab1")
+cb<-read.csv("GSS.2006.csv")
+describe(cb$agewed)
+cb$Ages<-as.numeric(cb$agewed)
+qplot(x=Ages, data=cb,geom="density",main="Distribution of How old were you when first married")
+```
+
+The variable I chose is AGEWED, which reflects the marriage age of an interviewee, with the ranging of 13 years old up to 90 years old. There are 3342 missing data in addition with 1 person, who answer “I don't know”, and 6 persons with no answers. The available responses are summed up to 1161. 
+
+Descriptions tell us that the average of responders’ age is about 23 while the median age is 22. It shows that the distribution of AGEWED has a little skewness. Because the maximum is as large as 90 but minimum is 13, with a range of 77 years! The results are more obviously observed in the Density Graph, in which there is a very long tail in left.
+
+```{r}
+qplot(x=Ages, data=cb,geom="histogram",main="Distribution of How old were you when first married")
+```
+
+The standard deviation is approximately 6 years, which means majority of people married first time when they were at age of 17 to 29. 

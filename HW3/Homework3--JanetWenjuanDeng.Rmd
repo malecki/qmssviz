@@ -1,0 +1,113 @@
+---
+title: "Homework 3 assignment-JanetWenjuanDeng"
+author: wd2234
+output: html_document 
+pulished: false   
+tags: hw3
+---
+
+Acquire and familiarize yourself with the data
+
+A. Identify two surveys that you want to compare. This part involves skimming the codebooks and questionnaires.
+
+I want to use World value survey to compare the same question in two waves, an early wave 1981-1984, and the latest wave 2010-2014. The question of interest is that "Generally speaking, would you say that most people can be trusted or that you need to be very careful in dealing with people?" The answers include "Most people can be trusted", "Need to be very careful","No answer" and "don't know".I selected three counties, one in Europe, "Sweden", one in Asia, "Japan", and the last one in North America, "United States". 
+
+B. Sketch and/or describe the graph(s) that you intend to make; these amount to informal research hypotheses.
+
+I want to firstly make a bar graph to show how the responses change across two waves using data for all these three countries. I expect to find that The proportion of "Most people can be trusted" would decrease because with the development of modern society people tend to rely on official documents which includes social status and credit history in order to decide someone can be trusted or not, rather than their intuitive impression on other people. Then I plan to compare if the changes across waves differ among different countries. It would be prefect I can make it in a single graph, rather than two graphs, each representative one wave. I expect to find that the proportion of "Most people can be trusted" would decrease for all countreis, but the decrease would be biggest for Japan because of its stlyish and relatively stable culture. 
+
+C. Write down the target shape of the data (a complete typical row of a melted or denormalized data frame for plotting. This is also before you write anything inside a code chunk! What do you eventually need to fulfill your graph's data contract? e.g.,
+
+My target shape of the data will be {country:"",Year:"",trust:""}
+
+Write code to analyze and visualize it
+
+D. Write a script that reads, transforms, prepares data for your graph.
+
+```{r}
+setwd("D:/Wenjuan Deng/Columbia/2014fall/data visualization/HW3/")
+load("D:/Wenjuan Deng/Columbia/2014fall/data visualization/HW3/WV1.rdata")
+load("D:/Wenjuan Deng/Columbia/2014fall/data visualization/HW3/WV6.rdata")
+library(ggplot2)
+library(MASS)
+#merge two waves into one data frame
+wave1<-subset(WV1_Data_rdata_v_2014_04_28,select=c("V2","v27"))
+wave1<-wave1[wave1$V2 %in% c(392,752,840),]
+wave1$year<-rep("1981",length(wave1$V2))
+names(wave1)[names(wave1) == 'V2'] <- 'country'
+names(wave1)[names(wave1) == 'v27'] <- 'trust'
+
+wave2<-subset(WV6_Data_spss_v_2014_06_04,select=c("V2","V24"))
+wave2<-wave2[wave2$V2 %in% c(392,752,840),]
+wave2$year<-rep("2014",length(wave2$V2))
+names(wave2)[names(wave2) == 'V2'] <- 'country'
+names(wave2)[names(wave2) == 'V24'] <- 'trust'
+
+survey<-rbind(wave1,wave2)
+
+#recode the variable of interest
+survey$trust<-ifelse(survey$trust==2,"trust",ifelse(survey$trust==1,"don't trust",NA))
+survey$country<-ifelse(survey$country==392,"Japan",ifelse(survey$country==752,"Sweden","U.S."))
+
+#remove NA
+survey <- na.omit(survey)
+attach(survey)
+
+Japan<-survey[country %in% "Japan",]
+Sweden<-survey[country %in% "Sweden",]
+US<-survey[country %in% "U.S.",]
+
+```
+
+E. Make it actually make your graph. (Or something. If your sketch is out of reach right now, put something else on the page. Note also we will be discussing some map plotting soon.)
+
+
+Overall, the proportion of people who are willing to trust others doesn't change at all after 30 years among these three countries.
+
+```{r}
+ ggplot(data=survey,aes(x=year,fill=factor(trust))) +geom_bar(position = "fill") + ggtitle("Can most people be trusted?")
+
+```          
+
+Trust level in United states comes first, followed by Japan, and then Sweden.
+```{r}
+ggplot(data=survey,aes(x=trust)) + geom_histogram(aes(fill=country))+facet_wrap(~country) + ggtitle("Can most people be trusted?")
+`````
+
+In Japan, people are a bit more likely to trust others now compared to what they are 30 years ago.
+```{r}
+ ggplot(data=Japan,aes(x=year,fill=factor(trust))) +geom_bar(position = "fill") + ggtitle("Can most people be trusted in Japan?")
+
+`````      
+
+
+
+
+In Sweden, it is interesting to find that: Swedish dont't trust others as much as Japanese do; the trust level among people decreases within these two waves.
+```{r}
+ ggplot(data=Sweden,aes(x=year,fill=factor(trust))) +geom_bar(position = "fill") + ggtitle("Can most people be trusted in Sweden?")
+
+`````      
+
+
+In Unites states, people trust each other better than people in previous two countries and trust level increases a little bit as time goes by.
+```{r}
+ ggplot(data=US,aes(x=year,fill=factor(trust))) +geom_bar(position = "fill") + ggtitle("Can most people be trusted in United States?")
+
+`````      
+
+F&G. Write expressive fantasy function calls that describe how you read, transformed, and prepared the data for the graph. 
+
+When I was drawing graphs of each country, I have to repeat entering those commands. Thus I wrote a funtion to draw the graphs of any country I am interested in. 
+````{r}
+graph<-function(country){
+library(ggplot2)   
+ggplot(data=country,aes(x=year,fill=factor(trust)))+geom_bar(position = "fill") + ggtitle(paste0("Can most people be trusted"," in ",country$country,"?",sep=""))
+}
+
+graph(Japan)
+graph(Sweden)
+graph(US)
+
+````
+

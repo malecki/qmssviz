@@ -90,14 +90,21 @@ ggplot(,aes(...))+...
 ```
 <br>
 **g. Write the functions**
-```{r}
+```{r,eval=FALSE}
+read.dta(data)
 
+subset(data,variable="...")
 
+levels(variable) <- c(levels(variable), "Quite happy")
+variable[variable=="Rather happy"] <-"Quite happy"
 
+na.omit(data)
 
+summary(variable)
 
+rbind(data1,data2)
 
-
+ggplot(data, aer(...))+...
 
 
 ```

@@ -155,6 +155,20 @@ d2 &lt;- loaddata(data2)
 combine &lt;- rbind(d1_sub1, d2_sub1)
 ggplot(,aes(...))+...</code></pre>
 <p><br> <strong>g. Write the functions</strong></p>
+<pre class="r"><code>read.dta(data)
+
+subset(data,variable=&quot;...&quot;)
+
+levels(variable) &lt;- c(levels(variable), &quot;Quite happy&quot;)
+variable[variable==&quot;Rather happy&quot;] &lt;-&quot;Quite happy&quot;
+
+na.omit(data)
+
+summary(variable)
+
+rbind(data1,data2)
+
+ggplot(data, aer(...))+...</code></pre>
 
 
 </div>

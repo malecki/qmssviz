@@ -1,0 +1,133 @@
+---
+title: "HW3"
+author: "Liangquan Zhou lz2377"
+date: "October 23, 2014"
+output: html_document
+---
+
+In this homework We try to visulize survey data for comparasion.
+
+#### Data Source: 
+
+The Annenberg Public Policy Center's National Annenberg Election Survey 2008 Online Edition (NAES08-Online) Data files.
+
+#### Data Introduction: 
+
+NAES08-Online data is a survey data about people's opinions about the election at 2008. It covering a range of topics about the presidential campaign and politics generally. The survey is segmented into five multi-month waves, numbered 1 – 5 and corresponding to the major divisions of the campaign: pre-primary, primary election, spring and summer, general election, and post-election. Same or similar questions are asked in different waves. The respondents could be same or different in different waves.
+
+#### Objectives:
+
+The data file contains lots of questions and there are a lot we can explore. Here are two interesting aspects:
+
+1. Compare the respondents' attitude and favorability of Obama and McCain. 
+
+2. Explore respondents' distribution among all states.
+
+We try to use heatmap to see the respondents' distribution, and use bar plot to campare Obama and McCain's popularity.
+
+
+#### 1. Compare the respondents' attitude and favorability of Obama and McCain. 
+
+We all know that Obama was the winner. How did he beat McCain? Was it a overwhelming victory or a narrow victory? How did their favoribility changes among all five waves? To explore this, we try to compare their favorability among all five waves. In these five waves of surveys, people can give scores to the candidates, and this question existed in all five surveys. 
+
+Hence it would be interesting to see how did their favoribility changes among 5 waves.
+
+```{r, message=FALSE,warning=FALSE}
+dat = read.table("naes08-online-all-waves-data-compact.txt", sep='\t', header=TRUE)
+
+mccain_fav = subset(dat, select = c(1, AAm01_1, AAm01_2, AAm01_3, AAm01_4, AAm01_5))
+obama_fav = subset(dat, select = c(1, ABo02_1, ABo02_2, ABo02_3, ABo02_4, ABo02_5))
+
+library(reshape2)
+favoribility = function(data, candidate.name){
+  data = melt(data, id.vars = 1, variable.name = "wave", value.name = "favoribility", na.rm = TRUE)
+  names(data)[1] = "name"
+  data$name = candidate.name
+  data$wave = as.character(data$wave)
+  data$wave = substr(data$wave, nchar(data$wave), nchar(data$wave))
+  data$wave = paste("Wave" ,data$wave)
+  data$wave = as.factor(data$wave)
+  data$name = as.factor(data$name)
+  return(data)
+}
+mccain_fav = favoribility(mccain_fav, "Jhon McCain")
+obama_fav = favoribility(obama_fav, "Barack Obama")
+fav = rbind(mccain_fav, obama_fav)
+```
+
+Write a function `favoribility` to melt the dataset into the idal form we want. The data frame `fav` stroes both McCain and Obama's favoribility favoribility scores in all 5 waves. We can see that the respondent's in each wave are about the same number and every respondent gave his favoribility score for both McCain and Obama.
+
+```{r, message=FALSE,warning=FALSE}
+library(ggplot2)
+ggplot(fav, aes(x = favoribility, y = ..density..)) + geom_histogram(aes(fill = name), binwidth = 5, position = "identity", alpha = 0.6) + geom_density(aes(color = name, fill = name), alpha = 0.2) + xlim(1, 100) + facet_wrap(~ wave ) + ggtitle("Favoribility change in 5 waves") + theme(legend.position = c(0.8, 0.3))
+```
+
+The plot above shows the favoribility changes among 5 waves for both McCain and Obama. We dropped the unreasonable favoribility scores.(favoribility score $\leq 0$ or favoribility score $\geq 100$.) 
+
+In each wave, we compare the favoribility score's distribution of McCain and Obama. We can see that at wave 1, Obama and McCain had a similar distribution of favoribility(Obama slightly leads), but as the election went on, Obama got a obviously better favoribility score. 
+
+#### 2. Explore respondent's distribution.
+
+There are 28,985 NAES08-Online respondents in total. (23,033 participated in at least two NAES waves, and 10,472 participated in all five NAES waves.) We try to use a heat map to visualize these respondants' location.
+
+The survey collected each respondent's state of redidence, then we can use this variable to visualize the respondents' distribution in the map:
+
+```{r, message=FALSE,warning=FALSE}
+pop = subset(dat, select = c(WFc01_a))
+pop$WFc01_a = as.factor(pop$WFc01_a)
+pop = data.frame(table(pop))
+names(pop) = c("state", "respondents")
+state.name = read.table("state.txt", sep = "\t")
+library(stringr)
+state.name = tolower(str_replace_all(as.vector(state.name[,1]), pattern = ' \\(.+?\\)',replacement = ''))
+pop$state = state.name
+
+states_map = map_data("state")
+ggplot(pop, aes(map_id = state)) + geom_map(aes(fill = respondents), map = states_map) + expand_limits(x = states_map$long, y = states_map$lat) + ggtitle("Respondents geographical distritution")
+```
+
+Spontaneously, we want to know how did Obama and McCain's favorility change in each state from wave 1 to wave 5. 
+
+```{r, message=FALSE,warning=FALSE, fig.height=13}
+obama <- aggregate(data=dat,cbind(ABo02_1, ABo02_2, ABo02_3, ABo02_4, ABo02_5) ~ WFc01_a,mean,na.omit=TRUE)
+mccain <- aggregate(data=dat,cbind(AAm01_1, AAm01_2, AAm01_3, AAm01_4, AAm01_5) ~ WFc01_a,mean,na.omit=TRUE)
+
+favoribility_map = function(data, candidate_name, state_name){
+  names(data) = c("state", "Wave 1", "Wave 2", "Wave 3", "Wave 4", "Wave 5")
+  data$state = state_name
+  data$name = candidate_name
+  data = melt(data, id = c("state", "name"), variable.name = "wave", value.name = "favoribility")
+  data$state = as.factor(data$state)
+  data$name = as.factor(data$name)
+  data$wave = as.factor(data$wave)
+  return(data)
+}
+
+obama = favoribility_map(obama, "Barack Obama", state.name)
+mccain = favoribility_map(mccain, "Jhon McCain", state.name)
+fav.map = rbind(obama, mccain)
+
+ggplot(fav.map, aes(map_id = state)) + geom_map(aes(fill = favoribility), map = states_map) + expand_limits(x = states_map$long, y = states_map$lat) + ggtitle("Favoribility change") + facet_wrap(~ wave + name, nrow = 5, ncol = 2)
+```
+
+We can see that their average favoribility scores among the whole country are close at the beginning, but Obama won a better favoribility as time went on. Using Obama's favoribility scores divide McCain's favoribility scores in each state, we can compare their relative favoribility score:
+
+```{r, message=FALSE,warning=FALSE}
+compare = data.frame(subset(obama, select = c(state, wave)), obama$favoribility/mccain$favoribility)
+names(compare) = c("state", "wave", "proportion")
+library(scales)
+ggplot(compare, aes(map_id = state)) + geom_map(aes(fill = proportion), map = states_map) + expand_limits(x = states_map$long, y = states_map$lat) + facet_wrap(~ wave) +  scale_fill_gradient2(low=muted("red"), high=muted("blue"), midpoint=1) + ggtitle("Relative favoribility ")
+```
+
+This is clearly to see that Obama's favoribility scores was increasing from wave 1 to wave 5. Actually, if we use the favoribility scores (in every wave) for prediction:
+
+```{r, message=FALSE,warning=FALSE}
+compare$proportion[compare$proportion >= 1] = "Obama"
+compare$proportion[compare$proportion < 1]= "McCain"
+ggplot(compare, aes(map_id = state)) + geom_map(aes(fill = proportion), map = states_map) + expand_limits(x = states_map$long, y = states_map$lat) + facet_wrap(~ wave) + scale_fill_discrete() + labs(fill = "Predicted Winner") + ggtitle("Prediction")
+```
+
+Comparing with the result(http://en.wikipedia.org/wiki/United_States_presidential_election,_2008), we can see that wave 4 and wave 5's prediction are close to the result.
+
+
+

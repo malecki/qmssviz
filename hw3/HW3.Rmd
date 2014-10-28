@@ -1,0 +1,83 @@
+---
+title: "Homework 3"
+author: "Dongze Lu"
+date: "October 23, 2014"
+output: html_document
+---
+A. Identify two surveys that you want to compare. 
+
+I am interested to know people's attitudes towards drug addicts in different nationsl across the world. Therefore, I used the dataset of Wave 4 and Wave 6 from World Values Survey and compared corresponding variables in those two five-year periods. In the Wave 4, the corresponding variable is V75 and the one in Wave 6 is V36. It describes the frequency that those respondents in those countries mentioned the times that they don't want to have as their neighbors, drug addict.  
+
+B. Sketch and/or describe the graph(s) that you intend to make
+I would like to visualize the ratio of "mentioned"/"not mentioned" in a descending order so that audience will be able to see what country's respondents have higher tolerance of drug addicts and be able to see the ratio change after 10 years of time. Therefore, I would assume the graph will be a stacked bar chart  and my assumptions would be that the lower the country's GDP per capita, the higher the "not mentioned" against "mentioned" ratio will be for those countries. 
+
+C. Write down the target shape of the data
+The target of the data shape will be a stacked bar chart that shows the number of respondents who mentioned drug addict as a major concern for their neighbors against those who didn't mention. 
+
+D. Write a script that reads, transforms, prepares data for your graph.
+```{r}
+#Set work Directory
+setwd("~/Desktop")
+library(foreign)
+data=read.spss("WV4_Data_spss_v_2014-04-28.sav", to.data.frame = TRUE)
+# Create  proportional tables from both data by country
+## there are some issues with country labels so I convert
+## the variable into a string
+
+#E. Make your graph.
+#F. Write a script that reads, transforms, prepares data for your graph.
+data$v2<-as.character(data$v2)
+# Create unweighted proportional tables from both datas
+tblA <- as.data.frame(prop.table(table(data$v2,data$v75),1)*100)
+tbl2 <- tblA[tblA$Var2 %in% c("Mentioned","Not mentioned"),]
+tbl2$Var2 <- factor(tbl2$Var2, levels=c("Mentioned","Not mentioned"))
+## To nicely order the plot I will melt the data into wide format, reorder it 
+## and convert it back to long format for plotting
+library(reshape2)
+orderDat <- dcast(tbl2, Var1 ~Var2, value.var="Freq")
+orderDat$Var1 <- reorder(orderDat$Var1, orderDat$Mentioned, median)
+tblPlot <- melt(orderDat, id.vars="Var1", measure.vars=c("Mentioned","Not mentioned"))
+# And then the plot
+## relevelling the levels to match the daulft colors better
+tblPlot$variable <- factor(tblPlot$variable, 
+                           levels=c("Mentioned","Not mentioned"))
+library(ggplot2)
+ggplot(tblPlot, aes(x=Var1,y=value,fill=variable)) +
+  geom_bar(stat="identity") +
+  coord_flip() + 
+  theme(legend.position="top") +
+  theme(axis.text.x = element_text(size=10),
+        axis.text.y = element_text(size=10),
+        legend.text = element_text(size=14))
+
+data2=read.spss("WV6_Data_spss_v_2014_06_04.sav", to.data.frame = TRUE)
+# Create  proportional tables from both data by country
+## there are some issues with country labels so I convert
+## the variable into a string
+data2$V2<-as.character(data2$V2)
+# Create unweighted proportional tables from both datas
+tblB <- as.data.frame(prop.table(table(data2$V2,data2$V36),1)*100)
+tbl3 <- tblB[tblB$Var2 %in% c("Mentioned","Not mentioned"),]
+tbl3$Var2 <- factor(tbl3$Var2, levels=c("Mentioned","Not mentioned"))
+## To nicely order the plot I will melt the data into wide format, reorder it 
+## and convert it back to long format for plotting
+library(reshape2)
+orderDat2 <- dcast(tbl3, Var1 ~Var2, value.var="Freq")
+orderDat2$Var1 <- reorder(orderDat2$Var1, orderDat2$Mentioned, median)
+tblPlot2 <- melt(orderDat2, id.vars="Var1", measure.vars=c("Mentioned","Not mentioned"))
+# And then the plot
+## relevelling the levels to match the daulft colors better
+tblPlot2$variable <- factor(tblPlot2$variable, 
+                           levels=c("Mentioned","Not mentioned"))
+library(ggplot2)
+ggplot(tblPlot2, aes(x=Var1,y=value,fill=variable)) +
+  geom_bar(stat="identity") +
+  coord_flip() + 
+  theme(legend.position="top") +
+  theme(axis.text.x = element_text(size=8),
+        axis.text.y = element_text(size=8),
+        legend.text = element_text(size=14))
+```
+
+Conclusions: From the two graphs above, we can see that the number of frequencies who mentioned drug addicts as a major concern for neighborhood have greatly increased for almost all of the countries a decade later compared to the situations in 1999-2004. 
+

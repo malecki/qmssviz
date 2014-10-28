@@ -37,7 +37,7 @@ group (such as Asian, people of Chinese ethnicity, people who speak the same lan
 
 This difference is likely to lead to different responses from the audience. In order to show the difference, I make use of ggplot to visualize the survey results.
 
-## 3. Analysis
+### 3. Analysis
 
 ```{r functions-of-data-processing}
 LoadSurvey <- function(surveyname){
@@ -93,7 +93,7 @@ From the above plot, we can see that more people answered this question in 2005 
 ggplot(data=CQ1819, aes(factor(Year), fill=factor(Answer)))+geom_bar(width=0.5, position="fill")+xlab("Year")+ylab("Percent")+scale_fill_discrete("Answer")
 ```
 
-Here, it's more obvious that the percentage of people choosing 1 doesn't change, the percentage of people choosing 2 decreases a little, but many people who chose 9 in 2005 changed to 6 in 2006. This trend is even more clearly shown in the following histograms, where colors chang in accordance with density amount.
+Here, it's more obvious that the percentages of people choosing 1, 2 and 3 decrease a little, but many people who chose 9 in 2005 changed to 6 in 2006. This trend is even more clearly shown in the following histograms, where colors chang in accordance with density amount.
 
 ```{r histogram}
 ggplot(data=CQ1819, aes(x=Answer))+geom_histogram(aes(y=..density.., fill=..density..), binwidth=1)+scale_fill_gradient("Density", low = "green", high = "red")+facet_wrap(~Year)

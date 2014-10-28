@@ -1,18 +1,18 @@
 ---
 title: "Homework 2 assignment-JanetWenjuanDeng"
 author: wd2234
-output: html_document 
-pulished: false   
+output: html_document
+pulished: false  
 tags: hw2
 ---
 
 1. Go to this link and download the file into the working directory.
 2. Produce a new data.frame, which has the following properties:
 
-Firstly, import sample data. 
+Firstly, import sample data.
 ```{r}
 setwd("D:/Wenjuan Deng/Columbia/2014fall/data visualization/qmssgit/HW2")
-file <- "D:/Wenjuan Deng/Columbia/2014fall/data visualization/HW2/sample_health_facilities.csv"
+file <- "sample_health_facilities.csv"
 sample_data <- read.csv(file)
 ```
 - From the Nigeria Facilities Inventory data (sample_data from section 1.5.1), select all facilities located in the Southern zones of Nigeria.
@@ -46,3 +46,4 @@ total
 ```{r, echo=FALSE}
 newdataframe[order(newdataframe$pop_2006, decreasing=TRUE), ]
 ```
+

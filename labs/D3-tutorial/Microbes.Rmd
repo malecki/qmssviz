@@ -1,7 +1,7 @@
 ---
-title: "d3-tutorial"
-author: "Elliot Cohen"
-date: "October 29, 2014"
+title: "D3-tutorial"
+author: "Elliot Cohen and Mike Malecki"
+date: "2014-10-29"
 output: html_document
 ---
 
@@ -11,13 +11,20 @@ When you click the **Knit** button a document will be generated that includes bo
 
 ```{r}
 germs <- read.csv(file="Microbe-scope-bugs.csv", header=TRUE)
-germs <- germs[-2, ]
+germs <- germs[-2, c(2, 4:7, 9:11)] # keep only data columns, exclude notes/links
+
+dropPct<-function(df, var){
+  dropPct<-strsplit(as.character(df[[var]]), split="%")
+  df[[var]]<-as.numeric(dropPct)
+  return(df[[var]])
+  }
+
+# remove % signs, leaving a numeric value.
+germs[["case.fatality.rate"]]<-dropPct(germs, "case.fatality.rate")
+
+# assign descriptive column names where absent
+names(germs)[1]<-"germ"
+names(germs)[10]<-"yearly.fatalities.rounded"
+names(germs)[11]<-"yearly.fatalities.raw"
 ```
 
-You can also embed plots, for example:
-
-```{r, echo=FALSE}
-plot(cars)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

@@ -16,10 +16,10 @@ Firstly, I'm going to use bar plots to compare different countries in the same w
 Secondly, I'm going to use stacked bar plots to compare the two waves, horizontally and vertically.
 
 # C.Write down the target shape
-## year(wave):"1990-1994", "2010-2014"
-## country: "United States","Sweden", "Spain"...
-## survey answer: "very happy","rather happy","not very happy","not at all happy","no answer","don't know"
-## proportion: the ratio of each level of happiness 
+1.year(wave):"1990-1994", "2010-2014";
+2.country: "Spain","Japan", "Mexico"...;
+3.survey answer: "very happy","rather happy","not very happy","not at all happy","no answer","don't know";
+4.proportion: the ratio of each level of happiness 
 
 # D. Write a script
 
@@ -60,37 +60,29 @@ table(dwv6$V10)
 table(dwv2$v18)
 ```
 
-## selecting data from 10 countries
+## selecting data from 6 countries
 ```{r}
-dwv2_new <- subset(dwv2,select=c("v1","v18","v2"),v2==156|v2==368|v2==392|v2==410|v2==434|v2==484|v2==566|v2==724|v2==752|v2==840)
-dwv6_new <- subset(dwv6,select=c("V1","V10","V2"),V2==156|V2==368|V2==392|V2==410|V2==434|V2==484|V2==566|V2==724|V2==752|V2==840)
+dwv2_new <- subset(dwv2,select=c("v1","v18","v2"),v2==156|v2==392|v2==410|v2==484|v2==566|v2==724)
+dwv6_new <- subset(dwv6,select=c("V1","V10","V2"),V2==156|V2==392|V2==410|V2==484|V2==566|V2==724)
 ```
 
 ## Rename the countries
 ```{r}
 dwv2_new$v2[dwv2_new$v2==156] <- "China"
-dwv2_new$v2[dwv2_new$v2==368] <- "Iraq"
 dwv2_new$v2[dwv2_new$v2==392] <- "Japan"
 dwv2_new$v2[dwv2_new$v2==410] <- "South Korea"
-dwv2_new$v2[dwv2_new$v2==434] <- "Libya"
 dwv2_new$v2[dwv2_new$v2==484] <- "Mexico"
 dwv2_new$v2[dwv2_new$v2==566] <- "Nigeria"
 dwv2_new$v2[dwv2_new$v2==724] <- "Spain"
-dwv2_new$v2[dwv2_new$v2==752] <- "Sweden"
-dwv2_new$v2[dwv2_new$v2==840] <- "USA"
 dwv6_new$V2[dwv6_new$V2==156] <- "China"
-dwv6_new$V2[dwv6_new$V2==368] <- "Iraq"
 dwv6_new$V2[dwv6_new$V2==392] <- "Japan"
 dwv6_new$V2[dwv6_new$V2==410] <- "South Korea"
-dwv6_new$V2[dwv6_new$V2==434] <- "Libya"
 dwv6_new$V2[dwv6_new$V2==484] <- "Mexico"
 dwv6_new$V2[dwv6_new$V2==566] <- "Nigeria"
 dwv6_new$V2[dwv6_new$V2==724] <- "Spain"
-dwv6_new$V2[dwv6_new$V2==752] <- "Sweden"
-dwv6_new$V2[dwv6_new$V2==840] <- "USA"
 ```
 
-### rename the columns
+## rename the columns
 ```{r}
 colnames(dwv2_new) <-c("year","happiness","country")
 colnames(dwv6_new) <-c("year","happiness","country")
@@ -98,19 +90,27 @@ dwv2_new$year <-"1992"
 dwv6_new$year <-"2012"
 ```
 
-## Calculate the proportion
+
+## combine the two waves
 ```{r}
-table1<-tapply(dwv2_new$happiness,dwv2_new$country,function(x){prop.table(table(x))})
-table1 <- do.call(rbind,table1)
-table1<-as.data.frame(table1)
-table1$year <- 1992
-table2<-tapply(dwv6_new$happiness,dwv6_new$country,function(x){prop.table(table(x))})
-table2 <- do.call(rbind,table2)
-table2<-as.data.frame(table2)
-table2$year <- 2012
-combine<-rbind(table1, table2)
+combine<-rbind(dwv2_new, dwv6_new)
+dim(combine)
 ```
 
-## 
+#E.Make it actually make your graph.
+```{r}
+library(ggplot2)
+ggplot(combine, aes(x=year, fill=happiness)) + geom_bar(position="fill", binwidth=40) + facet_wrap(~country) + xlab("year") + ylab("happiness") + ggtitle("Comparison of happiness in different countries in 1992 and 2012") + scale_fill_discrete(name="proportion of\nhappiness")
+```
+## Summary:
+From the grah, we can see that in some countries, there are more people feeling very happy(such as Mexico, Nigeria and South Korea), while in some countries there's a decrease. We can get similar conclusions such as differences in two waves in different countries from the grah. 
 
+# F&G. write funciton calls
+## lookatdata <- function(data=d)
+{
+head(d)
+dim(d)
+view(d)
+}
+## 
 

@@ -1,0 +1,123 @@
+---
+title: "2014_09_16_HW1_ClaireKelley"
+output: html_document
+published: false
+tags: hw1
+---
+
+###Modified according to suggestions, cleaned up code . 
+
+```{r,echo=FALSE}
+##Here we read in data and calcuate any addional columns we are going to use 
+setwd("C:/Users/Esmail/Desktop/DataViz/qmssviz/Lab1")
+x<-read.csv("Donation-Disease.csv")
+
+```
+
+After readin in data, Add CDC data on the number of new cases of each disease each year. For suicides, data is on the number of attempted suicides. 
+
+
+```{r}
+NewCases<-c(550000,1000000, 232000,1700000,47000,209000,5600,6800000)
+x<-cbind(x,NewCases)
+
+```
+
+Next calculate new columns for dollars spent per death, and per case
+```{r,echo=FALSE}
+
+x[,6]<-(x[,3]*1000/x[,4])
+names(x)[6]<-"PerDeath"
+x[,7]<-(x[,3]*1000/x[,5])
+names(x)[7]<-"PerCase"
+
+x$Name<-as.character(x$Name)#convert Name vector into characters, shorten names 
+    x[7,1]<-"MND and ALS"
+    x[8,1]<-"COPD"
+x
+
+```
+
+Intially, the plot of amount of money raised by number of new cases shows two main things. Firstly, there are vastly more new cases of COPD each year than new cases of any other disease. Secondly, compared to the number of new cases each year both breast cancer and prostrate cancer seem to be raising disproportionately large sums of money. In contrast, diseases like Diabetes,HIV and Heart disease raise comparitively little money. 
+
+```{r,echo=FALSE}
+library(ggplot2)
+Scatter1<-qplot(NewCases,MoneyRaised,data=x,
+                main="Money Raised by Number of New Cases",
+                ylab="Money Raised (in thousands)",
+                xlab="New Cases Yearly",col=Name) #Make initial scatter plot
+
+Scatter2<-Scatter1+theme(axis.title=element_text(face="bold.italic",size="14", color="black"),
+                         plot.title = element_text(face="bold.italic",size="20", color="black")
+                         ,legend.position="none")+
+          geom_text(aes(label=x$Name),vjust=1,hjust=.25)#Adjust Details
+
+Scatter2#Produce final graph
+```
+
+
+Next we use a two sided bar chart to compare dollars raised per case and per death in each disease. Looking at fundraising per death, both prostrate and breast cancercharities raised close to 6 dollars per death. ALS and HIV raise a moderate amount (between 2 and 4 dollars per death). In contrast heart dieases, suicide, diabetes and COPD all raise less than 10c per death. The graph of fundraising by case shows that ALS raises the most dollars per case, with both types of cancer being the next most heavily funded. 
+
+```{r,echo=FALSE}
+par(mar=plotrix::pyramid.plot(x$PerDeath,x$PerCase, 
+                              labels=x$Name,main="Dollars Spent",
+                              gap=2.3,show.values=F,
+                              top.labels=c("Per Death","","Per Case")
+                              ))#Butterfly Plot
+```
+Finally, to more easily compare per death and per case spending we look at a paired bar chart. From this graph we can clearly see that both prostrate cancer and breast cancer raised alot of money especially on a per death basis (likely because neither disease has a high mortality rate). 
+
+```{r,echo=FALSE}
+xSmall<-x[,c(1,6,7)]
+library(reshape2)
+xShaped <- melt(xSmall, id.vars='Name')
+
+PairBar<-ggplot(xShaped, aes(Name, value)) +   
+          geom_bar(aes(fill = variable), 
+          position = "dodge", stat="identity")+
+          theme(axis.title.x = element_blank(), 
+                axis.title.y=element_blank(), 
+                axis.text.x  = element_text(angle=300, vjust=0.6, hjust=.4,size=16),
+                plot.title = element_text(lineheight=.8, face="bold"))+
+                ggtitle("Money Raised")+
+                scale_fill_discrete(name="",labels=c("Per Death","Per New Case"))
+
+PairBar
+```
+
+Graph of Dollars raised per case
+
+```{r,echo=FALSE}
+##producing a bargraph for Dollars spent per case
+BarPerCase<-ggplot(data=x, aes(x=Name, y=PerCase)) + 
+                  geom_bar(stat="identity")+
+                  geom_bar(aes(fill=Name), stat="identity")+
+                  ggtitle("Dollars raised Per Case")+
+                  coord_flip()+
+                  guides(fill=FALSE)+
+                  scale_x_discrete(limits=c("COPD","Diabetes","Suicide","Heart Disease","HIV/AIDS","Prostate Cancer","Breast Cancer","MND and ALS"))+
+                  theme(axis.title.y = element_blank(),
+                        axis.title.x=element_blank(),
+                        plot.title = element_text(lineheight=2, face="bold"))
+
+BarPerCase#Print Graph
+
+```
+
+Now produce a similar graph for dollars raised per death 
+```{r,echo=FALSE}
+BarPerDeath<-ggplot(data=x, aes(x=Name, y=PerDeath)) + 
+  geom_bar(stat="identity")+
+  geom_bar(aes(fill=Name), stat="identity")+
+  ggtitle("Dollars raised Per Death")+
+  coord_flip()+
+  guides(fill=FALSE)+
+  scale_x_discrete(limits=c("COPD","Diabetes","Suicide","Heart Disease","HIV/AIDS","MND and ALS","Breast Cancer","Prostate Cancer"))+
+  theme(axis.title.y = element_blank(),
+        axis.title.x=element_blank(),
+        plot.title = element_text(lineheight=2, face="bold"))
+
+BarPerDeath#Print Graph
+```
+
+

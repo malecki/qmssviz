@@ -11,7 +11,6 @@ When you click the **Knit** button a document will be generated that includes bo
 
 ```{r}
 germs <- read.csv(file="Microbe-scope-bugs.csv", header=TRUE)
-germs <- germs[-2, c(2, 4:7, 9:11)] # keep only data columns, exclude notes/links
 
 dropPct<-function(df, var){
   dropPct<-strsplit(as.character(df[[var]]), split="%")
@@ -19,12 +18,33 @@ dropPct<-function(df, var){
   return(df[[var]])
   }
 
-# remove % signs, leaving a numeric value.
-germs[["case.fatality.rate"]]<-dropPct(germs, "case.fatality.rate")
-
 # assign descriptive column names where absent
 names(germs)[1]<-"germ"
 names(germs)[10]<-"yearly.fatalities.rounded"
 names(germs)[11]<-"yearly.fatalities.raw"
+
+germs <- germs[-2, c(2, 4:7, 9:11)] # keep only data columns, exclude notes/links
+
+# remove % signs, leaving a numeric value.
+germs[["case.fatality.rate"]]<-dropPct(germs, "case.fatality.rate")
+
+library(RJSONIO)
+toJSONarray <- function(dtf){
+    clnms <- colnames(dtf)
+    name.value <- function(i){
+        quote <- '';
+        if(!class(dtf[, i]) %in% c('numeric', 'integer')){
+            quote <- '"';
+        }
+    paste('"', i, '" : ', quote, dtf[,i], quote, sep='')
+    }
+    objs <- apply(sapply(clnms, name.value), 1, function(x){
+        paste(x, collapse=', ')
+    })
+    objs <- paste('{', objs, '}')
+    res <- paste('[', paste(objs, collapse=', '), ']')
+    return(res)
+}
+cat(toJSONarray(germs), file="germs.json")
 ```
 

@@ -1,0 +1,70 @@
+---
+title: "Mulvey_hw3"
+output: html_document
+---
+
+```{r}
+setwd("/Users/elizabethmulvey/qmssviz/hw3")
+
+load('WV5_Data_rdata_v_2014_04_28_2.rdata')
+load('WV6_Data_rdata_v_2014_06_04.rdata')
+d <- WV5_Data_spss_v_2014_04_28
+d2 <- WV6_Data_spss_v_2014_06_04
+
+
+require(ggplot2)
+
+
+```
+
+For my homework 3, I want to examine the financial satistifaction in the United States using data from the world value survey. I wanted to compare years 2005-2009 (wave 5), and 2010-2014 (wave 6). As a reference, I chose to include Mexico, a country with lower economic deveopment. 
+
+For this analysis I subsetted the data set to include data from only the U.S. and Mexico. 
+```{r, echo=FALSE}
+subsetd<-subset(d, V2A== 840 | V2A== 484)
+```
+I then created a bar graph to examine financial satisfaction across the entire data set. 
+```{r, echo=FALSE}
+bar1 <- ggplot(subsetd, aes(x=V68, xlab= "Countries")) + 
+  geom_bar(binwidth=1, color="white", fill="blue") + 
+  coord_cartesian(xlim=c(0,10)) +
+  xlab("Countries (Mexico and the U.S.)") + ggtitle("Financial Satisfaction on a Scale from 0 to 10") 
+bar1
+```
+
+I then wanted to look break the graph apart by country. 
+
+```{r, echo=FALSE}
+bar1 + facet_grid(. ~ V2)
+```
+
+I followed the same process for Wave 6.
+
+```{r, echo=FALSE}
+subsetd2<-subset(d2, V2A== 840 | V2A== 484)
+
+
+bar2 <- ggplot(subsetd2, aes(x=V59, xlab= "Countries")) + 
+  geom_bar(binwidth=1, color="white", fill="green") + 
+  coord_cartesian(xlim=c(0,10)) +
+  xlab("Countries (Mexico and the U.S.)") + ggtitle("Financial Satisfaction: 2010-2014)") 
+bar2
+bar2 + facet_grid(. ~ V2)
+
+```
+
+These graphs are not clearly illustrating the relationship between the two countries, and did not follow Tufte's guidelines. Firstly, Tufte recommends to 'show your data,' and the different sample sizes of the countries made it difficult to compare and understand the true relationship. In addition, Tufte recommends to avoid 'chartjunk,' which these graphs fall victim to; the two graphs could be condensed down to one graph and utilize a lot less ink. 
+
+To alleviate these problems, I created new graphs which use less ink, and illustrate more honestly the relationship between the US and Mexico. 
+
+Wave 5:
+```{r, echo=FALSE}
+density1 <- ggplot(data = subsetd, aes(x = V68, col=V2)) + geom_density(aes(group = V2, color=V2)) + ggtitle("Financial Satisfaction 2005-2009: Mexico (dark blue) v. US (light blue)")  + xlab("0= Dissatisfied, 10=Satisfied")   
+density1
+```
+
+Wave 6:
+```{r, echo=FALSE}
+density2 <- ggplot(data = subsetd2, aes(x = V59, col=V2)) + geom_density(aes(group = V2, color=V2)) + ggtitle("Financial Satisfaction 2010-2014: Mexico (dark blue) v. US (light blue)")  + xlab("0= Dissatisfied, 10=Satisfied")    
+density2
+```

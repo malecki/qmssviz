@@ -46,6 +46,10 @@ d2_sub1 <- na.omit(d2_sub1)
 colnames(d1_sub1) <- c("year","country","happiness")
 colnames(d2_sub1) <- c("year","country","happiness")
 
+## drop useless levels of factors ##
+d1_sub1$happiness <- droplevels(d1_sub1$happiness)
+d2_sub1$happiness <- droplevels(d2_sub1$happiness)
+
 ## summary variables ##
 summary(d1_sub1$happiness)
 summary(d2_sub1$happiness)

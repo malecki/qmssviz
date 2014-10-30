@@ -1,0 +1,17 @@
+{
+    "contents" : "library(ggplot2)\nlibrary(maptools)\nlibrary(rgeos)\nlibrary(RColorBrewer)\nlibrary(scales)\nlibrary(mapproj)\nrm(list=ls())\nsetwd(\"~/Documents/Delhi/BTeam/Delhi\")\ndis <- readShapeSpatial (\"Districts.shp\")\ndis <- fortify(dis, region = \"OBJECTID\")\n\n\n# drops <- c(\"X\",\"X.1\", \"X.2\")\n# map <- map[,!(names(map) %in% drops)]\n\n\n\ndata <- read.csv(\"Basic Info.csv\")\ncolnames(data)[4] <- \"pop11\"\n\n# colourCount = length(unique(data$pop11))\n# getPalette = colorRampPalette(brewer.pal(9, \"Blues\"))\n\nggplot()+\n  geom_map(data = data, aes(map_id = OBJECTID, fill= pop11, colour = DISTRICT),map=dis)+\n  geom_path(data=dis, aes(x=long, y=lat, group=group), color = NA, size = 0.5, linemetre = 0.5)+\n  coord_map(projection=\"mercator\")+\n  labs(title=\"Population Census Result in 2011\", fill=\"\") +\n  theme(legend.position = \"right\")\n\n\n\n\n\n\n",
+    "created" : 1413867917774.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1364992600",
+    "id" : "25FB9C15",
+    "lastKnownWriteTime" : 1413870151,
+    "path" : "~/Documents/Delhi/BTeam/Delhi/Delhi_pop11.R",
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

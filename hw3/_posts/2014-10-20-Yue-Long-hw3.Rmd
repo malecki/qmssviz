@@ -1,0 +1,132 @@
+---
+title: "Assignment 3"
+author: "Yue Long"
+date: "October 19, 2014"
+output: html_document
+---
+Fos this assignment, I decide to visualize two waves from the same survey (Princeton Survey Research Associates) that examines the difference between year 1997 and 2007 about things that people evaluate to be important for happiness. The same set of questions were asked in the survey with the only difference in that in year 1997, 1101 people participated while in 2007, 2020 people participated. Below is the survey question asked to respondents:
+
+*I'd like to ask you about some different aspects of your life. As I read the following list, please tell me how important each aspect is to your personal happiness and fulfillment using a scale from zero to 10, where 10 means very important and zero means not important at all. Your relationship with spouse, relatioinship with (chil/children) under 18, relationship with adult children, job and career, relationship with mother, relationship with father, the things you do in your free time, relationship with friends.*
+
+The survey then classifies respondents' answers into four intervals: scale 10, scale 7-9, scale 5-6 and scale 0-4, and name each interval as very important for happiness, important for happiness, not so important for happiness and not important for happiness accordingly. Note that they also record the number of respondents who refuse to answer the questions. I leave out this category since it is unrelated to our discussion.
+
+I made a pair of back-to-back bar charts, representing year 1997 and year 2007, for each of four importance levels to display the data. This way we can not only compare the percentages of respondents for each item at the same importance level, we can also compare across the two years to observe any trend.
+
+There are four steps to achieve this goal: first we need to melt/cast the dataset for each importance level into the desirable form: the first column lists the eight things for scaling, while the other two list the percentages of respondents who gave a scale that falls into the importance interval in year 1997 and 2007. Next we write the functions to plot the two sub-panals (one for 1997 and one for 2007) and the axis at each importance level. Third we write the function to put these three parts together and forth, we put all four panels in the same frame.
+
+Below are the packages that I need to run my code.
+```{r}
+rm(list=ls())
+library(ggplot2)
+library(grid)
+library(gridExtra)
+library(reshape2)
+```
+
+Below is the function that I wrote to melt/cast dataset:
+
+```{r,echo=TRUE}
+convert <- function(name){
+  df <- read.csv(name)
+  df <- melt(df, id.vars = c("QuestionTxt", "ReleaseDate"), measure.vars = "RespPct")
+  df <- dcast(df, QuestionTxt + ReleaseDate ~ variable)
+  df <- dcast(df, QuestionTxt ~ ReleaseDate, value = "ReleaseDate")
+  colnames(df)[2] <- "a"
+  colnames(df)[3] <- "b" 
+  return(df)
+}
+```
+
+Below are the three functions that I used to plot each sub-panal (1997 and 2007) and the axis between them:
+```{r}
+gg1 <- function(df, clr){ 
+  g1 <- ggplot(data = df, aes(x = QuestionTxt, y = a)) +
+        geom_bar(stat = "identity", fill = clr) + 
+        geom_text(aes(label = paste(a, " ", " "),size=2.3), show_guide = FALSE)+
+          theme(axis.title.x = element_blank(),
+          axis.title.y = element_blank(), 
+          axis.text.y = element_blank(), 
+          axis.ticks.y = element_blank(),
+          plot.margin = unit(c(1,-1,0,0), "mm")) +
+          scale_y_reverse(lim = c(100,0)) + 
+          coord_flip() 
+  return(ggplotGrob(g1))
+}
+
+gg2 <- function(df,clr, resp07){
+  g2 <- ggplot(data = df, aes(x = QuestionTxt, y = b)) +
+        geom_bar(stat = "identity", fill = clr) + 
+        geom_text(aes(label = paste(" ", " ", b),size=2.3), show_guide = FALSE)+
+        theme(axis.title.x = element_blank(), 
+          axis.title.y = element_blank(), 
+          axis.text.y = element_blank(), 
+          axis.ticks.y = element_blank(),
+          plot.margin = unit(c(1,1.5,0,0), "mm")) +
+          coord_flip() + ylim(c(0, 100))
+  return(ggplotGrob(g2))
+}
+
+ggmid <- function(df, clr){
+  g.mid <- ggplot(df, aes(x=1, y=QuestionTxt)) + geom_text(aes(label=QuestionTxt), size = 3) +
+    geom_segment(aes(x=0.94, xend=0.96, yend=QuestionTxt)) +
+    geom_segment(aes(x=1.04, xend=1.065, yend=QuestionTxt)) +
+    ylab(NULL)+
+    scale_x_continuous(expand=c(0,0),limits=c(0.94,1.065))+
+    theme(axis.title=element_blank(),
+          panel.grid=element_blank(),
+          axis.text.y=element_blank(),
+          axis.ticks.y=element_blank(),
+          panel.background=element_blank(),
+          axis.text.x=element_text(color=NA),
+          axis.ticks.x=element_line(color=NA),
+          plot.margin = unit(c(1,-1,1,-1), "mm"))
+  return(ggplotGrob(g.mid))
+}
+```
+
+Below is the function that I used to put two subpanels and the axis together in one frame:
+```{r} 
+compare <- function(name, clr, title){
+  df <- convert(name)
+  return (arrangeGrob(gg1(df, clr),ggmid(df, clr),gg2(df, clr),ncol=3,widths=c(4/10,2/10,4/10), main = title))
+}
+```
+
+Before we start making graphics, let me first present an example of the dataset and show what the dataset contains:
+
+```{r, message= FALSE}
+setwd("~/Documents/qmssviz/hw3/surveys")
+veryim <- convert("10.csv")
+colnames(veryim)[2] <- 1997
+colnames(veryim)[3] <- 2007
+veryim
+```
+
+
+The above example displays the percentage of respondents who give scale 10 for each item in year 1997 and 2007. I want to plot back-to-back bar charts to compare the results between year 1997 and 2007.
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE}
+setwd("~/Documents/qmssviz/hw3/surveys")
+test <- compare("10.csv", "#454545", "Percent of Respondents who give 10 for each category in 1997 (left) and 2007 (right)")
+grid.arrange(test, ncol = 1)
+```
+
+In order to compare across different importance levels, I line up the four graphs in correspondence with four importance intervals vertically (very important = scale 10, important = scale 7-9, not so important = scale 5-6, not important = 0-4) and give them colors by their importance level (red = 10, ..., yellow = 0-4).
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+setwd("~/Documents/qmssviz/hw3/surveys")
+a <- compare("10.csv","#FF3300", "Percent of Respondents who give 10 for each category in 1997 (left) and 2007(right)")
+b <- compare("7-9.csv","#FF6600", "Percent of Respondents who give 7-9 for each category in 1997 (left) and 2007(right)")
+c <- compare("5-6.csv","#FF9933", "Percent of Respondents who give 5-6 for each category in 1997 (left) and 2007(right)")
+d <- compare("0-4.csv","#FFFF33", "Percent of Respondents who give 0-4 for each category in 1997 (left) and 2007(right)")
+
+grid.arrange(a, b, c, d, ncol = 1)
+```
+
+Looking at the graph, we roughly observe that distributioins of percentage of respondents at different importance levels stay about the same between year 1997 and year 2007 (symmetric). However there are some interesting points to observe upon closer examination of the graph. For example, relationship with spouse and relationship with <18 children were most often selected as very important contributers (scale = 10) to happiness in both year 1997 and 2007. On the other hand, compared to the results in 1997, less percentage (six to seven percent less) of respondents in 2007 claimed that job and things to do in their free-time were very important contributers to happiness. Instead, more percentage of respondents in 2007 said that these two things were only important contributers (scale = 7-9) to their happiness. Results from the last panel show that relationship with father is most selected as a not-important-contributor (scale = 0-4) to happiness.
+
+If we observe vertically across different importance levels, we realize that while the distributions between 1997 and 2007 for scale=5-6 and scale=0-4 look almost identical, there is a slight "left skew"" towards year 1997 in the scale = 10 panel and a slight "right skew" towards year 2007 in the scale = 7-9 panel. In other words, in the first panel with scale = 10, all the bars have larger percentages in year 1997 (left) than 2007 (right) while in the second panel with sclae = 7-9, almost all the bars (except for <18 children) have larger percentages in year 2007 (right) than year 1997 (left). In evaluating things that are important for their happiness, people seem to become more conservative in 2007 than in 1997, while they remain about the same in evaluating things that are not so important for their happiness.   
+
+
+
+

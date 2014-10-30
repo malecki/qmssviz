@@ -1,6 +1,6 @@
 
 body {
-  font: 10px sans-serif;
+  font: 27px sans-serif;
 }
 
 .axis path,
@@ -8,6 +8,10 @@ body {
   fill: none;
   stroke: #000;
   shape-rendering: crispEdges;
+}
+
+.hovered {
+	color: red;
 }
 
 .point {

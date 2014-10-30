@@ -11,13 +11,81 @@ When you click the **Knit** button a document will be generated that includes bo
 
 ```{r}
 germs <- read.csv(file="Microbe-scope-bugs.csv", header=TRUE)
-germs <- germs[-2, ]
+germs <- germs[-1, ] #-1?
+germs[["germName"]] <- make.names(germs[["X"]])  # ?make.names
 ```
 
-You can also embed plots, for example:
+ [1] "X"                                                                           
+ [2] "case.fatality.rate"                                                          
+ [3] "note"                                                                        
+ [4] "average.basic.reproductive.rate"                                  
+ [5] "primary.mode.of.transmission"                                                
+ [6] "survival.time.on.surfaces"                                                   
+ [7] "survival.in.ideal.conditions..ie..blood..faeces."                            
+ [8] "note.1"                                                                      
+ [9] "pathogen.type"                                                               
+[10] "infectious.dose"                                                             
+[11] "viral.load.in.acute.stage"                                                   
+[12] "X.1"                                                                         
+[13] "yearly.fatalities"                                                           
+[14] "X.2"                                                                         
+[15] "X.3"                                                                         
+[16] "yearly.fatalities.1"                                                         
+[17] "yearly.fatalities.2"                                                         
+[18] "yearly.fatalities.3"                                                         
+[19] "X.4"                                                                         
+[20] "X.5"                                                                         
+[21] "lower.R0"                                                                    
+[22] "upper.R0"                                                                    
+[23] "survival.time.on.surfaces..room.temp..hours."                                
+[24] "lower"                                                                       
+[25] "infectious.dose.second.source"                                               
+[26] "infectious.dose.third.source"                                                
+[27] "note.2"                                                                      
+[28] "sources"                                                                     
+[29] "http...www.phac.aspc.gc.ca.lab.bio.res.psds.ftss.index.eng.php.v"            
+[30] "yearly.fatalities.4"                                                         
+[31] "http...www.who.int.healthinfo.global_burden_disease.estimates.en.index1.html"
+[32] "http...www.cdc.gov.mmwr.PDF.wk.mm6153.pdf"                                   
+[33] "http...en.wikipedia.org.wiki.Human_mortality_from_H5N1"                      
+[34] "individual.links.given.in.hidden.columns.to.right..where.different"          
+[35] "X.6"                                                                         
+[36] "X.7"                                                                         
+[37] "infectious.dose.1"                                                           
+[38] "X.8"                                                                         
+[39] "X.9"          
 
-```{r, echo=FALSE}
-plot(cars)
+```{r}
+## subset data
+germs<-germs[,c(1,2,4,5)] 
+## rename columns
+## but first, make sure you're re-writing the right ones!
+names(germs)names(germs)[1:4] <- c("disease", "deadliness", "R0", "transmission")
+
+## remove percent signs from vector
+removePercentSigns <- function(col) {
+    col <- as.character(col)
+    as.numeric(gsub("%", "", col))
+}
+
+# germs$deadliness <- as.numeric(gsub("%", "", as.character(germs$deadliness), fixed=T)) #use regular expression
+# germs$R0 <- as.numeric(gsub("%", "", as.character(germs$R0), fixed=T))
+
+germs$deadliness <- removePercentSigns(germs$deadliness)
+
+factor2levels <- function(x) {
+    levels(x)[as.numeric(x)]
+}
+germs$R0 <- as.numeric(factor2levels(germs$R0))
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r}
+#placeholder for vis
+g <- ggplot(data=germs, 
+    aes(x=R0, # we have lower and upper R_0 for this; which to use?
+    y=deadliness, 
+    col=transmission)) +
+geom_point()
+
+g + theme_classic() # or theme_bw()? <-- the gridlines tho
+```

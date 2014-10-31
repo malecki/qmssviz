@@ -1,0 +1,89 @@
+
+title: "hw3_Lanxiang_Li_ll2937"
+author: "Lanxiang Li"
+date: "October 21, 2014"
+output: html_document
+published:false
+tags:hw2
+
+# A. Identify two surveys
+I'm going to use two waves (wave2 and wave6)in the World Values Survey to examine the same survey question, simple but never out-dated:
+Are you happy?
+
+# B.Describe the graph(s)
+I'm going to make There're two waves of data. 
+
+# C.Write down the target shape
+## year(wave):"1990-1994", "2010-2014"
+## country: "United States","Sweden", "Spain"...
+## survey answer: "very happy","rather happy","not very happy","not at all happy","no answer","don't know"
+## proportion: the ratio of each level of happiness 
+
+## D. Write a script
+
+```{r}
+setwd("~/Desktop/qmssviz/hw3")
+load("/Users/carolineli/Desktop/qmssviz/hw3/WV2_Data_rdata_v_2014_04_28.rdata")
+load("/Users/carolineli/Desktop/qmssviz/hw3/WV6_Data_rdata_v_2014_06_04.rdata")
+dwv2 <- WV2_Data_rdata_v_2014_04_28
+dwv6 <- WV6_Data_spss_v_2014_06_04
+```
+
+### check the data
+```{r}
+dim(dwv2)
+dim(dwv6)
+str(dwv2$v18)
+str(dwv6$V10)
+```
+
+### Rename the Level of Happiness
+```{r}
+dwv2$v18[dwv2$v18==1] <- "very happy"
+dwv2$v18[dwv2$v18==2] <- "rather happy"
+dwv2$v18[dwv2$v18==3] <- "not very happy"
+dwv2$v18[dwv2$v18==4] <- "not at all happy"
+dwv2$v18[dwv2$v18==-1] <- "don't know"
+dwv2$v18[dwv2$v18==-2] <- "no answer"
+dwv2$v18[dwv2$v18==-3] <- "not applicable"
+dwv6$V10[dwv6$V10==1] <- "very happy"
+dwv6$V10[dwv6$V10==2] <- "rather happy"
+dwv6$V10[dwv6$V10==3] <- "not very happy"
+dwv6$V10[dwv6$V10==4] <- "not at all happy"
+dwv6$V10[dwv6$V10==-1] <- "don't know"
+dwv6$V10[dwv6$V10==-2] <- "no answer"
+dwv6$V10[dwv6$V10==-3] <- "not applicable"
+table(dwv6$V10)
+table(dwv2$v18)
+```
+
+### selecting data from 10 countries
+```{r}
+dwv2_new <- subset(dwv2,select=c(v18),v2==156|v2==368|v2==392|v2==410|v2==434|v2==484|v2==566|v2==724|v2==752|v2==840)
+dwv6_new <- subset(dwv6,select=c(V10),V2==156|V2==368|V2==392|V2==410|V2==434|V2==484|V2==566|V2==724|V2==752|V2==840)
+```
+
+### Rename the countries
+dwv2_new[dwv2_new$v2==156] <- "China"
+dwv2_new[dwv2_new$v2==368] <- "Iraq"
+dwv2_new[dwv2_new$v2==392] <- "Japan"
+dwv2_new[dwv2_new$v2==410] <- "South Korea"
+dwv2_new[dwv2_new$v2==434] <- "Libya"
+dwv2_new[dwv2_new$v2==484] <- "Mexico"
+dwv2_new[dwv2_new$v2==566] <- "Nigeria"
+dwv2_new[dwv2_new$v2==724] <- "Spain"
+dwv2_new[dwv2_new$v2==752] <- "Sweden"
+dwv2_new[dwv2_new$v2==840] <- "USA"
+dwv6_new[dwv6_new$V2==156] <- "China"
+dwv6_new[dwv6_new$V2==368] <- "Iraq"
+dwv6_new[dwv6_new$V2==392] <- "Japan"
+dwv6_new[dwv6_new$V2==410] <- "South Korea"
+dwv6_new[dwv2_new$V2==434] <- "Libya"
+dwv6_new[dwv2_new$V2==484] <- "Mexico"
+dwv6_new[dwv2_new$V2==566] <- "Nigeria"
+dwv6_new[dwv2_new$V2==724] <- "Spain"
+dwv6_new[dwv2_new$V2==752] <- "Sweden"
+dwv6_new[dwv2_new$V2==840] <- "USA"
+
+### Calculate the proportion
+

@@ -1,0 +1,54 @@
+---
+title: "hw2_Lanxiang_Li_ll2937"
+author: "Lanxiang Li"
+date: "October 1, 2014"
+output: html_document
+published:false
+tags:hw2
+
+# 1.read data
+setwd("~/Desktop/qmssviz/hw2")
+lgas <- read.csv("lgas.csv")
+str(lgas)
+dim(lgas)
+
+health_facility <- read.csv("Health_Mopup_and_Baseline_NMIS_Facility.csv")
+str(health_facility)
+dim(health_facility)
+
+# 2.Select all health facilities located in the Southern zones of Nigeria
+levels(lgas$zone)
+row<-grep("South", lgas$zone)
+slgas<-lgas[row, ]
+south_facility <-merge(slgas, health_facility, by="unique_lga", sort=TRUE, all.x=TRUE)
+str(south_facility)
+
+# 3.Calculate the total number of full time nurses and doctors for all health facilities, by state
+library(plyr)
+library(reshape2)
+library(ggplot2)
+states<-ddply(south_facility, .(state), numcolwise(sum), na.rm=TRUE)
+states<-subset(states, select=c("state", "pop_2006", "area_sq_km", "num_nurses_fulltime", "num_nursemidwives_fulltime", "num_doctors_fulltime"))
+
+## Population in Millions
+states$pop_2006<-states$pop_2006/10^6
+
+## total number of healthcare professionals, by state (in descending order of state population)
+states[order(-states$pop_2006), -3]
+
+## number of healthcare professionals per 1 million people
+percap<-cbind(states$state, states[,4:6]/(states$pop_2006))
+names(percap)[1]<-"state"
+percap[,2:4]<-round(percap[,2:4], digits=2)
+print(percap)
+
+## number of healthcare professionals per 100 sq. kilometers
+persqkm<-cbind(states$state, states[,4:6]/(states$area_sq_km)*100)
+names(persqkm)[1]<-"state"
+persqkm[,2:4]<-round(persqkm[,2:4], digits=2)
+print(persqkm)
+
+# 4.check
+check<-levels(slgas$lga)
+compare<-levels(south_facility$lga)
+all(check %in% compare)

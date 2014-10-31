@@ -102,15 +102,32 @@ dim(combine)
 library(ggplot2)
 ggplot(combine, aes(x=year, fill=happiness)) + geom_bar(position="fill", binwidth=40) + facet_wrap(~country) + xlab("year") + ylab("happiness") + ggtitle("Comparison of happiness in different countries in 1992 and 2012") + scale_fill_discrete(name="proportion of\nhappiness")
 ```
+
 ## Summary:
-From the grah, we can see that in some countries, there are more people feeling very happy(such as Mexico, Nigeria and South Korea), while in some countries there's a decrease. We can get similar conclusions such as differences in two waves in different countries from the grah. 
+From the graph, we can see that in some countries, there are more people feeling very happy(such as Mexico, Nigeria and South Korea), while in some countries there's a decrease. We can get similar conclusions such as differences in two waves in different countries from the gragh. 
 
 # F&G. write funciton calls
+
 ## lookatdata <- function(data=d)
 {
 head(d)
 dim(d)
 view(d)
 }
-## 
+
+## selectcolumns <- function(data) 
+{
+data <- subset(data,select=c("v1","v18","v2"),v2==156|v2==392|v2==410|v2==484|v2==566|v2==724)
+}
+
+## combinedata <- funciton(data1, data2)
+{
+rbind(data1, data2)
+}
+
+## renamecolumn <- function(data)
+{
+colnames(data) <- c("year","happiness","country")
+}
+
 

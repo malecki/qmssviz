@@ -1,0 +1,36 @@
+---
+title: "Nitkin HW1"
+tags: HW1
+output: html_document
+published: false
+---
+
+
+
+First I created an object called "Academic Data" that was built out of my csv file. Then I imported it into r.
+```{r, read-data}
+
+Academic_Data <- "../../Academic Data.csv"
+academic <- read.csv(Academic_Data)
+```
+####Next I looked to see the names of the columns/variables
+```{r, look_at_variable_names}
+head(names(academic), 10)
+```
+####Then I defined two of the variables as new objects
+```{r, define_variables}
+X12_13ELA <- academic$X2012.13.NYS.ELA.Test
+X12_13Math <- academic$X2012.13.NYS.Math.Test
+```
+
+```{r, plot}
+plot(X12_13ELA, X12_13Math, 
+     xlab='English Scores', 
+     ylab='Math Scores', 
+     main='2013-14 New York State Test Scores')
+```
+####Finally I plotted them. Voila!
+
+
+getwd()
+

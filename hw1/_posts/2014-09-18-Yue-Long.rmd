@@ -1,0 +1,115 @@
+---
+title: 'Homework 1 assignment'
+author: "Yue Long"
+date: "September 18, 2014"
+output: html_document
+published: false
+tags: hw1
+---
+
+For this homework, I chose the dataset Donation.Disease to practice making different kinds of graphs. 
+
+```{r}
+dd <- read.csv("~/Documents/qmssviz/Lab1/Donation-Disease.csv")
+```
+
+First let us observe some basic information about this dataset:
+
+```{r,echo=FALSE}
+str(dd) #information about this dataset
+```
+There are three sets of information provided for each disease: the name of a fundraising event for that disease, the amount of money collected and the number of deaths from the disease. We may want start off by looking at the amount of money collected from fundraising for each disease in a scatterplot. I looked up plotting in R on the internet and read through a post that helps to plot this very basic graph.
+
+```{r, echo=FALSE}
+money<-dd[ ,3]
+library(ggplot2)
+name=c("heartd", "suicide", "breastc", "diabetes", "HIV", "prostatec", "motord", "chronicd")
+ggplot(dd, aes(x=name, y=money))+
+      geom_point(shape=1, size=1.2, col="blue")+
+      xlab("Disease")+
+      ylab("Money raised for disease (in millions)")+
+      geom_text(aes(label=name), size=3.6, col="red", angle=20, position=position_jitter(width=-8, height=12))
+```
+
+A couple things about this may be helpful for future plotting. There are seven types of plotting in r and I chose type "o" for my graph, which means connected scatterplot. The other types are:
+
+"p":Points
+
+"l":Lines
+
+"b":Both
+
+"c": Lines except at data points
+
+"h": Histogram 
+
+"n": no plotting
+
+Similarly, we can make a graph showing the number of people who have died from certain disease. For this graph, I may want to put the two scatterplots together and compare them:
+
+```{r, echo=FALSE}
+par(mar=c(5,5,4,4))#set margins at bottom, left, top, right accordingly
+death<-dd[, 4]
+death_simp<-death/1000
+death_range <- range (0, death_simp)
+plot(death_simp, type="o", col="red", axes=FALSE, xlab="Disease", ylab="")
+mtext("Number of Deaths (in thousands)", side=2, line=2.5)#side=2 means text on the left, line=2.5 refers to distance from the default position
+money_range <- range (0, money)
+axis(1, at=1:8, lab=c("heartd", "suicide", "breastc", "diabetes", "HIV", "prostatec", "motord", "chronicd"))
+axis(2, las=1, at=100*0:death_range[2])
+par(new=TRUE)#if set to TRUE, the next high-level plotting command should not clean the frame before drawing as if it were on a new device
+plot(money, type="o", col="blue", axes=FALSE, xlab="Disease", ylab="") 
+mtext("Money Raised (in millions)", side=4, line=2.5)
+axis(4, las=1, at=50*0:money_range[2])
+```
+
+
+When I was doing this homework, I referred to Yang Yang's Lab 1 for help in plotting. I did not realize that I could use tools from ggplot2 until I read through her section about that. I decided to try her way of plotting and see if there is anything I can do to improve the graphs.
+
+The graph she plots has money raised as the y vairable and deaths from disease as the x variable. I only did some minor adjustment such as the angle the text is tilted and the color of the text to make it more readable.  
+```{r, echo=FALSE}
+library(ggplot2)
+name<-c("heartd", "suicide", "breastc", "diabetes", "HIV/AIDS", "prostatec", "motord", "chronicd")
+ggplot(dd, aes(x=death_simp, y=money, label=name))+
+      geom_point(shape=1, size=1.2)+
+      xlab("Deaths from disease (in thousands)")+
+      ylab("Money raised for disease (in millions)")+
+      geom_text(aes(label=name), size=3.6, col="red", angle=20, position=position_jitter(width=-8, height=12))
+```
+
+Because this dataset is pretty small, there are limited things that we can do to manipulate it. I thus download a dataset from National Data Climate Center about JFK's monthly snow precipitation from August 1st, 2004 to August 1st, 2014 and see if there are different graphs that I can create. First I need to read the data into R. 
+
+```{r, echo=FALSE}
+JFK <-read.csv("~/Documents/qmssviz/JFK_snow.csv")
+```
+
+Similar to what we did above we want to know some information about this dataset:
+```{r}
+str(JFK)
+```
+Note that in this dataset, EMXP refers to extreme maximum daily precipitation total in that month, MXSD maximum snow depth in that month, TPCP total precipitation and TSNW total snow fall amount. EMXP, MXSD and TPCP are in tenth millimeter precision and TSNW in millimeter precision. The difference between TPCP and TSNW is mainly that TPCP includes sleet, ice rain and others while TSNW does not. 
+
+Now I want to add two time-series plots for total precipitation and total snow fall amount. 
+
+```{r, echo=FALSE}
+require(xts)
+TPCP <- JFK[ ,4]
+TSNW <- JFK[ ,5]
+precip <- ts(TPCP, frequency = 12, start = c(2004,8))#ts refers to time-series objects, frequency refers to the number of observations per unit of time
+plot(as.xts(precip), major.format = "%Y-%m", main="Total Precipitation (mm*10)")#as.xts is a conversion function that coerce data objects of arbitrary classes to class xts, which is an extensible time-series object
+snow <- ts(TSNW, frequency = 12, start = c(2004,8))
+plot(as.xts(snow), major.format = "%Y-%m", main="Total Snow Fall(mm*10)")
+```
+
+We can do similar things with EMXP and MXSD. The last thing I want to do is to put all these four graphs together in one framework. 
+```{r, echo=FALSE}
+EMXP <- JFK[ ,2]
+MXSD <- JFK[ ,3]
+max_precip <- ts(EMXP, frequency = 12, start = c(2004, 8))
+max_depth <- ts(MXSD, frequency = 12, start = c(2004, 8))
+par(mfrow=c(2,2))
+plot(as.xts(precip), major.format = "%Y-%m", main="Total Precipitation (mm*10)")
+plot(as.xts(snow), major.format = "%Y-%m", main="Total Snow Fall (mm)")
+plot(as.xts(max_precip), major.format = "%Y-%m", main="Maximum Precipitation of a day (mm*10)")
+plot(as.xts(max_depth), major.format = "%Y-%m", main="Maximum Snow Depth (mm*10)")
+```

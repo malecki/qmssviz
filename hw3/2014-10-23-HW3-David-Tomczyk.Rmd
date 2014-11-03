@@ -1,0 +1,248 @@
+---
+title: "Spain's Latinobarometer: Before and After the Crisis"
+author: "David Tomczyk"
+output: html_document
+published: false
+tags: hw3
+---
+#Part A - Surveys to Compare
+
+Questionnaires to compare: Question about most important issues facing Spain from the Latinobarometer Spain 2006 vs 2009
+
+#Background
+
+Spain's economy grew rapidly during the end of the 90's and the beginning of the 2000's. From 1996 to 2007, real estate prices rose 200%. However, this real estate bubble inevitably broke, and in February 2009 it was confirmed that Spain, along with other European economies, had officialy entered recession.The economy contracted 3.7% in 2009, and unemployment rose rapidly.
+
+The latinobarometer was conducted in Spain both pre- and post-crisis. The survey period is roughly June-July. I chose survey year 2006 becauase this was arguably the height of the economic boom, and because in June 2007 construction rates in Spain were already beginning to plune. Survey year 2009 was chosen because the survey period was almost immediately after declaration of the recession/cris.
+
+#B - Description of Graphs
+
+Graphs to be made:  
+I envision creating one of two graphs, both of which are dotplots. In both plots the response levels will be on the Y-axis. Given there are 15+ response levels, I will likely only choose 4 or 5. On the X axis will be the proportion of respondents choosing a given option.
+
+The first dotplot has all years on a single graph. The two different years are designated by different colors or shapes. This way, one can easily see the difference in proportion of people choosing a response between both years. The second dot plot has two facets: one for 2006 and another for 2009, arranged vertically. This arrangement will allow people to see how responses varied between the two years, and also allow for easy comparison for how they changed.
+
+#C - Shape of Data
+
+In order to fulfill my graph's data contract, a row of my data frame will have to have the shape:
+
+{Year: "", Response: "", Value: ""}
+
+---
+```{r, echo=FALSE}
+
+#2006: p10st idenpa=724 (based on sample size)
+#2009: p2st idenpa=""
+#appears that codes for answers between 2006 and 2009 match up
+
+setwd("/Users/dtomczyk/qmssviz/hw3")
+library(ggplot2)
+```
+---
+
+#D-F: Script, Graph, and Fantasy Functions
+
+---
+
+#Create Data Frame for Spain's LatinoBarometer 2006
+
+Quick notes:
+
+2476 observations in 2006 Spain Latinobarometer  
+Question of interest is P10ST
+
+---
+```{r}
+ #read csv file
+lb2006_raw <-read.csv("lb2006.csv")
+
+#check structure
+str(lb2006_raw)
+
+#Subset to only include data for Spain
+spain2006 <- subset(lb2006_raw, IDENPA == 724)
+
+#Select only the variables I'm interested in (Survey Year, Question Responses)
+spain2006_rel <- subset(spain2006, select=c(NUMINVES,P10ST))
+
+#Check for NA's
+sum(is.na(spain2006_rel))
+
+#FREQ table of data response*sex (includes only column % to check with codebook)
+#CrossTable(spain2006_rel$P10ST,spain2006_rel$NUMINVES, prop.r = FALSE, prop.chisq=FALSE)
+
+#Add a variable that will be summed in aggregate to gives counts for each level
+spain2006_rel$Count <- 1 
+
+#Aggregate the count variable by Year, response, and gender
+spain2006_levels_raw <-aggregate(spain2006_rel, by=list(spain2006_rel$NUMINVES, spain2006_rel$P10ST), FUN=sum)
+
+#Rename the new variables
+colnames(spain2006_levels_raw)[1] <- "Year"
+colnames(spain2006_levels_raw)[2] <- "Response"
+
+#Check to make sure that the responses stay the same
+sort(unique(spain2006_levels_raw$Response)) == sort(unique(spain2006_rel$P10ST)) #checking to make sure that the responses stay the same
+
+#Subset data frame to only include the correct, renamed variables
+spain2006_final <- subset(spain2006_levels_raw, select=c(Year, Response, Count))
+
+#check to make sure total number of responses still matches
+
+sum(spain2006_final$Count)
+
+#Add new variable of proportion of people giving each response
+spain2006_final$Proportion <- round((spain2006_final$Count/2476)*100, digits = 1)
+
+```
+---
+
+#Create Data Frame for Spain's LatinoBarometer 2009
+
+Quick notes:
+
+2486 observations in 2009 Spain Latinobarometer  
+Question of interest is P2ST
+
+---
+```{r}
+#Read csv file
+lb2009_raw <-read.csv("lb2009.csv", stringsAsFactors=FALSE) #read file
+
+#Check structure
+str(lb2009_raw)
+
+#Subset to only include data for Spain
+spain2009 <- subset(lb2009_raw, IDENPA == 724)
+
+#Select only the variables I'm interested in (Survey Year, Question Responses)
+spain2009_rel <- subset(spain2009, select=c(NUMINVES,P2ST))
+
+#Check for NA's
+sum(is.na(spain2009_rel))
+
+#FREQ table of data response*sex (includes only column % to check with codebook)
+#CrossTable(spain2009_rel$P2ST,spain2009_rel$NUMINVES, prop.r = FALSE, prop.chisq=FALSE)
+
+#Add a variable that will be summed in aggregate to gives counts for each level
+spain2009_rel$Count <- 1
+
+#Aggregate the count variable by Year, response, and gender
+spain2009_levels_raw <-aggregate(spain2009_rel, by=list(spain2009_rel$NUMINVES, spain2009_rel$P2ST), FUN=sum)
+
+#Rename the new variables
+colnames(spain2009_levels_raw)[1] <- "Year"
+colnames(spain2009_levels_raw)[2] <- "Response"
+
+#Check to make sure that the responses stay the same
+sort(unique(spain2009_levels_raw$Response)) == sort(unique(spain2009_rel$P2ST))
+
+#Subset data frame to only include the correct, renamed variables
+spain2009_final <- subset(spain2009_levels_raw, select=c(Year, Response, Count))
+
+#check to make sure total number of responses still matches
+sum(spain2009_final$Count)
+
+#Add new variable of proportion of people giving each response
+spain2009_final$Proportion <- round((spain2009_final$Count/2476)*100, digits = 1)
+```
+---
+
+#Create Final Data Frame
+
+Both data framed contain unique rows by: Year, Gender, Response to question of interest. In order to visually compare them, they must be concatenated.
+
+---
+```{r}
+#Concatenate 2006 and 2009 Data Frames
+spain <- rbind(spain2006_final, spain2009_final)
+
+#There are 22 response levels to the question of interest. Subsetting it down to only include a few different responses:
+  #Terrorism - 3 (2006 & 2009)
+  #Unemployment - 7 (2006 & 2009)
+  #Gas/Fuel - 22 (2006 & 2009)
+  #Economy - 25 (2006 & 2009)
+  #Social Problems - 31 (2006 & 2009)
+
+#Select the above variables:
+spain_final <- subset(spain, Response %in% c(3,7,22,25,31))
+
+#Rename response levels:
+
+spain_final$Response[spain_final$Response == 3] <- "Terrorism"
+spain_final$Response[spain_final$Response == 7] <- "Unemployment"
+spain_final$Response[spain_final$Response == 22] <- "Gas/Fuel"
+spain_final$Response[spain_final$Response == 25] <- "Economy"
+spain_final$Response[spain_final$Response == 31] <- "Social Problems"
+
+```
+---
+
+#Plotting the data (Preliminary)
+
+---
+```{r plotting, fig.width=18, fig.height=12, message=FALSE}
+
+title <- ggtitle("Responses to \"Most Important Problem in the Country\" Before and After Spain's Crisis")
+
+bg <- theme(panel.background = element_blank())
+
+colors.custom <- scale_colour_manual(values=c("#216C2A", "#C7C561","#1dcaff", "#E60000","#999999"))
+
+#Dot Plot - One plot, stacked
+
+ggplot(spain_final, aes(x = Proportion, y = Response, color = Response)) +
+  geom_point(aes(shape = factor(Year)), size = 5, position ="identity") + colors.custom + title + bg
+
+#Dot Plot - Two Facets
+
+ggplot(spain_final, aes(x = Proportion, y = Response, colour = Response)) +
+  geom_point(size = 5) + facet_wrap(~ Year, ncol = 1) + colors.custom + title + bg
+
+```
+---
+
+#Fantasy Function calls
+
+Take blocks of code that created each data frame, and abstract them into functions
+
+Didn't have time to actually make the functions, will return to them later.
+
+---
+```{r eval=FALSE}
+
+
+loadsurvey <- function("csvname"){
+  #loads survey and checks structure
+  survey1 <- read.csv("csvname")
+  str(lb2006_raw)
+  return(survey1)
+}
+
+select_relevant <- function(dataframe= , variables = (list), variable_to_be_valued=, value=##){
+  #selects relevant variables and values (ie country code)
+  survey1 <- subset(dataframe, variable_to_be_valued == value)
+  survey2 <- subset(survey2, select=c(list))
+  return(survey2)
+}
+
+complete_agg <- function(dataframe=, agg_variables=, FUN=, listofnewvarnames=(list)
+  survey 1 <-aggregate(dataframe, by=list(agg_variables), FUN=FUN)
+  #Figure out a way to have the newly created variables renamed into something useful, maybe using list like above, maybe not
+  colnames(survey1)[1] <- listofnewvarnames[1]
+  colnames(survey1)[2] <- listofnewvarnames[2]
+  #Check to make sure that the responses stay the same
+  return(survey2)
+}
+```
+---
+
+#Creating Functions  
+
+---
+```{r}
+
+#To be continued...
+
+```
+---

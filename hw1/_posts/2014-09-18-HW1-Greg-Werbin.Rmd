@@ -1,0 +1,63 @@
+---
+title: "Homework 1"
+author: "Greg Werbin"
+output: html_document
+published: false
+tags: hw1
+---
+
+## Introduction
+
+This data comes from the National Longitudinal Survey of Freshmen (NLSF). I intend to use it for my master's thesis, and I am currently analyzing it for a preliminary modeling project.
+
+The NLSF is a longitudinal survey of students entering college for the first time in the fall of 1999, at one of 28 selective institutions. They were surveyed once that fall, and then once each spring for the next four years. In this homework, I analyze some summary statistics describing students' self-reported time use, GPAs, and majors over the four-year survey period. The sample here is limited to students who stayed at the same institution for exactly four years. That is, students who dropped out, transferred, or graduated early are not represented here, although they were followed and interviewed by the NLSF and make up a substantial portion of the original sample.
+
+Some preliminary code:
+
+```{r, warning = FALSE, message = FALSE}
+library(ggplot2)
+library(reshape2)
+library(dplyr)
+
+load("~/Class/Causal Methods/causal methods paper/data/design.RData")
+load("~/Class/Causal Methods/causal methods paper/data/gpa_number_NA_matrix.RData")
+load("~/Class/Causal Methods/causal methods paper/data/caseid.RData")
+
+gpa <- design[, c("caseid", grep("gpa$", names(design), value = TRUE))]
+gpa$cumulative <- rowMeans(gpa[, -1])
+major <- design[, c("caseid", grep("w\\d_(?!(gpa|wd))", names(design), perl = TRUE, value = TRUE))]
+time_use <- design[, c("caseid", grep("_wd_", names(design), value = TRUE))]
+```
+
+## GPA
+
+```{r}
+gpa.melted <- melt(gpa, id.vars = "caseid", variable.name = "wave", value.name = "GPA")
+gpa.melted$wave <- as.numeric(gsub("\\D", "", gpa.melted$wave))
+
+ncourses <- c(20, 30, 22, 18, 6)
+
+gpa_data <- merge(
+  merge(
+    gpa.melted,
+    melt(as.data.frame(cbind(caseid = caseid, gpa_number_NA_matrix)),
+         id.vars = "caseid", variable.name = "wave", value.name = "Number missing")
+    ),
+  melt(as.data.frame(cbind(caseid = caseid, t(apply(gpa_number_NA_matrix, 1, `/`, ncourses)))),
+       id.vars = "caseid", variable.name = "wave", value.name = "Percent reported")
+  )
+gpa_data.melted <- melt(gpa_data, id.vars = c("caseid", "wave"))
+
+ggplot(gpa_data.melted) + xlab("Wave") + ylab("") +
+  geom_boxplot(aes(x = as.factor(wave), y = value)) +
+#   geom_line(
+#     aes(x = wave, y = avg),
+#     summarize(group_by(gpa_data.melted, wave, variable), avg = mean(value))
+#     ) +
+  facet_grid(variable ~ ., scales = "free")
+
+# din <- par("din") / 2
+# ggsave("~/class/data viz/tmp.png",
+#        width = din[1], height = din[2], scale = 2)
+# system('open "/Users/hotdog2/class/data viz/tmp.png"')
+```

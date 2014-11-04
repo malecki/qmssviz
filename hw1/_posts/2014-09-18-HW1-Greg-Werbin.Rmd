@@ -20,6 +20,8 @@ library(reshape2)
 library(dplyr)
 
 load("~/Class/Causal Methods/causal methods paper/data/design.RData")
+load("~/Class/Causal Methods/causal methods paper/data/gpa_number_NA_matrix.RData")
+load("~/Class/Causal Methods/causal methods paper/data/caseid.RData")
 
 gpa <- design[, c("caseid", grep("gpa$", names(design), value = TRUE))]
 gpa$cumulative <- rowMeans(gpa[, -1])
@@ -30,7 +32,6 @@ time_use <- design[, c("caseid", grep("_wd_", names(design), value = TRUE))]
 ## GPA
 
 ```{r}
-load("~/Class/Causal Methods/causal methods paper/data/gpa_number_NA_matrix.RData")
 gpa.melted <- melt(gpa, id.vars = "caseid", variable.name = "wave", value.name = "GPA")
 gpa.melted$wave <- as.numeric(gsub("\\D", "", gpa.melted$wave))
 
@@ -39,10 +40,10 @@ ncourses <- c(20, 30, 22, 18, 6)
 gpa_data <- merge(
   merge(
     gpa.melted,
-    melt(as.data.frame(cbind(caseid = nlsf$caseid, gpa_number_NA_matrix)),
+    melt(as.data.frame(cbind(caseid = caseid, gpa_number_NA_matrix)),
          id.vars = "caseid", variable.name = "wave", value.name = "Number missing")
     ),
-  melt(as.data.frame(cbind(caseid = nlsf$caseid, t(apply(gpa_number_NA_matrix, 1, `/`, ncourses)))),
+  melt(as.data.frame(cbind(caseid = caseid, t(apply(gpa_number_NA_matrix, 1, `/`, ncourses)))),
        id.vars = "caseid", variable.name = "wave", value.name = "Percent reported")
   )
 gpa_data.melted <- melt(gpa_data, id.vars = c("caseid", "wave"))
@@ -55,8 +56,8 @@ ggplot(gpa_data.melted) + xlab("Wave") + ylab("") +
 #     ) +
   facet_grid(variable ~ ., scales = "free")
 
-din <- par("din") / 2
-ggsave("~/class/data viz/tmp.png",
-       width = din[1], height = din[2], scale = 2)
-system('open "/Users/hotdog2/class/data viz/tmp.png"')
+# din <- par("din") / 2
+# ggsave("~/class/data viz/tmp.png",
+#        width = din[1], height = din[2], scale = 2)
+# system('open "/Users/hotdog2/class/data viz/tmp.png"')
 ```

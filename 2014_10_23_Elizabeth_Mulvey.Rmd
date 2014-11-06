@@ -14,7 +14,6 @@ d2 <- WV6_Data_spss_v_2014_06_04
 
 require(ggplot2)
 
-
 ```
 
 For my homework 3, I want to examine the financial satistifaction in the United States using data from the world value survey. I wanted to compare years 2005-2009 (wave 5), and 2010-2014 (wave 6). As a reference, I chose to include Mexico, a country with lower economic deveopment. 
@@ -53,7 +52,7 @@ bar2 + facet_grid(. ~ V2)
 
 ```
 
-These graphs are not clearly illustrating the relationship between the two countries, and did not follow Tufte's guidelines. Firstly, Tufte recommends to 'show your data,' and the different sample sizes of the countries made it difficult to compare and understand the true relationship. In addition, Tufte recommends to avoid 'chartjunk,' which these graphs fall victim to; the two graphs could be condensed down to one graph and utilize a lot less ink. 
+These graphs are not clearly illustrating the relationship between the two countries, and did not follow Tufte's recommendations to create good graphics. Firstly, Tufte recommends to 'show your data,' and the different sample sizes of the countries made it difficult to compare and understand the true relationship. In addition, Tufte recommends to avoid 'chartjunk,' which these graphs fall victim to; the two graphs could be condensed down to one graph and utilize a lot less ink. 
 
 To alleviate these problems, I created new graphs which use less ink, and illustrate more honestly the relationship between the US and Mexico. 
 

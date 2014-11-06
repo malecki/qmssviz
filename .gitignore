@@ -11,10 +11,20 @@ _site
 .RData
 .Rhistory
 Thumbs.db
+<<<<<<< HEAD
+<<<<<<< HEAD
 .Rproj.user
+=======
+=======
+.Rproj.user
+>>>>>>> upstream/gh-pages
 
 ## Rproj is seriously annoying. Sorry.
 *.Rproj
 *.Rbuildignore
+<<<<<<< HEAD
+>>>>>>> upstream/gh-pages
+=======
 .Rproj.user
 *cache
+>>>>>>> upstream/gh-pages

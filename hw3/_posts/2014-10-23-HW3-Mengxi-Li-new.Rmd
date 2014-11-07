@@ -5,9 +5,19 @@ Date: 10/22/2014
 Output: html_document
 ---
 ========================================================
+### HW3
+#### A.Identify two surveys
 I use World Values Survey: Wave 4 (1999 - 2004) and Wave 6 (2010 - 2014), to finish this work.
 I would like to invesitigate how people in different countries describe themselves as belonging to different social classes. Such social classes include: Working class, Middle Class (Upper or Lower), Upper class and Lower Class. 
+
+#### B.Describe the graghs that you intend to make
 I use stacked barplots to show the percentages of each social class. Besides, I make some comparisions between the Wave 4 and Wave 6 plots figure out if any countries change a lot with regard to this question, during this ten-year period.
+
+#### C. Write down the target shape of the data
+{country:"China, United States,Japan...", year:"1999,2000,...,2014", wave:"4,6", Social Class ="working class,...upper class"}
+
+#### D.E & F. Write a script, make graphs and write expressive function calls
+In this part, firstly, I write a script that reads, transforms and prepares data for my graphs; then I rewrite all of the original script into function calls and make graphs. 
 ```{r}
 # install.packages("foreign")
 # install.packages("reshape2")
@@ -15,17 +25,21 @@ I use stacked barplots to show the percentages of each social class. Besides, I 
 library(foreign)
 library(reshape2)
 library(ggplot2)
-# Function 1:Set Work Directory and Load Data
-# Input : "WV4_Data_spss_v_2014-04-28.sav"
-# data: WV4 Data
+```
+##### Function 1:Set Work Directory and Load Data
+###### Input : "WV4_Data_spss_v_2014-04-28.sav"
+###### data: WV4 Data
+```{r}
 f1<-function(filename,workingdirectory){
   setwd(workingdirectory)
   data=read.spss(filename)
 return(data)
   }
 data = f1("WV4_Data_spss_v_2014-04-28.sav","~/Downloads")
-# Function 2: Create  proportional tables from data by country
-# First, I convert the the country variable into a string; then I create unweighted proportional tables from data
+```
+##### Function 2: Create  proportional tables from data by country
+###### First, I convert the the country variable into a string; then I create unweighted proportional tables from data
+```{r}
 f2<-function(data){
 data$v2<-as.character(data$v2)
 tblB <- as.data.frame(prop.table(table(data$v2,data$v235),1)*100)
@@ -34,7 +48,9 @@ tbl3$Var2 <- factor(tbl3$Var2, levels=c("Lower class","Lower middle class","Uppe
 return(tbl3)
 }
 tbl3 = f2(data)
-# Function 3: Reshape the data and relevel the levels to match the daulft colors better
+```
+##### Function 3: Reshape the data and relevel the levels to match the daulft colors better
+```{r}
 f3<-function(){
 orderDat3 <- dcast(tbl3, Var1 ~Var2, value.var="Freq")
 tblPlot3 <- melt(orderDat3, id.vars="Var1", measure.vars=c("Lower class","Lower middle class","Upper class","Upper middle class","Working class"))
@@ -42,33 +58,47 @@ tblPlot3$variable <- factor(tblPlot3$variable,levels=c("Lower class","Lower midd
 return(tblPlot3)
 }
 tblPlot3 = f3()
-# Then I Make a Graph for WV4
+```
+#### Then I Make a Graph for WV4
+```{r}
 ggplot(tblPlot3, aes(x=Var1,y=value,fill=variable)) +
 geom_bar(stat="identity") +
  coord_flip()
- 
-# Repeat procedures for Data for Wave 6
-# Load Data for Wave 6
-data2=read.spss("WV6_Data_spss_v_2014_06_04.sav")
-# Function 4: Create  proportional tables from data by country
-# First, I convert the the country variable into a string; then I create unweighted proportional tables from data
-f4<-function(data2){
+```
+#### Repeat procedures for Data for Wave 6
+##### Function 4: Load Data for Wave 6 
+```{r}
+setwd("~/Downloads")
+f4<-function(filename){
+  data2=read.spss(filename)
+return(data2)
+  }
+data2 = f4("WV6_Data_spss_v_2014_06_04.sav")
+```
+##### Function 5: Create  proportional tables from data by country
+###### First, I convert the the country variable into a string; then I create unweighted proportional tables from data
+```{r}
+f5<-function(data2){
 data2$V2<-as.character(data2$V2)
 tblC <- as.data.frame(prop.table(table(data2$V2,data2$V238),1)*100)
 tbl4 <- tblC[tblC$Var2 %in% c("Lower class","Lower middle class","Upper class","Upper middle class","Working class"),]
 tbl4$Var2 <- factor(tbl4$Var2, levels=c("Lower class","Lower middle class","Upper class","Upper middle class","Working class"))
 return(tbl4)
 }
-tbl4 = f4(data2)
-# Function 5: Reshape the data and relevel the levels to match the daulft colors better
-f5 <- function(){
+tbl4 = f5(data2)
+```
+##### Function 6: Reshape the data and relevel the levels to match the daulft colors better
+```{r}
+f6 <- function(){
 orderDat4 <- dcast(tbl4, Var1 ~Var2, value.var="Freq")
 tblPlot4 <- melt(orderDat4, id.vars="Var1", measure.vars=c("Lower class","Lower middle class","Upper class","Upper middle class","Working class"))
 tblPlot4$variable <- factor(tblPlot4$variable,levels=c("Lower class","Lower middle class","Upper class","Upper middle class","Working class"))
 return(tblPlot4)
 }
-tblPlot4 = f5()
-# Then I make a graph for WV6
+tblPlot4 = f6()
+```
+#### Then I make a graph for WV6
+```{r}
 ggplot(tblPlot4, aes(x=Var1,y=value,fill=variable)) +
   geom_bar(stat="identity") +
   coord_flip()

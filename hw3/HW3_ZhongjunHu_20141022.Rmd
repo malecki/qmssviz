@@ -44,11 +44,15 @@ In my target shape of data, I would like to include the year of two waves, 3 cou
 library(foreign)
 wv2cn<-read.spss("/Users/huzhongjun/Desktop/HW3/WV2_Data_China_1990_spss_v_2014_04_28.sav",to.data.frame = TRUE)
 wv6cn<-read.spss("/Users/huzhongjun/Desktop/HW3/WV6_Data_China_2012_spss_v_2014_04_28.sav",to.data.frame = TRUE)
+```
 
+```{r,warning=FALSE}
 #Get variables of Income Equality#
 eqin1<-subset(wv2cn, select = c("v2","v250"))
 eqin2<-subset(wv6cn, select = c("V2","V96"))
+```
 
+```{r,warning=FALSE}
 #Trasform and merge#
 eqin1990<-cbind(year=1990, eqin1)
 eqin2012<-cbind(year=2012,eqin2)
@@ -56,11 +60,15 @@ library(plyr)
 eqin1990<-rename(eqin1990, c("v2"="Country","v250"="IncomeEquality"))
 eqin2012<-rename(eqin2012, c("V2"="Country","V96"="IncomeEquality"))
 incomeequalitycn<-rbind(eqin1990, eqin2012)
+```
 
+```{r,warning=FALSE}
 #Read 2 datasets about Japan from WVS Database#
 wv2jp<-read.spss("/Users/huzhongjun/Desktop/HW3/WV2_Data_Japan_1990_spss_v_2014_04_28.sav",to.data.frame = TRUE)
 wv6jp<-read.spss("/Users/huzhongjun/Desktop/HW3/WV6_Data_Japan_2010_spss_v_2014_04_28.sav",to.data.frame = TRUE)
+```
 
+```{r,warning=FALSE}
 #Get Variables of Income Equality, transform them and merge#
 eqin1jp<-subset(wv2jp,select=c("v2","v250"))
 eqin1990jp<-cbind(year=1990,eqin1jp)
@@ -69,11 +77,15 @@ eqin2jp<-subset(wv6jp,select=c("V2","V96"))
 eqin2012jp<-cbind(year=2012,eqin2jp)
 eqin2012jp<-rename(eqin2012jp,c("V2"="Country","V96"="IncomeEquality"))
 incomeequalityjp<-rbind(eqin1990jp,eqin2012jp)
+```
 
+```{r,warning=FALSE}
 #Read 2 databases about South Korea from WVS Database#
 wv2sk<-read.spss("/Users/huzhongjun/Desktop/HW3/WV2_Data_SouthKorea_1990_spss_v_2014_04_28.sav",to.data.frame = TRUE)
 wv6sk<-read.spss("/Users/huzhongjun/Desktop/HW3/WV6_Data_South_Korea_2010_spss_v_2014_04_28.sav",to.data.frame = TRUE)
+```
 
+```{r,warning=FALSE}
 #Get Variables of Income Equality, transform them and merge#
 eqin1sk<-subset(wv2sk,select=c("v2","v250"))
 eqin2sk<-subset(wv6sk,select=c("V2","V96"))
@@ -82,26 +94,30 @@ eqin2012sk<-cbind(year=2012,eqin2sk)
 eqin1990sk<-rename(eqin1990sk,c("v2"="Country","v250"="IncomeEquality"))
 eqin2012sk<-rename(eqin2012sk,c("V2"="Country","V96"="IncomeEquality"))
 incomeequalitysk<-rbind(eqin1990sk,eqin2012sk)
+```
 
+```{r,warning=FALSE}
 #Merge dataframes of 3 countries and clean the NAs#
 cjkinceq<-rbind(incomeequalitycn,incomeequalityjp,incomeequalitysk)
 d<-cjkinceq
 df<-na.omit(d)
+```
 
+```{r,warning=FALSE}
 #Get the target dataframe#
 df$iechr<-as.character(df$IncomeEquality)
-df$ie[df$iechr=="Individ"]<- "Very Equal"
-df$ie[df$iechr=="Equal"]<- "Very Inequal"
-df$ie[df$iechr=="Incomes should be made more equal"]<- "Very Inequal"
-df$ie[df$iechr=="We need larger income differences as incentives for individu"]<- "Very Equal"
-df$ie[df$iechr=="2"]<- "Very Inequal"
-df$ie[df$iechr=="3"]<- "Inequal"
-df$ie[df$iechr=="4"]<- "Inequal"
-df$ie[df$iechr=="5"]<- "Totally neutral about that"
-df$ie[df$iechr=="6"]<- "Totally neutral about that"
-df$ie[df$iechr=="7"]<- "Equal"
-df$ie[df$iechr=="8"]<- "Equal"
-df$ie[df$iechr=="9"]<- "Very Equal"
+df$ie[df$iechr=="Individ"]<- "5.Very Equal"
+df$ie[df$iechr=="Equal"]<- "1.Very Inequal"
+df$ie[df$iechr=="Incomes should be made more equal"]<- "1.Very Inequal"
+df$ie[df$iechr=="We need larger income differences as incentives for individu"]<- "5.Very Equal"
+df$ie[df$iechr=="2"]<- "1.Very Inequal"
+df$ie[df$iechr=="3"]<- "2.Inequal"
+df$ie[df$iechr=="4"]<- "2.Inequal"
+df$ie[df$iechr=="5"]<- "3.Totally neutral about that"
+df$ie[df$iechr=="6"]<- "3.Totally neutral about that"
+df$ie[df$iechr=="7"]<- "4.Equal"
+df$ie[df$iechr=="8"]<- "4.Equal"
+df$ie[df$iechr=="9"]<- "5.Very Equal"
 
 df$Index[df$iechr=="Individ"]<- 10
 df$Index[df$iechr=="Equal"]<- 1
@@ -115,14 +131,23 @@ df$Index[df$iechr=="6"]<- 6
 df$Index[df$iechr=="7"]<- 7
 df$Index[df$iechr=="8"]<- 8
 df$Index[df$iechr=="9"]<- 9
+```
+
+```{r,warning=FALSE}
+#Get percentage#
 library(data.table)
+library(dplyr)
 
+ddd <- ddply(df, .(year, Country, ie), summarize, n = n())
+dd2 <- ddply(df, .(year, Country), summarize, n = n())
+merge <- merge(ddd, dd2, by = c("year", "Country"))
+merge$prop <- merge$n.x/merge$n.y
+```
+
+```{r,warning=FALSE}
 dp <- data.table(df)
-dp <- dp[, list(ie = unique (ie), percentage = as.numeric(table(ie)/length(ie), by=c("year", "Country"))), by=c("year", "Country")] #Get percentages#
-dp
-
 dmean <- aggregate(df$Index, by = list(df$Country, df$year), mean)
-dmean <- rename(dmean,c("Group.1"="Country", "Group.2"= "year", "x"= "Mean")) #Get the means#
+colnames(dmean)<-c("Country","year","Mean") #Get the means#
 dmean
 ```
 
@@ -155,7 +180,7 @@ ggplot(dmean, aes(x= Mean, y= Country)) +
 
 library(RColorBrewer)
 color <- brewer.pal(5, "Greens")
-ggplot(dp, aes(x=Country, y= percentage,fill=ie))+
+ggplot(merge, aes(x=Country, y= prop,fill=ie))+
   geom_bar(stat= "identity",position="dodge")+
   facet_grid(year ~. )+
   theme_bw() +
@@ -178,8 +203,7 @@ ggplot(df, aes(x = Country, fill=as.character(Index)))+geom_bar(position="dodge"
   
 ```
       
-      1. The first group of plots in my mind, as I mentioned in step B, is so annoying for read and difficult to plot, thus I abandoned them
-      2. I think there are some bugs in my second and third graphs, but I cannot find out what goes wrong. In the second graph, the distribution doesn't match with the result in the first and third graph very well. I think the order of labels is not consistent. In the third graph, the guide in the right is strange that "10" ranks in the second order. Anyone could help me?
+      The first group of plots in my mind, as I mentioned in step B, is so annoying for read and difficult to plot, thus I abandoned them
 
 ##F. Write expressive fantasy function calls
 

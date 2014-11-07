@@ -63,6 +63,7 @@ The course is roughly divided into four three-week sprints toward a final projec
    - The actual project including a presentation (similar in form to another blog post), explaining code / tools / libraries you learned doing the project
 
 ### Participation in class — (10%)
-    - Attendance
-    - Debugging
-    - Peer code review
+
+- Attendance
+- Debugging
+- Peer code review

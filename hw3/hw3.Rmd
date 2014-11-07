@@ -8,17 +8,18 @@ published: false
 ---
 
 **a. Identify survey**<br>
-I chose the dataset from World Value Survey which conducted from 1993 to 2014 in 51 different countries. I'm interested in the comparison of the feeling of happiness between the United States and China during 1009-2014.
+I chose the dataset from World Value Survey which conducted from 1993 to 2014 in 51 different countries. I'm interested in the comparison of the feeling of happiness in China from 2009 to 2014.
 <br><br>
 **b. Describe graphes**<br>
-I would plot a graph, showing the difference of the propotion of people reagrding to hapiness in two countries over years. I expect general increase in happiness, with some decrease in 2008 due to financial crisis.
+I would plot a graph, showing the difference of the propotion of people reagrding to hapiness in two countries over years. I expect general increase in every level of happiness.
 <br><br>
 **c. Target shape**<br>
 Two variables are included: felling of happiness and year of the survey.
 <br><br>
 **d. Read, transfer and prepare for graph**
 ```{r,warning=FALSE}
-setwd("D:/1st-semster/dataviz/hw3/dataset")
+setwd("D:/1st-semester/dataviz/hw3/dataset")
+
 library(foreign)
 d1 <- read.dta("WV5_Data_stata_dta_v_2014_04_28.dta")
 d2 <- read.dta("WV6_Data_stata_dta_v_2014_06_04.dta")
@@ -72,11 +73,12 @@ combine <- rbind(table1, table2)
 **e. Make graph**
 ```{r,warning=FALSE}
 library(ggplot2)
-ggplot(combine, aes(x=happiness, y=prob, fill=year)) + geom_bar(stat="identity", position="stack")+ coord_flip() +ggtitle("comparison of happiness between 2009 and 2014")
 
-ggplot(combine, aes(x=happiness, y=prob, fill=year)) + geom_bar(stat="identity", position="dodge")+ coord_flip() +ggtitle("comparison 2 of happiness between 2009 and 2014")
+ggplot(combine, aes(x=happiness, y=prob, fill=year)) + geom_bar(stat="identity", position="dodge")+ coord_flip() +ggtitle("comparison 1 of happiness between 2009 and 2014")
 
-ggplot(combine, aes(x=happiness, y=prob, fill=year)) + geom_bar(stat="identity")+ coord_flip() + facet_wrap("year") + ggtitle("comparison 3 of happiness between 2009 and 2014")
+ggplot(combine, aes(x=happiness, y=prob, fill=year)) + geom_bar(stat="identity")+ coord_flip() + facet_wrap("year") + ggtitle("comparison 2 of happiness between 2009 and 2014")
+
+ggplot(combine, aes(x=prob, y=happiness)) + geom_point(aes(shape=year, color=year), size=3) + geom_hline(aes(yintercept=as.numeric(happiness)), color="lightgray") + theme_classic() + theme(axis.title.x = element_blank(), axis.title.y = element_blank(),axis.ticks = element_blank()) + theme(legend.position = "top", panel.border = element_rect(fill = NA), plot.title = element_text(size = 11, face = "bold")) + ggtitle("comparison 3 of happiness between 2009 and 2014") 
 ```
 <br>
 **f. Write expressive functions**
@@ -108,7 +110,7 @@ summary(variable)
 
 rbind(data1,data2)
 
-ggplot(data, aer(...))+...
+ggplot(data, aes(...))+...
 
 
 ```

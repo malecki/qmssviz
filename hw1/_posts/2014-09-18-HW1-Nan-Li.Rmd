@@ -14,8 +14,8 @@ d <- read.csv("Donation-Disease.csv")
 library(ggplot2)
 opar <- par(no.readonly=TRUE)
 par(font=4)
-qplot(Name, Death, data = d, color = Name, geom = c("point"), xlab = "Disease", ylab = "Death", main="Total Death plot")
-qplot(Name, MoneyRaised, data = d, color = Name, geom = c("point"), xlab = "Disease", ylab = "Donation", main="Total Donation plot")
+qplot(Name, Death, data = d, fill = Name, geom = c("histogram"), stat="identity", xlab = "Disease", ylab = "Death", main="Total Death plot")
+qplot(Name, MoneyRaised, data = d, fill = Name, geom = c("histogram"), stat="identity", xlab = "Disease", ylab = "Donation", main="Total Donation plot")
 par(opar)
 ```
 
@@ -34,12 +34,12 @@ pie3D(d$MoneyRaised,labels=lbls, explode=0.1, labelcex=0.7, start=0, col=c("red"
 par(opar)
 ```
 
-## 3. dot chart
+## 3. ggplot & annotation
 ```{r}
-opar <- par(no.readonly=TRUE)
-nvar=d$MoneyRaised / d$Death * 1000
-par(font=4)
-lab_disease=c("Heart Disease","Suicide","Breast Cancer","Diabetes","HIV/AIDS","Prostate Cancer","Motor Neuron Disease (inc ALS)","Chronic Obstructive Pulmonary")
-dotchart(nvar, cex=0.7, col=c("red","blue","brown","green","orange","yellow","pink","purple"),labels=(lab_disease), pch=19, main="Donation per Death dot chart")
-par(opar)
+DonationperDeath=(d$MoneyRaised / d$Death )* 1000
+bp <- ggplot(d, aes(y=DonationperDeath,x=Death, color=Name, size=DonationperDeath)) +
+  geom_point() +
+  geom_text(aes(y=DonationperDeath+0.3, x=Death-50000, label=Name, colour=Name), size=5, hjust=0)
+bp + theme(legend.position="none") +
+  ggtitle("Donation per Death") + theme(plot.title = element_text(lineheight=.7, size=24, face="bold"))
 ```

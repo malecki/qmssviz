@@ -11,10 +11,8 @@ _site
 .RData
 .Rhistory
 Thumbs.db
-.Rproj.user
 
 ## Rproj is seriously annoying. Sorry.
 *.Rproj
 *.Rbuildignore
 .Rproj.user
-*cache

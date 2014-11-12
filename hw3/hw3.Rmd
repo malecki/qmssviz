@@ -1,0 +1,116 @@
+---
+title: "Assignment 3"
+author: "Nan Li (nl2482)"
+date: "October 16, 2014"
+output: html_document
+tags: hw3
+published: false
+---
+
+**a. Identify survey**<br>
+I chose the dataset from World Value Survey which conducted from 1993 to 2014 in 51 different countries. I'm interested in the comparison of the feeling of happiness in China from 2009 to 2014.
+<br><br>
+**b. Describe graphes**<br>
+I would plot a graph, showing the difference of the propotion of people reagrding to hapiness in two countries over years. I expect general increase in every level of happiness.
+<br><br>
+**c. Target shape**<br>
+Two variables are included: felling of happiness and year of the survey.
+<br><br>
+**d. Read, transfer and prepare for graph**
+```{r,warning=FALSE}
+setwd("D:/1st-semester/dataviz/hw3/dataset")
+
+library(foreign)
+d1 <- read.dta("WV5_Data_stata_dta_v_2014_04_28.dta")
+d2 <- read.dta("WV6_Data_stata_dta_v_2014_06_04.dta")
+```
+
+```{r}
+## subset data ##
+d1_sub <- d1[c("V1","V2","V10")]
+d2_sub <- d2[c("V1","V2","V10")]
+
+## change values for comparision ##
+levels(d2_sub$V10) <- c(levels(d2_sub$V10), "Quite happy")
+d2_sub$V10[d2_sub$V10=="Rather happy"] <-"Quite happy"
+
+d1_sub1 <- subset(d1_sub, V2=="China")
+d2_sub1 <- subset(d2_sub, V2=="China")
+d1_sub1 <- subset(d1_sub1, V10=="Not at all happy" | V10=="Not very happy" | V10=="Quite happy" | V10=="Very happy")
+d2_sub1 <- subset(d2_sub1, V10=="Not at all happy" | V10=="Not very happy" | V10=="Quite happy" | V10=="Very happy")
+
+## remove missing data ##
+d1_sub1 <- na.omit(d1_sub1)
+d2_sub1 <- na.omit(d2_sub1)
+
+## add column name ##
+colnames(d1_sub1) <- c("year","country","happiness")
+colnames(d2_sub1) <- c("year","country","happiness")
+
+## drop useless levels of factors ##
+d1_sub1$happiness <- droplevels(d1_sub1$happiness)
+d2_sub1$happiness <- droplevels(d2_sub1$happiness)
+
+## summary variables ##
+summary(d1_sub1$happiness)
+summary(d2_sub1$happiness)
+
+```
+
+```{r}
+## make prob table ##
+table1 <- table(d1_sub1$happiness)/nrow(d1_sub1)
+table2 <- table(d2_sub1$happiness)/nrow(d2_sub1)
+table1 <- as.data.frame(table1)
+table2 <- as.data.frame(table2)
+colnames(table1) <- c("happiness","prob")
+colnames(table2) <- c("happiness","prob")
+table1$year <- "2009"
+table2$year <- "2014"
+combine <- rbind(table1, table2)
+```
+<br><br>
+**e. Make graph**
+```{r,warning=FALSE}
+library(ggplot2)
+
+ggplot(combine, aes(x=happiness, y=prob, fill=year)) + geom_bar(stat="identity", position="dodge")+ coord_flip() +ggtitle("comparison 1 of happiness between 2009 and 2014")
+
+ggplot(combine, aes(x=happiness, y=prob, fill=year)) + geom_bar(stat="identity")+ coord_flip() + facet_wrap("year") + ggtitle("comparison 2 of happiness between 2009 and 2014")
+
+ggplot(combine, aes(x=prob, y=happiness)) + geom_point(aes(shape=year, color=year), size=3) + geom_hline(aes(yintercept=as.numeric(happiness)), color="lightgray") + theme_classic() + theme(axis.title.x = element_blank(), axis.title.y = element_blank(),axis.ticks = element_blank()) + theme(legend.position = "top", panel.border = element_rect(fill = NA), plot.title = element_text(size = 11, face = "bold")) + ggtitle("comparison 3 of happiness between 2009 and 2014") 
+```
+<br>
+**f. Write expressive functions**
+```{r,eval=FALSE}
+d1 <- loaddata(data1)
+d1 <- changevalues(d1)
+d1_sub1 <- selectvariables(d1, ...)
+d1_sub1 <-handlemissingdata(d1_sub1, ...)
+summary <- summaryvariables(variable1, ...)
+d1_sub1 <- addvariable(d1_sub1, ...)
+
+d2 <- loaddata(data2)
+combine <- rbind(d1_sub1, d2_sub1)
+ggplot(,aes(...))+...
+```
+<br>
+**g. Write the functions**
+```{r,eval=FALSE}
+read.dta(data)
+
+subset(data,variable="...")
+
+levels(variable) <- c(levels(variable), "Quite happy")
+variable[variable=="Rather happy"] <-"Quite happy"
+
+na.omit(data)
+
+summary(variable)
+
+rbind(data1,data2)
+
+ggplot(data, aes(...))+...
+
+
+```

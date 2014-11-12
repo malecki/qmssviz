@@ -1,0 +1,51 @@
+---
+title: "QMSS Data Visualization Outline"
+date: "2014-10-16"
+output: ioslides_presentation
+---
+## Outline
+
+- Quiz (15-min)
+- Quiz Discussion (15-min)
+- Graph Critique
+- ggplot2
+- Maps 
+
+
+## Quiz Discussion
+
+- Suppose you are given a data frame containing 150 observations of 5 variables describing the physical attributes of 3 groups (e.g. species) of flowers. Describe one way to visually differentiate between sample groups in the data?
+
+- How would you use the grammar of graphics (Wilkinson 2005) and ggplot2 (Wickham 2009) to create this visualization? You may use ggplot syntax or close psuedo-code to describe the graphic(s) you have in mind.
+
+
+## Quiz Discussion
+
+- Define or provide three examples of "chartjunk" according to Tufte (2001).
+
+- Chartjunk refers to all visual elements in charts and graphs that are not necessary to comprehend the information represented o the graph, or that distract the viewer from this information.
+
+- http://www.sealthreinhold.com/tuftes-rules/rule_three.php
+
+## Quiz Discussion
+
+- Define the Golden Rectangle? How does it apply to graphics according to Tufte (2001)?
+
+- If the nature of the data suggests the shape of the graphic, follow the suggestion. Otherwise, move toward horizontal graphics about 50% wider than tall.
+
+## Graphic Critique
+
+- Ebola Graphics from Economist
+- http://www.economist.com/blogs/graphicdetail/2014/10/ebola-graphics
+
+## ggplot2
+
+- ggplot2 doc http://ggplot2.org/
+- ggplot for python 
+- http://blog.yhathq.com/posts/ggplot-for-python.html
+
+## Maps
+
+- Course Website
+- http://malecki.github.io/qmssviz/2014/10/16/map-links/#/1
+

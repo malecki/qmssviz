@@ -22,11 +22,9 @@ gridLevels <- c("None", "A little", "Confident", "Expert")
 makeOrderedFactor <- function(col, levels){
     return (factor(col, levels=levels, labels=levels, ordered=TRUE))
 }
-df <- read.csv("responses-2014-09-05.csv", stringsAsFactors=FALSE,
-               check.names=FALSE)
+df <- read.csv("/Users/HanLu/Documents/Unsorted/QMSS.Vis/labs/questionnaire/responses-2014-09-05.csv", stringsAsFactors=FALSE, check.names=FALSE)
 df[,5:12] <- lapply(df[,5:12], makeOrderedFactor, levels=gridLevels)
-mrLogical <- t(sapply(df[['Baseline experience']], expandSelections, 
-                      options=mrOptions))
+mrLogical <- t(sapply(df[['Baseline experience']], expandSelections, options=mrOptions))
 df <- cbind(df, mrLogical)
 
 ```

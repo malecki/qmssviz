@@ -1,0 +1,60 @@
+Title: "Homework 3 Assignment"
+author: Andy Tang, awt2118
+output: html_document
+published: false
+tags: hw3
+========================================================
+I am using two waves (2006 and 2007) of the AsiaBarometer Survey to compare responses on how proud participants are of being their country's people.
+
+Q18 in 2006 AsiaBarometer Survey and Q19 in 2007 AsiaBarometer Survey
+How proud are you of being [YOUR COUNTRY’S PEOPLE]? (SA)
+1 Very proud
+2 Somewhat proud
+3 Not really proud
+4 Not proud at all
+9 Don't know
+
+```{r }
+library(ggplot2)
+library (plyr)
+```
+
+
+
+Read in the survey
+```{r fig.width=7, fig.height=6}
+readsurvey <- function(name){ location <- paste("/Users/awtang/Desktop/qmssviz/qmssviz",name, sep="/")
+survey <- read.table (location, header=T)
+return(survey)}
+
+asia2006<-readsurvey("AsiaBarometer2006.txt")
+asia2007<-readsurvey("AsiaBarometer2007.txt")
+
+```
+
+Omit NAs
+```{r echo=FALSE}
+
+na.omit(asia2006$Q18)
+na.omit(asia2007$Q19)
+
+```
+
+```{r}
+table (asia2006$Q18)
+table (asia2007$Q19)
+```
+
+
+
+Histograms
+```{r}
+qplot(Q18, data = asia2006, fill = Country) + labs(title = "Proudness of Being Your Country's People in Asia 2006" ) + 
+    labs(x = ("Proudness"), y = "Count")
+
+qplot(Q19, data = asia2007, fill = Country) + labs(title = "Proudness of Being Your Country's People in Asia 2007") + 
+    labs(x = ("Proudness"), y = "Count")
+
+```
+
+The countries in the 2007 wave of the survey have higher frequencies of respondents saying they are "very proud" of being their respective country's people.

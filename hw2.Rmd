@@ -1,0 +1,35 @@
+---
+title: Homework2
+author: jpcsoup
+output: html_document
+published: false
+tags: hw2
+---
+Sorted Data
+========================================================
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring web pages (click the **Help** toolbar button for more details on using R Markdown).
+
+When you click the **Knit HTML** button a web page will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+df4 <- read.csv("lgas.csv")
+sample_data <- read.csv("sample_health_facilities.csv")
+subdf4 <- subset(df4, zone == "South-South")
+df4merge <- merge(subdf4, sample_data, by.x = "lga_id", by.y = "lga_id")
+orddf4mrg <- df4merge[order(df4merge$pop_2006),]
+orddf4mrg
+
+```
+
+```{r}
+
+subdf4.1 <- subset(df4, grepl("South", df4$zone))
+df4merge.1 <- merge(subdf4.1, sample_data, by.x = "lga_id", by.y = "lga_id")
+orddf4mrg.1 <- df4merge.1[order(df4merge.1$pop_2006),]
+orddf4mrg.1
+
+```
+
+
+

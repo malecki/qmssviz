@@ -1,0 +1,193 @@
+---
+title: "Homework 3 - Kevin Gong"
+output: html_document
+date: "October 23, 2014"
+published: false
+tag: hw3
+---
+
+###**A**###
+
+The survey I will be examining is the World Values Survey. Specifically, we'll be looking at the willingness of survey respondents to have homosexual neighbours in Wave 4 (1999-2004) and Wave 6 (2010-2014). The question appears on Card G in both waves and is labeled Question V76 in Wave 4 and V40 in Wave 6. There is a very slight difference in wording between the two waves, though we are not primarily concerned with the difference in wording.
+
+**Wave 4:**
+"On this list are various groups of people. Could you please sort out any that you would 
+not like to have as neighbors? (CODE AN ANSWER FOR EACH) 
+MENTIONED  NOT MENTIONED 
+V68 People with a criminal record 1 2 
+V69 People of a different race 1 2 
+V70 Heavy drinkers 1 2
+V71 Emotionally unstable people 1 2 
+V72 Muslims 1 2
+V73 Immigrants/foreign workers 1 2
+V74 People who have AIDS 2 
+V75 Drug addicts 1
+V76 Homosexuals 1 2
+V77 Jews 1 2"
+
+**Wave 6:**
+"On this list are various groups of people. Could you please mention any that you would not like to have as neighbors? (Code an answer for each group):
+
+Mentioned Not mentioned
+V36. Drug addicts 1 2
+V37. People of a different race 1 2
+V38. People who have AIDS 1 2
+V39. Immigrants/foreign workers 1 2
+V40. Homosexuals 1 2
+V41. People of a different religion 1 2
+V42. Heavy drinkers 1 2
+V43. Unmarried couples living together 1 2
+V44. People who speak a different language 1 2"
+
+For these questions, note that a 1 indicates unwillingness to have as a neighbor. Also note that the groups of people listed across the two waves are different as well as being listed in different order.
+
+
+
+###**B**###
+
+Since the responses are functionally binary (either listed or unlisted as undesirable neighbors), our visualizable statistics will be percentages (out of 100). Thus, we will use a scatterplot to visualize Wave 4 and Wave 6 "Mentioned" percentages grouped by country. This will serve as a way to observe changes in perceptions towards homosexuals across two periods.
+
+
+
+###**C**###
+
+I'll be using the basic plot() to create my scatterplot, so I will need the data to look like this: 
+
+Country  |  Wave 4 % Mentioned  | Wave 6 % Mentioned
+
+Where the 60,000-70,000+ individual survey respondents are aggregated by country to produce a single proportion. Since the country codes are different across the two waves, we will manually select the countries we will plot and will try to retain only countries that appear in both waves of the survey, though if there are insufficient countries, more may be plotted.
+
+
+
+###**D**###
+
+We produce the table in the format we specified above. In this step, we need to manually remove countries that existed in both survey waves but were not asked the neighbor question regarding homosexuality.
+
+```{r}
+library(ggplot2)
+library(reshape2)
+load("~/qmssviz/hw3/WV4.RData")
+WV4 = `WV4_Data_rdata_v_2014-04-28`
+load("~/qmssviz/hw3/WV6.RData")
+WV6 = WV6_Data_spss_v_2014_06_04
+#head(WV6)
+dim(WV4)
+dim(WV6)
+
+
+country_wv4 = unique(WV4$v2)
+country_wv6 = unique(WV6$V2)
+country_wv4
+country_wv6
+
+country_wv4==country_wv6
+
+country_list = vector()
+
+for(i in 1:length(country_wv4)) {
+
+  if (is.element(country_wv4[i], country_wv6)) {
+    country_list[i] = country_wv4[i]
+  }
+  
+}
+
+country_list2 = country_list[!is.na(country_list)]
+country_list2
+
+length(country_list2)
+
+country_matrix = matrix(nrow=21, ncol=3)
+country_matrix[,1]=country_list2
+country_matrix
+
+
+sum(WV4$v2==country_wv4[2])
+
+
+sum(WV4$v76[WV4$v2==country_wv4[2]]==2)
+sum(WV6$V40[WV6$V2==country_wv6[1]]==2)
+
+for(i in 1:length(country_list2)){
+  mention_wv4 = sum(WV4$v76[WV4$v2==country_list2[i]]==1)
+  total_wv4 = sum(WV4$v2==country_list2[i])
+  proportion_wv4 = mention_wv4/total_wv4
+  country_matrix[i,2] = proportion_wv4
+  
+  mention_wv6 = sum(WV6$V40[WV6$V2==country_list2[i]]==1)
+  total_wv6 = sum(WV6$V2==country_list2[i])
+  proportion_wv6 = mention_wv6/total_wv6
+  country_matrix[i,3] = proportion_wv6
+  
+}
+country_matrix
+
+country_matrix2 = country_matrix[-c(4:6),]
+country_matrix2
+colnames(country_matrix2)[1:3] = c("Country","WV4_percent","WV6_percent")
+country_matrix2
+
+country_matrix3 = country_matrix2
+
+newnames=c("Algeria","Chile","China","Jordan","Kyrgyzstan","Mexico","Morocco","Nigeria","Pakistan","Peru","Philippines","Singapore","South Korea","Spain","Sweden","Turkey","United States","Zimbabwe")
+newnames
+newnames2 = as.factor(newnames)
+newnames2
+
+country_matrix3[,1]=newnames
+country_matrix3[,1]
+
+country_matrix3[,1]=as.factor(country_matrix3[,1])
+country_matrix3
+
+newnames3 = as.matrix(newnames2)
+
+country_matrix4 = cbind(newnames3,as.numeric(country_matrix3[,2]),country_matrix3[,3])
+country_matrix4[,2] = as.numeric(country_matrix4[,2])
+country_matrix4[,3] = as.numeric(country_matrix4[,3])
+colnames(country_matrix4)[1:3] = c("Country","Wave 4 % Mention","Wave 6 % Mention")
+country_matrix4
+
+country_matrix4[,2] = country_matrix3[,2]
+country_matrix4
+
+
+#use country_matrix3 for now
+```
+
+country_matrix3
+
+###**E**###
+
+Now we graph it!
+
+```{r}
+#country_matrix6 = read.table(country_matrix3)
+
+#cm = structure( c(country_matrix3[,1], country_matrix3[,2], country_matrix3[,3]) ,.Dim=c(18,3))
+#cm2 = melt(country_matrix3,id.vars=c("Country","Wave4","Wave6"))
+#cm2
+
+
+#country_matrix3
+#plot(country_matrix3)
+
+a=as.factor(country_matrix4[,1])
+
+
+plot(a,country_matrix3[,2],type="p",col="blue",labels=FALSE,main="Unwillingness to have Homosexual Neighbors \n during 1999-2004 (blue) vs 2010-2014 (green)")
+points(a,country_matrix3[,3],col="green")
+axis(1, at=seq(1, 18, by=1), labels = FALSE)
+text(seq(1, 18, by=1), par("usr")[3] - 0.2, labels = newnames, srt = 90, pos = 1, xpd = TRUE)
+
+
+
+```
+
+For most countries, we see that unwillingness to have homosexual neighbors decreases from Wave 4 (blue dot) to Wave 6 (green dot), which makes sense due to the general decrease of homophobia in the past decade. However, note that some countries, such as Kyrgyzstan and Zimbabwe, actually experienced notable increases in unwillingness to have homosexual neighbors.
+
+
+
+###**F**###
+
+See loops, if statements, etc used in code blocks above.

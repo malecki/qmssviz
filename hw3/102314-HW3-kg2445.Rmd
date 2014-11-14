@@ -175,7 +175,7 @@ Now we graph it!
 a=as.factor(country_matrix4[,1])
 
 
-plot(a,country_matrix3[,2],type="p",col="blue",labels=FALSE,main="Unwillingness to have Homosexual Neighbors during 1999-2004 (blue) vs 2010-2014 (green)")
+plot(a,country_matrix3[,2],type="p",col="blue",labels=FALSE,main="Unwillingness to have Homosexual Neighbors \n during 1999-2004 (blue) vs 2010-2014 (green)")
 points(a,country_matrix3[,3],col="green")
 axis(1, at=seq(1, 18, by=1), labels = FALSE)
 text(seq(1, 18, by=1), par("usr")[3] - 0.2, labels = newnames, srt = 90, pos = 1, xpd = TRUE)

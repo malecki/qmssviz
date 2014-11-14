@@ -11,6 +11,7 @@ setwd("/Users/hotdog2/class/data viz/hw 3")
 ## Part A
 
 I'll be comparing Question 5 of the 1999 and 2008 European Values Surveys &ndash; Great Britain, which has the same exact wording in both versions:
+
 > Please look carefully at the following list of voluntary organisations and activities and say ...
 a) which, if any, do you belong to? (Code all mentioned under (a) as ‘1’)
 b) which, if any, are you currently doing unpaid voluntary work for? (Code all mentioned under (b) as ‘1’)

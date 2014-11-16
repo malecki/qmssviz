@@ -1,0 +1,75 @@
+---
+title: "Homework 1 assignment"
+author: "sl3641"
+date: "September 16, 2014"
+output: html_document
+published: false
+tags: hw1
+---
+
+CNN had an article this month about the World Health Organization's report on suicides in different countries:  
+http://www.cnn.com/2014/09/05/world/who-global-suicide-report/
+
+According to the article, South Korea had one of the highest suicide rates (after Guyana and North Korea).   
+Among OECD countries, South Korea has had the highest reported suicide rates in the last 10 years.
+
+I decided to look more closely at the data provided by WHO and combine it with data on other social and economic factors.
+
+<br>
+```{r, echo=FALSE}
+suicideRate <- read.csv("/Users/User/Documents/qmssviz_other/Suicide Data/suicide_gdp.csv")
+suicideRate$logGDPpc <- log(suicideRate$GDPperCap)
+```        
+
+```{r}
+str(suicideRate)
+```
+
+<br>
+
+Below we have a scatterplot of 2010 suicide rates for 59 countries and GDP per capita.
+
+```{r, echo=FALSE}
+require(ggplot2)
+
+ggplot(suicideRate, aes(x=logGDPpc, y=SuicideRate)) +
+  geom_point() +
+  ggtitle("2010 Suicide Rates vs. GDP per Capita") +
+  xlab("GDP per Capita, log scale") +
+  ylab("Suicide rates (per 100,000)") +
+  geom_text(aes(label=Country), hjust=0, vjust=0, size=3) +
+  annotate("rect", xmin = 9.8, xmax = 10.7, ymin = 25, ymax = 27, alpha = .2, fill="yellow")
+```
+
+<br>
+The plot below shows an increase in suicide rates in South Korea over time (since 1990).
+```{r, echo=FALSE}
+kor <- read.csv("/Users/User/Documents/qmssviz_other/Suicide Data/southkorea.csv")
+
+require(ggplot2)
+
+ggplot(kor, aes(x=year, y=suicideRate)) +
+  geom_smooth() +
+  geom_point() +
+  ggtitle("South Korea Suicide Rates 1990 - 2011") +
+  xlab("Year") +
+  ylab("Suicide rates (per 100,000)") +
+  scale_x_continuous(minor_breaks = seq(1990, 2011, 1))
+```   
+
+However, overall mortality rates have declined during this period.
+
+```{r, echo=FALSE}
+ggplot(kor, aes(x=year, y=mortality)) +
+  geom_smooth() +
+  geom_point() +
+  ggtitle("South Korea Mortality Rates 1990 - 2011") +
+  xlab("Year") +
+  ylab("Mortality rates (per 100,000)") +
+  scale_x_continuous(minor_breaks = seq(1990, 2011, 1))
+```   
+
+
+Data sources:
+<li> http://apps.who.int/healthinfo/statistics/mortality/whodpms/
+<li> http://data.worldbank.org/indicator/NY.GDP.PCAP.CD

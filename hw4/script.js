@@ -4,7 +4,7 @@ steps for mapping our ecstasy project data:
 2. save in CSV format
 3. ecstasy data, each "observation" (row) consists of the year, the category (pure MDMA, more MDMA, less MDMA, no MDMA, and unknown), count, and proportion by year).
 4. before we start, we have to reference some scripts in our index.html, specifically, d3.js, style.css, and this script, script.js. 
-5. I would like to make a stacked bar chart by year, and within each year, have stacked bars representing the four categories of pure MDMA, more MDMA, less MDMA, no MDMA, and unknown. 
+5. I would like to make a stacked bar chart by year, and within each year, have stacked bars representing the four categories of pure MDMA, more MDMA, less MDMA, no MDMA, and unknown; for the sake of the assignment, let's first just feed in the "count" property of each object into a simple bar chart using SVGs. Once that is done, further updates to move towards the stacked bar chart will come!
 */
 
 /*
@@ -21,7 +21,7 @@ while writing the code below, I had the for loop that saves obj_count originally
 */
 
 /*
-loading the data and getting it to proper numeric formats, and for the sake of the assignment, let's feed in the "count" property of each object into a simple bar chart using SVGs
+loading the data and getting it to proper numeric formats
 */
 
 var dataset;  //set global variable

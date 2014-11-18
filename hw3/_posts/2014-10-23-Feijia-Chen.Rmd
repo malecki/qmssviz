@@ -1,0 +1,45 @@
+---
+title: "Homework 3 assignment"
+author: "fc2440"
+date: "October 18, 2014"
+output: html_document
+---
+
+A. Identify two surveys to compare
+
+Use World Values Survey 2005 and General Social Survey 2012 and look at the question about happiness as well as income.
+
+In terms of happiness, the survey question in World Values Survey 2005 states: Describe your feeling of happiness; while the survey question in General Social Survey 2012 states: How happy you are?
+
+In terms of income, the survey question in World Values Survey 2005 asks for the scale of income; while the survey question in General Social Survey 2012 asks for real family income.
+
+B. Sketch and/or describe the graph(s)
+
+The graph I intend to make is how happiness is associated with income, which should be positive correlation according to my hypothesis.
+
+C. Write down the target shape
+
+I will be using only two variables from each survey: "realinc" and "happy7" in General Social Survey as well as "v10" (happiness) and "v253" (income) in World Value Survey.
+
+D. Write a script that reads, transforms, prepares data
+
+```{r}
+wvs_data <- read.csv("/Users/Chen/Desktop/Data Visualization/hw3/WVS2005.csv", header=T)
+gss_data <- read.csv("/Users/Chen/Desktop/Data Visualization/hw3/GSS2012.csv", header=T)
+```
+
+E. Make graphs
+
+```{r, echo=FALSE}
+plot(wvs_data$happy,wvs_data$income, main="World Value Survey", xlab="Happiness",ylab="Income")
+plot(gss_data$happy,gss_data$income, main="General Social Survey", xlab="Happiness",ylab="Income")
+```
+
+F. Write expressive fantasy function calls
+
+```{r, eval=FALSE}
+wvs_data <- read.csv("/Users/Chen/Desktop/Data Visualization/hw3/WVS2005.csv", header=T) #read World Value Survey data
+gss_data <- read.csv("/Users/Chen/Desktop/Data Visualization/hw3/GSS2012.csv", header=T) #read General Social Survey data
+plot(wvs_data$happy,wvs_data$income, main="World Value Survey", xlab="Happiness",ylab="Income") #plot World Value Survey data
+plot(gss_data$happy,gss_data$income, main="General Social Survey", xlab="Happiness",ylab="Income") #plot General Social Survey data
+```

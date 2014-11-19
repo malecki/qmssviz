@@ -1,9 +1,12 @@
-# Homework 4
+Homework 4
+===========
 
-Author: Ryan Quan
-Date: November 20, 2014
+Author: Ryan Quan (rcquan)  
+Date: 2014-11-20
 
 ## Description
+
+This D3 plot is intended to answer the following question:
 
 **Out of all pills sold as ecstasy for a given year, how often was chemical X present?**
 

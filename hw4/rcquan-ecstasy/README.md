@@ -2,7 +2,8 @@ Homework 4
 ===========
 
 Author: Ryan Quan (rcquan)  
-Date: 2014-11-20
+Date: 2014-11-20  
+GitHub: [www.github.com/fryandata/ecstasy](www.github.com/fryandata/ecstasy)
 
 ## Description
 

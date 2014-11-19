@@ -3,7 +3,7 @@
 var dataset;
 
 d3.json("ecstasy_data.json", function(json) {
-  
+
   dataset = json;
 
   // initialize the plot
@@ -32,12 +32,12 @@ function createDotPlot(prop, comp) {
   // remove any existing svg element
   d3.select("svg")
     .remove();
-  
+
   // set window size
   var w = 400;
   var h = 600;
   var padding = 30;
-  
+
   // set the scale for y-axis
   var yScale = d3.scale.linear()
     .domain([0, d3.max(prop, function(d) {
@@ -45,33 +45,34 @@ function createDotPlot(prop, comp) {
     })])
     .range([h - padding, padding])
     .nice();
-  
+
   // y-axis
   var yAxis = d3.svg.axis()
     .scale(yScale)
     .orient("left")
     .ticks(10);
-    
+
   // create the svg element
   var svg = d3.select("body")
     .append("svg")
     .attr("width", w)
     .attr("height", h);
-  
+
   // bind proportion data to points
   svg.selectAll("circle")
     .data(prop)
     .enter()
     .append("circle")
     .attr("fill", "steelblue")
+    // dynamic axis scaling
     .attr("cy", function(d) {
       return yScale(d);
     })
     .attr("cx", 100)
     .attr("r", 5);
-  
+
   // bind composition data to text
-  svg.selectAll("text") // <-- Note "text", not "circle" or "rect"
+  svg.selectAll("text")
   .data(comp)
     .enter()
     .append("text")
@@ -82,13 +83,13 @@ function createDotPlot(prop, comp) {
     .attr("y", function(d, i) {
       return yScale(prop[i]);
     });
-  
+
   // add y-axis
   svg.append("g")
     .attr("class", "axis")
     .attr("transform", "translate(" + padding * 3 + ",0)")
     .call(yAxis);
-  
+
   // add y-axis label
   svg.append("text")
     .attr("class", "y label")

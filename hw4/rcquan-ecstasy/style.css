@@ -1,0 +1,12 @@
+/* Styles go here */
+
+/* make the font less ugly */
+body {
+  font: 10px sans-serif;
+}
+
+/* make the axis prettier */
+.axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;

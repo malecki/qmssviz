@@ -19,6 +19,37 @@ var dataset = [
   { race: "White", cellphone: 689, smartphone: 373 }
   ];
 
+## Loading the Dataset 
+Look at HTML code to see how I loaded the data. Because I wanted to do a stacked graph, I had to manually enter in the array values. If I were just to directly load the data set, I could just do the following:
+
+var dataset;
+d3.csv(“ereadData.csv”, function(error, data) {
+  if (error) {
+		console.log(error);
+	} else {
+		console.log(data);
+	dataset = data;
+	}
+});
   
+## Mapping Data onto SVG elements
+In order to map my data onto SVG elements, I need to create the svg object and then append the data onto the object. This is done in the following steps:
+
+  		var svg = d3.select("body")
+						.append("svg")
+						.attr("width", w)
+						.attr("height", h);
+	  		var groups = svg.selectAll("g")
+				.data(dataset)
+				.enter()
+				.append("g")
+				.style("fill", function(d, i) {
+					return colors(i);
+				});
+        
+
+	
+  
+
 
 

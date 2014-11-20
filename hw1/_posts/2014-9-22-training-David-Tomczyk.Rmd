@@ -1,0 +1,60 @@
+---
+title: "R Training Assignment"
+author: "David Tomczyk"
+date: "September 22 2014"
+output: html_document
+published: FALSE
+tags: r_training
+---
+code to produce the new data frame:
+```{r}
+
+setwd("~/qmssviz/hw1/_posts/R_Training_Assignment") #change working directory
+
+file <- "sample_health_facilities.csv"
+sample_data <- read.csv(file)
+
+table(sample_data[["zone"]]) #looking at distribution of zones
+
+
+
+southern <- subset(sample_data, substr(zone,1,5) == "South") #select all facilities located in the Southern zones of Nigeria
+
+str(southern) #24 levels of state?? 
+table(southern$state)#the values of the dropped states still appear in the states column. Why?
+
+file2 <- "lgas.csv"
+lgas <-read.csv(file2) #read lgas.csv into a dataframe
+lgas2 <- subset(lgas, select = c(lga_id, pop_2006)) #create a new data frame that contains only columns of interest: lga_id and pop_2006
+
+southern_pop <- merge(southern, lgas2, by = "lga_id") #merge southern and lgas together by lga_id
+
+southern_pop$full_time <- southern_pop$num_nurses_fulltime + southern_pop$num_doctors_fulltime #creating a new column that sums full time nurses and full time doctors
+
+southern_pop2 <- subset(southern_pop, select = c(state, pop_2006, full_time))#making new data set with only necessary columns
+
+sum(is.na(southern_pop2)) #checking for NA's
+southern_pop2[which(is.na(southern_pop2)), ] #where are the NA's
+which(is.na(southern_pop2)) #why is this returning 131 and 155??? Guessing it is taking row id's from an older data set?? ASK in class!
+
+#anyway, 2 rows have NA values in the full_time column (and those are the only NAs in the data frame), and need to be omitted
+
+southern_pop3 <- na.omit(southern_pop2) #remove the 2 rows with NA values. Side effect: adds column row.names, why?
+
+full_time.total <- aggregate(full_time ~ state,data=southern_pop3,sum) #sum the number of full time docs and nurses by state
+state_pop.total <- aggregate(pop_2006 ~ state,data=southern_pop3,sum) #sum the populations by state
+
+final <- merge(full_time.total, state_pop.total, by = "state") #merge two data frames above into the final data frame
+
+final.sorted <- final[order(final$pop_2006, decreasing=TRUE), ] #sort the final data frame
+
+```
+Final Data Frame
+---
+The final data frame shows the number of full time doctors and nurses in each state. It is sorted in descending order by state population.
+
+```{r final, echo=FALSE}
+
+final.sorted
+
+```

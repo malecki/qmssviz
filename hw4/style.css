@@ -1,0 +1,25 @@
+a {
+  background-color: #99CCFF;
+}
+
+h2 {
+  font-family: "Helvetica Neue";
+  background-color: yellow;
+}
+
+p {
+  font-family: "Futura";
+}
+
+.symptom {
+  font-family: "Georgia";
+}
+
+.emphasis {
+  font-family: "Helvetica Neue";
+  font-weight: bold;
+}
+
+.transp {
+  opacity: 0.3;
+}

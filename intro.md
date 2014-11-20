@@ -45,13 +45,13 @@ Coming up with constructive criticism is one thing. Implementing your ideas is a
 
 # Requirements
 
-### Three coding/graphing assignments (40%)
+### Four coding/graphing assignments (40%)
 
-Students will complete three assignments and submit them to this course repository as pull requests. Instructions will be given on file naming / location / linking conventions. The assignments themselves will be fairly narrowly focussed on specific tools and coding and graphing tasks. 
+Students will complete four assignments and submit them to this course repository as pull requests. Instructions will be given on file naming / location / linking conventions. The assignments themselves will be fairly narrowly focussed on specific tools and coding and graphing tasks. 
 
-### Debugging and peer code review (20%)
+### Two Quizzes (20%)
 
-Students are expected to read each other's work, and to work using modern collaborative tools. On the days that assignments 2 and 3 are due, class will be dedicated to peer code reviews, with comments on pull requests before they are merged. Extra credit may be offered for refactorings or major changes resulting from reviews.
+Quizzes are essential for assessing student learning and pedagogical efficacy. There will be 4 quizzes in total; students may pick their best two to count towards their grade.
 
 ### A project in your area of specialization using statistical graphics (30%)
 
@@ -63,3 +63,7 @@ The course is roughly divided into four three-week sprints toward a final projec
    - The actual project including a presentation (similar in form to another blog post), explaining code / tools / libraries you learned doing the project
 
 ### Participation in class — (10%)
+
+- Attendance
+- Debugging
+- Peer code review

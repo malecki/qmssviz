@@ -1,0 +1,223 @@
+---
+title: "Homework 3"
+author: "Yan Wang (yw2668)"
+date: "October 23, 2014"
+output: html_document
+---
+
+
+</br>
+
+##Acquire and familiarize yourself with the data
+</br>
+
+####A. Identify two surveys that you want to compare. 
+
+I would like to choose two waves from World Value Survey. Because the countries under study in the first two waves are very limited, I choose Wave 3 and Wave 6 for this study.
+
+</br>
+
+####B. Sketch and/or describe the graph(s) that you intend to make; these amount to informal research hypotheses.
+
+I choose the variable "V10" of each survey, which investigates people's feeling of happiness. I plan to compare the happiness index of different countries/continents in those two waves. I expect that on average the happiness index has increased over years in most countries/continents. Now let's see if the result fits my expectation.
+
+</br>
+
+####C. Write down the target shape of the data 
+Country: "China, United State, Japan, South Korea..."
+value："0.42, 0.41, 0.56, 0.98..."
+Wave: "wave_3, wave_6"
+Continent: "Asia, North America..."
+
+##Write code to analyze and visualize it
+</br>
+
+####D. Write a script that reads, transforms, prepares data for your graph.
+```{r}
+#Read R Data into the project
+setwd("/Users/Emily/Documents/Columbia/Data Visualization/Homework 3")
+load("WV3_Data_rdata_v_2014_09_21.rdata")
+d1<- WV3_Data_rdata_v_2014_09_21
+load("WV6_Data_rdata_v_2014_06_04.rdata")
+d2<-WV6_Data_spss_v_2014_06_04
+
+#Check the variables I intend to look into
+
+str(d1$V2)
+table(d1$V2)
+sum(is.na(d1$V2))
+
+str(d1$V10)
+table(d1$V10)
+sum(is.na(d1$V10))
+
+str(d2$V2)
+table(d2$V2)
+sum(is.na(d2$V2))
+
+str(d2$V10)
+table(d2$V10)
+sum(is.na(d2$V10))
+```
+
+```{r}
+#Check out the labels of each variable
+lapply(attributes(d1), length)
+names(attr(d1,'var.labels')[[12]])
+attr(d1,'label.table')[[12]]
+table(d1$V10)
+
+lapply(attributes(d2), length)
+names(attr(d2,'var.labels')[[11]])
+attr(d2,'label.table')[[11]]
+table(d2$V10)
+```
+
+```{r}
+##Make the value of "very happy" or "rather happy" equals to 1, and the value of "not quite happy" or "not at all happy" equals to 0. Other answers are omitted.
+d3<-subset(d1, V10>0, select=c(V2, V10))
+d6<-subset(d2, V10>0, select=c(V2, V10))
+d3$V10[d3$V10 <= 2] <- 1
+d3$V10[d3$V10 >= 2] <- 0
+d6$V10[d6$V10 <= 2] <- 1
+d6$V10[d6$V10 >= 2] <- 0
+```
+
+```{r}
+#Calculate the mean of "Happiness" of each country for the two waves and then merge the resultant datasets
+library(plyr)
+d3_mean<-ddply(d3, .(V2), summarise, mean=mean(V10,na.rm=TRUE))
+colnames(d3_mean) <- c("Country", "Happiness")
+country3<-attr(d1, 'label.table')[[2]]
+d3_mean$Country <- names(country3)[match(d3_mean$Country, country3)]
+d6_mean<-ddply(d6, .(V2), summarise, mean=mean(V10,na.rm=TRUE))
+colnames(d6_mean) <- c("Country", "Happiness")
+country6<-attr(d2, 'label.table')[[2]]
+d6_mean$Country <- names(country6)[match(d6_mean$Country, country6)]
+happy<-merge(d3_mean, d6_mean, by="Country")
+colnames(happy) <- c("Country", "Wave 3", "Wave 5")
+```
+
+```{r}
+#Continue to tidy data
+library(rworldmap)
+temp_map = getMap(resolution='coarse') 
+continent<-temp_map@data[c('NAME','REGION')]
+colnames(continent)<-c("Country","Continent")
+all(happy$Country %in% continent$Country)
+which(happy$Country %in% continent$Country, arr.ind =TRUE)
+happy$Country[[20]]<-"S. Korea"
+all(happy$Country %in% continent$Country)
+happy<-merge(happy, continent, by="Country")
+library(reshape2)
+happym<-melt(happy, id =c("Country","Continent"))
+colnames(happym)[c(3,4)]<-c("Wave","Happiness")
+happy_con<-dcast(happym,Wave~Continent, mean,na.rm=T)
+happy_con<-melt(happy_con, id =c("Wave"))
+happy_con["value"]<-round(happy_con["value"], digits=3)
+
+
+```
+</br>
+
+####E. Make it actually make your graph. 
+```{r}
+#Bar Chart
+library(ggplot2)
+ggplot(happy_con,aes(x=variable, y=value,fill=Wave))+geom_bar(stat="identity",position="dodge")+geom_text(aes(label=value),vjust=1.5, colour="white", position=position_dodge(.9),size=3)+ylim(0,1)+xlab("Continent")+ylab("Feeling of Happiness")+scale_fill_manual(values=c("#BAF479","#A02A77"))
+```
+
+```{r}
+#Maps
+library(RColorBrewer)
+library("sp")
+
+datalist<-list(d3_mean,d6_mean)
+titlelist<-c("Feeling of Happiness (1995-1999)", "Feeling of Happiness (2010-2014)")
+par(fin=c(7,9),mfcol=c(1,2),mai=c(0,0,0.2,0),xaxs="i",yaxs="i")
+
+
+```
+
+```{r, eval=FALSE}
+# This function works in R console and returns two maps aligned to show different levels of happiness in two waves.
+# But it seems that Rmarkdown can't knit "sPDF@data", therefore can't display properly. I will try to push the pic seperately and try to work out a solution later.
+for(i in 1:2){
+ data<-datalist[[i]]
+sPDF<-joinCountryData2Map(data, joinCode = "NAME", nameJoinColumn = "Country", verbose = F)
+sPDF@data[["Happy.Cat"]] <- cut(sPDF@data[["Happy"]], breaks=c(0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0), )
+levels(sPDF@data[["Happy.Cat"]]) <- c("very low", "low","a bit low","medium","a bit high", "high", "very high")
+mapParams<-mapCountryData(sPDF, nameColumnToPlot="Happy.Cat", catMethod="categorical", mapTitle=titlelist[i], colourPalette=brewer.pal(7, "RdPu"), oceanCol="lightblue", missingCountryCol="white")
+                          }
+
+```
+
+```{r}
+#Scatter Plots
+ggplot(happym,aes(x=Happiness,y=Country, size=Happiness,colour=Wave))+geom_point(alpha=.5)+theme_bw()+theme(panel.grid.major.x=element_blank(), panel.grid.minor.x=element_blank(), panel.grid.major.y=element_line(colour="grey60", linetype="dashed"))+scale_size_area()+scale_fill_manual(values=c("#84DB61","#A02A77"))
+
+```
+</br>
+
+####F. Write expressive fantasy function calls that describe how you read, transformed, and prepared the data for the graph. 
+```{r, eval=FALSE}
+survey1 <- loadSurvey(1)
+survey1 <- selectVariables(survey1, ...)
+survey1 <- checkVariables(suvey1,...)
+survey1 <- handleMissingData(survey1, ...)
+survey1 <- labelValues(survey1)
+summarize1 <- summarizeVariables(survey1, ...) #get interested descriptive statistics
+plotData <- preparePlotData(summarize1, ...)
+
+survey2 <- loadSurvey(2)
+survey2 <- selectVariables(survey2, ...)
+survey2 <- checkVariables(suvey2,...)
+survey2 <- handleMissingData(survey2, ...)
+survey2 <- labelValues(survey2)
+summarize2 <- summarizeVariables(survey2, ...) #get interested descriptive statistics
+plotData <- preparePlotData(summarize2, ...)
+
+CombineData <- merge(survey1, survey2...)
+meltData <- TidyData(CombineData,...) #transform data to favorable format
+castData <- GetPerfectData(...)
+ggplot(, aes(...)) + ...
+joinCountryData2Map(,...
+mapCountryData(,...      
+
+```
+</br>
+
+####G. (Bonus) Write (some or all of) the functions to read, transform, and analyze the data.
+```{r, eval=FALSE}
+#If I need to compare more than 2 datasets, then it will much more convient to use functions
+surveylist <- list(survey1, survey2, survey3...)
+
+#Function Example 1 : Congregate Data
+WholeData<- for (i in 1:length(surveylist))
+  {
+  transform1 <- ddply(surveylist(1), .(variable), summarise, FUN)
+  transform <- ddply(surveylist(i), .(variable), summarise, FUN)
+  if(i==1) {
+    merge<-merge(transform1,transform, by=)
+    else
+      merge<- merge(merge,transform, by=)
+  }
+
+}
+
+#Function Example 2 : Draw Maps for Each Dataset
+titlelist<- list(title1, title2, title3...)
+for(i in 1:length(surveylist))
+  {
+ survey<-surveylist[[i]]
+sPDF<-joinCountryData2Map(survey, joinCode = "NAME", nameJoinColumn = "Country", verbose = F)
+sPDF@data[["Variable.Cat"]] <- cut(sPDF@data[["Variable"]], breaks=c(), )
+levels(sPDF@data[["Varible.Cat"]]) <- c()
+mapParams<-mapCountryData(sPDF, nameColumnToPlot="Variable.Cat", catMethod="categorical", mapTitle=titlelist[i], colourPalette=brewer.pal(7, "RdPu"), oceanCol="lightblue", missingCountryCol="white")
+}
+```
+</br>
+
+####Conclusion:
+The graphics show that today happiness index has slightly increased compared to that of 90s in most countries, which is in line with my expection.
+

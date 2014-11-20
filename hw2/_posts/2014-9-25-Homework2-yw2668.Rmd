@@ -1,0 +1,46 @@
+---
+title: "Homework 2 Assignment"
+author: "yw2668"
+date: "October 13, 2014"
+output: html_document
+---
+
+####1. Produce a new dataframe with the following properties:
+####   Select all health facilities located in the Southern zones of Nigeria.
+####   Incorporate LGA metadata into this new dataframe.
+
+```{r}
+setwd("/Users/Emily/Documents/Columbia/Data Visualization")
+d_lgas<-read.csv("lgas.csv")
+data<-read.csv("Health_Mopup_and_Baseline_NMIS_Facility.csv")
+table(d_lgas$zone)
+lgas_south<-d_south1<-subset(d_lgas, zone %in% c("South-South", "Southeast", "Southwest"))
+newdata<-merge(lgas_south, data, by="unique_lga", all.x=TRUE)
+
+```
+
+####2. Calculate the total number of full time nurses and doctors in all health facilities, by state. Compute per capita and per square area values, as well.
+####   Sort the first resultant dataset by state population, in descending order.
+####   Show the results!
+
+```{r}
+library(plyr)
+doctors<-ddply(newdata , .(state), summarise, sum=sum(num_doctors_fulltime,na.rm=TRUE))
+nurses<-ddply(newdata , .(state), summarise, sum=sum(num_nurses_fulltime,na.rm=TRUE))
+pop_2006<-ddply(newdata , .(state), summarise, sum=sum(pop_2006,na.rm=TRUE))
+area<-ddply(newdata , .(state), summarise, sum=sum(area_sq_km,na.rm=TRUE))
+
+d1<-merge(doctors, nurses,  by="state")
+d2<-merge(d1, pop_2006,  by="state")
+d3<-merge(d2,area, by="state")
+names(d3)[2]<-"doctors"
+names(d3)[3]<-"nurses"
+names(d3)[4]<-"pop_2006"
+names(d3)[5]<-"area"
+d4<-d3[order(-d3$pop_2006), ]
+print(d4)
+result<-cbind(d3$state, d3[,2:3]/(d3$pop_2006))
+names(result)[1]<-"state"
+print(result)
+```
+

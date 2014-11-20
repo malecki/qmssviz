@@ -13,7 +13,7 @@
 	
 			//Width and height
 			var w = 700;
-			var h = 700;
+			var h = 500;
 			var barPadding = 1;
 	
 			//Data
@@ -33,6 +33,17 @@
 					{ x: 4, y: 373 }
 				]
 			];
+      
+      // If I was directly reading from the CSV:
+      // var dataset;
+      // d3.csv(“ereadData.csv”, function(error, data) {
+      //   if (error) {
+      //  	console.log(error);
+      //	} else {
+      //		console.log(data);
+      //	dataset = data;
+      //	}
+      // });
 
 			// Stacked Data
 			var stack = d3.layout.stack();
@@ -56,18 +67,18 @@
 			// Color scheme
 			var colors = d3.scale.category20();
 		
-			// Create SVG
-			var svg = d3.select("body")
-						.append("svg")
-						.attr("width", w)
-						.attr("height", h);
+			// Create SVG & map data onto SVG
+			var svg = d3.select("body")     //select <body>
+						.append("svg")            //attach svg object to <body>
+						.attr("width", w)         //set width of svg
+						.attr("height", h);       //set height of svg
 	
 			// Group
-			var groups = svg.selectAll("g")
-				.data(dataset)
-				.enter()
-				.append("g")
-				.style("fill", function(d, i) {
+			var groups = svg.selectAll("g") 
+				.data(dataset)                  //load data
+				.enter()                        //creates space for each data value
+				.append("g")                    //appends data into space
+				.style("fill", function(d, i) { // custom style
 					return colors(i);
 				});
 	
@@ -90,3 +101,5 @@
 				.attr("width", xScale.rangeBand());
 						
 		</script>
+  </body>
+</html>

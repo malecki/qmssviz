@@ -1,5 +1,5 @@
 getwd()
-setwd('/Users/florenceclee/Desktop/hw4/')
+setwd('/Users/florenceclee/Desktop/qmssviz/hw4')
 
 #Read in data
 ereadDat<-read.csv("January_2014_Ereading_Gadgets_CSV.csv", stringsAsFactors=FALSE)

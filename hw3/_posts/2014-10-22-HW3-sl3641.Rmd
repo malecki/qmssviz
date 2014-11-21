@@ -7,9 +7,16 @@ published: false
 tags: hw3
 ---
 
-For this assignment, I am comparing responses from Wave 6 (2010) and Wave 5 (2005) of the World Values Survey administered in South Korea.  References and links can be found at the end of this document.
+For this assignment, I am comparing responses from 
+<ol> <li>Wave 6 (2010) 
+<li> Wave 5 (2005) of the World Values Survey administered in South Korea.
+</ol>
 
-Specifically, I wanted to see how attitudes towards the importance of the economy (versus other national priorities) have changed over time.
+References and links can be found at the end of this document.
+
+<b>Research Question</b>
+<br> Specifically, I wanted to see how attitudes towards the importance of the economy (versus other national priorities) have changed over time.
+My hypothesis is that as South Korea's economic conditions improve over time, individuals will place more importance on other values such as a more humane society.
 
 The relevant question from the World Values Survey is below:
 
@@ -22,6 +29,7 @@ Would you please say which of these you, yourself, consider the most important? 
 </i> 
 
 This is the script that reads, transforms, and prepares data for the graph.
+<br> The description of variables is in the comments.
 ```{r PrepareData}
 setwd("~/Documents/qmssviz_other/Assignment3")
 wv5 <- read.csv("WV5_Data_South_Korea.csv")   # read Wave 5 data
@@ -54,6 +62,14 @@ summ$year <- ifelse(summ$wave==5, "2005", "2010")
 ```
 
 This is the final dataset that we are using for the graph
+<ul>
+- wave: wave is a factor variable, with "1" referring to Wave 5, and "2" referring to Wave 6
+- question: this is a factor variable representing the four possible responses to the question of interest
+- freq: indicates the number of people out of 1,200 respondents who selected a certain response
+- percent: this is the percentage of 1,200 respondents who indicated a specific response 
+- year: this is a character variable indicating the year of the survey (2005 or 2010)
+</ul>
+
 ``` {r Finaldata}
 summ
 ```
@@ -72,6 +88,11 @@ ggplot(summ, aes(x=question, y=percent)) +
   scale_x_discrete(limits=c("no answer", "ideas more than money", 
                             "fight against crime", "more humane society", "stable economy"))
 ```
+
+The plot appears to agree with the initial hypothesis.  
+<br>Comparing 2010 to 2005, a smaller proportion of respondents indicated that a stable economy is the most important national priority among the four goals listed.
+<br> There was an increase in the proportion of respondents who indicated either that a more humane society or the fight against crime was the most important national priority.
+<br> In addition, the graph shows that there was no significant change in the proportion of respondents who indicated that "Progress toward a society in which ideas count more than money"
 
 Below are expressive fantasy function calls describing how I read, transformed, and prepared the data for the graph.
 ``` {r FantasyFunction, eval=FALSE}

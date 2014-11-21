@@ -2,16 +2,17 @@
 <meta charset="utf-8">
 
 <!-- Graph Description:
-A barchart of  "accessibility to radial highways" of Boston subrbs.
-The data is the "Housing" data set hosted at the UCI Machine Learning Repository:
+A scatterplot of median home values in Boston suburbs versus an "index of
+accessibility to radial highways." The data is the "Housing" data set hosted at
+the UCI Machine Learning Repository:
 	http://archive.ics.uci.edu/ml/datasets/Housing
 -->
 
 <!-- Data contract:
-An array of levels and a corresponding array of counts; or, a dictionary of level-count pairs.
+A rectangular data set with columns "RAD" (for "RADial highways") and "MEDV" (for "MEDian Value") and one row for each suburb.
 -->
 
-<link rel="stylesheet" href="2014-11-13-hw4-gw2286.css">
+<link rel="stylesheet" href="style.css">
 
 <div id="section">
   <p>
@@ -23,7 +24,7 @@ An array of levels and a corresponding array of counts; or, a dictionary of leve
   </p>
       <div class="figure 1" width=450 height=450>
         <svg class="plot" width=450 height=400></svg>
-        <div class="caption" width=450>
+        <div class="caption" width=450 height=300>
           Source: <a href=https://archive.ics.uci.edu/ml/datasets/Housing>
             "Housing" data set, UCI Machine Learning Repository
             </a>
@@ -35,4 +36,4 @@ An array of levels and a corresponding array of counts; or, a dictionary of leve
 </div>
 
 <script src="http://d3js.org/d3.v3.min.js"></script>
-<script src="2014-11-13-hw4-gw2286.js"></script>
+<script src="script.js"></script>

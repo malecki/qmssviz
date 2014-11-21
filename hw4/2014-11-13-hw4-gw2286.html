@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<!-- Graph Description:
+A scatterplot of median home values in Boston suburbs versus an "index of
+accessibility to radial highways." The data is the "Housing" data set hosted at
+the UCI Machine Learning Repository:
+	http://archive.ics.uci.edu/ml/datasets/Housing
+-->
+
+<!-- Data contract:
+A rectangular data set with columns "RAD" (for "RADial highways") and "MEDV" (for "MEDian Value") and one row for each suburb.
+-->
+
+<link rel="stylesheet" href="style.css">
+
+<div id="section">
+  <p>
+    Here's some text.
+  </p>
+  
+  <p>
+    Here's a plot:
+  </p>
+      <div class="figure 1" width=450 height=450>
+        <svg class="plot" width=450 height=400></svg>
+        <div class="caption" width=450 height=300>
+          Source: <a href=https://archive.ics.uci.edu/ml/datasets/Housing>
+            "Housing" data set, UCI Machine Learning Repository
+            </a>
+        </div>
+      </div>
+  <p>
+    isn't it cool?
+  </p>
+</div>
+
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="script.js"></script>

@@ -1,0 +1,49 @@
+.figure {
+  margin: 0px;
+  padding: 10px;
+  border: 1px solid black;
+}
+
+.caption {
+  font-style: italic;
+  text-align: right;
+}
+
+.plot {
+  background-color: lightgray;
+
+  padding: 0px;
+  margin: 0px;
+}
+
+rect {
+  fill: steelblue;
+}
+
+circle {
+  fill: goldenrod;
+}
+
+.main-title {
+  font: 15pt courier;
+}
+
+.axis-title {
+  font: 11pt courier;
+}
+
+.plot-labels {
+  font: 10pt sans-serif;
+}
+
+.axis-labels {
+  font: 12pt sans-serif;
+}
+
+.axis-ticks {
+  stroke: black;
+}
+
+.axis-line {
+  stroke: black;
+}

@@ -1,0 +1,72 @@
+---
+title: "Lab1_Assignment"
+author: "sl3641"
+date: "September 24, 2014"
+output: html_document
+published: false
+---
+
+```{r initialize, echo=FALSE}
+# R Tutorial from September 16
+# setwd("~/Documents/qmssviz/hw2/")
+
+## The following function will load packages required for this tutorial.
+## If a package cannot be found in your instance of Rstudio...
+## ... it will be installed automatically. 
+## Don't worry about how to write functions quite yet, we will introduce that later
+## But do run the following code:
+
+load_install<-function(lib){
+  if(! require(lib, character.only=TRUE)) install.packages(lib, character.only=TRUE)
+  library(lib, character.only=TRUE)
+}
+
+## the required libraries (e.g. packages)
+Thelib<-c("knitr", "plyr", "ggplot2", "reshape2")
+
+## apply the function
+lapply(Thelib, load_install)
+```
+
+```{r import_data}
+# Nigeria facility inventory
+getwd()
+sample_data <- read.csv("../sample_health_facilities.csv")
+
+str(sample_data)
+head(sample_data)
+```
+
+Mini-Assignment
+1. Go to this link and download the file into the working directory
+2. Product a new data.frame, which has the following properties
+    + From the Nigeria Facilities Inventory data (sample_data from section 1.5.1), select all facilities located in the Southern zones of Nigeria.
+```{r op1}
+newdata <- sample_data[sample_data$zone%in%c("South-South", "Southeast", "Southwest"),]
+
+# - Incorporate the pop2006 column from the lgas.csv file into the new data.frame containing only those facilities located in Southern Nigeria. (Hint: your id column is lga_id).
+lgas <- read.csv("../lgas.csv")
+lgas2 <- lgas[, c("lga_id", "pop_2006")]
+
+newdata2 <- merge(newdata, lgas2, by="lga_id")
+
+# - Calculate the total number of full time nurses and doctors for all health facilities in each state.
+?aggregate
+total_nurses <- aggregate(num_nurses_fulltime~state, data=newdata2, sum, na.rm=FALSE)
+colnames(total_nurses) <- c("state", "total_nurses")
+newdata3 <- merge(newdata2, total_nurses, by="state", all=TRUE)
+
+total_doctors <- aggregate(num_doctors_fulltime ~ state, data=newdata2, sum, na.rm=FALSE)
+colnames(total_doctors) <- c("state", "total_doctors")
+newdata4 <- merge(newdata3, total_doctors, by="state")
+
+# - Sort the resulting dataset by state population, in descending order.
+newdata5 <- newdata4[order(newdata4$pop_2006, decreasing=TRUE),]
+row.names(newdata5) <- NULL
+```
+
+```{r show_results}
+# - Show the results!
+head(newdata5)
+```
+

@@ -1,0 +1,37 @@
+---
+title: "Homework 2"
+author: "Greg Werbin"
+output: html_document
+---
+
+```{r}
+library(plyr)
+
+setwd("~/class/data viz/qmssviz/hw2/")
+
+# just making sure it's not something really bizarre
+awk <- 'awk \'BEGIN{ FS="," } { for (i=1; i<=3; i++) printf $i"\t"; printf ORS }\''
+system(sprintf('head -n 4 Health_Mopup_and_Baseline_NMIS_Facility.csv | %s', awk))
+
+# load data
+nmis <- read.csv("Health_Mopup_and_Baseline_NMIS_Facility.csv")
+lgas <- read.csv("lgas.csv")
+
+names(lgas)
+"unique_lga" %in% names(nmis)
+
+nmis_south <- merge(
+  x = nmis,
+  y = lgas[grep("South", lgas$zone), c("unique_lga", "state", "zone", "pop_2006")],
+  by = "unique_lga"
+)
+# why is all.x set to TRUE in the "mini assignment" file? makes no sense
+
+nmis_south_bystate <- ddply(
+  nmis_south[, c("state", "num_nurses_fulltime", "num_doctors_fulltime", "pop_2006")],
+  .variables = .(state), .fun = numcolwise(sum), na.rm = TRUE
+)
+state_order <- order(nmis_south_bystate$pop_2006, decreasing = TRUE)
+nmis_south_bystate[state_order, ]
+
+```

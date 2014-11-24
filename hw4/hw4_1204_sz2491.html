@@ -1,41 +1,123 @@
 <!DOCTYPE html>
 <html>
- <head><title>hw4-1204-sz2491</title></head>
+ <head>
+  <title>hw4-1204-sz2491</title>
+  <style type="text/css">
+   #graph {
+    border: 1em solid lightgreen;
+    background: lightgreen;
+   }
+   #graph p {
+    font-size: 0.75em;
+   }
+
+   #datashape {
+    border: 1em solid #ff6;
+    background: #ff6;
+   }
+
+   #datashape p {
+    font-size: 0.75em;
+   }
+
+   #createdata {
+    border: 1em solid #9cf;
+    background: #9cf;
+   }
+
+   #createdata p {
+    font-size: 0.75em;
+   }
+
+   #loaddata {
+    border: 1em solid #cc66ff;
+    background: #cc66ff;
+    margin-bottom: 0;
+   }
+
+   #loaddata p {
+    font-size: 0.75em;
+   }
+
+   #steps {
+    border: 1em solid #cc99ff;
+    background: #cc99ff;
+    margin-top: 0;
+    padding-left: 1em;
+   }
+
+   #steps p {
+    font-size: 0.75em;
+   }
+
+   #steps ol {
+    list-style: none;
+    margin-top: 0;
+   }
+
+   #steps ol a {
+    color: black;
+    font-size: 0.9em;
+   }
+
+   #notes {
+    border: 1em solid #ccc;
+    background: #ccc;
+   }
+
+   #notes span {
+    font-weight: bold;
+    margin-bottom: 0.5em;
+   } /*this won't work. why???*/
+
+   #notes p {
+    margin: 0.5em;
+    font-size: 0.8em;
+   }
+
+  </style>
+ </head>
  <body>
-   <h2>Describe the graph</h2>
+   <h2 id="graph">Describe the graph
     <p>
     It will show electricity use condition in New Delhi on 9/24/2012. Data are recored every 15 minutes. Five major companies supply electricity in New Delhi.
     </p>
-   
-   <h2>Describe data shape</h2>
+   </h2>
+
+   <h2 id="datashape">Describe data shape
     <p>
     I'm still learning~
     </p>
+   </h2>
 
-   <h2>Create data as csv</h2>
+   <h2 id="createdata">Create data as csv
     <p>
     It's on my github now.
     </p>
+   </h2>
    
-   <h2>Load data and use data callback</h2>
+   <h2 id="loaddata">Load data and use data callback
     <p>
     Still don't understand what is convenience methods. Need to continue work on data callback.
     </p>
 
-    <h3>Describe steps with ol</h3>
-    <p>
-     <ol> 	
-      <li class="steps">draw plots in R</li>
-      <li class="steps">ggplot first and then convert it into svg</li>
-      <li class="steps">use svg plot in html</li>
-      <li class="steps">apply d3</li>
-     </ol>
-    </p>
+    <h3 id="steps">Describe steps with ordered list
+     <p>
+      <ol> 	
+       <li><a href="/drawpoints">draw plots in R</a></li>
+       <li><a href="/ggplot">ggplot first and then convert it into svg</a></li>
+       <li><a href="/svg">use svg plot in html</a></li>
+       <li><a href="/d3">apply d3</a></li>
+      </ol>
+     </p>
+    </h3>
+   </h2>
 
-  <h1>Notes</h1>
+  <h3 id="notes"><span>Notes</span>
    <p>
    This is only the structure(html) without style(css) or script(javasript). I will work on it soon.
    </p>
+  </h3>
    
  </body>
 </html>

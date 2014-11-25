@@ -8,9 +8,9 @@ My first step was to bring my data into R. For this homework, I used data from t
 The survey was administered via surveymonkey, so I exported the data into a csv that
 I could then import into R.
 
-```
-Fall_Survey <- "Fall_Survey.csv"
-Spring_Survey <- "Spring_Survey.csv"
+```{r}
+Fall_Survey <- "../Fall_Survey.csv"
+Spring_Survey <- "../Spring_Survey.csv"
 Fall <- read.csv(Fall_Survey)
 Spring <- read.csv(Spring_Survey)
 ```
@@ -27,40 +27,66 @@ colnames(Spring)
 I decided that I wanted to track the change in the average score for three questions:
 "I feel valued as part of our community," "School leadership makes thoughtful decisions," and "I am proud to work for this organization."
 
-At this point I tried to create objects for the variables that I cared about, but got an error message in R. I think the data was perhaps in the wrong format?
+At this point I created new values for the three variables that I cared about.
 
-```
+```{r}
 Fall_Value <- Fall$I.feel.valued.as.part.of.our.community
+Fall_Leadership <-Fall$School.leadership.makes.thoughtful.decisions
+Fall_Pride <-Fall$I.am.proud.to.work.for.this.organization
 Spring_Value <- Spring$I.feel.valued.as.part.of.our.community
-mean(Fall_Value)
-plot(Fall_Value,Spring_Value)
+Spring_Leadership <-Spring$School.leadership.makes.thoughtful.decisions
+Spring_Pride <-Spring$I.am.proud.to.work.for.this.organization
 ```
 
-I did some googling and found a website that recommended that I melt the data in Excel, then import it into R already formatted for graphing. So that's what I did. 
+Next I needed to convert this data from factors into numeric data.
 
 ```{r}
-Graphable_Data <- "../Survey_Data_To_Graph.csv"
-Graphdata <- read.csv(Graphable_Data)
-dim(Graphdata)
-colnames(Graphdata)
+NumFallValue <- as.numeric(Fall_Value)
+NumFallLead <- as.numeric(Fall_Leadership)
+NumFallPride <- as.numeric(Fall_Pride)
+NumSpringValue <- as.numeric(Spring_Value)
+NumSpringLead <- as.numeric(Spring_Leadership)
+NumSpringPride <- as.numeric(Spring_Pride)
 ```
 
-Now that I had my data in a melted format, I tried to create a very simple clustered bar graph. I created a new object with the average score for each question, which I called "Score." Then I used that data to create my barplot.
+Unfortunately, the as.numeric() function was converting blank responses into the number 1 and the response "Strongly Disagree (1)" into 11. So I wrote the below code to generate new objects with the correct values.
 
 ```{r}
-Score <- Graphdata$Score
+NumFallValue[NumFallValue == 1] <- NA
+NumFallValue[NumFallValue == 11] <- 1
+NumFallValueFinal <- na.omit(NumFallValue)
 ```
 
-I was able to plot this data just fine, but when I tried to use the {r, echo=FALSE} command to display it, I got an error message that said that "object 'Score' found found in Calls"
+I then repeated this for the other five variables.
 
-```
-barplot(Score, main="Satisfaction Over Time", ylab = "Average Response Score", names.arg=c("I feel valued - Fall", "I feel valued - Spring", "Principal is thoughtful - Fall", "Principal is thoughtful - Spring", "I am proud - Fall", "I am proud - Spring"),las=2)
+```{r}
+NumSpringValue[NumSpringValue == 1] <- NA
+NumSpringValue[NumSpringValue == 11] <- 1
+NumSpringValueFinal <- na.omit(NumSpringValue)
+NumFallLead[NumFallLead == 1] <- NA
+NumFallLead[NumFallLead == 11] <- 1
+NumFallLeadFinal <- na.omit(NumFallLead)
+NumSpringLead[NumSpringLead == 1] <- NA
+NumSpringLead[NumSpringLead == 11] <- 1
+NumSpringLeadFinal <- na.omit(NumSpringLead)
+NumFallPride[NumFallPride == 1] <- NA
+NumFallPride[NumFallPride == 11] <- 1
+NumFallPrideFinal <- na.omit(NumFallPride)
+NumSpringPride[NumSpringPride == 1] <- NA
+NumSpringPride[NumSpringPride == 11] <- 1
+NumSpringPrideFinal <- na.omit(NumSpringPride)
 ```
 
-Then I took this graph and tried to turn it into a clustered bar graph by adding colors and a legend. The colors appeared, but the legend didn't.
+Next I created a new object called "Graphdata" that had only six values: the mean scores for the six questions that I cared about.
+
+```{r}
+Graphdata <- c(mean(NumFallValueFinal),mean(NumSpringLeadFinal),mean(NumFallPrideFinal),mean(NumSpringPrideFinal),mean(NumFallLeadFinal),mean(NumSpringLeadFinal))
+```
+
+Finally I graphed that object. Viola! I had a bar graph.
 
 ```{r, echo=FALSE}
-barplot(Score, main="Satisfaction Over Time", ylab = "Average Response Score", names.arg=c("I feel valued - Fall", "I feel valued - Spring", "Principal is thoughtful - Fall", "Principal is thoughtful - Spring", "I am proud - Fall", "I am proud - Spring"),las=2, col=c("darkblue","red"), beside=TRUE, cex.names=0.5)
+barplot(Graphdata, main="Satisfaction Over Time", ylab = "Average Response Score", names.arg=c("I feel valued - Fall", "I feel valued - Spring", "Principal is thoughtful - Fall", "Principal is thoughtful - Spring", "I am proud - Fall", "I am proud - Spring"),las=2, col=c("darkblue","red"), beside=TRUE, cex.names=0.5, ylim=c(0,10))
 ```
 
-And that's as far as I got!
+It appears that staff satisfaction decreased over time on all three of the questions that I pulled out. Bad news for management :-(

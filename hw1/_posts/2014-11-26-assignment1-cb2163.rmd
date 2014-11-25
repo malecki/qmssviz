@@ -18,12 +18,11 @@ require ("ggplot2")
 ```
 ####alright, that seemed to work. Now its time to dance with some data. The donation/disease dataset is conveniently already available in the hw1 branch and in *.csv form. I'll need to read the file:
 ```{r}
-setwd(https://github.com/malecki/qmssviz.git/gh-pages/Lab1")
-donationdisease <-read.csv("donation-disease.csv")
+donationdisease <-read.csv("../../Lab1/donation-disease.csv")
 ```
 ##fail.... well, that definitely didn't work as I expected. 
 ####I get an error indicating that the file cannot be found. I need to point R in the right direction so we can chart this data already. I cheat a bit and use the RStudio UI to set the working directory to where I have a local copy of the required file and I see what it writes in the console. Let's drop that into the Rmd and try again. WINNING:
-```{r}
+```{r, eval=FALSE}
 donationdisease <-read.csv("Donation-isease.csv")
 ```
 ####No errors this time. Awesome. Now, lets see what this data looks like:
@@ -32,7 +31,7 @@ print(donationdisease)
 ```
 ####looks like everything is working so far. brilliant.... Let get a basic chart going:
 ```{r}
-qplot(Moneyraised, Name, data=donationdisease)
+qplot(MoneyRaised, Name, data=donationdisease)
 ```
 ####It says "object 'Moneyraised' not found." Ok.. But... I can see it right in front of me.. I mutter expletives. I scratch my head for a bit. Just got a fresh haircut this morning and it feels nice. Ah! I see in my printed table that's still staring at me from the console that 'Moneyraised' should have a capitalized "R," could it be that easy? 
 ```{r}
@@ -55,7 +54,7 @@ qplot(MoneyRaised, Name, data=donationdisease, size=Death,xlab="Millions of doll
 #Alright
 
 ####Successfully creating a chart was nice, but I can't figure out how to make it look good. I want to try to use G G P L O T in all of its glory:
-```{r}
+```{r, eval=FALSE}
 ggplot(donationdisease, aes(x=Death, y=MoneyRaised))
 ```
 #FAIL

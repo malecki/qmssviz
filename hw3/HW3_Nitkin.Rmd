@@ -38,8 +38,8 @@ plot(Fall_Value,Spring_Value)
 
 I did some googling and found a website that recommended that I melt the data in Excel, then import it into R already formatted for graphing. So that's what I did. 
 
-```
-Graphable_Data <- "Survey_Data_To_Graph.csv"
+```{r}
+Graphable_Data <- "../Survey_Data_To_Graph.csv"
 Graphdata <- read.csv(Graphable_Data)
 dim(Graphdata)
 colnames(Graphdata)
@@ -47,7 +47,7 @@ colnames(Graphdata)
 
 Now that I had my data in a melted format, I tried to create a very simple clustered bar graph. I created a new object with the average score for each question, which I called "Score." Then I used that data to create my barplot.
 
-```
+```{r}
 Score <- Graphdata$Score
 ```
 
@@ -59,8 +59,8 @@ barplot(Score, main="Satisfaction Over Time", ylab = "Average Response Score", n
 
 Then I took this graph and tried to turn it into a clustered bar graph by adding colors and a legend. The colors appeared, but the legend didn't.
 
-```
-barplot(Score, main="Satisfaction Over Time", ylab = "Average Response Score", names.arg=c("I feel valued - Fall", "I feel valued - Spring", "Principal is thoughtful - Fall", "Principal is thoughtful - Spring", "I am proud - Fall", "I am proud - Spring"),las=2, col=c("darkblue","red"), beside=TRUE)
+```{r, echo=FALSE}
+barplot(Score, main="Satisfaction Over Time", ylab = "Average Response Score", names.arg=c("I feel valued - Fall", "I feel valued - Spring", "Principal is thoughtful - Fall", "Principal is thoughtful - Spring", "I am proud - Fall", "I am proud - Spring"),las=2, col=c("darkblue","red"), beside=TRUE, cex.names=0.5)
 ```
 
 And that's as far as I got!

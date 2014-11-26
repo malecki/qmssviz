@@ -1,0 +1,22 @@
+body {
+  font: 12px sans-serif;
+  color: #121401;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #121401;
+  stroke-width: 2px;
+  shape-rendering: crispEdges;
+}
+
+.point {
+  stroke: grey;
+  stroke-width: 3px;
+  opacity: 0;
+}
+
+.point:hover{
+  opacity: .5;
+}

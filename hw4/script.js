@@ -1,56 +1,56 @@
-var margin = {top: 20, right: 55, bottom: 30, left: 40},
+/* set area */
+
+var margin = {top: 20, right: 55, bottom: 30, left: 40},  //set margin  
     width = 1000 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
-var x = d3.scale.ordinal()
+var x = d3.scale.ordinal()  //set type of scale and output
     .rangeRoundBands([0, width], .1);
 
-var y = d3.scale.linear()
+var y = d3.scale.linear()  //set type of scale and output
     .range([height, 0]);
 
-var xAxis = d3.svg.axis()
+var xAxis = d3.svg.axis()  //set scale and orientation
     .scale(x)
     .orient("bottom");
 
-var yAxis = d3.svg.axis()
+var yAxis = d3.svg.axis()  //set scale and orientation
     .scale(y)
     .orient("left");
 
-var area = d3.svg.area()
+var area = d3.svg.area()  //sets eventual stacked area, same x, stacked y
   .interpolate("cardinal")
   .x(function (d) { return x(d.label) + x.rangeBand() / 2; })
   .y0(function (d) { return y(d.y0); })
   .y1(function (d) { return y(d.y0 + d.y); });
 
-var svg = d3.select("body").append("svg")
+var svg = d3.select("body").append("svg")  //select body, prep svg
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var color = d3.scale.ordinal()
+var color = d3.scale.ordinal()  //use these ranges of colors
   .range(["#001c9c","#101b4d","#475003","#9c8305","#d3c47c"]);
 
-var stack = d3.layout.stack()
+var stack = d3.layout.stack()  //stack function baseline y0 on top of y value
     .offset("zero")
     .values(function (d) { return d.values; })
     .x(function (d) { return x(d.label); })
     .y(function (d) { return d.value; });
 
+/* loading data */
+
 var dataset;  //set global variable
-
-//insert variables 
-
-//loading data
 
 d3.csv("mdma_cast.csv", function(d) {  //d3.csv can take a callback function
   return {
-    year: d.year,
-    pure: +d.pure, //convert to numeric
-    more: +d.more,  //covert to numeric
-    less: +d.less, //convert to numeric
-    none: +d.none, //convert to numeric
-    unknown: +d.unknown  //convert to numeric;  date //new Date(+d.year, 0, 1)
+    "year": d.year,
+    "Pure MDMA": +d.pure, //convert to numeric
+    "More MDMA": +d.more,  //covert to numeric
+    "Less MDMA": +d.less, //convert to numeric
+    "No MDMA": +d.none, //convert to numeric
+    "Unknown": +d.unknown  //convert to numeric;  date //new Date(+d.year, 0, 1)
   };
 },
 
@@ -86,10 +86,10 @@ function(error, data) {
 
   x.domain(dataset.map(function(d) { return d.year; })); //categorical variable year for our x-axis domain
 
-  stack(seriesArr);  //yo describe this shit
+  stack(seriesArr);  //stacks it so that categorical variables have the same x and corresponding y0 and y values that stack on top of each other
   console.log("stacked seriesArr", seriesArr);
 
-  y.domain([0, d3.max(seriesArr, function(c) {  ///look through each series, each values, and establish min and max
+  y.domain([0, d3.max(seriesArr, function(c) {  //look through each series, each values, and establish min and max
     return d3.max(c.values, function(d) { return d.y0 + d.y; });
   })]);
 
@@ -119,22 +119,6 @@ function(error, data) {
     .style("fill", function (d) { return color(d.name); })
     .style("stroke", "grey");
 
-  /*var points = svg.selectAll(".seriesPoints")
-    .data(seriesArr)
-    .enter().append("g")
-    .attr("class", "seriesPoints");
-        
-  points.selectAll(".point")
-    .data(function (d) { return d.values; })
-    .enter().append("circle")
-    .attr("class", "point")
-    .attr("cx", function (d) { return x(d.label) + x.rangeBand() / 2; })
-    .attr("cy", function (d) { return y(d.y0 + d.y); })
-    .attr("r", "10px")
-    .style("fill",function (d) { return color(d.name); })
-    .on("mouseover", function (d) { showPopover.call(this, d); })
-    .on("mouseout",  function (d) { removePopovers(); })*/
-  
   var legend = svg.selectAll(".legend")
     .data(varNames.slice().reverse())
     .enter().append("g")
@@ -155,7 +139,23 @@ function(error, data) {
     .style("text-anchor", "end")
     .text(function (d) { return d; });
 
-  /*function removePopovers () {
+  var points = svg.selectAll(".seriesPoints")
+    .data(seriesArr)
+    .enter().append("g")
+    .attr("class", "seriesPoints");
+        
+  points.selectAll(".point")
+    .data(function (d) { return d.values; })
+    .enter().append("circle")
+    .attr("class", "point")
+    .attr("cx", function (d) { return x(d.label) + x.rangeBand() / 2; })
+    .attr("cy", function (d) { return y(d.y0 + d.y); })
+    .attr("r", "8px")
+    .style("fill",function (d) { return color(d.name); })
+    .on("mouseover", function (d) { showPopover.call(this, d); })
+    .on("mouseout",  function (d) { removePopovers(); })
+
+  function removePopovers () {
     $('.popover').each(function() {
       $(this).remove();
     }); 
@@ -169,12 +169,11 @@ function(error, data) {
       trigger: 'manual',
       html : true,
       content: function() { 
-        return "Quarter: " + d.label + 
-               "<br/>Rounds: " + d3.format(",")(d.value ? d.value: d.y1 - d.y0); }
+        return "Year: " + d.label + 
+               "<br/>Count: " + d3.format(",")(d.value ? d.value: d.y1 - d.y0); }
     });
     $(this).popover('show')
-  }*/
-
+  }
 });
 
 

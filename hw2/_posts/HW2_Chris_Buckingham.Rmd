@@ -1,0 +1,69 @@
+---
+title: "HW2"
+author: "Christopher Buckingham"
+output: html_document
+published: false
+---
+##### For HW2 we have been asked to combine and manipulate data from multiple source files
+
+##### Require plyr and read the first .csv file:
+
+```{r}
+require("plyr")
+```
+
+```{r}
+setwd("~/Documents/git/qmssviz/hw2")
+data1 <- read.csv("sample_health_facilities.csv")
+```
+
+##### Cut down to something that only contains data related to the Southern Zones in the sample health facilities dataset:
+
+```{r}
+south <- grep("South", data1[,"zone"], fixed = TRUE)
+southerndata1 <- data1[south, ]
+```
+
+##### Now read the second data file
+
+```{r}
+setwd("~/Documents/git/qmssviz/hw2")
+data2 <- read.csv("lgas.csv")
+```
+
+##### Isolate population numbers with unique identifier:
+
+```{r}
+population <- data2[data2$lga_id, c("lga_id","pop_2006")]
+```
+
+##### Create one unified dataset:
+
+```{r}
+merged <- merge(southerndata1, population, by = "lga_id")
+```
+
+##### Calculate number of FT medical personnel in each state one variable for doctors another for nurses
+
+```{r}
+MedPersonnel <- ddply(merged, "state", summarise, Drs = sum(num_doctors_fulltime, na.rm = TRUE), Nurses = sum(num_nurses_fulltime, na.rm = TRUE))
+```
+
+#### Also show state populations alongside medical personnel counts:
+
+```{r}
+statepopulation <- aggregate(data2$pop_2006 ~ data2$state, FUN = sum)
+colnames(statepopulation) <- c("state", "State Population")
+MedPersonnel <- join(MedPersonnel, statepopulation, by = "state", type = "left", match = "first")
+```
+
+#### Sort by population:
+
+```{r}
+MedPersonnel.sorted <- MedPersonnel[order(MedPersonnel[, 4], decreasing = TRUE), ]
+```
+
+##### Show results:
+```{r}
+print(MedPersonnel.sorted)
+```

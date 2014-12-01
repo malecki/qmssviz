@@ -5,74 +5,86 @@ published: false
 output: html_document
 tags: hw1
 ---
-#Homework 1
-##Christopher Buckingham
+##### In attempting to complete this assignment, I created a new project in RStudio, created a new Rmd file, and added some descriptive information to the top of the document. With an *.Rmd file ready I start making some charts. I am going to take the easy way out and work with the donation/disease dataset because it saves the effort of having to go out and find an interesting dataset (though there is no shortage of these)
 
-#### In attempting to complete this assignment, I created a new project in RStudio, created a new Rmd file, and added some descriptive information to the top of the document.
+#####I know that in order to produce something on the order of what we tinkered with in the first couple of classes, i'll need the ggplot package installed and ready to go:
 
-####ok, now I have my *.Rmd file and am ready to start making some charts. I am going to take the easy way out and work with the donation/disease dataset because it saves the effort of having to go out and find an interesting dataset (though there is no shortage of these)
-
-####I know that in order to produce something on the order of what we tinkered with in the first couple of classes, i'll need the gglot package installed and ready to go:
 ```{r}
 require ("ggplot2")
 ```
-####alright, that seemed to work. Now its time to dance with some data. The donation/disease dataset is conveniently already available in the hw1 branch and in *.csv form. I'll need to read the file:
+
+#####Alright, that seemed to work. Now its time to dance with some data. The donation/disease dataset is conveniently already available in the hw1 branch and in *.csv form. I'll need to read the file:
+
+```{r, eval=FALSE}
+donationdisease <-read.csv("Donation-disease.csv")
+```
+
+####fail.... well, that definitely didn't work as I expected. 
+#####I get an error indicating that the file cannot be found. I need to point R in the right direction so we can chart this data already. I add a bit of location information in front of the filename and R successfully reads the file. WINNING:
+
 ```{r}
 donationdisease <-read.csv("../../Lab1/donation-disease.csv")
 ```
-##fail.... well, that definitely didn't work as I expected. 
-####I get an error indicating that the file cannot be found. I need to point R in the right direction so we can chart this data already. I cheat a bit and use the RStudio UI to set the working directory to where I have a local copy of the required file and I see what it writes in the console. Let's drop that into the Rmd and try again. WINNING:
-```{r, eval=FALSE}
-donationdisease <-read.csv("Donation-isease.csv")
-```
-####No errors this time. Awesome. Now, lets see what this data looks like:
+
+#####No errors this time. Awesome. Now, lets see what this data looks like:
+
 ```{r}
 print(donationdisease)
 ```
-####looks like everything is working so far. brilliant.... Let get a basic chart going:
+
+#####looks like everything is working so far. brilliant.... Let get a basic chart going using qplot:
+
 ```{r}
 qplot(MoneyRaised, Name, data=donationdisease)
 ```
-####It says "object 'Moneyraised' not found." Ok.. But... I can see it right in front of me.. I mutter expletives. I scratch my head for a bit. Just got a fresh haircut this morning and it feels nice. Ah! I see in my printed table that's still staring at me from the console that 'Moneyraised' should have a capitalized "R," could it be that easy? 
-```{r}
-qplot(MoneyRaised, Name, data=donationdisease)
-```
-####Two of the first three words of the Team America World Police theme song run through my mind. I see dots. Amazing. This is the goal. Dots. I remember talking about this in class. Breasts are important.. but hearts? Not so much. You can lie about the data but data never lies. It is what it is. Lets jazz this thing up a bit:
+
+#####On the first attempt, I was presented with an error: "object 'Moneyraised' not found." It turns out that 'Moneyraised' should have a capitalized "R," so I make the change and continue working. My qplot line is now working. Two of the first three words of the Team America World Police theme song run through my mind. I see dots. Amazing. This is the goal. Dots. I remember talking about this in class. Breasts are important.. but hearts? Not so much. You can lie about the data but data never lies. It is what it is. Lets jazz this thing up a bit:
+
 ```{r}
 qplot(MoneyRaised, Name, data=donationdisease, size=Death)
 ```
-####That looks better. More informative. I revisit the breasts vs. hearts thought. The death scale looks like death. Terrible. Need to google how to fix this thing:
+
+#####That looks better. More informative. I revisit the breasts vs. hearts thought. The death scale looks like death. Terrible. Need to google how to fix this:
+
 ```{r}
 qplot(MoneyRaised, Name, data=donationdisease, size=Death,xlab="Millions of dollars raised",ylab="Lives claimed")
 ```
-####Good news first: In my noodling I figured out how to replace the default labeling. Sweet. Baby steps. But -- I still have no idea how to fix the death scale and scientific notation reminds me of chemistry. Exasperated sigh..
+
+#####Good news first: In my noodling I figured out how to replace the default labeling. Sweet. Baby steps. But -- I still have no idea how to fix the death scale and scientific notation reminds me of chemistry. Exasperated sigh..
+
 ```{r}
 qplot(MoneyRaised, Name, data=donationdisease, size=Death,xlab="Millions of dollars raised",ylab="Lives claimed", color=Name)
 ```
-####More colorful
 
-#Alright
+#####More colorful
+###Alright
+#####Successfully creating a chart was nice, but I can't figure out how to make it look good. I want to try to utilize G G P L O T in all of its glory:
 
-####Successfully creating a chart was nice, but I can't figure out how to make it look good. I want to try to use G G P L O T in all of its glory:
 ```{r, eval=FALSE}
 ggplot(donationdisease, aes(x=Death, y=MoneyRaised))
 ```
-#FAIL
 
-####Seems GGPLOT requires a bit more handling:
+###FAIL
+#####Seems GGPLOT requires a bit more handling:
+
 ```{r}
 ggplot(donationdisease, aes(x=Death, y=MoneyRaised)) +
 geom_point(shape=1)
 ```
-####Still looks terrible... I am going to rescale deaths:
+
+#####Still looks terrible... Let's rescale deaths:
+
 ```{r}
 donationdisease$Death<-donationdisease$Death/1000
 
 ggplot(donationdisease, aes(x=Death, y=MoneyRaised)) +
 geom_point(shape=1)
 ```
-####I can live with that, lets tinker around a bit:
+
+#####I can live with that, lets tinker around a bit more:
+
 ```{r}
 ggplot(donationdisease, aes(y=Death, x=MoneyRaised, color=Name, size=MoneyRaised)) + geom_point()+ labs(title = "Deaths by Cause and Donations to Related Charities",x = "Money Raised ($mm) for Related Charity",y = "Number of deaths (000s)")
 ```
-####Okay, that is some progress. It's not sexy but it displays the data in a meaningful way. Now I will try to GIT SUBMIT this thing...
+
+#####Okay, that is some progress. It's not sexy but it displays the data in a meaningful way. Now that I know how to properly git submit this thing, we are moving forward.

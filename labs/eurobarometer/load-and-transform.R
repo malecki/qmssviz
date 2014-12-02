@@ -36,7 +36,11 @@ loadAndTransform41 <- function(file){
 }
 
 transform41 <- function(d){
-  d
+  ## which varis to keep
+  ## which var is weight var
+  d  <- d %>% 
+    doColumnSubset(d, columnsToKeep) %>% # dplyr magritter
+    doRowSubset
 }
 
 transform411 <- function(d){

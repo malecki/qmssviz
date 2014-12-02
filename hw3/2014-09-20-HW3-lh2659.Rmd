@@ -1,0 +1,100 @@
+---
+title: "Homework 3"
+author: "Lu Han: lh2659"
+date: "October 20, 2014"
+output: html_document
+---
+
+### 1. Introduction
+
+In this homework, I looked into the questionnaires from AsiaBarometer, who conducts yearly comparative survey on daily lives of ordinary people (bumi putra) and their relationships to family, neighborhood, workplace, social and political institutions and market place covering East, Southeast, South and Central Asia. (More information can be found at <https://www.asiabarometer.org>
+
+### 2. Data Source
+
+After comparing the questionnaire of 2006 and 2005, I noticed that Question 18 in 2005's questionnaire is slightly different from Question 19 in 2006's questionnaire in that they offered different options. (The detailed questions are shown as follows.) 
+
+*Q18 of Questionnaire 2005:*
+```
+Throughout the world, some people also see themselves as belonging to a transnational group
+(such as Asian, people of Chinese ethnicity, people who speak the same language or practice the same religion). Do you identify with any transnational group?
+1. Asian
+2. Other transnational identity (please specify: )
+3. No, I don’t identify particularly with any transnational group
+9. Don’t know
+```
+*Q19 of Questionnaire 2006:*
+```
+Throughout the world, some people also see themselves as belonging to a transnational
+group (such as Asian, people of Chinese ethnicity, people who speak the same language or practice the same religion). Do you identify with any transnational group? (SA)
+1. Asian
+2. Ethnic group that has common genealogy or ancestry
+3. Language group that I am speaking
+4. Religious group that I am believing in and practicing
+5. Other transnational identity (please specify: )
+6. No, I don’t identify particularly with any transnational group
+9. Don’t know
+```
+
+This difference is likely to lead to different responses from the audience. In order to show the difference, I make use of ggplot to visualize the survey results.
+
+### 3. Analysis
+
+```{r functions-of-data-processing}
+LoadSurvey <- function(surveyname){
+  #'@param surveyname: a string describing the survey name and its direct filename under current directory.
+  surveypath <- paste("/Users/HanLu/Documents/Unsorted/QMSS.Vis",surveyname, sep="/")
+  #note: we can use getwd() to make this function more general, but getwd() can't be used in markdown.
+  msurvey <- read.csv(surveypath, header=T, stringsAsFactors=F)
+  return(msurvey)
+}
+
+ProcessData <- function(data, variable, ind){
+  #'@param data: a data.frame containing our input survey results.
+  #'@param variable: a string of the question name to extract results for.
+  #'@param ind: a number to indicate this survey data.
+  col <- match(variable, colnames(data))
+  Qdata <- data[data[,col]!="#NULL!",col]
+  Qdata <- as.numeric(Qdata)
+  Year <- rep(ind, length(Qdata))
+  Qdata <- data.frame(cbind(Qdata, Year))
+  colnames(Qdata) <- c("Answer", "Year")
+  return(Qdata)
+}
+
+CombineData <- function(data1, data2){
+  #'@param data1: the first data.frame.
+  #'@param data2: the second data.frame.
+  if (dim(data1)[2]==dim(data2)[2]) {
+    CD <- rbind(data1, data2)
+    print(table(CD$Answer, CD$Year))
+    return(CD)
+  } else {
+    print("Dimension conflicts!")
+  }
+}
+
+Survey2005 <- LoadSurvey("hw3/AsiaBarometer2005.csv")
+Survey2006 <- LoadSurvey("hw3/AsiaBarometer2006.csv")
+Q18.2005 <- ProcessData(Survey2005, "Q18", 2005)
+Q19.2006 <- ProcessData(Survey2006, "Q19", 2006)
+CQ1819 <- CombineData(Q18.2005, Q19.2006)
+```
+
+After the above data pre-processing, we can apply ggplot2 to make visulization about the survey result. To begin with, we can make a stacked barplot to compare the result of 2005 with the result of 2006.
+
+```{r barplot1}
+library(ggplot2)
+ggplot(data=CQ1819, aes(factor(Year), fill=factor(Answer)))+geom_bar(width=0.5)+xlab("Year")+scale_fill_discrete("Answer")
+```
+
+From the above plot, we can see that more people answered this question in 2005 compared with 2006. In order to compare people's response to each options, it will be better if we look into the percentage. Thus, we can draw another barplot to show percentage of different options.
+
+```{r barplot2}
+ggplot(data=CQ1819, aes(factor(Year), fill=factor(Answer)))+geom_bar(width=0.5, position="fill")+xlab("Year")+ylab("Percent")+scale_fill_discrete("Answer")
+```
+
+Here, it's more obvious that the percentages of people choosing 1, 2 and 3 decrease a little, but many people who chose 9 in 2005 changed to 6 in 2006. This trend is even more clearly shown in the following histograms, where colors chang in accordance with density amount.
+
+```{r histogram}
+ggplot(data=CQ1819, aes(x=Answer))+geom_histogram(aes(y=..density.., fill=..density..), binwidth=1)+scale_fill_gradient("Density", low = "green", high = "red")+facet_wrap(~Year)
+```

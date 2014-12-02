@@ -1,0 +1,56 @@
+---
+title: "Homework 2"
+author: "Lu Han: lh2659"
+date: "September 25, 2014"
+output: html_document
+published: false
+tags: hw2
+---
+## Step 1
+Go to this link and download the file into the working directory.
+
+```{r Data-importing}
+lgas.df <- read.csv("/Users/HanLu/Documents/Unsorted/QMSS.Vis/hw2/lgas.csv", header=T, stringsAsFactors=F)
+summary(lgas.df)
+```
+
+## Step 2
+Produce a new data.frame, which has the following properties:
+
+1. From the Nigeria Facilities Inventory data (sample_data from section 1.5.1), select all facilities located in the Southern zones of Nigeria.
+```{r Dissection-Southern}
+shf.df <- read.csv("/Users/HanLu/Documents/Unsorted/QMSS.Vis/labs/tutorial/sample_health_facilities.csv", header=T, stringsAsFactors=F)
+summary(shf.df)
+Sshf.df <- shf.df[grepl("South",shf.df$zone),]
+dim(Sshf.df)
+head(Sshf.df)
+```
+We get 26 observations, whose zones are all contain "South". Thus, those facilities in Sshf.df are all facilities located in the Southern zones of Nigeria.
+
+2. Incorporate the pop2006 column from the lgas.csv file into the new data.frame containing only those facilities located in Southern Nigeria. (Hint: your id column is lga_id).
+```{r Merge-Southern}
+plgas.df <- lgas.df[,c("lga_id", "pop_2006")]
+SP.df <- merge(Sshf.df, plgas.df, by="lga_id")
+dim(SP.df)
+head(SP.df)
+```
+A new column called pop_2006 is attached at the end of SP.df date frame.
+
+3. Calculate the total number of full time nurses and doctors for all health facilities in each state.
+```{r Calculation-health}
+SP.df$total_staff <- SP.df$num_nurses_fulltime+SP.df$num_doctors_fulltime
+sstaff.df <- aggregate(cbind(total_staff,pop_2006) ~ state, data=SP.df, sum)
+sstaff.df
+```
+
+4. Sort the resulting dataset by state population, in descending order.
+```{r Sort-result}
+ostaff.df <- sstaff.df[order(sstaff.df$pop_2006, decreasing=T),-3]
+rownames(ostaff.df) <- NULL
+```
+
+5. Show the results!
+```{r Result}
+ostaff.df
+```
+The final data frame is the above table, which lists each state's total full-time doctors and nurses and orders states according to the descending state population.

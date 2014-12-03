@@ -4,7 +4,12 @@
 <html lang="en">
   <head>
     <div><p>Smartphone Use Among Cellphone Users By Race</p>
-    <p class="subtitle">January 2014, Pew Research Center</p></div>
+    <p class="subtitle">January 2014, Pew Research Center</p>
+  <form>
+      <label><input type="radio" name="mode" value="grouped">Grouped</label>
+      <label><input type="radio" name="mode" value="stacked" checked> Stacked          
+      </label>
+  </form></div>
   	<meta charset="utf-8">
 		<title>2014-12-03 HW4 Florence Lee</title>
     <style type="text/css">
@@ -17,6 +22,13 @@
       text-align: center;
       line-height: 30%;
     }
+    form {
+      position: absolute;
+      left: 50px;
+      top: 80px;
+      font-family: "Franklin Gothic Medium";
+      font-size: 14px;
+    }    
     .subtitle {
       font-family: "Franklin Gothic Medium";
       font-size:18px;
@@ -50,18 +62,18 @@
 			//Data
 			var dataset = [
 				[
-					{ x: 0, y: 20 },
-					{ x: 1, y: 100 },
-					{ x: 2, y: 43 },
-					{ x: 3, y: 11 },
-					{ x: 4, y: 689 }
+					{ x: 0, y: 20},
+					{ x: 1, y: 100},
+					{ x: 2, y: 43},
+					{ x: 3, y: 11},
+					{ x: 4, y: 689}
 				],
 				[
-					{ x: 0, y: 35 },
-					{ x: 1, y: 164 },
-					{ x: 2, y: 79 },
-					{ x: 3, y: 18 },
-					{ x: 4, y: 1062 }
+					{ x: 0, y: 35},
+					{ x: 1, y: 164},
+					{ x: 2, y: 79},
+					{ x: 3, y: 18},
+					{ x: 4, y: 1062}
 				]
 			];
       
@@ -94,7 +106,7 @@
 				.range([h-vpadding, hpadding]);        
   	     
 			// Color scheme
-			var colors = ["#CCCCCC", "#377ACB"];
+			var colors = ["#377ACB", "#CCCCCC"];
 		
 			// Create SVG & map data onto SVG
 			var svg = d3.select("body")     //select <body>
@@ -138,20 +150,18 @@
 				.attr("height", function(d) {
 					return yScale(d.y0)-yScale(d.y);
 				})
-				.attr("width", xScale.rangeBand());
+				.attr("width", xScale.rangeBand());		
         
     svg.append("g")
       .attr("class", "axis")
       .attr("transform", "translate(" + hpadding + ",0)")
       .call(yAxis);
+      
     svg.append("g")
         .attr("class", "axis")
         .attr("transform", "translate(0, " + (h - vpadding) + ")")
         .call(xAxis);
-        
-        
-      // Add text
-						
+
 		</script>
   </body>
 </html>

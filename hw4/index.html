@@ -3,7 +3,7 @@
 
 <html lang="en">
   <head>
-		<meta charset="utf-8">
+  	<meta charset="utf-8">
 		<title>2014-11-20 HW4 Florence Lee</title>
 		<link rel="stylesheet" href="style.css">
 		<script type="text/javascript" src="d3.v3.js"></script>
@@ -15,6 +15,7 @@
 			var w = 700;
 			var h = 500;
 			var barPadding = 1;
+      var padding = 50;
 	
 			//Data
 			var dataset = [
@@ -51,19 +52,26 @@
 
 			// Scales
 			var xScale = d3.scale.ordinal()
-				.domain(d3.range(dataset[0].length))
-				.rangeRoundBands([0, w], 0.05);
-		
+				            .domain(d3.range(dataset[0].length))
+				            .rangeRoundBands([0, w], 0.05);
+		  
 			var yScale = d3.scale.linear()
-				.domain([0,				
-					d3.max(dataset, function(d) {
-						return d3.max(d, function(d) {
-							return d.y0 + d.y;
-						});
-					})
-				])
-				.range([0, h]);
-				
+				.domain([0, d3.max(dataset, function(d) {
+						              return d3.max(d, function(d) {
+							                          return d.y0 + d.y;
+						                            });
+					                 })])
+				.range([h,0]);        
+  		
+      var hScale = d3.scale.linear()
+				.domain([0, d3.max(dataset, function(d) {
+						              return d3.max(d, function(d) {
+							                          return d.y0 + d.y;
+						                            });
+					                 })])
+				.range([0, h]);           
+        
+        
 			// Color scheme
 			var colors = d3.scale.category20();
 		
@@ -79,7 +87,7 @@
 				.enter()                        //creates space for each data value
 				.append("g")                    //appends data into space
 				.style("fill", function(d, i) { // custom style
-					return colors(i);
+          return colors(i);
 				});
 	
       // Add bars
@@ -93,12 +101,14 @@
 					return xScale(i);
 				})
 				.attr("y", function(d) {
-					return yScale(d.y0);
-				})
-				.attr("height", function(d) {
 					return yScale(d.y);
 				})
+				.attr("height", function(d) {
+					return hScale(d.y);
+				})
 				.attr("width", xScale.rangeBand());
+        
+      // Add text
 						
 		</script>
   </body>

@@ -15,12 +15,13 @@ str(ereadDat2)
 ##Clean up smartphone
 ereadDat2$smartphone <- ereadDat2$smart1
 
-for (i in which(ereadDat2$smart1==8|ereadDat2$smart1==9)) {
-  ereadDat2$smartphone[i]=NA
-}
-
-for (i in which(ereadDat2$smart1==2)){
-  ereadDat2$smartphone[i]=0
+for(i in (1:length(ereadDat2$smart1))) {
+  if (ereadDat2$smart1[i]==8|ereadDat2$smart1[i]==9) {
+    ereadDat2$smartphone[i]=NA
+  }
+  if (ereadDat2$smart1[i]==2) {
+    ereadDat2$smartphone[i]=0
+  }
 }
 
 ereadUse <- subset(ereadDat2, select=c(psraid, smartphone, race))
@@ -32,26 +33,27 @@ ereadUse <- subset(ereadDat2, select=c(psraid, smartphone, race))
 ereadUse$race2 <- ereadUse$race
 str(ereadUse)
 
-for (i in which(ereadUse$race==1)) {
-  ereadUse$race2[i]="White"
+for (i in (1:length(ereadUse$race))) {
+  if (ereadUse$race[i]==1) {
+    ereadUse$race2[i]="White"
+  }
+  if (ereadUse$race[i]==2) {
+    ereadUse$race2[i]="Black"
+  }
+  if (ereadUse$race[i]==3) {
+    ereadUse$race2[i]="Asian/Pacific Islander"
+  }
+  if (ereadUse$race[i]==4|ereadUse$race[i]==6) {
+    ereadUse$race2[i]="Mixed race/Other"
+  }
+  if (ereadUse$race[i]==5) {
+    ereadUse$race2[i]="Native American"
+  }
+  if (ereadUse$race[i]==9) {
+    ereadUse$race2[i]=NA
+  }
 }
-for (i in which(ereadUse$race==2)) {
-  ereadUse$race2[i]="Black"
-}
-for (i in which(ereadUse$race==3)) {
-  ereadUse$race2[i]="Asian/Pacific Islander"
-}
-for (i in which(ereadUse$race==4|ereadUse$race==6)) {
-  ereadUse$race2[i]="Mixed race/Other"
-}
-for (i in which(ereadUse$race==5)) {
-  ereadUse$race2[i]="Native American"
-}
-for (i in which(ereadUse$race==9)) {
-  ereadUse$race2[i]=NA
-}
-
-
+  
 #Create function to check for NAs
 check <- function(data) {
   NAs <- sum(is.na(data))
@@ -74,13 +76,15 @@ str(ereadUse)
 #Tidy up 
 head(ereadUse)
 cts <- as.data.frame(table(ereadUse$race2))
-names(cts) <- c("Race", "Cellphone")
+names(cts) <- c("Race", "Total")
 cts
 dat <- aggregate(ereadUse$smartphone, list(ereadUse$race2), mean)
 names(dat) <- c("Race", "% Smartphone")
 dat
 eread <- merge(cts, dat, by = "Race")
-eread$Smartphone <- eread[,"Cellphone"] * eread[, "% Smartphone"]
+eread$Smartphone <- eread[,"Total"] * eread[, "% Smartphone"]
+eread[, "% Regular"] <- 1-eread[,"% Smartphone"]
+eread$Regular <- eread[, "Total"] * eread[, "% Regular"]
 eread
 
 #Export to csv

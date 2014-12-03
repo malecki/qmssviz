@@ -5,7 +5,20 @@
   <head>
   	<meta charset="utf-8">
 		<title>2014-11-20 HW4 Florence Lee</title>
-		<link rel="stylesheet" href="style.css">
+    <style type="text/css">
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: black;
+        stroke-width: 2px;
+        shape-rendering: crispEdges;
+    }
+    .axis text {
+        fill: black;
+        font-family: "Franklin Gothic Medium";
+        font-size: 11px;
+    }
+    </style>
 		<script type="text/javascript" src="d3.v3.js"></script>
 	</head>
 	<body>
@@ -15,7 +28,7 @@
 			var w = 700;
 			var h = 500;
 			var barPadding = 1;
-      var padding = 50;
+      var padding = 40;
 	
 			//Data
 			var dataset = [
@@ -27,11 +40,11 @@
 					{ x: 4, y: 689 }
 				],
 				[
-					{ x: 0, y: 15 },
-					{ x: 1, y: 64 },
-					{ x: 2, y: 36 },
-					{ x: 3, y: 7 },
-					{ x: 4, y: 373 }
+					{ x: 0, y: 35 },
+					{ x: 1, y: 164 },
+					{ x: 2, y: 79 },
+					{ x: 3, y: 18 },
+					{ x: 4, y: 1062 }
 				]
 			];
       
@@ -53,25 +66,16 @@
 			// Scales
 			var xScale = d3.scale.ordinal()
 				            .domain(d3.range(dataset[0].length))
-				            .rangeRoundBands([0, w], 0.05);
+				            .rangeRoundBands([padding, w-padding], 0.05);
 		  
 			var yScale = d3.scale.linear()
 				.domain([0, d3.max(dataset, function(d) {
 						              return d3.max(d, function(d) {
-							                          return d.y0 + d.y;
+							                          return d.y;
 						                            });
 					                 })])
-				.range([h,0]);        
-  		
-      var hScale = d3.scale.linear()
-				.domain([0, d3.max(dataset, function(d) {
-						              return d3.max(d, function(d) {
-							                          return d.y0 + d.y;
-						                            });
-					                 })])
-				.range([0, h]);           
-        
-        
+				.range([h-padding, padding]);        
+  	     
 			// Color scheme
 			var colors = d3.scale.category20();
 		
@@ -89,6 +93,15 @@
 				.style("fill", function(d, i) { // custom style
           return colors(i);
 				});
+        
+    // Add axes
+    var yAxis = d3.svg.axis()
+                      .scale(yScale)
+                      .orient("left");
+
+    var xAxis = d3.svg.axis()
+                      .scale(xScale)
+                      .orient("bottom");
 	
       // Add bars
 			var rects = groups.selectAll("rect")
@@ -104,9 +117,19 @@
 					return yScale(d.y);
 				})
 				.attr("height", function(d) {
-					return hScale(d.y);
+					return yScale(d.y0)-yScale(d.y);
 				})
 				.attr("width", xScale.rangeBand());
+        
+    svg.append("g")
+      .attr("class", "axis")
+      .attr("transform", "translate(" + padding + ",0)")
+      .call(yAxis);
+    svg.append("g")
+        .attr("class", "axis")
+        .attr("transform", "translate(0, " + (h - padding) + ")")
+        .call(xAxis);
+        
         
       // Add text
 						

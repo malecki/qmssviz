@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+
+<html lang="en">
+  <head>
+    <div><p>Smartphone Use Among Cellphone Users By Race</p>
+    <p class="subtitle">January 2014, Pew Research Center</p>
+  <form>
+      <label><input type="radio" name="mode" value="grouped">Grouped</label>
+      <label><input type="radio" name="mode" value="stacked" checked> Stacked          
+      </label>
+  </form></div>
+  	<meta charset="utf-8">
+		<title>2014-12-03 HW4 Florence Lee</title>
+    <style type="text/css">
+    div {
+      width: 700px;
+    }
+    p {
+      font-family: "Franklin Gothic Medium";
+      font-size: 23px;
+      text-align: center;
+      line-height: 30%;
+    }
+    form {
+      position: absolute;
+      left: 50px;
+      top: 80px;
+      font-family: "Franklin Gothic Medium";
+      font-size: 14px;
+    }    
+    .subtitle {
+      font-family: "Franklin Gothic Medium";
+      font-size:18px;
+      text-align: center;
+    }
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: black;
+        stroke-width: 2px;
+        shape-rendering: crispEdges;
+    }
+    .axis text {
+        fill: black;
+        font-family: "Franklin Gothic Medium";
+        font-size: 11px;
+    }
+    </style>
+		<script type="text/javascript" src="d3.v3.js"></script>
+	</head>
+	<body>
+		<script type="text/javascript">
+	
+			//Width and height
+			var w = 700;
+			var h = 500;
+			var barPadding = 1;
+      var hpadding = 40;
+      var vpadding = 20;
+	
+			//Data
+			var dataset = [
+				[
+					{ x: 0, y: 20},
+					{ x: 1, y: 100},
+					{ x: 2, y: 43},
+					{ x: 3, y: 11},
+					{ x: 4, y: 689}
+				],
+				[
+					{ x: 0, y: 35},
+					{ x: 1, y: 164},
+					{ x: 2, y: 79},
+					{ x: 3, y: 18},
+					{ x: 4, y: 1062}
+				]
+			];
+      
+      // If I was directly reading from the CSV:
+      // var dataset;
+      // d3.csv(“ereadData.csv”, function(error, data) {
+      //   if (error) {
+      //  	console.log(error);
+      //	} else {
+      //		console.log(data);
+      //	dataset = data;
+      //	}
+      // });
+
+			// Stacked Data
+			var stack = d3.layout.stack();
+			stack(dataset);
+
+			// Scales
+			var xScale = d3.scale.ordinal()
+				            .domain(d3.range(dataset[0].length))
+				            .rangeRoundBands([hpadding, w-hpadding], 0.05);
+		  
+			var yScale = d3.scale.linear()
+				.domain([0, d3.max(dataset, function(d) {
+						              return d3.max(d, function(d) {
+							                          return d.y;
+						                            });
+					                 })])
+				.range([h-vpadding, hpadding]);        
+  	     
+			// Color scheme
+			var colors = ["#377ACB", "#CCCCCC"];
+		
+			// Create SVG & map data onto SVG
+			var svg = d3.select("body")     //select <body>
+						.append("svg")            //attach svg object to <body>
+						.attr("width", w)         //set width of svg
+						.attr("height", h);       //set height of svg
+	
+			// Group
+			var groups = svg.selectAll("g") 
+				.data(dataset)                  //load data
+				.enter()                        //creates space for each data value
+				.append("g")                    //appends data into space
+				.style("fill", function(d, i) { // custom style
+          return colors[i];
+				});
+        
+    // Add axes
+    var yAxis = d3.svg.axis()
+                      .scale(yScale)
+                      .orient("left");
+
+    var xAxis = d3.svg.axis()
+                      .scale(xScale)
+                      .tickValues(["Asian/Pacific Islander", "Black", "Mixed/Other", 
+                      "Native American", "White"])
+                      .orient("bottom");
+	
+      // Add bars
+			var rects = groups.selectAll("rect")
+				.data(function(d) { 
+          return d; 	
+				})
+				.enter()
+				.append("rect")
+				.attr("x", function(d, i) {
+					return xScale(i);
+				})
+				.attr("y", function(d) {
+					return yScale(d.y);
+				})
+				.attr("height", function(d) {
+					return yScale(d.y0)-yScale(d.y);
+				})
+				.attr("width", xScale.rangeBand())		
+  		  .on("mouseover", function() {
+			   		d3.select(this)
+			   			.attr("opacity", 0.5);
+			   })
+        .on("mouseout", function(d) {
+            d3.select(this)
+              .transition()
+              .duration(250)
+              .attr("opacity", 1.0); // edit to select everything but 'this'
+        });
+              
+    svg.append("g")
+      .attr("class", "axis")
+      .attr("transform", "translate(" + hpadding + ",0)")
+      .call(yAxis);
+      
+    svg.append("g")
+        .attr("class", "axis")
+        .attr("transform", "translate(0, " + (h - vpadding) + ")")
+        .call(xAxis);
+
+		</script>
+  </body>
+</html>

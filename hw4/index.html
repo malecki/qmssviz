@@ -150,8 +150,18 @@
 				.attr("height", function(d) {
 					return yScale(d.y0)-yScale(d.y);
 				})
-				.attr("width", xScale.rangeBand());		
-        
+				.attr("width", xScale.rangeBand())		
+  		  .on("mouseover", function() {
+			   		d3.select(this)
+			   			.attr("opacity", 0.5);
+			   })
+        .on("mouseout", function(d) {
+            d3.select(this)
+              .transition()
+              .duration(250)
+              .attr("opacity", 1.0); // edit to select everything but 'this'
+        });
+              
     svg.append("g")
       .attr("class", "axis")
       .attr("transform", "translate(" + hpadding + ",0)")

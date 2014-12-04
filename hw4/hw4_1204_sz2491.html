@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html> /*Q1: what does lang="en" do?; Q1: why this /**/ doesnt's work?*/
+<html lang="en"> //Q1: what does lang="en" do?; Q2: why doesn't this // work?
  <head>
+  <meta charset="utf-8"> 
+  //why there is no end meta for meta
   <title>hw4-1204-sz2491</title>
   <script type="text/javascript" src="d3/d3.v3.js"></script>
   <style type="text/css">
@@ -69,7 +71,7 @@
    #notes span {
     font-weight: bold;
     margin-bottom: 0.5em;
-   } /*this won't work. why???*/
+   } /*this won't work. why*/
 
    #notes p {
     margin: 0.5em;
@@ -80,10 +82,6 @@
  </head>
 
  <body>
-  <script type="text/javascript">
-  d3.select("body").append("p").text("New paragraph!");
-  </script>
-  
   <div>
    <h2 id="graph">Describe the graph
     <p>
@@ -129,5 +127,32 @@
   </h3>
  </div>
 
+  <script type="text/javascript">
+  //there goes D3 code
+   d3.select("body").append("p").text("New paragraph!");
+   var canvas = d3.select("body")
+                  .append("svg")
+                  .attr("height",500)
+                  .attr("width",500);
+
+   var circle = canvas.append("circle")
+                .attr("cx",250)
+                .attr("cy",250)
+                .attr("r",50)
+                .attr("fill","red");
+
+   var rect = canvas.append("rect")
+                .attr("width",100)
+                .attr("height",50)
+                .attr("fill","blue");             
+
+   var line = canvas.append("line")
+                .attr("x1",0)
+                .attr("y1",100)
+                .attr("x2",400)
+                .attr("y2",400)
+                .attr("stroke","green")
+                .attr("stroke-width",10);  
+  </script>
  </body>
 </html>

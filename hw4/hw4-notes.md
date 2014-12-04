@@ -69,9 +69,8 @@ In order to map my data onto SVG elements, I need to create the svg object and t
 					return colors(i);
 				});
         
-## Next Steps
-(1) Flip the bar graph... I think I have to play around with the height and the data values.
-(2) Create axes, labels, and a legend.
+## Preview Graph
+## http://embed.plnkr.co/V3YoQadeq247vOIfOrfd/preview
 	
   
 

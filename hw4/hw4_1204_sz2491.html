@@ -1,158 +1,28 @@
 <!DOCTYPE html>
-<html lang="en"> //Q1: what does lang="en" do?; Q2: why doesn't this // work?
- <head>
-  <meta charset="utf-8"> 
-  //why there is no end meta for meta
-  <title>hw4-1204-sz2491</title>
-  <script type="text/javascript" src="d3/d3.v3.js"></script>
-  <style type="text/css">
-   #graph {
-    border: 1em solid lightgreen;
-    background: lightgreen;
-   }
-   #graph p {
-    font-size: 0.75em;
-   }
-
-   #datashape {
-    border: 1em solid #ff6;
-    background: #ff6;
-   }
-
-   #datashape p {
-    font-size: 0.75em;
-   }
-
-   #createdata {
-    border: 1em solid #9cf;
-    background: #9cf;
-   }
-
-   #createdata p {
-    font-size: 0.75em;
-   }
-
-   #loaddata {
-    border: 1em solid #cc66ff;
-    background: #cc66ff;
-    margin-bottom: 0;
-   }
-
-   #loaddata p {
-    font-size: 0.75em;
-   }
-
-   #steps {
-    border: 1em solid #cc99ff;
-    background: #cc99ff;
-    margin-top: 0;
-    padding-left: 1em;
-   }
-
-   #steps p {
-    font-size: 0.75em;
-   }
-
-   #steps ol {
-    list-style: none;
-    margin-top: 0;
-   }
-
-   #steps ol a {
-    color: black;
-    font-size: 0.9em;
-   }
-
-   #notes {
-    border: 1em solid #ccc;
-    background: #ccc;
-   }
-
-   #notes span {
-    font-weight: bold;
-    margin-bottom: 0.5em;
-   } /*this won't work. why*/
-
-   #notes p {
-    margin: 0.5em;
-    font-size: 0.8em;
-   }
+<html lang"en">
+  <head>
+    <meta charset="utf-8">
+    <title>hw4-1204-sz2491</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="d3.v3.js"></script>
+  </head>
   
-  </style>
- </head>
-
- <body>
-  <div>
-   <h2 id="graph">Describe the graph
-    <p>
-    It will show electricity use condition in New Delhi on 9/24/2012. Data are recored every 15 minutes. Five major companies supply electricity in New Delhi.
-    </p>
-   </h2>
-
-   <h2 id="datashape">Describe data shape
-    <p>
-    I'm still learning~
-    </p>
-   </h2>
-
-   <h2 id="createdata">Create data as csv
-    <p>
-    It's on my github now.
-    </p>
-   </h2>
-   
-   <h2 id="loaddata">Load data and use data callback
-    <p>
-    Still don't understand what is convenience methods. Need to continue work on data callback.
-    </p>
-
-    <h3 id="steps">Describe steps with ordered list
-     <p>
-      <ol> 	
-       <li><a href="/drawpoints">draw plots in R</a></li>
-       <li><a href="/ggplot">ggplot first and then convert it into svg</a></li>
-       <li><a href="/svg">use svg plot in html</a></li>
-       <li><a href="/d3">apply d3</a></li>
-      </ol>
-     </p>
-    </h3>
-   </h2>
-  </div>
-
- <div>
-  <h3 id="notes"><span>Notes</span>
-   <p>
-   This is only the structure(html) without style(css) or script(javasript). I will work on it soon.
-   </p>
-  </h3>
- </div>
-
-  <script type="text/javascript">
-  //there goes D3 code
-   d3.select("body").append("p").text("New paragraph!");
-   var canvas = d3.select("body")
-                  .append("svg")
-                  .attr("height",500)
-                  .attr("width",500);
-
-   var circle = canvas.append("circle")
-                .attr("cx",250)
-                .attr("cy",250)
-                .attr("r",50)
-                .attr("fill","red");
-
-   var rect = canvas.append("rect")
-                .attr("width",100)
-                .attr("height",50)
-                .attr("fill","blue");             
-
-   var line = canvas.append("line")
-                .attr("x1",0)
-                .attr("y1",100)
-                .attr("x2",400)
-                .attr("y2",400)
-                .attr("stroke","green")
-                .attr("stroke-width",10);  
-  </script>
- </body>
+  <body>
+    <div id="prologue"></div>
+    
+    <div id="div1"></div>
+    <div id="div2">
+      <p>This is the daily electricity consumption condition in New Delhi, India, 
+      on 09/24/2012, recorded every 15 minutes.
+        
+      </p>
+    </div>
+    <div id="div3"></div>
+    
+    <br></br>
+    
+    <script src="script.js"></script>
+  
+  </body>
+  
 </html>

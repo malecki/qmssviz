@@ -40,7 +40,7 @@ Spring_Pride <-Spring$I.am.proud.to.work.for.this.organization
 
 Next I needed to convert this data from factors into numeric data.
 
-```{r}
+```
 NumFallValue <- as.numeric(Fall_Value)
 NumFallLead <- as.numeric(Fall_Leadership)
 NumFallPride <- as.numeric(Fall_Pride)
@@ -51,7 +51,7 @@ NumSpringPride <- as.numeric(Spring_Pride)
 
 Unfortunately, the as.numeric() function was converting blank responses into the number 1 and the response "Strongly Disagree (1)" into 11. So I wrote the below code to generate new objects with the correct values.
 
-```{r}
+```
 NumFallValue[NumFallValue == 1] <- NA
 NumFallValue[NumFallValue == 11] <- 1
 NumFallValueFinal <- na.omit(NumFallValue)
@@ -59,7 +59,7 @@ NumFallValueFinal <- na.omit(NumFallValue)
 
 I then repeated this for the other five variables.
 
-```{r}
+```
 NumSpringValue[NumSpringValue == 1] <- NA
 NumSpringValue[NumSpringValue == 11] <- 1
 NumSpringValueFinal <- na.omit(NumSpringValue)
@@ -77,10 +77,31 @@ NumSpringPride[NumSpringPride == 11] <- 1
 NumSpringPrideFinal <- na.omit(NumSpringPride)
 ```
 
+But rather than do things the long way, I created a function to do it more quickly.
+
+```{r}
+recodeFactorAndFixScale <- function(col){
+    out <- as.numeric(col)
+    out[out == 1] <- NA
+    out[out == 11] <- 1
+    na.omit(out)
+    (out)
+}
+```
+
+```{r}
+FinalFallValue <- recodeFactorAndFixScale(Fall_Value)
+FinalSpringValue <- recodeFactorAndFixScale(Spring_Value)
+FinalFallPride <- recodeFactorAndFixScale(Fall_Pride)
+FinalSpringPride <- recodeFactorAndFixScale(Spring_Pride)
+FinalFallLead <- recodeFactorAndFixScale(Fall_Leadership)
+FinalSpringLead <- recodeFactorAndFixScale(Spring_Leadership)
+```
+
 Next I created a new object called "Graphdata" that had only six values: the mean scores for the six questions that I cared about.
 
 ```{r}
-Graphdata <- c(mean(NumFallValueFinal),mean(NumSpringLeadFinal),mean(NumFallPrideFinal),mean(NumSpringPrideFinal),mean(NumFallLeadFinal),mean(NumSpringLeadFinal))
+Graphdata <- c(mean(FinalFallValue,na.rm = TRUE),mean(FinalSpringValue,na.rm = TRUE),mean(FinalFallPride,na.rm = TRUE),mean(FinalSpringPride,na.rm = TRUE),mean(FinalFallLead,na.rm = TRUE),mean(FinalSpringLead,na.rm = TRUE))
 ```
 
 Finally I graphed that object. Viola! I had a bar graph.

@@ -1,0 +1,45 @@
+---
+title: "Delhi Growth Rates"
+author: "Christopher Buckingham"
+date: "November 29, 2014"
+output: html_document
+---
+####Reading electricity consumption data from CSV file, aggregating into delhi-wided number, breaking into date subsets, and calculating growth rates:
+
+```{r}
+Source <- read.csv("~/Desktop/loads 2011-2013.csv")
+```
+
+#####Data read as "Source," now have all data, but need to aggregate to get some Dehli-wide numbers:
+
+```{r}
+Sourceagg <- aggregate(Source$mW, by=list(Source$days,Source$timeslots,Source$date), FUN=sum)
+names(Sourceagg) <- c("days", "timeslots", "date", "mW")
+```
+
+#####New dataframe "Sourceagg" created that contains the total electricity consumption across all regions for each unique date + timeframe combination. Lost numeric timeslot variables in the process, will need to re-add these. First need a clean list of timeslots and corresponding point values:
+
+```{r}
+TimeslotHeaders <- c("timeslots", "timepoint")
+Timeslots <- Source[TimeslotHeaders]
+Cleantimeslots <- subset(Timeslots, timepoint>0 & timepoint<97, c(timeslots, timepoint))
+Reallycleantimeslots <- unique(Cleantimeslots)  
+```
+
+#####Have now created "Reallycleantimeslots," which is a list comprised of two columns and 96 rows. Must now attach timepoint values to the aggregated delhi data:
+
+```{r}
+DelhiTotals <- merge(Sourceagg, Reallycleantimeslots, by=c("timeslots"))
+```
+
+#####The DelhiTotals dataframe now contains timeslot. The next step is to add a "discom" column that has a value of "total." We will then be able to merge the aggregated data with source.
+
+
+```{r}
+#data2011 <- Source[which(Source$days<=40908, Source$days>=40544),c("days","timeslots","discom","mW","timepoint","date")]
+#attach(data2011)
+#d2011sorted <- data2011[order(discom,days,timepoint),]
+```
+
+
+

@@ -61,7 +61,7 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 
 <div id="reading-electricity-consumption-data-from-csv-file-aggregating-into-delhi-wided-number-breaking-into-date-subsets-and-calculating-growth-rates" class="section level4">
 <h4>Reading electricity consumption data from CSV file, aggregating into delhi-wided number, breaking into date subsets, and calculating growth rates:</h4>
-<pre class="r"><code>Source &lt;- read.csv(&quot;loads 2011-2013.csv&quot;)</code></pre>
+<pre class="r"><code>Source &lt;- read.csv(&quot;loads2010-2013.csv&quot;)</code></pre>
 <div id="data-read-as-source-now-have-all-data-but-need-to-aggregate-to-get-some-dehli-wide-numbers" class="section level5">
 <h5>Data read as “Source,” now have all data, but need to aggregate to get some Dehli-wide numbers:</h5>
 <pre class="r"><code>Sourceagg &lt;- aggregate(Source$mW, by=list(Source$days,Source$timeslots,Source$date), FUN=sum)
@@ -99,6 +99,27 @@ DelhiDataMaster &lt;- merge(DelhiDataMasterxTimepoints, Reallycleantimeslots, by
 <div id="looking-good-lets-sort-by-date-timepoint-and-discom-for-good-measure." class="section level5">
 <h5>Looking good, lets sort by date, timepoint, and discom for good measure.</h5>
 <pre class="r"><code>DelhiDataMaster &lt;- DelhiDataMaster[order(DelhiDataMaster$days, DelhiDataMaster$timepoint, DelhiDataMaster$discom),]</code></pre>
+</div>
+<div id="and..-lets-get-rid-of-the-useless-row.names." class="section level5">
+<h5>And.. lets get rid of the useless “row.names.”</h5>
+<pre class="r"><code>DelhiDataMaster &lt;-data.frame(DelhiDataMaster$timeslots, DelhiDataMaster$days, DelhiDataMaster$date, DelhiDataMaster$mW, DelhiDataMaster$discom, DelhiDataMaster$timepoint)
+names(DelhiDataMaster) &lt;- c(&quot;timeslots&quot;, &quot;days&quot;, &quot;date&quot;, &quot;mW&quot;, &quot;discom&quot;, &quot;timepoint&quot;)</code></pre>
+</div>
+<div id="since-we-now-have-a-comprehensive-dataset-time-to-share" class="section level5">
+<h5>Since we now have a comprehensive dataset, time to share:</h5>
+<pre class="r"><code>write.csv(DelhiDataMaster, file = &quot;DelhiDataMaster.csv&quot;)</code></pre>
+</div>
+</div>
+<div id="with-the-data-now-ready-its-time-to-parse-with-the-goal-of-gathering-datapoints-that-can-be-utilized-for-interesting-graphs." class="section level4">
+<h4>With the data now ready, it’s time to parse with the goal of gathering datapoints that can be utilized for interesting graphs.</h4>
+<div id="first-i-set-out-to-gather-delhi-peak-low-and-average-energy-usage-spanning-the-entire-2011-2013-observation-period." class="section level5">
+<h5>First, I set out to gather Delhi Peak, Low, and Average Energy usage spanning the entire 2011-2013 observation period.</h5>
+<pre class="r"><code>require(&quot;plyr&quot;)</code></pre>
+<pre><code>## Loading required package: plyr</code></pre>
+<pre class="r"><code>DailyPeak &lt;- ddply(.data=DelhiDataMaster, .variables=.(date, discom), subset, mW==max(mW))
+DailyLow &lt;- ddply(.data=DelhiDataMaster, .variables=.(date, discom), subset, mW==min(mW))
+OverallPeak &lt;- ddply(.data=DelhiDataMaster, .variables=.(discom), subset, mW==max(mW))
+OverallLow &lt;- ddply(.data=DelhiDataMaster, .variables=.(discom), subset, mW==min(mW))</code></pre>
 <pre class="r"><code>#data2011 &lt;- Source[which(Source$days&lt;=40908, Source$days&gt;=40544),c(&quot;days&quot;,&quot;timeslots&quot;,&quot;discom&quot;,&quot;mW&quot;,&quot;timepoint&quot;,&quot;date&quot;)]
 #attach(data2011)
 #d2011sorted &lt;- data2011[order(discom,days,timepoint),]</code></pre>

@@ -4,10 +4,10 @@ author: "Christopher Buckingham"
 date: "November 29, 2014"
 output: html_document
 ---
-####Reading electricity consumption data from CSV file, aggregating into delhi-wided number, breaking into date subsets, and calculating growth rates:
+####Reading electricity consumption data from CSV file, aggregating into delhi-wide number, breaking into date subsets
 
 ```{r}
-Source <- read.csv("loads 2011-2013.csv")
+Source <- read.csv("loads2010-2013.csv")
 ```
 
 #####Data read as "Source," now have all data, but need to aggregate to get some Dehli-wide numbers:
@@ -63,10 +63,37 @@ DelhiDataMaster <- DelhiDataMaster[order(DelhiDataMaster$days, DelhiDataMaster$t
 ```
 
 #####And.. lets get rid of the useless "row.names."
+
 ```{r}
 DelhiDataMaster <-data.frame(DelhiDataMaster$timeslots, DelhiDataMaster$days, DelhiDataMaster$date, DelhiDataMaster$mW, DelhiDataMaster$discom, DelhiDataMaster$timepoint)
 names(DelhiDataMaster) <- c("timeslots", "days", "date", "mW", "discom", "timepoint")
 ```
+
+#####Since we now have a comprehensive dataset, time to share:
+
+```{r}
+write.csv(DelhiDataMaster, file = "DelhiDataMaster.csv")
+```
+
+####With the data now ready, it's time to parse with the goal of gathering datapoints that can be utilized for interesting graphs.
+#####First, I set out to gather Delhi Peak, Low, and Average Energy usage spanning the entire 2011-2013 observation period.
+
+```{r}
+require("plyr")
+DailyPeak <- ddply(.data=DelhiDataMaster, .variables=.(date, discom), subset, mW==max(mW))
+DailyLow <- ddply(.data=DelhiDataMaster, .variables=.(date, discom), subset, mW==min(mW))
+OverallPeak <- ddply(.data=DelhiDataMaster, .variables=.(discom), subset, mW==max(mW))
+OverallLow <- ddply(.data=DelhiDataMaster, .variables=.(discom), subset, mW==min(mW))
+```
+
+
+
+
+
+
+
+
+
 
 ```{r}
 #data2011 <- Source[which(Source$days<=40908, Source$days>=40544),c("days","timeslots","discom","mW","timepoint","date")]

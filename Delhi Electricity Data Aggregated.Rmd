@@ -40,8 +40,33 @@ DelhiTotalswDiscom  <- data.frame(DelhiTotals$timeslots, DelhiTotals$days, Delhi
 names(DelhiTotalswDiscom) <- c("timeslots", "days", "date", "mW", "timepoint", "discom")
 ```
 
-#####DelhiTotalswDiscom is a dataframe that has been appended with discom values of "total." Now it's time to merge the aggregated data with the original source data.
+#####DelhiTotalswDiscom is a dataframe that has been appended with discom values of "total." Now it's time to merge the aggregated data with the original source data. The final dataframe should have 342720+68544=411264 obs. Merge did not work. Will use Rbind, but will need to remove column "X" from source in order to do so.
 
+```{r}
+SourceMinusX <-data.frame(Source$timeslots, Source$days, Source$date, Source$mW, Source$timepoint, Source$discom)
+names(SourceMinusX) <- c("timeslots", "days", "date", "mW", "timepoint", "discom")
+DelhiDataMaster <- rbind(SourceMinusX, DelhiTotalswDiscom)
+```
+
+#####The combined master dataset looks good as indicated by the number of observations and a brief visual inspection. The erraneous timepoint issue has resurfaced. I'm not sure having accurate values of 1 through 96 for timepoints is necessary but in the interest of having a solid dataframe I will now need to go back and fix the timepoint values in the master dataset. 
+
+```{r}
+DelhiDataMasterxTimepoints <-data.frame(DelhiDataMaster$timeslots, DelhiDataMaster$days, DelhiDataMaster$date, DelhiDataMaster$mW, DelhiDataMaster$discom)
+names(DelhiDataMasterxTimepoints) <- c("timeslots", "days", "date", "mW", "discom")
+DelhiDataMaster <- merge(DelhiDataMasterxTimepoints, Reallycleantimeslots, by=c("timeslots"))
+```
+
+#####Looking good, lets sort by date, timepoint, and discom for good measure.
+
+```{r}
+DelhiDataMaster <- DelhiDataMaster[order(DelhiDataMaster$days, DelhiDataMaster$timepoint, DelhiDataMaster$discom),]
+```
+
+#####And.. lets get rid of the useless "row.names."
+```{r}
+DelhiDataMaster <-data.frame(DelhiDataMaster$timeslots, DelhiDataMaster$days, DelhiDataMaster$date, DelhiDataMaster$mW, DelhiDataMaster$discom, DelhiDataMaster$timepoint)
+names(DelhiDataMaster) <- c("timeslots", "days", "date", "mW", "discom", "timepoint")
+```
 
 ```{r}
 #data2011 <- Source[which(Source$days<=40908, Source$days>=40544),c("days","timeslots","discom","mW","timepoint","date")]

@@ -61,7 +61,7 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 
 <div id="reading-electricity-consumption-data-from-csv-file-aggregating-into-delhi-wided-number-breaking-into-date-subsets-and-calculating-growth-rates" class="section level4">
 <h4>Reading electricity consumption data from CSV file, aggregating into delhi-wided number, breaking into date subsets, and calculating growth rates:</h4>
-<pre class="r"><code>Source &lt;- read.csv(&quot;~/Desktop/loads 2011-2013.csv&quot;)</code></pre>
+<pre class="r"><code>Source &lt;- read.csv(&quot;loads 2011-2013.csv&quot;)</code></pre>
 <div id="data-read-as-source-now-have-all-data-but-need-to-aggregate-to-get-some-dehli-wide-numbers" class="section level5">
 <h5>Data read as “Source,” now have all data, but need to aggregate to get some Dehli-wide numbers:</h5>
 <pre class="r"><code>Sourceagg &lt;- aggregate(Source$mW, by=list(Source$days,Source$timeslots,Source$date), FUN=sum)
@@ -80,6 +80,25 @@ Reallycleantimeslots &lt;- unique(Cleantimeslots)  </code></pre>
 </div>
 <div id="the-delhitotals-dataframe-now-contains-timeslot.-the-next-step-is-to-add-a-discom-column-that-has-a-value-of-total.-we-will-then-be-able-to-merge-the-aggregated-data-with-source." class="section level5">
 <h5>The DelhiTotals dataframe now contains timeslot. The next step is to add a “discom” column that has a value of “total.” We will then be able to merge the aggregated data with source.</h5>
+<pre class="r"><code>discom &lt;- c('Total')
+DelhiTotalswDiscom  &lt;- data.frame(DelhiTotals$timeslots, DelhiTotals$days, DelhiTotals$date, DelhiTotals$mW, DelhiTotals$timepoint, discom)
+names(DelhiTotalswDiscom) &lt;- c(&quot;timeslots&quot;, &quot;days&quot;, &quot;date&quot;, &quot;mW&quot;, &quot;timepoint&quot;, &quot;discom&quot;)</code></pre>
+</div>
+<div id="delhitotalswdiscom-is-a-dataframe-that-has-been-appended-with-discom-values-of-total.-now-its-time-to-merge-the-aggregated-data-with-the-original-source-data.-the-final-dataframe-should-have-34272068544411264-obs.-merge-did-not-work.-will-use-rbind-but-will-need-to-remove-column-x-from-source-in-order-to-do-so." class="section level5">
+<h5>DelhiTotalswDiscom is a dataframe that has been appended with discom values of “total.” Now it’s time to merge the aggregated data with the original source data. The final dataframe should have 342720+68544=411264 obs. Merge did not work. Will use Rbind, but will need to remove column “X” from source in order to do so.</h5>
+<pre class="r"><code>SourceMinusX &lt;-data.frame(Source$timeslots, Source$days, Source$date, Source$mW, Source$timepoint, Source$discom)
+names(SourceMinusX) &lt;- c(&quot;timeslots&quot;, &quot;days&quot;, &quot;date&quot;, &quot;mW&quot;, &quot;timepoint&quot;, &quot;discom&quot;)
+DelhiDataMaster &lt;- rbind(SourceMinusX, DelhiTotalswDiscom)</code></pre>
+</div>
+<div id="the-combined-master-dataset-looks-good-as-indicated-by-the-number-of-observations-and-a-brief-visual-inspection.-the-erraneous-timepoint-issue-has-resurfaced.-im-not-sure-having-accurate-values-of-1-through-96-for-timepoints-is-necessary-but-in-the-interest-of-having-a-solid-dataframe-i-will-now-need-to-go-back-and-fix-the-timepoint-values-in-the-master-dataset." class="section level5">
+<h5>The combined master dataset looks good as indicated by the number of observations and a brief visual inspection. The erraneous timepoint issue has resurfaced. I’m not sure having accurate values of 1 through 96 for timepoints is necessary but in the interest of having a solid dataframe I will now need to go back and fix the timepoint values in the master dataset.</h5>
+<pre class="r"><code>DelhiDataMasterxTimepoints &lt;-data.frame(DelhiDataMaster$timeslots, DelhiDataMaster$days, DelhiDataMaster$date, DelhiDataMaster$mW, DelhiDataMaster$discom)
+names(DelhiDataMasterxTimepoints) &lt;- c(&quot;timeslots&quot;, &quot;days&quot;, &quot;date&quot;, &quot;mW&quot;, &quot;discom&quot;)
+DelhiDataMaster &lt;- merge(DelhiDataMasterxTimepoints, Reallycleantimeslots, by=c(&quot;timeslots&quot;))</code></pre>
+</div>
+<div id="looking-good-lets-sort-by-date-timepoint-and-discom-for-good-measure." class="section level5">
+<h5>Looking good, lets sort by date, timepoint, and discom for good measure.</h5>
+<pre class="r"><code>DelhiDataMaster &lt;- DelhiDataMaster[order(DelhiDataMaster$days, DelhiDataMaster$timepoint, DelhiDataMaster$discom),]</code></pre>
 <pre class="r"><code>#data2011 &lt;- Source[which(Source$days&lt;=40908, Source$days&gt;=40544),c(&quot;days&quot;,&quot;timeslots&quot;,&quot;discom&quot;,&quot;mW&quot;,&quot;timepoint&quot;,&quot;date&quot;)]
 #attach(data2011)
 #d2011sorted &lt;- data2011[order(discom,days,timepoint),]</code></pre>

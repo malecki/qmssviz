@@ -81,11 +81,10 @@ write.csv(DelhiDataMaster, file = "DelhiDataMaster.csv")
 #####First, I set out to gather Delhi Peak and Low Energy usage spanning the entire 2010-2013 observation period.
 
 ```{r}
-DailyPeak <- ddply(.data=DelhiDataMaster, .variables=.(date, discom), subset, mW==max(mW))
-DailyLow <- ddply(.data=DelhiDataMaster, .variables=.(date, discom), subset, mW==min(mW))
-OverallPeak <- ddply(.data=DelhiDataMaster, .variables=.(discom), subset, mW==max(mW))
-OverallLow <- ddply(.data=DelhiDataMaster, .variables=.(discom), subset, mW==min(mW))
-df[grep("trna", df$common_name, ignore.case=T),]
+DailyPeak <-ddply(.data=DelhiDataMaster, .variables=.(date, discom), subset, mW=max(mW))
+DailyLow <-ddply(.data=DelhiDataMaster, .variables=.(date, discom), subset, mW=min(mW))
+OverallPeak <-ddply(.data=DelhiDataMaster, .variables=.(discom), subset, mW=max(mW))
+OverallLow <-ddply(.data=DelhiDataMaster, .variables=.(discom), subset, mW=min(mW))
 TotalPeakOccurence <-OverallPeak[grep("Total", OverallPeak$discom, ignore.case=T),]
 BRPLPeakOccurence <-OverallPeak[grep("BRPL", OverallPeak$discom, ignore.case=T),]
 BYPLPeakOccurence <-OverallPeak[grep("BYPL", OverallPeak$discom, ignore.case=T),]
@@ -112,7 +111,7 @@ NDPLPeakData <-NDPLPeakDataA[grep(NDPLPeakOccurence$timepoint, NDPLPeakDataA$tim
 TotalPeakDate <-toString(TotalPeakData$date)
 TotalPeakData$mW <-round(TotalPeakData$mW, 0)
 TotalPeakTitleText<-paste("Peak mW Consumption Observation on ",TotalPeakData$date, "at ",TotalPeakData$timeslots, Sep="")
-ggplot(TotalPeakData, aes(y=mW ,x=discom, fill=discom)) + geom_bar(stat="identity", width=.75, alpha = 3/4) + ggtitle(TotalPeakTitleText) + ylab("mW by Distribution Company") + xlab("") + geom_text(aes(label = mW, size = 4, y=mW+125)
+ggplot(TotalPeakData, aes(y=mW ,x=discom, fill=discom)) + geom_bar(stat="identity", width=.75, alpha = 3/4) + ggtitle(TotalPeakTitleText) + ylab("mW by Distribution Company") + xlab("") + geom_text(aes(label = mW, y=mW+125, size=4)) + theme(legend.position="none")
 ```
 
 ```{r}

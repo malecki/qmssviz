@@ -7,8 +7,7 @@ output: html_document
 ####Reading electricity consumption data from CSV file, aggregating into delhi-wide number, breaking into date subsets
 
 ```{r}
-Source <-read.csv("loads2010-2013.csv")
-require(plyr)
+Source <- read.csv("loads2010-2013.csv")
 require(ggplot2)
 ```
 
@@ -109,6 +108,7 @@ NDPLPeakData <-NDPLPeakDataA[grep(NDPLPeakOccurence$timepoint, NDPLPeakDataA$tim
 ##### Now we have all of the peak information. Time to start graphing.
 
 ```{r}
+require(ggplot2)
 TotalPeakDate <-toString(TotalPeakData$date)
 TotalPeakData$mW <-round(TotalPeakData$mW, 0)
 TotalPeakTitleText<-paste("Peak mW Consumption Observation on ",TotalPeakData$date, "at ",TotalPeakData$timeslots, Sep="")

@@ -109,10 +109,12 @@ NDPLPeakData <-NDPLPeakDataA[grep(NDPLPeakOccurence$timepoint, NDPLPeakDataA$tim
 
 ```{r}
 require(ggplot2)
-ggplot(TotalPeakData, aes(y=mW ,x=discom)) + geom_bar(stat="identity")
-
+TotalPeakDate <-toString(TotalPeakData$date)
+TotalPeakData$mW <-round(TotalPeakData$mW, 0)
+TotalPeakTitleText<-paste("Peak mW Consumption Observation on ",TotalPeakData$date, "at ",TotalPeakData$timeslots, Sep="")
+ggplot(TotalPeakData, aes(y=mW ,x=discom, fill=discom)) + geom_bar(stat="identity", width=.75, alpha = 3/4) + ggtitle(TotalPeakTitleText) + ylab("mW by Distribution Company") + xlab("") + geom_text(aes(label = mW, size = 4, y=mW+125)
 ```
-
++ scale_fill_manual(values=c("#CC6666", "#9999CC", "#66CC99", "#66CC99", "#66CC99", "#66CC99"))
 ```{r}
 #data2011 <- Source[which(Source$days<=40908, Source$days>=40544),c("days","timeslots","discom","mW","timepoint","date")]
 #attach(data2011)

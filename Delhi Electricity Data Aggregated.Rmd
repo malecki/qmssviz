@@ -7,7 +7,7 @@ output: html_document
 ####Reading electricity consumption data from CSV file, aggregating into delhi-wided number, breaking into date subsets, and calculating growth rates:
 
 ```{r}
-Source <- read.csv("~/Desktop/loads 2011-2013.csv")
+Source <- read.csv("loads 2011-2013.csv")
 ```
 
 #####Data read as "Source," now have all data, but need to aggregate to get some Dehli-wide numbers:
@@ -33,6 +33,14 @@ DelhiTotals <- merge(Sourceagg, Reallycleantimeslots, by=c("timeslots"))
 ```
 
 #####The DelhiTotals dataframe now contains timeslot. The next step is to add a "discom" column that has a value of "total." We will then be able to merge the aggregated data with source.
+
+```{r}
+discom <- c('Total')
+DelhiTotalswDiscom  <- data.frame(DelhiTotals$timeslots, DelhiTotals$days, DelhiTotals$date, DelhiTotals$mW, DelhiTotals$timepoint, discom)
+names(DelhiTotalswDiscom) <- c("timeslots", "days", "date", "mW", "timepoint", "discom")
+```
+
+#####DelhiTotalswDiscom is a dataframe that has been appended with discom values of "total." Now it's time to merge the aggregated data with the original source data.
 
 
 ```{r}

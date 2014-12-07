@@ -81,10 +81,10 @@ write.csv(DelhiDataMaster, file = "DelhiDataMaster.csv")
 #####First, I set out to gather Delhi Peak and Low Energy usage spanning the entire 2010-2013 observation period.
 
 ```{r}
-DailyPeak <-ddply(.data=DelhiDataMaster, .variables=.(date, discom), subset, mW=max(mW))
-DailyLow <-ddply(.data=DelhiDataMaster, .variables=.(date, discom), subset, mW=min(mW))
-OverallPeak <-ddply(.data=DelhiDataMaster, .variables=.(discom), subset, mW=max(mW))
-OverallLow <-ddply(.data=DelhiDataMaster, .variables=.(discom), subset, mW=min(mW))
+DailyPeak <-ddply(.data=DelhiDataMaster, .variables=.(date, discom), subset, mW==max(mW))
+DailyLow <-ddply(.data=DelhiDataMaster, .variables=.(date, discom), subset, mW==min(mW))
+OverallPeak <-ddply(.data=DelhiDataMaster, .variables=.(discom), subset, mW==max(mW))
+OverallLow <-ddply(.data=DelhiDataMaster, .variables=.(discom), subset, mW==min(mW))
 TotalPeakOccurence <-OverallPeak[grep("Total", OverallPeak$discom, ignore.case=T),]
 BRPLPeakOccurence <-OverallPeak[grep("BRPL", OverallPeak$discom, ignore.case=T),]
 BYPLPeakOccurence <-OverallPeak[grep("BYPL", OverallPeak$discom, ignore.case=T),]

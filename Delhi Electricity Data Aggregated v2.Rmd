@@ -107,11 +107,59 @@ NDPLPeakData <-NDPLPeakDataA[grep(NDPLPeakOccurence$timepoint, NDPLPeakDataA$tim
 
 ##### Now we have all of the peak information. Time to start graphing.
 
+#### Peak Power Consumption in Delhi
+
 ```{r}
 TotalPeakDate <-toString(TotalPeakData$date)
 TotalPeakData$mW <-round(TotalPeakData$mW, 0)
 TotalPeakTitleText<-paste("Peak mW Consumption Observation on ",TotalPeakData$date, "at ",TotalPeakData$timeslots, Sep="")
-ggplot(TotalPeakData, aes(y=mW ,x=discom, fill=discom)) + geom_bar(stat="identity", width=.75, alpha = 3/4) + ggtitle(TotalPeakTitleText) + ylab("mW by Distribution Company") + xlab("") + geom_text(aes(label = mW, y=mW+125, size=4)) + theme(legend.position="none")
+ggplot(TotalPeakData, aes(y=mW ,x=reorder(discom,-mW), fill=discom)) + geom_bar(stat="identity", width=.75, alpha = 3/4) + ggtitle(TotalPeakTitleText) + ylab("mW by Distribution Company") + xlab("") + geom_text(aes(label = mW, y=mW+125, size=6)) + theme(legend.position="none")
+
+```
+
+#### Peak Power Consumption in Zones Served by BSES Rajdhani Power Limited (BRPL)
+
+```{r}
+BRPLPeakDate <-toString(BRPLPeakData$date)
+BRPLPeakData$mW <-round(BRPLPeakData$mW, 0)
+BRPLPeakTitleText<-paste("Peak mW Consumption Observation by BRPL on ",BRPLPeakData$date, "at ",BRPLPeakData$timeslots, Sep="")
+ggplot(BRPLPeakData, aes(y=mW ,x=reorder(discom,-mW), fill=discom)) + geom_bar(stat="identity", width=.75, alpha = 3/4) + ggtitle(BRPLPeakTitleText) + ylab("mW by Distribution Company") + xlab("") + geom_text(aes(label = mW, y=mW+125, size=6)) + theme(legend.position="none")
+```
+
+#### Peak Power Consumption in Zones Served by BSES Yamuna Power Limited (BYPL)
+
+```{r}
+BYPLPeakDate <-toString(BYPLPeakData$date)
+BYPLPeakData$mW <-round(BYPLPeakData$mW, 0)
+BYPLPeakTitleText<-paste("Peak mW Consumption Observation by BYPL on ",BYPLPeakData$date, "at ",BYPLPeakData$timeslots, Sep="")
+ggplot(BYPLPeakData, aes(y=mW ,x=reorder(discom,-mW), fill=discom)) + geom_bar(stat="identity", width=.75, alpha = 3/4) + ggtitle(BYPLPeakTitleText) + ylab("mW by Distribution Company") + xlab("") + geom_text(aes(label = mW, y=mW+125, size=6)) + theme(legend.position="none")
+```
+
+#### Peak Power Consumption in Zones Served by Military Engineering Service (MES)
+
+```{r}
+MESPeakDate <-toString(MESPeakData$date)
+MESPeakData$mW <-round(MESPeakData$mW, 0)
+MESPeakTitleText<-paste("Peak mW Consumption Observation by MES on ",MESPeakData$date, "at ",MESPeakData$timeslots, Sep="")
+ggplot(MESPeakData, aes(y=mW ,x=reorder(discom,-mW), fill=discom)) + geom_bar(stat="identity", width=.75, alpha = 3/4) + ggtitle(MESPeakTitleText) + ylab("mW by Distribution Company") + xlab("") + geom_text(aes(label = mW, y=mW+125, size=6)) + theme(legend.position="none")
+```
+
+#### Peak Power Consumption in Zones Served by New Delhi Municipal Committee (NDMC)
+
+```{r}
+NDMCPeakDate <-toString(NDMCPeakData$date)
+NDMCPeakData$mW <-round(NDMCPeakData$mW, 0)
+NDMCPeakTitleText<-paste("Peak mW Consumption Observation by NDMC on ",NDMCPeakData$date, "at ",NDMCPeakData$timeslots, Sep="")
+ggplot(NDMCPeakData, aes(y=mW ,x=reorder(discom,-mW), fill=discom)) + geom_bar(stat="identity", width=.75, alpha = 3/4) + ggtitle(NDMCPeakTitleText) + ylab("mW by Distribution Company") + xlab("") + geom_text(aes(label = mW, y=mW+125, size=6)) + theme(legend.position="none")
+```
+
+#### Peak Power Consumption in Zones Served by North Delhi Power Limited (NDPL)
+
+```{r}
+NDPLPeakDate <-toString(NDPLPeakData$date)
+NDPLPeakData$mW <-round(NDPLPeakData$mW, 0)
+NDPLPeakTitleText<-paste("Peak mW Consumption Observation by NDPL on ",NDPLPeakData$date, "at ",NDPLPeakData$timeslots, Sep="")
+ggplot(NDPLPeakData, aes(y=mW ,x=reorder(discom,-mW), fill=discom)) + geom_bar(stat="identity", width=.75, alpha = 3/4) + ggtitle(NDPLPeakTitleText) + ylab("mW by Distribution Company") + xlab("") + geom_text(aes(label = mW, y=mW+125, size=6)) + theme(legend.position="none")
 ```
 
 ```{r}

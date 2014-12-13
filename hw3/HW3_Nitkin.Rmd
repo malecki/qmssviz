@@ -1,0 +1,154 @@
+---
+title: "Nitkin HW3"
+output: html_document
+---
+
+My first step was to bring my data into R. For this homework, I used data from the beginning-of-year and end-of-year staff satisfaction surveys at the network of charter schools where I work.
+
+The survey was administered via surveymonkey, so I exported the data into a csv that
+I could then import into R.
+
+```{r}
+Fall_Survey <- "../Fall_Survey.csv"
+Spring_Survey <- "../Spring_Survey.csv"
+Fall <- read.csv(Fall_Survey)
+Spring <- read.csv(Spring_Survey)
+```
+
+I then did some exploring of my new data frames.
+
+```
+dim(Fall)
+dim(Spring)
+colnames(Fall)
+colnames(Spring)
+```
+
+I decided that I wanted to track the change in the average score for three questions:
+"I feel valued as part of our community," "School leadership makes thoughtful decisions," and "I am proud to work for this organization."
+
+At this point I created new values for the three variables that I cared about.
+
+```{r}
+Fall_Value <- Fall$I.feel.valued.as.part.of.our.community
+Fall_Leadership <-Fall$School.leadership.makes.thoughtful.decisions
+Fall_Pride <-Fall$I.am.proud.to.work.for.this.organization
+Spring_Value <- Spring$I.feel.valued.as.part.of.our.community
+Spring_Leadership <-Spring$School.leadership.makes.thoughtful.decisions
+Spring_Pride <-Spring$I.am.proud.to.work.for.this.organization
+```
+
+Next I needed to convert this data from factors into numeric data.
+
+```
+NumFallValue <- as.numeric(Fall_Value)
+NumFallLead <- as.numeric(Fall_Leadership)
+NumFallPride <- as.numeric(Fall_Pride)
+NumSpringValue <- as.numeric(Spring_Value)
+NumSpringLead <- as.numeric(Spring_Leadership)
+NumSpringPride <- as.numeric(Spring_Pride)
+```
+
+Unfortunately, the as.numeric() function was converting blank responses into the number 1 and the response "Strongly Disagree (1)" into 11. So I wrote the below code to generate new objects with the correct values.
+
+```
+NumFallValue[NumFallValue == 1] <- NA
+NumFallValue[NumFallValue == 11] <- 1
+NumFallValueFinal <- na.omit(NumFallValue)
+```
+
+I then repeated this for the other five variables.
+
+```
+NumSpringValue[NumSpringValue == 1] <- NA
+NumSpringValue[NumSpringValue == 11] <- 1
+NumSpringValueFinal <- na.omit(NumSpringValue)
+NumFallLead[NumFallLead == 1] <- NA
+NumFallLead[NumFallLead == 11] <- 1
+NumFallLeadFinal <- na.omit(NumFallLead)
+NumSpringLead[NumSpringLead == 1] <- NA
+NumSpringLead[NumSpringLead == 11] <- 1
+NumSpringLeadFinal <- na.omit(NumSpringLead)
+NumFallPride[NumFallPride == 1] <- NA
+NumFallPride[NumFallPride == 11] <- 1
+NumFallPrideFinal <- na.omit(NumFallPride)
+NumSpringPride[NumSpringPride == 1] <- NA
+NumSpringPride[NumSpringPride == 11] <- 1
+NumSpringPrideFinal <- na.omit(NumSpringPride)
+```
+
+However, I eventually realized it was possible to create a function that would do all of that work. So I created the function and put it to work.
+
+
+```{r}
+recodeFactorAndFixScale <- function(col){
+    out <- as.numeric(col)
+    out[out == 1] <- NA
+    out[out == 11] <- 1
+    na.omit(out)
+    (out)
+}
+```
+
+```{r}
+FinalFallValue <- recodeFactorAndFixScale(Fall_Value)
+FinalSpringValue <- recodeFactorAndFixScale(Spring_Value)
+FinalFallPride <- recodeFactorAndFixScale(Fall_Pride)
+FinalSpringPride <- recodeFactorAndFixScale(Spring_Pride)
+FinalFallLead <- recodeFactorAndFixScale(Fall_Leadership)
+FinalSpringLead <- recodeFactorAndFixScale(Spring_Leadership)
+```
+
+Next I created a new object called "Graphdata" that had only six values: the mean scores for the six questions that I cared about.
+
+```{r}
+Graphdata <- c(mean(FinalFallValue,na.rm = TRUE),mean(FinalSpringValue,na.rm = TRUE),mean(FinalFallPride,na.rm = TRUE),mean(FinalSpringPride,na.rm = TRUE),mean(FinalFallLead,na.rm = TRUE),mean(FinalSpringLead,na.rm = TRUE))
+```
+
+Finally I graphed that object. Viola! I had a bar graph.
+
+```{r, echo=FALSE}
+barplot(Graphdata, main="Satisfaction Over Time", ylab = "Average Response Score", names.arg=c("I feel valued - Fall", "I feel valued - Spring", "Principal is thoughtful - Fall", "Principal is thoughtful - Spring", "I am proud - Fall", "I am proud - Spring"),las=2, col=c("darkblue","red"), beside=TRUE, cex.names=0.5, ylim=c(0,10))
+```
+
+It appears that staff satisfaction decreased over time on all three of the questions that I pulled out. Bad news for management :-(
+
+I was also interested in disaggregating the survey results within one administration period (either Spring or Fall) depending on which school the respondents worked at. Did staff at each school feel differently about any of these questions?
+
+As a first step, I created a new data frame called NumericFall in which the three responses that I care about were changed from factors to numeric.
+
+```{r}
+NumericFall <- transform(Fall, I.feel.valued.as.part.of.our.community = as.numeric(I.feel.valued.as.part.of.our.community), Fall, School.leadership.makes.thoughtful.decisions = as.numeric(School.leadership.makes.thoughtful.decisions), Fall, I.am.proud.to.work.for.this.organization = as.numeric(I.am.proud.to.work.for.this.organization))
+```
+
+Then I installed some packages I would need for melting, reshaping, and plotting.
+
+```{r}
+library(ggplot2)
+library(plyr)
+library(reshape2)
+```
+
+Next I isolated the three variables I wanted. I could probably have used subset for this first step instead of melting, but this way seemed to work, so I stuck with it.
+
+```{r}
+melted <- melt(NumericFall, id.vars=c("Which.Public.Prep.school.do.you.work.for.", "I.feel.valued.as.part.of.our.community", "School.leadership.makes.thoughtful.decisions", "I.am.proud.to.work.for.this.organization"))
+
+means <- ddply(melted, c("Which.Public.Prep.school.do.you.work.for."), summarise,valued=mean(I.feel.valued.as.part.of.our.community), leadership=mean(School.leadership.makes.thoughtful.decisions), pride=mean(I.am.proud.to.work.for.this.organization))
+
+meltagain <- melt(means, id=c("Which.Public.Prep.school.do.you.work.for."))
+```
+
+At this point my data was ready to be plotted. However, I wanted to change some of the variable names to make them more user-friendly.
+
+```{r}
+meltagain <- rename(meltagain, c("Which.Public.Prep.school.do.you.work.for."="School", "variable"="Question", "value"="Avg_Response"))
+```
+
+Then I plotted my clustered bar chart, flipped on its side for easier readability.
+
+```{r, echo=FALSE}
+ggplot(data=meltagain, aes(x=Question, y=Avg_Response, fill=School)) + geom_bar(stat="identity", position=position_dodge()) + coord_flip()
+```
+
+I don't see too many differences, with the possible exception of the LES Middle School having more faith in their leadership and the Bronx school feeling proudest. Perhaps the next step is ANOVA to see whether these changes are significant?

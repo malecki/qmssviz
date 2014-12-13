@@ -1,5 +1,5 @@
 ---
-title: "Nitkin HW1"
+title: "Nitkin HW3"
 output: html_document
 ---
 
@@ -77,7 +77,8 @@ NumSpringPride[NumSpringPride == 11] <- 1
 NumSpringPrideFinal <- na.omit(NumSpringPride)
 ```
 
-But rather than do things the long way, I created a function to do it more quickly.
+However, I eventually realized it was possible to create a function that would do all of that work. So I created the function and put it to work.
+
 
 ```{r}
 recodeFactorAndFixScale <- function(col){
@@ -111,3 +112,43 @@ barplot(Graphdata, main="Satisfaction Over Time", ylab = "Average Response Score
 ```
 
 It appears that staff satisfaction decreased over time on all three of the questions that I pulled out. Bad news for management :-(
+
+I was also interested in disaggregating the survey results within one administration period (either Spring or Fall) depending on which school the respondents worked at. Did staff at each school feel differently about any of these questions?
+
+As a first step, I created a new data frame called NumericFall in which the three responses that I care about were changed from factors to numeric.
+
+```{r}
+NumericFall <- transform(Fall, I.feel.valued.as.part.of.our.community = as.numeric(I.feel.valued.as.part.of.our.community), Fall, School.leadership.makes.thoughtful.decisions = as.numeric(School.leadership.makes.thoughtful.decisions), Fall, I.am.proud.to.work.for.this.organization = as.numeric(I.am.proud.to.work.for.this.organization))
+```
+
+Then I installed some packages I would need for melting, reshaping, and plotting.
+
+```{r}
+library(ggplot2)
+library(plyr)
+library(reshape2)
+```
+
+Next I isolated the three variables I wanted. I could probably have used subset for this first step instead of melting, but this way seemed to work, so I stuck with it.
+
+```{r}
+melted <- melt(NumericFall, id.vars=c("Which.Public.Prep.school.do.you.work.for.", "I.feel.valued.as.part.of.our.community", "School.leadership.makes.thoughtful.decisions", "I.am.proud.to.work.for.this.organization"))
+
+means <- ddply(melted, c("Which.Public.Prep.school.do.you.work.for."), summarise,valued=mean(I.feel.valued.as.part.of.our.community), leadership=mean(School.leadership.makes.thoughtful.decisions), pride=mean(I.am.proud.to.work.for.this.organization))
+
+meltagain <- melt(means, id=c("Which.Public.Prep.school.do.you.work.for."))
+```
+
+At this point my data was ready to be plotted. However, I wanted to change some of the variable names to make them more user-friendly.
+
+```{r}
+meltagain <- rename(meltagain, c("Which.Public.Prep.school.do.you.work.for."="School", "variable"="Question", "value"="Avg_Response"))
+```
+
+Then I plotted my clustered bar chart, flipped on its side for easier readability.
+
+```{r, echo=FALSE}
+ggplot(data=meltagain, aes(x=Question, y=Avg_Response, fill=School)) + geom_bar(stat="identity", position=position_dodge()) + coord_flip()
+```
+
+I don't see too many differences, with the possible exception of the LES Middle School having more faith in their leadership and the Bronx school feeling proudest. Perhaps the next step is ANOVA to see whether these changes are significant?

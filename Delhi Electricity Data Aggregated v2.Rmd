@@ -297,15 +297,28 @@ NDPLPeakData2013 <-NDPLPeakDataA2013[grep(NDPLPeakOccurence2013$timepoint, NDPLP
 
 ```{r}
 DelhiData <- merge(TotalPeakData, Averages, by=c("discom"))
-names(DelhiData) <- c("discom", "timeslots", "days", "date", "mW", "timepoint", "Average mW")
+names(DelhiData) <- c("discom", "timeslots", "days", "date", "mW", "timepoint", "Average")
 Delhi2010 <- merge(Peaks2010, Averages2010, by=c("discom"))
-names(Delhi2010) <- c("discom", "timeslots", "days", "date", "mW", "timepoint", "Average mW")
+names(Delhi2010) <- c("discom", "timeslots", "days", "date", "mW", "timepoint", "Average")
 Delhi2011 <- merge(Peaks2011, Averages2011, by=c("discom"))
-names(Delhi2011) <- c("discom", "timeslots", "days", "date", "mW", "timepoint", "Average mW")
+names(Delhi2011) <- c("discom", "timeslots", "days", "date", "mW", "timepoint", "Average")
 Delhi2012 <- merge(Peaks2012, Averages2012, by=c("discom"))
-names(Delhi2012) <- c("discom", "timeslots", "days", "date", "mW", "timepoint", "Average mW")
+names(Delhi2012) <- c("discom", "timeslots", "days", "date", "mW", "timepoint", "Average")
 Delhi2013 <- merge(Peaks2013, Averages2013, by=c("discom"))
-names(Delhi2013) <- c("discom", "timeslots", "days", "date", "mW", "timepoint", "Average mW")
+names(Delhi2013) <- c("discom", "timeslots", "days", "date", "mW", "timepoint", "Average")
+```
+
+######When I first set up the d3 visualization, I noticed that I only rounded the numbers in the total dataframe. Need to come back and round the other final dataframes for consistency / cleanliness of graph labels.
+
+```{r}
+Delhi2013$mW <-round(Delhi2013$mW, 0)
+Delhi2012$mW <-round(Delhi2012$mW, 0)
+Delhi2011$mW <-round(Delhi2011$mW, 0)
+Delhi2010$mW <-round(Delhi2010$mW, 0)
+Delhi2013$Average <-round(Delhi2013$Average, 0)
+Delhi2012$Average <-round(Delhi2012$Average, 0)
+Delhi2011$Average <-round(Delhi2011$Average, 0)
+Delhi2010$Average <-round(Delhi2010$Average, 0)
 ```
 
 ######Now we need to create some *CSV files

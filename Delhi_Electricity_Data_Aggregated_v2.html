@@ -318,15 +318,26 @@ NDPLPeakData2013 &lt;-NDPLPeakDataA2013[grep(NDPLPeakOccurence2013$timepoint, ND
 <div id="now-there-are-really-a-large-number-of-data-frames-floating-around-it-was-necessary-to-cut-and-aggregate-but-now-it-feels-necessary-to-simplify-the-output.-i-will-write-.csv-files-that-can-be-used-in-plnkr-with-d3..-but-i-dont-want-to-use-some-permutation-of-6-csv-files.-with-the-peaks-and-averages-cut-it-now-makes-sense-to-combine-them-into-fewer-dataframes-and-ultimately-.csv-files.-my-initial-vision-will-need-to-be-scaled-back-in-the-interest-of-completing-the-final-visualization-in-a-timely-fashion-but-the-next-core-goal-that-needs-to-be-achieved-is-getting-something-interactive-and-meaningful-going..-i-think-in-order-to-make-this-manageable-from-a-time-perspective-i-will-not-create-one-interactive-graph-but-instead-will-create-several.-and-i-will-have-one-source-.csv-file-for-each-of-these." class="section level5">
 <h5>Now there are really a large number of data frames floating around… It was necessary to cut and aggregate but now it feels necessary to simplify the output. I will write <em>.csv files that can be used in plnkr with d3.. But I don’t want to use some permutation of 6 </em>csv files. With the peaks and averages cut, it now makes sense to combine them into fewer dataframes and ultimately, <em>.csv files. My initial vision will need to be scaled back in the interest of completing the final visualization in a timely fashion, but the next core goal that needs to be achieved is getting something interactive and meaningful going.. I think in order to make this manageable from a time perspective I will not create one interactive graph, but instead will create several. And I will have one source </em>.csv file for each of these.</h5>
 <pre class="r"><code>DelhiData &lt;- merge(TotalPeakData, Averages, by=c(&quot;discom&quot;))
-names(DelhiData) &lt;- c(&quot;discom&quot;, &quot;timeslots&quot;, &quot;days&quot;, &quot;date&quot;, &quot;mW&quot;, &quot;timepoint&quot;, &quot;Average mW&quot;)
+names(DelhiData) &lt;- c(&quot;discom&quot;, &quot;timeslots&quot;, &quot;days&quot;, &quot;date&quot;, &quot;mW&quot;, &quot;timepoint&quot;, &quot;Average&quot;)
 Delhi2010 &lt;- merge(Peaks2010, Averages2010, by=c(&quot;discom&quot;))
-names(Delhi2010) &lt;- c(&quot;discom&quot;, &quot;timeslots&quot;, &quot;days&quot;, &quot;date&quot;, &quot;mW&quot;, &quot;timepoint&quot;, &quot;Average mW&quot;)
+names(Delhi2010) &lt;- c(&quot;discom&quot;, &quot;timeslots&quot;, &quot;days&quot;, &quot;date&quot;, &quot;mW&quot;, &quot;timepoint&quot;, &quot;Average&quot;)
 Delhi2011 &lt;- merge(Peaks2011, Averages2011, by=c(&quot;discom&quot;))
-names(Delhi2011) &lt;- c(&quot;discom&quot;, &quot;timeslots&quot;, &quot;days&quot;, &quot;date&quot;, &quot;mW&quot;, &quot;timepoint&quot;, &quot;Average mW&quot;)
+names(Delhi2011) &lt;- c(&quot;discom&quot;, &quot;timeslots&quot;, &quot;days&quot;, &quot;date&quot;, &quot;mW&quot;, &quot;timepoint&quot;, &quot;Average&quot;)
 Delhi2012 &lt;- merge(Peaks2012, Averages2012, by=c(&quot;discom&quot;))
-names(Delhi2012) &lt;- c(&quot;discom&quot;, &quot;timeslots&quot;, &quot;days&quot;, &quot;date&quot;, &quot;mW&quot;, &quot;timepoint&quot;, &quot;Average mW&quot;)
+names(Delhi2012) &lt;- c(&quot;discom&quot;, &quot;timeslots&quot;, &quot;days&quot;, &quot;date&quot;, &quot;mW&quot;, &quot;timepoint&quot;, &quot;Average&quot;)
 Delhi2013 &lt;- merge(Peaks2013, Averages2013, by=c(&quot;discom&quot;))
-names(Delhi2013) &lt;- c(&quot;discom&quot;, &quot;timeslots&quot;, &quot;days&quot;, &quot;date&quot;, &quot;mW&quot;, &quot;timepoint&quot;, &quot;Average mW&quot;)</code></pre>
+names(Delhi2013) &lt;- c(&quot;discom&quot;, &quot;timeslots&quot;, &quot;days&quot;, &quot;date&quot;, &quot;mW&quot;, &quot;timepoint&quot;, &quot;Average&quot;)</code></pre>
+<div id="when-i-first-set-up-the-d3-visualization-i-noticed-that-i-only-rounded-the-numbers-in-the-total-dataframe.-need-to-come-back-and-round-the-other-final-dataframes-for-consistency-cleanliness-of-graph-labels." class="section level6">
+<h6>When I first set up the d3 visualization, I noticed that I only rounded the numbers in the total dataframe. Need to come back and round the other final dataframes for consistency / cleanliness of graph labels.</h6>
+<pre class="r"><code>Delhi2013$mW &lt;-round(Delhi2013$mW, 0)
+Delhi2012$mW &lt;-round(Delhi2012$mW, 0)
+Delhi2011$mW &lt;-round(Delhi2011$mW, 0)
+Delhi2010$mW &lt;-round(Delhi2010$mW, 0)
+Delhi2013$Average &lt;-round(Delhi2013$Average, 0)
+Delhi2012$Average &lt;-round(Delhi2012$Average, 0)
+Delhi2011$Average &lt;-round(Delhi2011$Average, 0)
+Delhi2010$Average &lt;-round(Delhi2010$Average, 0)</code></pre>
+</div>
 <div id="now-we-need-to-create-some-csv-files" class="section level6">
 <h6>Now we need to create some *CSV files</h6>
 <pre class="r"><code>write.csv(DelhiData, file=&quot;DelhiData.csv&quot;)

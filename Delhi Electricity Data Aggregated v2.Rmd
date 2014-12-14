@@ -293,26 +293,27 @@ NDPLPeakDataA2013 <-Delhi2013[grep(NDPLPeakOccurence2013$days, Delhi2013$days,  
 NDPLPeakData2013 <-NDPLPeakDataA2013[grep(NDPLPeakOccurence2013$timepoint, NDPLPeakDataA2013$timepoint,  ignore.case=T),]
 ```
 
-#####Now there are really a huge number of datasets floating around... It was necessary to cut and aggregate but now it feels necessary to simplify the output. I will write *.csv files that can be used in plnkr with d3.. But I don't want to use some permutation of 6 *csv files. With the peaks and averages cut, it now makes sense to combine them into fewer dataframes and ultimately, *.csv files. My initial vision will need to be scaled back in the interest of completing the final visualization in a timely fashion, but the next core goal that needs to be achieved is getting something interactive and meaningful going.. I think in order to make this manageable from a time perspective I will not create one interactive graph, but instead will create several. And I will have one source *.csv file for each of these.
+#####Now there are really a large number of data frames floating around... It was necessary to cut and aggregate but now it feels necessary to simplify the output. I will write *.csv files that can be used in plnkr with d3.. But I don't want to use some permutation of 6 *csv files. With the peaks and averages cut, it now makes sense to combine them into fewer dataframes and ultimately, *.csv files. My initial vision will need to be scaled back in the interest of completing the final visualization in a timely fashion, but the next core goal that needs to be achieved is getting something interactive and meaningful going.. I think in order to make this manageable from a time perspective I will not create one interactive graph, but instead will create several. And I will have one source *.csv file for each of these.
 
-##DelhiDataMaster <- merge(DelhiDataMasterxTimepoints, Reallycleantimeslots, by=c("timeslots"))
+```{r}
+DelhiData <- merge(TotalPeakData, Averages, by=c("discom"))
+names(DelhiData) <- c("discom", "timeslots", "days", "date", "mW", "timepoint", "Average mW")
+Delhi2010 <- merge(Peaks2010, Averages2010, by=c("discom"))
+names(Delhi2010) <- c("discom", "timeslots", "days", "date", "mW", "timepoint", "Average mW")
+Delhi2011 <- merge(Peaks2011, Averages2011, by=c("discom"))
+names(Delhi2011) <- c("discom", "timeslots", "days", "date", "mW", "timepoint", "Average mW")
+Delhi2012 <- merge(Peaks2012, Averages2012, by=c("discom"))
+names(Delhi2012) <- c("discom", "timeslots", "days", "date", "mW", "timepoint", "Average mW")
+Delhi2013 <- merge(Peaks2013, Averages2013, by=c("discom"))
+names(Delhi2013) <- c("discom", "timeslots", "days", "date", "mW", "timepoint", "Average mW")
+```
 
+######Now we need to create some *CSV files
 
-#### Things to do:
-##### Create *.csv files for:
-###### Total peak & average
-###### BRPL peak & average
-###### NDPL peak & average
-###### BYPL peak & average
-###### NDMC peak & average
-###### MES peak & average
-###### Create dataframe with peak and average for 2010, 2011, and 2013
-###### Create *.csv files for:
-###### Total peak & average by year
-###### BRPL peak & average by year
-###### NDPL peak & average by year
-###### BYPL peak & average by year
-###### NDMC peak & average by year
-###### MES peak & average by year 
-
-
+```{r}
+write.csv(DelhiData, file="DelhiData.csv")
+write.csv(Delhi2013, file="Delhi2013.csv")
+write.csv(Delhi2012, file="Delhi2012.csv")
+write.csv(Delhi2011, file="Delhi2011.csv")
+write.csv(Delhi2010, file="Delhi2010.csv")
+```

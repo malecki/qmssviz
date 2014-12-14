@@ -315,34 +315,25 @@ NDMCPeakData2013 &lt;-NDMCPeakDataA2013[grep(NDMCPeakOccurence2013$timepoint, ND
 NDPLPeakDataA2013 &lt;-Delhi2013[grep(NDPLPeakOccurence2013$days, Delhi2013$days,  ignore.case=T),]
 NDPLPeakData2013 &lt;-NDPLPeakDataA2013[grep(NDPLPeakOccurence2013$timepoint, NDPLPeakDataA2013$timepoint,  ignore.case=T),]</code></pre>
 </div>
-<div id="now-there-are-really-a-huge-number-of-datasets-floating-around-it-was-necessary-to-cut-and-aggregate-but-now-it-feels-necessary-to-simplify-the-output.-i-will-write-.csv-files-that-can-be-used-in-plnkr-with-d3..-but-i-dont-want-to-use-some-permutation-of-6-csv-files.-with-the-peaks-and-averages-cut-it-now-makes-sense-to-combine-them-into-fewer-dataframes-and-ultimately-.csv-files.-my-initial-vision-will-need-to-be-scaled-back-in-the-interest-of-completing-the-final-visualization-in-a-timely-fashion-but-the-next-core-goal-that-needs-to-be-achieved-is-getting-something-interactive-and-meaningful-going..-i-think-in-order-to-make-this-manageable-from-a-time-perspective-i-will-not-create-one-interactive-graph-but-instead-will-create-several.-and-i-will-have-one-source-.csv-file-for-each-of-these." class="section level5">
-<h5>Now there are really a huge number of datasets floating around… It was necessary to cut and aggregate but now it feels necessary to simplify the output. I will write <em>.csv files that can be used in plnkr with d3.. But I don’t want to use some permutation of 6 </em>csv files. With the peaks and averages cut, it now makes sense to combine them into fewer dataframes and ultimately, <em>.csv files. My initial vision will need to be scaled back in the interest of completing the final visualization in a timely fashion, but the next core goal that needs to be achieved is getting something interactive and meaningful going.. I think in order to make this manageable from a time perspective I will not create one interactive graph, but instead will create several. And I will have one source </em>.csv file for each of these.</h5>
-</div>
-</div>
-<div id="delhidatamaster---mergedelhidatamasterxtimepoints-reallycleantimeslots-byctimeslots" class="section level2">
-<h2>DelhiDataMaster &lt;- merge(DelhiDataMasterxTimepoints, Reallycleantimeslots, by=c(“timeslots”))</h2>
-<div id="things-to-do" class="section level4">
-<h4>Things to do:</h4>
-<div id="create-.csv-files-for-total-peak-average-brpl-peak-average-ndpl-peak-average-bypl-peak-average-ndmc-peak-average-mes-peak-average-create-dataframe-with-peak-and-average-for-2010-2011-and-2013-create-.csv-files-for" class="section level5">
-<h5>Create <em>.csv files for: ###### Total peak &amp; average ###### BRPL peak &amp; average ###### NDPL peak &amp; average ###### BYPL peak &amp; average ###### NDMC peak &amp; average ###### MES peak &amp; average ###### Create dataframe with peak and average for 2010, 2011, and 2013 ###### Create </em>.csv files for:</h5>
-<div id="total-peak-average-by-year" class="section level6">
-<h6>Total peak &amp; average by year</h6>
-</div>
-<div id="brpl-peak-average-by-year" class="section level6">
-<h6>BRPL peak &amp; average by year</h6>
-</div>
-<div id="ndpl-peak-average-by-year" class="section level6">
-<h6>NDPL peak &amp; average by year</h6>
-</div>
-<div id="bypl-peak-average-by-year" class="section level6">
-<h6>BYPL peak &amp; average by year</h6>
-</div>
-<div id="ndmc-peak-average-by-year" class="section level6">
-<h6>NDMC peak &amp; average by year</h6>
-</div>
-<div id="mes-peak-average-by-year" class="section level6">
-<h6>MES peak &amp; average by year</h6>
-</div>
+<div id="now-there-are-really-a-large-number-of-data-frames-floating-around-it-was-necessary-to-cut-and-aggregate-but-now-it-feels-necessary-to-simplify-the-output.-i-will-write-.csv-files-that-can-be-used-in-plnkr-with-d3..-but-i-dont-want-to-use-some-permutation-of-6-csv-files.-with-the-peaks-and-averages-cut-it-now-makes-sense-to-combine-them-into-fewer-dataframes-and-ultimately-.csv-files.-my-initial-vision-will-need-to-be-scaled-back-in-the-interest-of-completing-the-final-visualization-in-a-timely-fashion-but-the-next-core-goal-that-needs-to-be-achieved-is-getting-something-interactive-and-meaningful-going..-i-think-in-order-to-make-this-manageable-from-a-time-perspective-i-will-not-create-one-interactive-graph-but-instead-will-create-several.-and-i-will-have-one-source-.csv-file-for-each-of-these." class="section level5">
+<h5>Now there are really a large number of data frames floating around… It was necessary to cut and aggregate but now it feels necessary to simplify the output. I will write <em>.csv files that can be used in plnkr with d3.. But I don’t want to use some permutation of 6 </em>csv files. With the peaks and averages cut, it now makes sense to combine them into fewer dataframes and ultimately, <em>.csv files. My initial vision will need to be scaled back in the interest of completing the final visualization in a timely fashion, but the next core goal that needs to be achieved is getting something interactive and meaningful going.. I think in order to make this manageable from a time perspective I will not create one interactive graph, but instead will create several. And I will have one source </em>.csv file for each of these.</h5>
+<pre class="r"><code>DelhiData &lt;- merge(TotalPeakData, Averages, by=c(&quot;discom&quot;))
+names(DelhiData) &lt;- c(&quot;discom&quot;, &quot;timeslots&quot;, &quot;days&quot;, &quot;date&quot;, &quot;mW&quot;, &quot;timepoint&quot;, &quot;Average mW&quot;)
+Delhi2010 &lt;- merge(Peaks2010, Averages2010, by=c(&quot;discom&quot;))
+names(Delhi2010) &lt;- c(&quot;discom&quot;, &quot;timeslots&quot;, &quot;days&quot;, &quot;date&quot;, &quot;mW&quot;, &quot;timepoint&quot;, &quot;Average mW&quot;)
+Delhi2011 &lt;- merge(Peaks2011, Averages2011, by=c(&quot;discom&quot;))
+names(Delhi2011) &lt;- c(&quot;discom&quot;, &quot;timeslots&quot;, &quot;days&quot;, &quot;date&quot;, &quot;mW&quot;, &quot;timepoint&quot;, &quot;Average mW&quot;)
+Delhi2012 &lt;- merge(Peaks2012, Averages2012, by=c(&quot;discom&quot;))
+names(Delhi2012) &lt;- c(&quot;discom&quot;, &quot;timeslots&quot;, &quot;days&quot;, &quot;date&quot;, &quot;mW&quot;, &quot;timepoint&quot;, &quot;Average mW&quot;)
+Delhi2013 &lt;- merge(Peaks2013, Averages2013, by=c(&quot;discom&quot;))
+names(Delhi2013) &lt;- c(&quot;discom&quot;, &quot;timeslots&quot;, &quot;days&quot;, &quot;date&quot;, &quot;mW&quot;, &quot;timepoint&quot;, &quot;Average mW&quot;)</code></pre>
+<div id="now-we-need-to-create-some-csv-files" class="section level6">
+<h6>Now we need to create some *CSV files</h6>
+<pre class="r"><code>write.csv(DelhiData, file=&quot;DelhiData.csv&quot;)
+write.csv(Delhi2013, file=&quot;Delhi2013.csv&quot;)
+write.csv(Delhi2012, file=&quot;Delhi2012.csv&quot;)
+write.csv(Delhi2011, file=&quot;Delhi2011.csv&quot;)
+write.csv(Delhi2010, file=&quot;Delhi2010.csv&quot;)</code></pre>
 </div>
 </div>
 </div>

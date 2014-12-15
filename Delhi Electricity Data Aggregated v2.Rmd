@@ -1,0 +1,332 @@
+---
+title: "Delhi Aggregated Data"
+author: "Christopher Buckingham"
+date: "November 29, 2014"
+output: html_document
+---
+####Reading electricity consumption data from CSV file, aggregating into delhi-wide number, breaking into date subsets
+
+```{r}
+Source <-read.csv("~/documents/git/qmssviz/delhi/qmssviz/loads2010-2013.csv")
+require(plyr)
+require(ggplot2)
+require(plotly)
+require(devtools)
+require(plotly)
+py <- plotly("cbuckingham0819", "n4iccjh7lr")
+```
+
+#####Data read as "Source," now have all data, but need to aggregate to get some Dehli-wide numbers:
+
+```{r}
+Sourceagg <- aggregate(Source$mW, by=list(Source$days,Source$timeslots,Source$date), FUN=sum)
+names(Sourceagg) <- c("days", "timeslots", "date", "mW")
+```
+
+#####New dataframe "Sourceagg" created that contains the total electricity consumption across all regions for each unique date + timeframe combination. Lost numeric timeslot variables in the process, will need to re-add these. First need a clean list of timeslots and corresponding point values:
+
+```{r}
+TimeslotHeaders <- c("timeslots", "timepoint")
+Timeslots <- Source[TimeslotHeaders]
+Cleantimeslots <- subset(Timeslots, timepoint>0 & timepoint<97, c(timeslots, timepoint))
+Reallycleantimeslots <- unique(Cleantimeslots)  
+```
+
+#####Have now created "Reallycleantimeslots," which is a list comprised of two columns and 96 rows. Must now attach timepoint values to the aggregated delhi data:
+
+```{r}
+DelhiTotals <- merge(Sourceagg, Reallycleantimeslots, by=c("timeslots"))
+```
+
+#####The DelhiTotals dataframe now contains timeslot. The next step is to add a "discom" column that has a value of "total." We will then be able to merge the aggregated data with source.
+
+```{r}
+discom <- c('Total')
+DelhiTotalswDiscom  <- data.frame(DelhiTotals$timeslots, DelhiTotals$days, DelhiTotals$date, DelhiTotals$mW, DelhiTotals$timepoint, discom)
+names(DelhiTotalswDiscom) <- c("timeslots", "days", "date", "mW", "timepoint", "discom")
+```
+
+#####DelhiTotalswDiscom is a dataframe that has been appended with discom values of "total." Now it's time to merge the aggregated data with the original source data. Merge did not work. Will use Rbind, but will need to remove column "X" from source in order to do so.
+
+```{r}
+SourceMinusX <-data.frame(Source$timeslots, Source$days, Source$date, Source$mW, Source$timepoint, Source$discom)
+names(SourceMinusX) <- c("timeslots", "days", "date", "mW", "timepoint", "discom")
+DelhiDataMaster <- rbind(SourceMinusX, DelhiTotalswDiscom)
+```
+
+#####The combined master dataset looks good as indicated by the number of observations and a brief visual inspection. The erraneous timepoint issue has resurfaced. I'm not sure having accurate values of 1 through 96 for timepoints is necessary but in the interest of having a solid dataframe I will now need to go back and fix the timepoint values in the master dataset. 
+
+```{r}
+DelhiDataMasterxTimepoints <-data.frame(DelhiDataMaster$timeslots, DelhiDataMaster$days, DelhiDataMaster$date, DelhiDataMaster$mW, DelhiDataMaster$discom)
+names(DelhiDataMasterxTimepoints) <- c("timeslots", "days", "date", "mW", "discom")
+DelhiDataMaster <- merge(DelhiDataMasterxTimepoints, Reallycleantimeslots, by=c("timeslots"))
+```
+
+#####Looking good, lets sort by date, timepoint, and discom for good measure.
+
+```{r}
+DelhiDataMaster <- DelhiDataMaster[order(DelhiDataMaster$days, DelhiDataMaster$timepoint, DelhiDataMaster$discom),]
+```
+
+#####And.. lets get rid of the useless "row.names."
+
+```{r}
+DelhiDataMaster <-data.frame(DelhiDataMaster$timeslots, DelhiDataMaster$days, DelhiDataMaster$date, DelhiDataMaster$mW, DelhiDataMaster$discom, DelhiDataMaster$timepoint)
+names(DelhiDataMaster) <- c("timeslots", "days", "date", "mW", "discom", "timepoint")
+```
+
+#####Since we now have a comprehensive dataset, time to share:
+
+```{r}
+write.csv(DelhiDataMaster, file = "DelhiDataMaster.csv")
+```
+
+####With the data now ready, it's time to parse with the goal of gathering datapoints that can be utilized for interesting graphs.
+#####First, I set out to gather Delhi Peak and Low Energy usage spanning the entire 2010-2013 observation period.
+
+```{r}
+DailyPeak <-ddply(.data=DelhiDataMaster, .variables=.(date, discom), subset, mW==max(mW))
+DailyLow <-ddply(.data=DelhiDataMaster, .variables=.(date, discom), subset, mW==min(mW))
+OverallPeak <-ddply(.data=DelhiDataMaster, .variables=.(discom), subset, mW==max(mW))
+OverallLow <-ddply(.data=DelhiDataMaster, .variables=.(discom), subset, mW==min(mW))
+TotalPeakOccurence <-OverallPeak[grep("Total", OverallPeak$discom, ignore.case=T),]
+BRPLPeakOccurence <-OverallPeak[grep("BRPL", OverallPeak$discom, ignore.case=T),]
+BYPLPeakOccurence <-OverallPeak[grep("BYPL", OverallPeak$discom, ignore.case=T),]
+MESPeakOccurence <-OverallPeak[grep("MES", OverallPeak$discom, ignore.case=T),]
+NDMCPeakOccurence <-OverallPeak[grep("NDMC", OverallPeak$discom, ignore.case=T),]
+NDPLPeakOccurence <-OverallPeak[grep("NDPL", OverallPeak$discom, ignore.case=T),]
+TotalPeakDataA <-DelhiDataMaster[grep(TotalPeakOccurence$days, DelhiDataMaster$days,  ignore.case=T),]
+TotalPeakData <-TotalPeakDataA[grep(TotalPeakOccurence$timepoint, TotalPeakDataA$timepoint,  ignore.case=T),]
+BRPLPeakDataA <-DelhiDataMaster[grep(BRPLPeakOccurence$days, DelhiDataMaster$days,  ignore.case=T),]
+BRPLPeakData <-BRPLPeakDataA[grep(BRPLPeakOccurence$timepoint, BRPLPeakDataA$timepoint,  ignore.case=T),]
+BYPLPeakDataA <-DelhiDataMaster[grep(BYPLPeakOccurence$days, DelhiDataMaster$days,  ignore.case=T),]
+BYPLPeakData <-BYPLPeakDataA[grep(BYPLPeakOccurence$timepoint, BYPLPeakDataA$timepoint,  ignore.case=T),]
+MESPeakDataA <-DelhiDataMaster[grep(MESPeakOccurence$days, DelhiDataMaster$days,  ignore.case=T),]
+MESPeakData <-MESPeakDataA[grep(MESPeakOccurence$timepoint, MESPeakDataA$timepoint,  ignore.case=T),]
+NDMCPeakDataA <-DelhiDataMaster[grep(NDMCPeakOccurence$days, DelhiDataMaster$days,  ignore.case=T),]
+NDMCPeakData <-NDMCPeakDataA[grep(NDMCPeakOccurence$timepoint, NDMCPeakDataA$timepoint,  ignore.case=T),]
+NDPLPeakDataA <-DelhiDataMaster[grep(NDPLPeakOccurence$days, DelhiDataMaster$days,  ignore.case=T),]
+NDPLPeakData <-NDPLPeakDataA[grep(NDPLPeakOccurence$timepoint, NDPLPeakDataA$timepoint,  ignore.case=T),]
+```
+
+##### Now we have all of the peak information. Time to start graphing.
+
+#### Peak Power Consumption in Delhi
+
+```{r}
+TotalPeakDate <-toString(TotalPeakData$date)
+TotalPeakData$mW <-round(TotalPeakData$mW, 0)
+TotalPeakTitleText<-paste("Peak mW Consumption Observation on ",TotalPeakData$date, "at ",TotalPeakData$timeslots, Sep="")
+ggplot(TotalPeakData, aes(y=mW ,x=reorder(discom,-mW), fill=discom)) + geom_bar(stat="identity", width=.75, alpha = 3/4)+ ggtitle("TotalPeakTitleText")+ ggtitle(TotalPeakTitleText) + ylab("mW by Distribution Company") + xlab("") + geom_text(aes(label = mW, y=mW+125, size=6)) + theme(legend.position="none")
+```
+
+#### Peak Power Consumption in Zones Served by BSES Rajdhani Power Limited (BRPL)
+
+```{r}
+BRPLPeakDate <-toString(BRPLPeakData$date)
+BRPLPeakData$mW <-round(BRPLPeakData$mW, 0)
+BRPLPeakTitleText<-paste("Peak mW Consumption Observation by BRPL on ",BRPLPeakData$date, "at ",BRPLPeakData$timeslots, Sep="")
+ggplot(BRPLPeakData, aes(y=mW ,x=reorder(discom,-mW), fill=discom)) + geom_bar(stat="identity", width=.75, alpha = 3/4) + ggtitle(BRPLPeakTitleText) + ylab("mW by Distribution Company") + xlab("") + geom_text(aes(label = mW, y=mW+125, size=6)) + theme(legend.position="none")
+```
+
+#### Peak Power Consumption in Zones Served by BSES Yamuna Power Limited (BYPL)
+
+```{r}
+BYPLPeakDate <-toString(BYPLPeakData$date)
+BYPLPeakData$mW <-round(BYPLPeakData$mW, 0)
+BYPLPeakTitleText<-paste("Peak mW Consumption Observation by BYPL on ",BYPLPeakData$date, "at ",BYPLPeakData$timeslots, Sep="")
+ggplot(BYPLPeakData, aes(y=mW ,x=reorder(discom,-mW), fill=discom)) + geom_bar(stat="identity", width=.75, alpha = 3/4) + ggtitle(BYPLPeakTitleText) + ylab("mW by Distribution Company") + xlab("") + geom_text(aes(label = mW, y=mW+125, size=6)) + theme(legend.position="none")
+```
+
+#### Peak Power Consumption in Zones Served by Military Engineering Service (MES)
+
+```{r}
+MESPeakDate <-toString(MESPeakData$date)
+MESPeakData$mW <-round(MESPeakData$mW, 0)
+MESPeakTitleText<-paste("Peak mW Consumption Observation by MES on ",MESPeakData$date, "at ",MESPeakData$timeslots, Sep="")
+ggplot(MESPeakData, aes(y=mW ,x=reorder(discom,-mW), fill=discom)) + geom_bar(stat="identity", width=.75, alpha = 3/4) + ggtitle(MESPeakTitleText) + ylab("mW by Distribution Company") + xlab("") + geom_text(aes(label = mW, y=mW+125, size=6)) + theme(legend.position="none")
+```
+
+#### Peak Power Consumption in Zones Served by New Delhi Municipal Committee (NDMC)
+
+```{r}
+NDMCPeakDate <-toString(NDMCPeakData$date)
+NDMCPeakData$mW <-round(NDMCPeakData$mW, 0)
+NDMCPeakTitleText<-paste("Peak mW Consumption Observation by NDMC on ",NDMCPeakData$date, "at ",NDMCPeakData$timeslots, Sep="")
+ggplot(NDMCPeakData, aes(y=mW ,x=reorder(discom,-mW), fill=discom)) + geom_bar(stat="identity", width=.75, alpha = 3/4) + ggtitle(NDMCPeakTitleText) + ylab("mW by Distribution Company") + xlab("") + geom_text(aes(label = mW, y=mW+125, size=6)) + theme(legend.position="none")
+```
+
+#### Peak Power Consumption in Zones Served by North Delhi Power Limited (NDPL)
+
+```{r}
+NDPLPeakDate <-toString(NDPLPeakData$date)
+NDPLPeakData$mW <-round(NDPLPeakData$mW, 0)
+NDPLPeakTitleText<-paste("Peak mW Consumption Observation by NDPL on ",NDPLPeakData$date, "at ",NDPLPeakData$timeslots, Sep="")
+ggplot(NDPLPeakData, aes(y=mW ,x=reorder(discom,-mW), fill=discom)) + geom_bar(stat="identity", width=.75, alpha = 3/4) + ggtitle(NDPLPeakTitleText) + ylab("mW by Distribution Company") + xlab("") + geom_text(aes(label = mW, y=mW+125, size=6)) + theme(legend.position="none")
+```
+
+##### Tried using plotly, left some of the code in my *Rmd but decided that plotly is NOT ideal. Will need to figure out how to use D3.
+
+#####Now we need to calculate average consumption, the second set of values needed to make the planned interactive graph.
+
+```{r}
+DelhiAverages <-ddply(.data=DelhiDataMaster, .variables=.(discom), summarize, mW=round(mean(mW),0))
+```
+
+#####Let's take a quick peek at what the averages look like relative to the peaks!
+
+```{r}
+ggplot(DelhiAverages, aes(y=mW ,x=reorder(discom,-mW), fill=discom)) + geom_bar(stat="identity", width=.75, alpha = 3/4)+ ggtitle("2010-2013 Average Load Observed at 2975mW") + ylab("Average mW by Distribution Company") + xlab("") + geom_text(aes(label = mW, y=mW+125, size=6)) + theme(legend.position="none")
+```
+
+#####Ok, now the data needs to be cut a few more ways. I will create 4 data frames, one for each year (2010-2013). These data frames will then be used to calculate averages and peaks for each year.
+
+```{r}
+Delhi2010 <-DelhiDataMaster[DelhiDataMaster$days<40544 & DelhiDataMaster$days>40178,]
+Delhi2011 <-DelhiDataMaster[DelhiDataMaster$days<40909 & DelhiDataMaster$days>40543,]
+Delhi2012 <-DelhiDataMaster[DelhiDataMaster$days<41275 & DelhiDataMaster$days>40908,]
+Delhi2013 <-DelhiDataMaster[DelhiDataMaster$days<41640 & DelhiDataMaster$days>41274,]
+```
+
+#####Not in the code here but I ran a few qplots to check the new dataframes. Will now go on to calc the yearly averages. I suspect 2010 and 2013 will be very different given they are partial years.
+
+```{r}
+Averages2010 <-ddply(.data=Delhi2010, .variables=.(discom), summarize, mW=round(mean(mW),0))
+Averages2011 <-ddply(.data=Delhi2011, .variables=.(discom), summarize, mW=round(mean(mW),0))
+Averages2012 <-ddply(.data=Delhi2012, .variables=.(discom), summarize, mW=round(mean(mW),0))
+Averages2013 <-ddply(.data=Delhi2013, .variables=.(discom), summarize, mW=round(mean(mW),0))
+```
+
+#####Averages for each year are ready. Now we need peaks for each discom for each year..
+
+```{r}
+Peaks2010 <-ddply(.data=Delhi2010, .variables=.(discom), subset, mW==max(mW))
+PeakOccurence2010 <-Peaks2010[grep("Total", Peaks2010$discom, ignore.case=T),]
+BRPLPeakOccurence2010 <-Peaks2010[grep("BRPL", Peaks2010$discom, ignore.case=T),]
+BYPLPeakOccurence2010 <-Peaks2010[grep("BYPL", Peaks2010$discom, ignore.case=T),]
+MESPeakOccurence2010 <-Peaks2010[grep("MES", Peaks2010$discom, ignore.case=T),]
+NDMCPeakOccurence2010 <-Peaks2010[grep("NDMC", Peaks2010$discom, ignore.case=T),]
+NDPLPeakOccurence2010 <-Peaks2010[grep("NDPL", Peaks2010$discom, ignore.case=T),]
+TotalPeakDataA2010 <-Delhi2010[grep(PeakOccurence2010$days, Delhi2010$days,  ignore.case=T),]
+TotalPeakData2010 <-TotalPeakDataA2010[grep(PeakOccurence2010$timepoint, TotalPeakDataA2010$timepoint,  ignore.case=T),]
+BRPLPeakDataA2010 <-Delhi2010[grep(BRPLPeakOccurence2010$days, Delhi2010$days,  ignore.case=T),]
+BRPLPeakData2010 <-BRPLPeakDataA2010[grep(BRPLPeakOccurence2010$timepoint, BRPLPeakDataA2010$timepoint,  ignore.case=T),]
+BYPLPeakDataA2010 <-Delhi2010[grep(BYPLPeakOccurence2010$days, Delhi2010$days,  ignore.case=T),]
+BYPLPeakData2010 <-BYPLPeakDataA2010[grep(BYPLPeakOccurence2010$timepoint, BYPLPeakDataA2010$timepoint,  ignore.case=T),]
+MESPeakDataA2010 <-Delhi2010[grep(MESPeakOccurence2010$days, Delhi2010$days,  ignore.case=T),]
+MESPeakData2010 <-MESPeakDataA2010[grep(MESPeakOccurence2010$timepoint, MESPeakDataA2010$timepoint,  ignore.case=T),]
+NDMCPeakDataA2010 <-Delhi2010[grep(NDMCPeakOccurence2010$days, Delhi2010$days,  ignore.case=T),]
+NDMCPeakData2010 <-NDMCPeakDataA2010[grep(NDMCPeakOccurence2010$timepoint, NDMCPeakDataA2010$timepoint,  ignore.case=T),]
+NDPLPeakDataA2010 <-Delhi2010[grep(NDPLPeakOccurence2010$days, Delhi2010$days,  ignore.case=T),]
+NDPLPeakData2010 <-NDPLPeakDataA2010[grep(NDPLPeakOccurence2010$timepoint, NDPLPeakDataA2010$timepoint,  ignore.case=T),]
+```
+
+#####That worked for 2010, will now just copy the R chunk several times and calculate the 2011-2013 peaks.
+
+```{r}
+Peaks2011 <-ddply(.data=Delhi2011, .variables=.(discom), subset, mW==max(mW))
+PeakOccurence2011 <-Peaks2011[grep("Total", Peaks2011$discom, ignore.case=T),]
+BRPLPeakOccurence2011 <-Peaks2011[grep("BRPL", Peaks2011$discom, ignore.case=T),]
+BYPLPeakOccurence2011 <-Peaks2011[grep("BYPL", Peaks2011$discom, ignore.case=T),]
+MESPeakOccurence2011 <-Peaks2011[grep("MES", Peaks2011$discom, ignore.case=T),]
+NDMCPeakOccurence2011 <-Peaks2011[grep("NDMC", Peaks2011$discom, ignore.case=T),]
+NDPLPeakOccurence2011 <-Peaks2011[grep("NDPL", Peaks2011$discom, ignore.case=T),]
+TotalPeakDataA2011 <-Delhi2011[grep(PeakOccurence2011$days, Delhi2011$days,  ignore.case=T),]
+TotalPeakData2011 <-TotalPeakDataA2011[grep(PeakOccurence2011$timepoint, TotalPeakDataA2011$timepoint,  ignore.case=T),]
+BRPLPeakDataA2011 <-Delhi2011[grep(BRPLPeakOccurence2011$days, Delhi2011$days,  ignore.case=T),]
+BRPLPeakData2011 <-BRPLPeakDataA2011[grep(BRPLPeakOccurence2011$timepoint, BRPLPeakDataA2011$timepoint,  ignore.case=T),]
+BYPLPeakDataA2011 <-Delhi2011[grep(BYPLPeakOccurence2011$days, Delhi2011$days,  ignore.case=T),]
+BYPLPeakData2011 <-BYPLPeakDataA2011[grep(BYPLPeakOccurence2011$timepoint, BYPLPeakDataA2011$timepoint,  ignore.case=T),]
+MESPeakDataA2011 <-Delhi2011[grep(MESPeakOccurence2011$days, Delhi2011$days,  ignore.case=T),]
+MESPeakData2011 <-MESPeakDataA2011[grep(MESPeakOccurence2011$timepoint, MESPeakDataA2011$timepoint,  ignore.case=T),]
+NDMCPeakDataA2011 <-Delhi2011[grep(NDMCPeakOccurence2011$days, Delhi2011$days,  ignore.case=T),]
+NDMCPeakData2011 <-NDMCPeakDataA2011[grep(NDMCPeakOccurence2011$timepoint, NDMCPeakDataA2011$timepoint,  ignore.case=T),]
+NDPLPeakDataA2011 <-Delhi2011[grep(NDPLPeakOccurence2011$days, Delhi2011$days,  ignore.case=T),]
+NDPLPeakData2011 <-NDPLPeakDataA2011[grep(NDPLPeakOccurence2011$timepoint, NDPLPeakDataA2011$timepoint,  ignore.case=T),]
+```
+
+#####There goes '11
+
+```{r}
+Peaks2012 <-ddply(.data=Delhi2012, .variables=.(discom), subset, mW==max(mW))
+PeakOccurence2012 <-Peaks2012[grep("Total", Peaks2012$discom, ignore.case=T),]
+BRPLPeakOccurence2012 <-Peaks2012[grep("BRPL", Peaks2012$discom, ignore.case=T),]
+BYPLPeakOccurence2012 <-Peaks2012[grep("BYPL", Peaks2012$discom, ignore.case=T),]
+MESPeakOccurence2012 <-Peaks2012[grep("MES", Peaks2012$discom, ignore.case=T),]
+NDMCPeakOccurence2012 <-Peaks2012[grep("NDMC", Peaks2012$discom, ignore.case=T),]
+NDPLPeakOccurence2012 <-Peaks2012[grep("NDPL", Peaks2012$discom, ignore.case=T),]
+TotalPeakDataA2012 <-Delhi2012[grep(PeakOccurence2012$days, Delhi2012$days,  ignore.case=T),]
+TotalPeakData2012 <-TotalPeakDataA2012[grep(PeakOccurence2012$timepoint, TotalPeakDataA2012$timepoint,  ignore.case=T),]
+BRPLPeakDataA2012 <-Delhi2012[grep(BRPLPeakOccurence2012$days, Delhi2012$days,  ignore.case=T),]
+BRPLPeakData2012 <-BRPLPeakDataA2012[grep(BRPLPeakOccurence2012$timepoint, BRPLPeakDataA2012$timepoint,  ignore.case=T),]
+BYPLPeakDataA2012 <-Delhi2012[grep(BYPLPeakOccurence2012$days, Delhi2012$days,  ignore.case=T),]
+BYPLPeakData2012 <-BYPLPeakDataA2012[grep(BYPLPeakOccurence2012$timepoint, BYPLPeakDataA2012$timepoint,  ignore.case=T),]
+MESPeakDataA2012 <-Delhi2012[grep(MESPeakOccurence2012$days, Delhi2012$days,  ignore.case=T),]
+MESPeakData2012 <-MESPeakDataA2012[grep(MESPeakOccurence2012$timepoint, MESPeakDataA2012$timepoint,  ignore.case=T),]
+NDMCPeakDataA2012 <-Delhi2012[grep(NDMCPeakOccurence2012$days, Delhi2012$days,  ignore.case=T),]
+NDMCPeakData2012 <-NDMCPeakDataA2012[grep(NDMCPeakOccurence2012$timepoint, NDMCPeakDataA2012$timepoint,  ignore.case=T),]
+NDPLPeakDataA2012 <-Delhi2012[grep(NDPLPeakOccurence2012$days, Delhi2012$days,  ignore.case=T),]
+NDPLPeakData2012 <-NDPLPeakDataA2012[grep(NDPLPeakOccurence2012$timepoint, NDPLPeakDataA2012$timepoint,  ignore.case=T),]
+```
+
+#####And '12
+
+```{r}
+Peaks2013 <-ddply(.data=Delhi2013, .variables=.(discom), subset, mW==max(mW))
+PeakOccurence2013 <-Peaks2013[grep("Total", Peaks2013$discom, ignore.case=T),]
+BRPLPeakOccurence2013 <-Peaks2013[grep("BRPL", Peaks2013$discom, ignore.case=T),]
+BYPLPeakOccurence2013 <-Peaks2013[grep("BYPL", Peaks2013$discom, ignore.case=T),]
+MESPeakOccurence2013 <-Peaks2013[grep("MES", Peaks2013$discom, ignore.case=T),]
+NDMCPeakOccurence2013 <-Peaks2013[grep("NDMC", Peaks2013$discom, ignore.case=T),]
+NDPLPeakOccurence2013 <-Peaks2013[grep("NDPL", Peaks2013$discom, ignore.case=T),]
+TotalPeakDataA2013 <-Delhi2013[grep(PeakOccurence2013$days, Delhi2013$days,  ignore.case=T),]
+TotalPeakData2013 <-TotalPeakDataA2013[grep(PeakOccurence2013$timepoint, TotalPeakDataA2013$timepoint,  ignore.case=T),]
+BRPLPeakDataA2013 <-Delhi2013[grep(BRPLPeakOccurence2013$days, Delhi2013$days,  ignore.case=T),]
+BRPLPeakData2013 <-BRPLPeakDataA2013[grep(BRPLPeakOccurence2013$timepoint, BRPLPeakDataA2013$timepoint,  ignore.case=T),]
+BYPLPeakDataA2013 <-Delhi2013[grep(BYPLPeakOccurence2013$days, Delhi2013$days,  ignore.case=T),]
+BYPLPeakData2013 <-BYPLPeakDataA2013[grep(BYPLPeakOccurence2013$timepoint, BYPLPeakDataA2013$timepoint,  ignore.case=T),]
+MESPeakDataA2013 <-Delhi2013[grep(MESPeakOccurence2013$days, Delhi2013$days,  ignore.case=T),]
+MESPeakData2013 <-MESPeakDataA2013[grep(MESPeakOccurence2013$timepoint, MESPeakDataA2013$timepoint,  ignore.case=T),]
+NDMCPeakDataA2013 <-Delhi2013[grep(NDMCPeakOccurence2013$days, Delhi2013$days,  ignore.case=T),]
+NDMCPeakData2013 <-NDMCPeakDataA2013[grep(NDMCPeakOccurence2013$timepoint, NDMCPeakDataA2013$timepoint,  ignore.case=T),]
+NDPLPeakDataA2013 <-Delhi2013[grep(NDPLPeakOccurence2013$days, Delhi2013$days,  ignore.case=T),]
+NDPLPeakData2013 <-NDPLPeakDataA2013[grep(NDPLPeakOccurence2013$timepoint, NDPLPeakDataA2013$timepoint,  ignore.case=T),]
+```
+
+#####Now there are really a large number of data frames floating around... It was necessary to cut and aggregate but now it feels necessary to simplify the output. I will write *.csv files that can be used in plnkr with d3.. But I don't want to use some permutation of 6 *csv files. With the peaks and averages cut, it now makes sense to combine them into fewer dataframes and ultimately, *.csv files. My initial vision will need to be scaled back in the interest of completing the final visualization in a timely fashion, but the next core goal that needs to be achieved is getting something interactive and meaningful going.. I think in order to make this manageable from a time perspective I will not create one interactive graph, but instead will create several. And I will have one source *.csv file for each of these.
+
+```{r}
+DelhiData <- merge(TotalPeakData, Averages, by=c("discom"))
+names(DelhiData) <- c("discom", "timeslots", "days", "date", "mW", "timepoint", "Average")
+Delhi2010 <- merge(Peaks2010, Averages2010, by=c("discom"))
+names(Delhi2010) <- c("discom", "timeslots", "days", "date", "mW", "timepoint", "Average")
+Delhi2011 <- merge(Peaks2011, Averages2011, by=c("discom"))
+names(Delhi2011) <- c("discom", "timeslots", "days", "date", "mW", "timepoint", "Average")
+Delhi2012 <- merge(Peaks2012, Averages2012, by=c("discom"))
+names(Delhi2012) <- c("discom", "timeslots", "days", "date", "mW", "timepoint", "Average")
+Delhi2013 <- merge(Peaks2013, Averages2013, by=c("discom"))
+names(Delhi2013) <- c("discom", "timeslots", "days", "date", "mW", "timepoint", "Average")
+```
+
+######When I first set up the d3 visualization, I noticed that I only rounded the numbers in the total dataframe. Need to come back and round the other final dataframes for consistency / cleanliness of graph labels.
+
+```{r}
+Delhi2013$mW <-round(Delhi2013$mW, 0)
+Delhi2012$mW <-round(Delhi2012$mW, 0)
+Delhi2011$mW <-round(Delhi2011$mW, 0)
+Delhi2010$mW <-round(Delhi2010$mW, 0)
+Delhi2013$Average <-round(Delhi2013$Average, 0)
+Delhi2012$Average <-round(Delhi2012$Average, 0)
+Delhi2011$Average <-round(Delhi2011$Average, 0)
+Delhi2010$Average <-round(Delhi2010$Average, 0)
+```
+
+######Now we need to create some *CSV files
+
+```{r}
+write.csv(DelhiData, file="DelhiData.csv")
+write.csv(Delhi2013, file="Delhi2013.csv")
+write.csv(Delhi2012, file="Delhi2012.csv")
+write.csv(Delhi2011, file="Delhi2011.csv")
+write.csv(Delhi2010, file="Delhi2010.csv")
+```

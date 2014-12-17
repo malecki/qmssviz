@@ -1,0 +1,27 @@
+---
+title: "Creating a Data Frame"
+output: html_document
+---
+ R tutorial assignment
+```{r} 
+##set WD
+setwd("C:/Users/Esmail/Desktop/Claire/Columbia/4_Data Visualization")
+c<-read.csv("lgas.csv") ##lgas info with population
+f<-read.csv("tutorial.csv")##data with number of nurses 
+
+
+g<-f[f$zone=="South-South",]##just the south 
+##add a new variable and assign to pop
+rows<-as.numeric(rownames(g))
+g$pop<-c$pop_2006[rows]
+
+##make total of nurses and doctors
+g$hlthCare<-g$num_doctors_fulltime+g$num_nurses_fulltime
+
+##order by decending population
+final <- g[order(-g$pop),]
+```
+The result: 
+```{r}
+final
+```

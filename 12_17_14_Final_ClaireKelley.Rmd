@@ -1,0 +1,339 @@
+---
+title: "Final_ClaireKelley_12_17_14"
+author: "Claire Kelley"
+date: "Wednesday, December 17, 2014"
+output: html_document
+---
+
+First, load in the data and examine. 
+
+```{r}
+load("C:/Users/Esmail/Desktop/Claire/Sociology/Varoon/WorkspaceClaireJune10.RData")
+head(x)
+names(x)
+```
+
+Next data processing. First, Add dates and days of the week 
+
+```{r}
+##split up date variable to exclude time stamp
+df<-strsplit(as.character(x$date_orig),",")
+h<-sapply(df, "[", 1)
+Date<-as.Date(h)
+
+##bind date vector onto data
+x<-cbind(x,Date)
+
+##Calcuate Date 
+Day<-format(x$Date, format="%a")
+x<-cbind(x,Day)
+```
+Add a logical vector for whether the ad mentions safe sex under the label "Safe" there is a seperate concept that we also want to measure- ie ads that mention being disease free or clean. Any ad that mentions "Clean", "ddf", "df" is scored as being "clean"
+
+```{r}
+Safe<-grepl("safe", x[,13], ignore.case = TRUE, perl = FALSE, fixed = FALSE, useBytes = FALSE)
+
+##any ad that mentions either clean, ddf or df is coded as clean
+c<-grepl("clean", x[,13], ignore.case = TRUE, perl = FALSE, fixed = FALSE, useBytes = FALSE)
+d<-grepl("ddf", x[,13], ignore.case = TRUE, perl = FALSE, fixed = FALSE, useBytes = FALSE)
+f<-grepl("df", x[,13], ignore.case = TRUE, perl = FALSE, fixed = FALSE, useBytes = FALSE)
+
+clean<-unique(c,d,f)
+
+x<-cbind(x,Safe, clean)
+
+##also label which adds are both
+n<-which(x$Safe==T&x$clean==T)
+Both<-rep(FALSE,dim(x)[1])
+Both[n]<-TRUE
+x<-cbind(x,Both)
+
+```
+Data is messy. Something odd has happened with the time of data collection A time series appears below 
+```{r}
+library(ggplot2)
+df<-data.frame(table(x$Date))
+df$Var1<-as.Date(df$Var1)
+ ggplot(data=df, aes(x=Var1, y=Freq,group=1)) + geom_line()+ggtitle("Posts per Day")+scale_y_continuous(name="Number of Posts")+xlab("Date")+theme(plot.title = element_text(lineheight=3, face="bold"))
+
+```
+Next we can look at posting seperately by day of the week
+```{r,echo=FALSE}
+Week<-matrix(nrow=7,ncol=8)
+Week[,1]<-levels(x$Day)
+
+
+  Week[,2] <-as.numeric(table(x$Day))
+  Week[,3]<-as.numeric(table(x$Day,x$clean)[,2])
+  Week[,4]<-as.numeric(table(x$Day,x$Safe)[,2])
+  Week[,5]<-as.numeric(table(x$Day,x$Both)[,2])
+ 
+colnames(Week)<-c("Day","Total","Clean","Safe","Both","JClean","JSafe","Neither")
+
+##and calculate clean and safe not including both 
+Week[,6]<-(as.numeric(Week[,3])-as.numeric(Week[,5]))
+Week[,7]<-(as.numeric(Week[,4])-as.numeric(Week[,5]))
+Week[,8]<-(as.numeric(Week[,2])-as.numeric(Week[,5])-as.numeric(Week[,6])-as.numeric(Week[,7]))
+
+##trim to needed columns 
+Week<-data.frame(Week)
+for(i in 2:8){
+  Week[,i]<-as.numeric(as.character(Week[,i]))
+}
+
+DF<-Week[,c(1,5,6,7,8)]
+rownames(DF)<-DF[,1]
+
+
+###melts 
+library(reshape2)
+DF<-data.frame(DF)
+
+DF1<-melt(DF,id.var="Day")
+
+DF1[,3]<-as.numeric(DF1[,3])
+
+##works. Need title and Axis labels and maybe logical colors  
+library(ggplot2)
+ggplot(DF1, aes(x = Day, y = value,fill=variable)) +
+  geom_bar(stat='identity')+
+  scale_x_discrete(limits=c("Mon","Tue","Wed","Thu","Fri","Sat","Sun"))+ylab("Number of Posts")+scale_fill_discrete(name="",
+                    breaks=c("Both", "JClean", "JSafe","Neither"),
+                    labels=c("Clean and Safe", "Clean", "Safe","Neither"))+ggtitle("Postings By Day of the Week")+theme(plot.title = element_text(lineheight=3, face="bold"))
+
+```
+The trend of higher posting rates on the weekend is reflected in the data. Still not sure why the number of posting is increasing like that. Now lets look at state by state posting (Need to reorder)
+
+Next we look at posts mentioning "Clean" or "Safe" over time to see if there are any major trends in these two dimensions. We consider "clean " and "Safe" separately because using protection vs hoping that your partner is being honest about thier STD status have different implication for public health. 
+
+```{r}
+n<-which(x$Safe==T&x$clean==T)
+
+Both<-rep(FALSE,dim(x)[1])
+
+Both[n]<-TRUE
+x<-cbind(x,Both)
+
+Day<-matrix(nrow=78,ncol=7)
+Day[,1]<-table(x$Safe,x$Date)[2,]
+Day[,2]<-table(x$clean,x$Date)[2,]
+Day[,3]<-table(x$Both,x$Date)[2,]
+Day[,4]<-table(x$Date)
+Day<-data.frame(Day)
+names(Day)<-c("Safe","Clean","Both","Total")
+
+Day$Safe<-Day$Safe-Day$Both
+Day$Clean<-Day$Clean-Day$Both
+Day$Neither<-Day$Total-Day$Clean-Day$Safe+Day$Both
+
+mf<-Day[,c("Safe","Clean","Both","Neither")]
+tomelt<-data.frame(table(x$Date))
+mf<-cbind(tomelt$Var1,mf)
+names(mf)[1]<-"date"
+mf$date<-as.Date(mf$date)
+
+mf<-melt(mf,id="date")
+
+
+ggplot(mf, aes(x=date, y=value, fill=variable)) +
+  geom_area(colour="black", size=.2, alpha=.4) +
+  scale_fill_brewer(palette="Blues", breaks=rev(levels(mf$variable)))+ylab("Posts")+ggtitle("Ads mentioning 'safe' and 'clean' over time")+theme(plot.title = element_text(lineheight=3, face="bold"))
+```
+Now we move to an examination of geography. The next plot shows post volume by state, colored by percent seeking safe sex
+
+```{r,echo=FALSE,fig.width = 5, fig.height = 8}
+##make a data frame with count of posts 
+state<-data.frame(table(x$state))
+names(state)<-c("state","total")
+state$safe<-table(x$state,x$Safe)[,2]
+state$per<-100*state$safe/state$total
+
+##re order for convenient plotting
+state2<-state[order(state$total),]
+order2<-as.character((state2$state))
+
+##remove first row which is a single unlabeled case
+state2<-state2[-1,]
+state2$state<-as.character(state2$state)
+levels(state2$state) <- order2
+
+library(reshape)
+s2<-melt(state2,idvars="state")
+s3<-s2[1:52,]
+s3$per<-s2$value[105:156]
+###graph 
+ggplot(s3, aes(x = state, y = value,fill=per)) + 
+    geom_bar(stat="identity")+
+    theme(plot.title = element_text(lineheight=3, face="bold"),axis.text.x  = element_text(angle=0, vjust=0.7, size=10))+
+    ggtitle("Total Posts by State")+
+    scale_fill_continuous(name="Percent Safe")+coord_flip()+ylab("Number of Posts")+xlab("")
+  
+```
+Next we look at Map of safe postings by county 
+```{r,fig.width = 9, fig.height =5}
+##Load in spatial data from shapefile
+library(maptools)
+#library (spdep)
+#library(spgwr)
+setwd("C:/Users/Esmail/Desktop/Claire/Columbia/2_GIS Spatial/Project/Regression")
+USASafe <- readShapeSpatial("CountyDataForRegression3")
+library(ggplot2)
+USA.f <- fortify(USASafe,groups="county")
+
+### Merge in percent safe by county to fortified data set 
+library(scales)
+pp<-cbind(unique(USA.f$id),USASafe$perSafe)
+pp<-data.frame(pp)
+names(pp)<-c("id","Safe")
+USA.g<-merge(USA.f,pp,by="id")
+
+##quantize percent safe for plotting 
+library(RColorBrewer)
+USA.g$cut<-as.numeric(as.character(USA.g$Safe))
+USA.g$cut3 <- cut(USA.g$cut, breaks = c(seq(0,60,10),100))
+pal<-rev(brewer.pal(7,"YlOrRd"))
+
+##plot clorpleth
+
+ggplot(USA.g, aes(long, lat, group = group)) +
+  geom_polygon(data = USA.g, colour = "white", fill = NA) +
+  scale_x_continuous(limits=c(-127,-61))+scale_y_continuous(limits=c(21,53))+
+  geom_polygon(aes(fill = cut3), colour = alpha("white", 1/2), size = 0.2)+scale_fill_manual(values=pal,name="Percent seeking Safe Sex")+ggtitle("Cloropleth Map of Percentage Seeking Safe Sex ")+theme(plot.title = element_text(lineheight=3, face="bold"))
+
+```
+Now we look at the cities with the highest post volume 
+
+```{r,fig.width = 10, fig.height =5, echo=FALSE}
+###here we read in a file which includes zip codes for major cities in the US 
+setwd("C:/Users/Esmail/Desktop/Claire/Columbia/2_GIS Spatial/Project")
+zip<-read.csv("zipcode.csv")
+
+##to merge with existing data need lower case city name and change from abbreviated state to full name
+zip$city<-tolower(zip$city)
+zip$state<-state.name[match(zip$state,state.abb)]
+
+
+##Merge in lat and long data 
+y<-merge(x,zip,by="city",all=T)
+
+##look at post volume by city 
+df<-data.frame(table(y$city))
+
+##and make data frame in order of post volume 
+df2<-df[order(-df$Freq),]
+
+##select top 25 cities and merge in lat and long data, not all matches up. so load new data from excel
+df3<-df2[1:25,]
+
+
+##Hand code in lat and long because not all 
+setwd("C:/Users/Esmail/Desktop/Claire/Columbia/4_Data Visualization")
+city<-read.csv("cities.csv")
+city$plot<-city$Freq/2000
+##try 2
+
+base_map<-qplot(long, lat, data=USA.g, group=group, geom="polygon")+ scale_x_continuous(limits=c(-127,-61))+scale_y_continuous(limits=c(21,53))+ geom_polygon(aes(fill="#66B2FF"))+geom_point(aes(longitude, latitude,fill = NULL,group = NULL, size = Freq),data=city)+scale_fill_discrete(name="Cities Post Volume")+scale_size(range = c(3, 8))+guides(fill=FALSE)+ggtitle("Post Volume in Major Cities")+theme(plot.title = element_text(lineheight=3, face="bold"))
+
+base_map
+```
+Prep data for text analysis 
+```{r,echo=FALSE}
+##Prepare for text analysis, take a sample to find common words
+
+small <- sample(0:434957,2000)
+
+sm<-x[small,]
+
+vec<-paste(sm$title,sm$msg)
+test<-paste(vec,collapse=" ")
+test1<-tolower(test)
+
+test2<-strsplit(test1," ")
+test3<-unlist(test2)
+
+df<-data.frame(table(test3))
+
+df4<-cbind(as.character(df[,1]),df[,2])
+
+####sort and remove common "stop words"
+library(tm)
+stopWords<-stopwords("en")
+remove<-which(df4[,1]%in%stopWords)
+keep<-which(!df4[,1]%in%stopWords)
+
+df5<-df4[keep,]
+df5<-data.frame(df5)
+colnames(df5)<-c("word","freq")
+df5$freq<-as.numeric(as.character(df5$freq))
+
+##which words mentioned in more than 10% 
+df2<-df5[which(df5$freq>290),]
+df2<-data.frame(df2)
+##now we have common words 
+#vector of common words 
+
+loop<-as.character(df2$word)
+
+##
+safe<-x[which(x$Safe==T),]
+unsafe<-x[which(x$Safe==F),]
+
+##make document term matrix for safe 
+test<-c("bottom","can")
+nw<-matrix(nrow=48728, ncol=33)
+for(i in 1:33){
+  nw[,i]<-grepl(loop[i], safe$msg, ignore.case = TRUE, perl = FALSE, fixed = FALSE, useBytes = FALSE)
+}
+nw<-data.frame(nw)
+colnames(nw)<-loop
+new2<-cbind(nw,as.character(safe$Date),safe$state,safe$Safe)
+new2<-data.frame(new2)
+names(new2)[34:36]<-c("Date","State","Safe")
+
+##and unsafe 
+nw2<-matrix(nrow=386228, ncol=33)
+for(i in 1:33){
+  nw2[,i]<-grepl(loop[i], unsafe$msg, ignore.case = TRUE, perl = FALSE, fixed = FALSE, useBytes = FALSE)
+}
+
+nw2<-data.frame(nw2)
+colnames(nw2)<-loop
+
+##make new matricies 
+new3<-cbind(nw2,as.character(unsafe$Date),unsafe$state,unsafe$Safe)
+new3<-data.frame(new3)
+names(new3)[34:36]<-c("Date","State","Safe")
+
+##combine them into a matrix with dates 
+dtm<-rbind(new2,new3)
+mat<-matrix(nrow=78,ncol=31)
+```
+This line of code wont run in Markdown. It will run in the Console. I cant figure out why and i need the document term  matrix organized by date so I ran it in the console, saved it to a file and read it back in for plotting. It is supposed to make a matrix of term frequency by date. I ran this code in the terminal and in the next code chunk read in the csv. 
+
+for (i in 3:33){
+  mat[,(i-2)]<-table(dtm[,i],dtm$Date)[2,]
+}
+write.csv(mat,"docterm.csv")
+
+
+```{r}
+setwd("C:/Users/Esmail/Desktop/Claire/Columbia/4_Data Visualization")
+mat<-read.csv("docterm.csv")
+
+dfd<-data.frame(mat)
+names(dfd)<-loop[3:33]
+
+dfd<-cbind(as.character(data.frame(table(dtm$Date))[,1]),dfd)
+names(dfd)[1]<-"Date"
+dfd$Date<-as.Date(dfd$Date)
+
+###sort in date order 
+dfdS<-dfd[order(dfd$Date),]
+
+##and subset for plotting 
+tomelt<-dfdS[,c("bottom","host","love","pic","suck","top","Date")]
+library(reshape)
+dfm<-melt(tomelt,id="Date")
+library(ggplot2)
+ggplot(data=dfm, aes(x=Date, y=value, group=variable,color=variable)) + geom_line()
+```

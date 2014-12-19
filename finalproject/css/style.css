@@ -1,0 +1,562 @@
+/** ************************* **/
+/** Froont widget base styles **/
+/** ************************* **/
+.fr-widget h1,
+.fr-widget h2,
+.fr-widget h3,
+.fr-widget h4,
+.fr-widget h5,
+.fr-widget h6,
+.fr-widget p {
+  margin: 0;
+}
+html,
+body,
+button,
+input,
+select,
+textarea {
+  font-family: "PT Sans", Tahoma, Verdana, sans-serif;
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  font-size: 62.5%;
+}
+* {
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+input:focus,
+textarea:focus {
+  outline: none;
+}
+.b-content {
+  font-size: 1.6em;
+  padding-top: 0.02px;
+  min-height: 100%;
+  margin: 0 auto -50px;
+  /* the bottom margin is the negative value of the footer's height */
+  padding-bottom: 50px;
+}
+.b-content.loading {
+  opacity: 0;
+}
+.b-content:after {
+  content: ".";
+  display: none;
+  clear: both;
+  line-height: 0;
+  height: 0;
+}
+.b-content.not-in-preview {
+  padding-bottom: 0;
+}
+a {
+  color: #000;
+  text-decoration: underline;
+}
+.fr-wf {
+  -webkit-transition: opacity .1s linear;
+  -moz-transition: opacity .1s linear;
+  -o-transition: opacity .1s linear;
+  transition: opacity .1s linear;
+  word-break: break-word;
+}
+.wf-loading .fr-wf {
+  opacity: 0 !important;
+}
+.wf-inactive .fr-wf,
+.wf-active .fr-wf {
+  opacity: 1;
+}
+.fr-widget:after,
+.fr-widget:before {
+  content: ".";
+  display: block;
+  clear: both;
+  visibility: hidden;
+  line-height: 0;
+  height: 0;
+}
+.fr-widget {
+  display: block;
+}
+.fr-text * {
+  font-family: inherit;
+  font-weight: inherit;
+  font-size: inherit;
+  color: inherit;
+  text-decoration: inherit;
+}
+.fr-link {
+  text-decoration: none;
+}
+.fr-text i {
+  font-style: italic;
+}
+.fr-text u {
+  text-decoration: underline;
+}
+.fr-text del,
+.fr-text s,
+.fr-text strike {
+  text-decoration: line-through;
+}
+.fr-text b,
+.fr-text strong,
+.fr-text h1,
+.fr-text h2,
+.fr-text h3,
+.fr-text h4,
+.fr-text h5,
+.fr-text h6 {
+  font-weight: bold;
+}
+.fr-img {
+  line-height: 0;
+}
+.fr-img img {
+  width: 100%;
+  max-width: 100%;
+}
+.fr-svg svg {
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+}
+.fr-svg-inner svg {
+  position: absolute;
+  display: block;
+}
+.fr-grid > .fr-widget {
+  float: left;
+}
+.fr-video-inner {
+  position: relative;
+}
+.fr-video-inner iframe {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+.fr_hover-animation {
+  -webkit-transition-duration: 0.2s;
+  -moz-transition-duration: 0.2s;
+  -o-transition-duration: 0.2s;
+  transition-duration: 0.2s;
+  -webkit-transition-property: background, color, border-radius;
+  -moz-transition-property: background, color, border-radius;
+  -o-transition-property: background, color, border-radius;
+  transition-property: background, color, border-radius;
+  -webkit-transition-timing-function: ease-in-out;
+  -moz-transition-timing-function: ease-in-out;
+  -o-transition-timing-function: ease-in-out;
+  transition-timing-function: ease-in-out;
+}
+.fr-video-inner p {
+  display: none;
+}
+.fr-widget-hover-opacity-60:hover {
+  opacity: 0.6;
+}
+.fr-widget-hover-scale-up:hover {
+  transform: scale(1.1);
+}
+.fr-copyright-footer {
+  bottom: 0;
+  width: 100%;
+  position: relative;
+  height: 50px;
+  overflow: hidden;
+}
+.fr-copyright-footer.fixed {
+  position: fixed;
+  left: 0;
+}
+.fr-copyright-footer > .fr-container {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background: #242424;
+}
+.fr-copyright-footer .fr-made-with-froont {
+  width: auto;
+  font-family: Arial;
+  font-size: .55rem;
+  text-align: center;
+  letter-spacing: .14rem;
+  margin: 0 auto;
+  padding: 1.05rem 0 0.5rem 0;
+  color: #979797;
+}
+.fr-copyright-footer .fr-made-with-froont .fr-text {
+  min-width: 100%;
+}
+.fr-copyright-footer .fr-made-with-froont .fr-text .heart {
+  font-size: .8rem;
+}
+.fr-copyright-footer .fr-bottom-em-spacer {
+  height: 0.8rem;
+  background: #242424;
+}
+.fr-fork-on-froont {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 115px;
+  height: 115px;
+  background-image: url('//froont.com/_static/images/fork-ribbon.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  z-index: 10000;
+}
+.fr-fork-on-froont:hover {
+  background-position: 0 -115px;
+}
+
+/** ******************************** **/
+/** End of Froont widget base styles **/
+/** ******************************** **/
+
+/** ************************* **/
+/** Widget styles             **/
+/** ************************* **/
+body {
+  background-color: #0f0f0f
+}
+.fr_wifegi {
+  top: .015625px;
+  left: 0;
+  margin-right: auto;
+  margin-left: auto;
+  padding-top: 1px;
+  padding-bottom: 2em;
+  padding-left: 200px;
+  background-repeat: no-repeat;
+  background-image: url(../images/thumbnail/bg2_1.jpg_1400x933.jpg);
+  background-position: center center;
+  background-size: cover;
+  min-height: 100vh
+}
+.fr_pojovo {
+  top: 0;
+  left: 0;
+  width: 200px;
+  height: 100vh;
+  padding-top: 4em;
+  padding-left: 40px;
+  background-color: rgba(0, 0, 0, 0.8);
+  position: absolute;
+  bottom: 0
+}
+.fr_lecija {
+  margin-top: 43.7em;
+  margin-left: 82.5%
+}
+.fr_wavobo {
+  margin-top: 43.7em;
+  margin-left: 132.5%
+}
+.fr_hiketa {
+  float: none;
+  display: none;
+  width: 100px;
+  height: 100px;
+  margin-right: auto;
+  margin-bottom: 1em;
+  margin-left: auto;
+  background-image: url(../images/thumbnail/bill-murray.png_294x294.png);
+  background-size: cover
+}
+.fr_jewavi {
+  width: auto;
+  font-family: europa;
+  font-weight: 600;
+  font-size: 1.2em;
+  letter-spacing: .05em;
+  margin-top: 0;
+  margin-right: auto;
+  margin-bottom: 3em;
+  margin-left: auto;
+  color: #e8e8e8
+}
+.fr_jewavi .fr-text {
+  min-width: 100%
+}
+.fr_faguci {
+  width: auto;
+  font-family: europa;
+  font-weight: 600;
+  font-size: 1em;
+  letter-spacing: .05em;
+  margin-top: 0;
+  margin-right: auto;
+  margin-left: auto;
+  padding-top: .7em;
+  padding-bottom: .7em;
+  color: #999
+}
+.fr_faguci .fr-text {
+  min-width: 100%
+}
+.fr_misuku {
+  width: auto;
+  font-family: europa;
+  font-weight: 600;
+  font-size: 1em;
+  letter-spacing: .05em;
+  margin-top: 0;
+  margin-right: auto;
+  margin-left: auto;
+  padding-top: .7em;
+  padding-bottom: .7em;
+  color: #999
+}
+.fr_misuku .fr-text {
+  min-width: 100%
+}
+.fr_wakule {
+  width: auto;
+  font-family: europa;
+  font-weight: 300;
+  font-size: 1em;
+  letter-spacing: .05em;
+  margin-top: 3.2em;
+  margin-right: auto;
+  margin-bottom: 1.2em;
+  margin-left: auto;
+  color: #999
+}
+.fr_wakule .fr-text {
+  min-width: 100%
+}
+.fr_fehisu {
+  float: none;
+  display: block;
+  width: 90%;
+  font-family: proxima-nova;
+  font-weight: 600;
+  font-size: 2.9em;
+  text-align: left;
+  letter-spacing: 0, 2em;
+  margin-top: 4.827586206896552em;
+  margin-right: auto;
+  margin-left: auto;
+  color: #e8e8e8;
+  max-width: 900px
+}
+.fr_fehisu .fr-text {
+  min-width: 100%
+}
+.fr_hawemi {
+  float: none;
+  display: block;
+  width: 90%;
+  font-family: proxima-nova;
+  font-weight: 600;
+  font-size: 2.9em;
+  text-align: left;
+  letter-spacing: 0, 2em;
+  margin-top: .9655172413793103em;
+  margin-right: auto;
+  margin-left: auto;
+  color: #7c638a;
+  max-width: 900px
+}
+.fr_hawemi .fr-text {
+  min-width: 100%
+}
+.fr_govuso {
+  display: block;
+  width: 90%;
+  font-family: proxima-nova;
+  font-weight: 300;
+  font-size: .7em;
+  text-align: center;
+  letter-spacing: .05em;
+  margin-top: 0;
+  margin-bottom: .7em;
+  padding-top: .5em;
+  padding-bottom: .5em;
+  color: #999;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  max-width: 120px;
+  border-radius: 12px
+}
+.fr_govuso .fr-text {
+  min-width: 100%
+}
+.fr_mapivo {
+  display: block;
+  width: 90%;
+  font-family: proxima-nova;
+  font-weight: 300;
+  font-size: .7em;
+  text-align: center;
+  letter-spacing: .05em;
+  margin-top: 0;
+  margin-bottom: .7em;
+  padding-top: .5em;
+  padding-bottom: .5em;
+  color: #999;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  max-width: 120px;
+  border-radius: 12px
+}
+.fr_mapivo .fr-text {
+  min-width: 100%
+}
+.fr_dumuno {
+  display: block;
+  width: 90%;
+  font-family: proxima-nova;
+  font-weight: 300;
+  font-size: .7em;
+  text-align: center;
+  letter-spacing: .05em;
+  margin-top: 0;
+  padding-top: .5em;
+  padding-bottom: .5em;
+  color: #999;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  max-width: 120px;
+  border-radius: 12px
+}
+.fr_dumuno .fr-text {
+  min-width: 100%
+}
+.fr_wecowu {
+  width: auto;
+  font-family: europa;
+  font-weight: 600;
+  font-size: 1em;
+  letter-spacing: .05em;
+  margin-top: 0;
+  margin-right: auto;
+  margin-left: auto;
+  padding-top: .7em;
+  padding-bottom: .7em;
+  color: #999
+}
+.fr_wecowu .fr-text {
+  min-width: 100%
+}
+@media screen and (max-width: 740px) {
+  .fr_wifegi {
+    padding-left: 0;
+    min-height: 600px
+  }
+}
+@media screen and (max-width: 740px) {
+  .fr_pojovo {
+    float: none;
+    display: block;
+    width: 100%;
+    height: 600px;
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 0;
+    position: relative
+  }
+}
+@media screen and (max-width: 740px) {
+  .fr_jewavi {
+    text-align: center;
+    padding-left: 0
+  }
+}
+@media screen and (max-width: 740px) {
+  .fr_faguci {
+    text-align: center;
+    padding-left: 0
+  }
+}
+@media screen and (max-width: 740px) {
+  .fr_misuku {
+    text-align: center;
+    padding-left: 0
+  }
+}
+@media screen and (max-width: 740px) {
+  .fr_wakule {
+    text-align: center;
+    padding-left: 0
+  }
+}
+@media screen and (max-width: 740px) {
+  .fr_fehisu {
+    font-size: 1.9em;
+    margin-top: 6em
+  }
+}
+@media screen and (max-width: 740px) {
+  .fr_hawemi {
+    font-size: 1.9em;
+    margin-top: 1.4736842105263157em
+  }
+}
+@media screen and (max-width: 740px) {
+  .fr_govuso {
+    float: none;
+    display: block;
+    text-align: center;
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 0
+  }
+}
+@media screen and (max-width: 740px) {
+  .fr_mapivo {
+    float: none;
+    display: block;
+    text-align: center;
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 0
+  }
+}
+@media screen and (max-width: 740px) {
+  .fr_dumuno {
+    float: none;
+    display: block;
+    text-align: center;
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 0
+  }
+}
+@media screen and (max-width: 740px) {
+  .fr_wecowu {
+    text-align: center;
+    padding-left: 0
+  }
+}
+.fr_dumuno:hover {
+  color: #e3e3e3;
+  background-color: rgba(255, 255, 255, 0.09)
+}
+.fr_mapivo:hover {
+  color: #e3e3e3;
+  background-color: rgba(255, 255, 255, 0.09)
+}
+.fr_govuso:hover {
+  color: #e3e3e3;
+  background-color: rgba(255, 255, 255, 0.04)
+}
+.fr_misuku:hover {
+  color: white
+}
+.fr_wecowu:hover {
+  color: white
+}
+.fr_faguci:hover {
+  color: white
+}
+
+/** ******************************** **/
+/** End of widget styles             **/
+/** ******************************** **/

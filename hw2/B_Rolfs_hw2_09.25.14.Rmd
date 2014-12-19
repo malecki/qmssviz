@@ -1,0 +1,39 @@
+---
+title: "Homework 2"
+author: "Bethany Rolfs"
+output: html_document
+---
+ 
+Homework 2
+
+To create new data only containing southern zones:
+```{r}
+setwd("~/GitHub/qmssviz/hw2")
+lgas_data<-read.csv("lgas.csv")
+hf_data<- read.csv("sample_health_facilities.csv")
+
+southern_data <- hf_data[grep("South", hf_data$zone),]
+pop_2006 <- lgas_data[,c(1,3)]
+merge_data <- merge(southern_data, pop_2006, by = "lga_id")
+
+
+```
+
+Calculating the total number of fulltime doctors and nurses by state:
+
+```{r}
+aggregate(num_doctors_fulltime~ state, data = merge_data, sum)
+
+aggregate(num_nurses_fulltime ~ state, data = merge_data, sum)
+```
+
+Sorting the results in descending order and final results:
+```{r}
+bystate <- aggregate(pop_2006 ~ state, data = merge_data, sum)
+final_data <- merge(merge_data, bystate, by = "state")
+names(final_data)[names(final_data)=="pop_2006.y"] <- "statepop"
+final.sort <- final_data[order(-final_data$statepop),]
+
+aggregate(num_doctors_fulltime ~ state,data = merge_data, sum)
+aggregate(num_nurses_fulltime ~ state,data = merge_data, sum)
+```

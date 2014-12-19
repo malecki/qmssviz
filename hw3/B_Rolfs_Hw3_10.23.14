@@ -1,0 +1,31 @@
+---
+title: "Homework 3"
+author: "Bethany Rolfs"
+date: "Thursday, October 23, 2014"
+output: html_document
+---
+
+I chose to use wave 5 and 6 of the world values survey to evaluate happiness levels in contries with high and low grossdomestic product, according to the International Monetary FUnd, in 2013 . I will be evaluating survey results from countries that have the highest gross domestic product, the United States and China, , as well as two countries that have some of the lowest GDP globally, Rwanda and Trinidad and Tobago, from 2005-2009 and 2010-2014. 
+
+Respondents were asked to evaluate their feeling of happiness on an ordinal scale of very happy, rather happy, Not very happy, not happy at all, no answer, and dont know. I hypothesize that the countries with the higher GDP will have a higher feeling of happiness. 
+
+
+
+```{r, echo=FALSE}
+setwd("~/GitHub/qmssviz/hw3")
+library(ggplot2)
+ wave4<- read.csv("wave4.csv", stringsAsFactors=F)
+ wave6 <- read.csv("wave6.csv", stringsAsFactors=F)
+ mydata<- rbind(wave4, wave6)
+
+
+```
+
+```{r, echo=FALSE}
+ggplot(data=mydata, aes(x=Status, fill= Country, y=Percent)) +geom_bar(stat="identity", position="dodge")
+ggplot(data=wave4, aes(x=Status, fill= Country, y=Percent)) +geom_bar(stat="identity", position="dodge")
+ggplot(data=wave6, aes(x=Status, fill= Country, y=Percent)) +geom_bar(stat="identity", position="dodge")
+
+```
+
+

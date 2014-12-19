@@ -31,7 +31,6 @@ First, let's load the relevant libraries into the R environment and set the curr
 # install.packages("devtools")
 # devtools::install_github('rstudio/ggvis', build_vignettes = FALSE)
 library(dplyr)
-library(ggvis)
 library(stringr)
 library(XML)
 library(ggplot2)
@@ -110,22 +109,22 @@ dfPlot <- df %>%
 
 Let's make some plots.
 
-### Proportion of Committee Meetings Held by Month
+### Committee Meetings Held by Month
 
 ```{r}
 # Total Committee Meetings Held by Month
 dfPlot %>%
-  group_by(Month) %>%
+  group_by(Month, Year) %>%
   summarise(Count = n()) %>%
-  mutate(Proportion = (Count/sum(Count)*100)) %>%
+  group_by(Month) %>%
+  summarise(Count = sum(Count/length(Year))) %>%
   
   # bar plot
-  ggplot(aes(x = Month, y = Proportion)) +
-  geom_bar(stat = "identity") +
-  ylab("Proportion of Meetings Held (%)") +
+  ggplot(aes(x = Month, y = Count, group = 1)) +
+  geom_line() +
+  ylab("Mean Number of Meetings Held, 2000-2013") +
   # create more breaks
-  scale_y_continuous(breaks = seq(0, 16, 2)) +
-  ggtitle("City Council Meetings (2000-2013)") +
+  ggtitle("City Council Meetings Held by Month") +
   theme_bw()
 ```
 

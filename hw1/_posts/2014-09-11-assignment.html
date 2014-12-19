@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<!-- saved from url=(0014)about:internet -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=9" >
+
+<title>Assignment 1: RMarkdown, R graphics, and Github</title>
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 12px;
+   margin: 8px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 { 
+   font-size:2.2em; 
+}
+
+h2 { 
+   font-size:1.8em; 
+}
+
+h3 { 
+   font-size:1.4em; 
+}
+
+h4 { 
+   font-size:1.0em; 
+}
+
+h5 { 
+   font-size:0.9em; 
+}
+
+h6 { 
+   font-size:0.8em; 
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre {	
+   margin-top: 0;
+   max-width: 95%;
+   border: 1px solid #ccc;
+   white-space: pre-wrap;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code.r, code.cpp {
+   background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * { 
+      background: transparent !important; 
+      color: black !important; 
+      filter:none !important; 
+      -ms-filter: none !important; 
+   }
+
+   body { 
+      font-size:12pt; 
+      max-width:100%; 
+   }
+       
+   a, a:visited { 
+      text-decoration: underline; 
+   }
+
+   hr { 
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote { 
+      padding-right: 1em; 
+      page-break-inside: avoid; 
+   }
+
+   tr, img { 
+      page-break-inside: avoid; 
+   }
+
+   img { 
+      max-width: 100% !important; 
+   }
+
+   @page :left { 
+      margin: 15mm 20mm 15mm 10mm; 
+   }
+     
+   @page :right { 
+      margin: 15mm 10mm 15mm 20mm; 
+   }
+
+   p, h2, h3 { 
+      orphans: 3; widows: 3; 
+   }
+
+   h2, h3 { 
+      page-break-after: avoid; 
+   }
+}
+
+</style>
+
+
+
+
+
+</head>
+
+<body>
+<h2>Assignment 1: RMarkdown, R graphics, and Github</h2>
+
+<blockquote>
+<p>Make some pictures of some dataset(s). Use either of the two datasets we have provided (questionnaire, and donations-vs-deaths), or acquire one of your own.</p>
+
+<ul>
+<li>Write about your process and your results using RMarkdown and submit both the Rmd and compiled html as a pull request to the course repository.</li>
+<li>Next week, you will each lead a code review with a group of your peers explaining your implementations. You will then have the opportunity to amend your branch in light of your peers feedback. Pull requests will be merged over the following week when you indicate that they are complete.</li>
+</ul>
+
+<p>This is a many-part assignment. It asks you to do some things that are familiar, to recite some unfamiliar incantations to git, and to follow some strict rules about naming and changes that are appropriate to include in a pull request. On the other hand, the actual work of the assignment  making pictures of data  is an open, creative exercise and is a chance to share something with your peers and to learn from them. </p>
+</blockquote>
+
+<h2>Detailed instructions</h2>
+
+<ol>
+<li>Create a branch on which to work: <code>git checkout -b hw1</code></li>
+<li>Select <em>file &gt; new Rmarkdown</em> in RStudio and create a file in <code>qmssviz/hw1/_posts</code>.</li>
+</ol>
+
+<p><img src="new-rmd.png" alt=""/></p>
+
+<ol>
+<li>Add some stuff to the YAML Front Matter at the top of the document:
+
+<ul>
+<li><code>published: false</code> (This prevents gh-pages from trying to re-render your document, and simply use the html one)</li>
+<li><code>tags: hw1</code> (for organization)</li>
+<li><img src="yaml-matter.png" alt=""/></li>
+</ul></li>
+<li>Save the file. Follow the required naming convention: ISO8601 date and some other text. A good name is something like <code>2014-09-18-HW1-Michael-Malecki.Rmd</code>. (Uni is fine too. You just can&#39;t all give it the same non-unique name <code>hw1</code>.)</li>
+<li>Select that file for staging using the Git pane of RStudio.
+<img src="staging.png" alt=""/></li>
+<li>Commit your changes. A message like initial commit is fine.
+<img src="commit.png" alt=""/></li>
+<li>Push your branch so that the simple buttons for push/pull work. For this you have to use <em>More &gt; Shell</em> and then type <code>git push -u origin hw1</code> so that your current branch goes live to your fork and the two (local and server) know about each other.</li>
+<li>Now, explore some data and write about it!</li>
+<li>Save and commit frequently. You might choose just to commit changes to the Rmd, and then only include the html at the end. Then you can see (and share, and store) the entire history of the process. </li>
+<li>Before class (or within the first moments of class) next week, open a pull request for your branch targeting the class repo.
+<img src="opened-request.png" alt=""/></li>
+</ol>
+
+<p>If in the first draft of the assignment you cant debug your issues with git or Rmd, you will have time in class to show your broken branch to your peers, who might be able to help, and to try again. Share your frustrations and get them resolved.</p>
+
+</body>
+
+</html>
+

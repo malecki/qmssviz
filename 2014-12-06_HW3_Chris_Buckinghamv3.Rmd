@@ -1,0 +1,68 @@
+---
+title: "QMSSViz Homework Assignment Number 3"
+author: "Christopher Buckingham"
+date: "December 6, 2014"
+output: html_document
+published: false
+---
+#####For this assignment, I wanted to try and find some comparable interesting questions in the World Values Survey and the European Values Study. I downloaded the data, codebooks, and documentation. My goal is to find an interesting question or line of survey questions that can be plotted and compared for an unscientfic but more than cursory comparison of European values relative to a broader global population.
+
+#####The World Values Survey offers a large *RData file that I will now load as a dataframe. I somewhat arbitratily decided to simply take the latest available survey dataset (from both sources). For the WVS, the latest availabel was the 2010-2014 results. for the EVS, the latest was the 2008 study. The EVS is only available in SPSS format, which helped me appreciate the flexibility of R paired with the foreign package.
+
+#####I will compare the survey results related to a question and will look at both datasets pertaining to Estonia (233 in WVS). 
+
+```{r}
+require("ggplot2")
+load("~/Documents/git/qmssviz/hw3/WVS.rdata")
+WVSData<-`WorldValuesSurvey-Wave6-2010-2014_v2014-11-07`[,"V40"]
+WVSData2<-`WorldValuesSurvey-Wave6-2010-2014_v2014-11-07`[,"V2"]
+WVS <-cbind(WVSData, WVSData2)
+write.csv (file="~/Documents/git/qmssviz/hw3/wvs.csv", WVS)
+```
+
+#####Looks like the question and country column have been captured in the dataframe.
+
+```{r}
+require("foreign")
+EVS <- read.spss("~/Documents/git/qmssviz/hw3/ZA4800_v3-0-0_spss/ZA4800_v3-0-0.sav")
+write.csv(EVS, file="~/Documents/git/qmssviz/hw3/ZA4800_v3-0-0_spss/EVS.csv")
+EVSData <-read.csv("~/Documents/git/qmssviz/hw3/ZA4800_v3-0-0_spss/EVS.csv")
+EVSCutDown <-data.frame(EVSData$country, EVSData$v57)
+write.csv(EVSCutDown, file="~/Documents/git/qmssviz/hw3/ZA4800_v3-0-0_spss/EVSscraped.csv")
+```
+
+#####One of the things that I noticed very early on in my attempts to read the file is that reading an SPSS data file can take a very long time. This is a very large dataset. I create a shiny new CSV file with only the elements that I care about. I will do the same for the world values survey. By the way, all of this is based on what I read in the codebooks and questionaire guides. Now, the data needs to be cut further. Let's just look at Estonia for both datasets.
+
+```{r}
+EVSCutDown2 <- EVSCutDown[which(EVSCutDown$EVSData.country=='Estonia'),] 
+WVSCutDown2 <- WVS[which(WVSData2=='233'),] 
+WVSCutDown2 <- data.frame(WVSCutDown2)
+```
+
+###### OK, we've got 1533 observations from the WVS, and 1518 observations from the EVS. Lets convert these into percentages and see if there is any difference in the result.
+
+```{r}
+EVSMentioned <- nrow(EVSCutDown2[EVSCutDown2$EVSData.v57=='mentioned',])
+EVSNotMentioned <- nrow(EVSCutDown2[EVSCutDown2$EVSData.v57=='not mentioned',])
+EVSResponses = EVSMentioned + EVSNotMentioned
+WVSMentioned <- nrow(WVSCutDown2[WVSCutDown2$WVSData==1,])
+WVSNotMentioned <- nrow(WVSCutDown2[WVSCutDown2$WVSData==2,])
+WVSResponses = WVSMentioned + WVSNotMentioned
+```
+
+###### Now, I'm not familiar with the level of social advancement in Estonia, but the numbers are not looking very hot at this point.. Some transformation needed..
+
+```{r}
+EVSMentionedPct = (EVSMentioned / EVSResponses) *100
+WVSMentionedPct = (WVSMentioned / WVSResponses) *100
+EstonianNeighbors <-data.frame(c('EVS', 'WVS'),c( EVSMentionedPct , WVSMentionedPct))
+names(EstonianNeighbors) <-c("Survey", "Percentage")
+```
+
+###### Lets make a quick graph to concisely demonstrate what we've found.
+```{r}
+qplot(EstonianNeighbors, y=EstonianNeighbors$Percentage, x=EstonianNeighbors$Survey)
+ggplot(EstonianNeighbors, aes(y=Percentage , x=Survey, fill=Survey)) + geom_bar(stat="identity", width=.75, alpha = 3/4)+ ggtitle("Estonians who would not like to have homosexual neighbors") + ylab("Percentage of respondents") + xlab("Survey source")
+```
+
+###### This graph very clearly displays that there is no meaningful difference in result between surveys. If we trust the methods of the World Values Survey and the European Values Study, we can infer that nearly half of Estonians mentioned they would not like to have homosexuals as neighbors. I was surprised this number is so high in a relatively economically advanced country (GPD per capita ~18kUSD)

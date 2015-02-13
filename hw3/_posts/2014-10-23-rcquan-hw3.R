@@ -1,8 +1,7 @@
 #############################
 # Ryan Quan
-# QMSSVIZ
-# Homework 3
-# 2014-10-23
+# 2014-11-23
+# Email: ryan.quan08@gmail.com
 #
 # The following code creates a ggplot to
 # compare a survey response from two different
@@ -14,7 +13,6 @@ library(dplyr)
 library(reshape2)
 library(scales)
 library(RColorBrewer)
-setwd("~/mailman/qmssviz/hw3/_posts/")
 
 ########################
 # FUNCTIONS
@@ -112,8 +110,8 @@ reorderCountriesByProportion <- function(df, refWave) {
 ########################
 
 ## read in the .rdata file
-dfSurvey <- load("~/Downloads/WVS_Longitudinal.rdata")
-dfSurvey <- `WVS_Longitudinal_1981-2014_spss_v_2014_06_17_(beta)`
+dfSurvey <- load("WVS_Longitudinal.rdata")
+dfSurvey <- `WVS_Longitudinal_1981-2014_rdata_v_2014_11_25`
 
 dfSurvey %>%
     ## pre-processing

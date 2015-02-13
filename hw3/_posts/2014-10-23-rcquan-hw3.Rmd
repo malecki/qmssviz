@@ -1,0 +1,237 @@
+---
+title: "Visualizing Introspection by Country"
+author: "rcquan"
+date: "October 23, 2014"
+output: html_document
+---
+
+# Objective
+
+I am using the two most recent waves of the World Values Survey to examine the responses to the following survey question:
+
+**How frequently do you think about meaning and purpose in life?**
+
+The graph that I will be making will attempt to convey the following:
+
+* A comparison of the response breakdown between countries within the same wave
+* A comparison of the response breakdown within countries across different waves.
+
+This information can be represented by a stacked horizontal bar plot that has the proportion of survey responses on the horizontal axis and the countries on the vertical axis.
+
+Moreover, this particular survey question has five responses of interest:
+
+1. Often
+2. Sometimes
+3. Rarely
+4. Never
+5. Don't know
+
+Applying the appropriate color palette could help the viewer to more easily interpret the breakdown of each country's response. For example, we could use similar, positive colors for responses indicating a greater frequency of "thinking about meaning and purpose".
+
+# Data Description
+
+Before we wrangle our dataset into the appropriate long format for `ggplot`, let's first define the target shape of our data.
+
+`{wave: "", country: "", meaning: "", proportion: ""}`
+
+Here are possible values that each column could take:
+
+* `wave`: "2005-2009", "2010-2014"
+* `country`: "Afghanistan..."
+* `meaning`: "Often", "Sometimes", "Rarely", "Never", "Don't Know"
+* `proportion`: "numeric"
+
+Since the objective is to compare all countries that have values in both waves, we do not yet know the exact length of this particular variable.
+
+# Code
+
+Let's declare our dependencies and define some helper functions so we can keep our environment clean:
+
+```{r, message=FALSE}
+library(ggplot2)
+library(dplyr)
+library(reshape2)
+library(scales)
+library(RColorBrewer)
+
+########################
+# FUNCTIONS
+########################
+selectVars <- function(df, code, name) {
+    # Select survey variables to include in the subsetted data frame.
+    # Args:
+    #   df: a data.frame of the WVS survey data
+    #   code: a vector of strings corresponding to survey codes
+    #   name: a vector of strings corresponding to desired varname
+    # Returns:
+    #   A subsetted and named data.frame 
+    if (length(code) != length(name)) {
+    stop("Length of code and name vectors do not match.")
+    }
+    ## pre-allocate size of list
+    varList <- vector("list", length(code))
+    varList <- df[code]
+    ## create data.frame from list
+    dfNames <- data.frame(varList)
+    names(dfNames) <- name
+    return(dfNames)
+}
+
+factorizeVars <- function(df) {
+    # Convert all variables into factors
+    # Args:
+    #   df: a data.frame
+    # Returns:
+    # a data.frame of variables of class "factor"
+    data.frame(apply(df, 2, as.factor))
+}
+
+labelValues <- function(var, df, sep = ":") {
+    # Reads in codebook from the current directory
+    # and creates factor labels for the given variable.
+    # If no codebook is found, no labeling is done.
+    # Args:
+    #   var: string. the name of the variable to be labeled
+    #   df: data.frame. the data.frame containing the variable
+    #   sep: string. the delimiter used in the codebook
+    # Returns:
+    #   A vector of class "factor" with the corresponding labels
+    filename <- paste(var, ".txt", sep = "")
+    if(file.exists(filename)) {
+        dfLabels <- read.delim(filename, header = FALSE, sep = sep)
+        labeledVar <- factor(df[, var],
+                              levels = dfLabels$V1,
+                              labels = dfLabels$V2)
+        labeledVar
+    } else {
+        cat(sprintf("%s does not exist in the current directory. \n", filename))
+        cat(sprintf("No labeling done for %s.", var))
+        df[, var]
+    }
+}
+
+labelDataFrame <- function(df, sep = ":") {
+    # A wrapper for the above function to vectorize the labeling
+    # process for all column variables.
+    listLabeled <- sapply(colnames(df), function(var) {
+        labelValues(var, df, sep = sep)
+    })
+    dfLabeled <- data.frame(listLabeled)
+    return(dfLabeled)
+}
+
+reorderResponses <- function(df, var, newLevels) {
+    # Reorder factor levels of response variable.
+    # Args:
+    #   df: data.frame. the data.frame containing the var to be reordered
+    #   var: string. the name of variable to be ordered
+    #   newLevels: a vector of strings to denote new var order
+    # Returns:
+    #   A data.frame
+    df[, var] <- factor(df[, var],levels = newLevels)
+    return(df)
+}
+
+handleMissingValues <- function(df, missingLabels) {
+    # Remove missing responses from the dataset
+    # Args:
+    #   df: data.frame. the data.frame 
+    #   missingLabels: string. a vector of reponse values to be removed
+    # Returns:
+    #   A data.frame with missing responsed removed
+    df <- filter(df, !(meaning %in% missingLabels))
+    return(df)
+}
+
+subsetByCountriesInBothWaves <- function(df, wave1, wave2) {
+    # Subsets the data.frame by countries that have responses in both waves.
+    # Args:
+    #   df: data.frame. the data.frame 
+    #   wave1: string. the year of the first wave to match against
+    #   wave2: string. the year of the second wave to match against
+    # Returns:
+    #   A data.frame with countries that have responses in wave 1 and wave 2.
+    firstWave <- df %>% filter(wave == wave1)
+    secondWave <- df %>% filter(wave == wave2)
+    
+    firstWave <- firstWave[which(firstWave$country %in% secondWave$country), ]
+    secondWave <- secondWave[which(secondWave$country %in% firstWave$country), ]
+    
+    df <- rbind(firstWave, secondWave)
+    return(df)
+}
+
+reorderCountriesByProportion <- function(df, refWave) {
+    # Reorders the levels of the country factor variable by
+    # the proportion of responses from the reference wave.
+    # Args:
+    #   df: the data.frame
+    #   refWave: string. the reference wave to sort by
+    # Returns:
+    #   A sorted data.frame
+    countryIndex <- df %>%
+        group_by(meaning) %>%
+        filter(wave == refWave) %>%
+        filter(meaning == "Often") %>%
+        arrange(desc(proportion))
+    
+    countryIndex <- data.frame(countryIndex)
+    df$country <- factor(df$country, levels = countryIndex$country)
+    return(df)
+}
+```
+
+# Visualization
+
+Alright, now let's run the script to wrangle and visualize the dataset so we can answer our key question:
+
+```{r, warnings=FALSE, message=FALSE}
+## globals
+newLevels <- c("Often", "Sometimes", "Rarely", "Never", "No answer",
+               "Not asked in survey", "Missing: Unknown", "Don´t know")
+missingLabels <- c("No answer", "Missing: Unknown", "Not asked in survey")
+
+## reading in the data
+df <- load("WVS_Longitudinal.rdata")
+df <- `WVS_Longitudinal_1981-2014_rdata_v_2014_11_25`
+
+df %>%
+    # pre-processing
+    selectVars(code = c("S002", "S003", "S020", "F001"),
+               name = c("wave", "country", "year", "meaning")) %>%
+    factorizeVars() %>%
+    labelDataFrame() %>%
+    reorderResponses(var = "meaning", newLevels = newLevels) %>%
+    handleMissingValues(missingLabels = missingLabels) %>%
+    
+    ## get proportion of responses for each country by wave
+    group_by(wave, country, meaning) %>%
+        summarise(count = n()) %>%
+        mutate(proportion = count/sum(count)) %>%
+        arrange(meaning, desc(proportion)) %>%
+    
+    ## prep data for plotting
+    subsetByCountriesInBothWaves(wave1 = "2005-2009",
+                                 wave2 = "2010-2014") %>%
+    reorderCountriesByProportion(refWave = "2005-2009") %>%
+    
+    ## generate the plot
+    ggplot(aes(country, proportion, fill = meaning)) +
+    geom_bar(stat = "identity", alpha = 7/8) + facet_grid(~wave) +
+    ggtitle("How frequently do you think about meaning and purpose in life?") +
+    xlab("Country") + ylab("Proportion of Survey Responses") +
+    ## display proportion as percent
+    scale_y_continuous(label = percent) +
+    scale_fill_manual(values = rev(brewer.pal(n = 5, "RdYlBu"))) +
+    coord_flip() + 
+    ## minimalist theme
+    theme_bw() +
+    theme(legend.position = "bottom",
+          legend.title = element_blank(),
+          ## make reference lines darker
+          panel.grid.major.x = element_line(color = "black"),
+          panel.grid.major.y = element_blank(),
+          panel.border = element_blank(),
+          strip.background = element_blank(),
+          axis.ticks = element_blank())
+```

@@ -1,0 +1,123 @@
+
+**A short post looking at career importance in Britain using data from the European values survey database.** <!--more-->
+
+*Let's read in the data for this particular question about what people value in a job.*
+
+```{r, warning = FALSE, message = FALSE, error=FALSE, echo=FALSE}
+library("foreign")
+library("ggplot2")
+library("grid")
+```
+
+```{r, warning = FALSE, message = FALSE, error=FALSE, echo=-1}
+setwd("/Users/knarf/Copy/datasets/columbia/4_dv/")
+gesis1999 <- read.dta("ZA3777_v3-0-1.dta", convert.factors=FALSE)
+gesis2008 <- read.dta("ZA4752_v1-0-0.dta", convert.factors=FALSE)
+job99 <- gesis1999[,83:100]
+job08 <- gesis2008[,81:99]
+```
+
+### Introduction 
+
+We're going to try to understand what makes people tick in their jobs- what they value, what they don't care for, and how that's changed in about a decade, according to the European Values Survey. The corresponding questions from 1999 (question 13) and 2008 (question 14) ask the British workforce which aspects of a job they think are especially significant. The answers were categorized to approximately 20 groups of themes (e.g "good pay", "pleasant people to work with", "not too much pressure", "good job security"...etc). Each theme was labeled with a binary classification of "mentioned" or "not mentioned," and when loaded, would represent 1s and 0s. Below are the two questions that we'll be analyzing.
+
+![q13](https://raw.githubusercontent.com/frankchen07/frankchen07.github.com/master/images/2015-02-20-britain-1999-q13.png)
+
+![q14](https://raw.githubusercontent.com/frankchen07/frankchen07.github.com/master/images/2015-02-20-britain-2008-q14.png)
+
+We'll be making paired histogram and paired point comparisons to help visualize the decade difference. Below is a pre-processing sketch of how we're going to process the data. R enthusiasts will be happy to know that there will be usage of `ggplot2`.
+
+*We have separate dataframes for the question from 1999 and 2008. We're going to combine them, and then `melt` the dataframe so ggplot2 will be able to visualize for us. The main point here is to make the combined dataframe such that each question does not have its own column, but rather, is represented as items in a new column (named "variable" in this case). One may `melt` to achieve this, or manually process the data.*
+
+![sketch](https://raw.githubusercontent.com/frankchen07/qmssviz/hw3/hw3/_posts/2014-10-23-hw3-fc2451-sketch.JPG)
+
+### Functions
+
+*The questions from 1999 were ready out of the box to be melting into a single dataframe. The 2008 questionnaire results required some processing, mainly turning the binary response of "not mentioned" from 2s to 0s, in order to make aggregate summaries easier later on. 7 and 8 were recorded as inconsistent answers, where it was ambiguous whether or not the respondent was referencing to one of the preordained categories or whether none of the categories were important. We take only the surveys where complete answers were given for the sake of this study.*
+
+```{r}
+job08[job08==2] <- 0
+job08[job08==7 | job08==8 ] <- NA
+job08 <- job08[complete.cases(job08), ]
+```
+
+*A function was written to calculate the proportion of survey respondents who noted a particular job characteristic values; a date column was also subsequently added.*
+
+```{r}
+propCalc <- function(x, y) { # proportion by year
+	x <- apply(x, 2, sum)
+	x <- data.frame(x/sum(x))
+	x[, ncol(x)+1] <- y
+	return(x)
+}
+
+job99 <- propCalc(job99, "1999")
+job08 <- propCalc(job08, "2008")
+```
+
+*Naming of columns and characteristics.*
+
+```{r}
+job99$c3 <- c("good pay", "pleasant co-workers", "less pressure", 
+					 "good security", "promotion chance", "respect", "good hours", 
+					 "uses initiative", "useful", "generous holidays", 
+					 "meeting people", "feeling achievement", "responsibility", 
+					 "interesting", "uses abilities", "good conditions", 
+					 "weekends off", "none mentioned")
+colnames(job99) <- c("proportion", "date", "characteristic")
+job08$c3 <- c("good pay", "pleasant co-workers", "less pressure", 
+					 "good security", "good hours", "uses initiative", "useful", 
+					 "generous holidays", "meeting people", "feeling achievement", 
+					 "responsibility", "interesting", "uses abilities", 
+					 "learning skills", "family friendly", "leadership role", 
+					 "equal treatment", "consistency", "none mentioned")
+colnames(job08) <- c("proportion", "date", "characteristic")
+```
+
+*We can see that money is still a pretty big motivating factor for the importance of a job, followed by pleasant co-workers. The job itself also had to be interesting and have good security as well. Let's visualize this to get a better idea of what we're looking at. 
+
+```{r}
+jobJoin <- rbind(job99, job08)
+jobJoin <- jobJoin[with(jobJoin, order(proportion)), ]
+jobJoin
+```
+
+### Plots
+
+```{r}
+ggplot(jobJoin, aes(reorder(characteristic, proportion), 
+					proportion, fill=as.factor(date))) +
+	   geom_bar(data=jobJoin, position="stack", 
+	   		 stat="identity", width=0.7) + 
+			 # color="black", fill="NA") +
+	   scale_fill_manual(values = c("red", "blue")) + 
+	   theme(panel.grid.major = element_blank(), 
+	   	  	 panel.grid.minor = element_blank()) +
+	   theme_bw() + 
+	   theme(panel.margin=unit(2, "lines")) +
+ 	   coord_flip() +
+	   ylab("Proportion of those Surveyed") + 
+	   xlab("Job Characteristic") + 
+	   ggtitle("Important Job Aspects in Great Britain") + 
+	   facet_wrap(~date)
+```
+
+The previous insight still holds. However, can now see that in 2008, "good pay" as an important job aspect has gotten slightly less important, with other non-monetary factors either staying the same, or new factors appearing. Characteristics that do not have bars in the graph represent choices that were not included in that year's survey. In 2008, we see that "equal treatment" and "learning skills" appear as one of the more prominent important job aspects, where as "good conditions", "weekends off", "promotion chance", and "respect" were taken off of the 2008 survey. Why that is, I have no idea. 
+
+```{r}
+ggplot(jobJoin, aes(reorder(characteristic, proportion), proportion)) +
+	geom_point(aes(color = as.factor(date))) +
+	#geom_segment(aes(x=job99$proportion, y=characteristic, 
+					 #xend=job08$proportion, yend=characteristic), 
+				 	 #arrow=arrow(length=unit(0.1, "cm"))) +
+	coord_flip() + 
+	ylab("Proportion of those Surveyed") + 
+	xlab("Job Characteristic") + 
+	ggtitle("Important Job Aspects in Great Britain") +
+	scale_color_manual(values = c("red", "blue")) +
+	theme_bw()
+```
+
+**Time runs from red to blue.** We can see people value good pay, pleasant co-workers, interesting, and good security less often in 2008 as compared to 1999. Conversely, "feeling achievement" and "good hours" have risen dramatically. Generous holidays have taken a huge dip in importance, similar to good pay. 
+
+**It seems Britain overall, wants to feel more useful in their careers, and have steadily placed less emphasis on pay and holidays. Work should be interesting, and should make one feel useful, no? I can buy it. Interestingly, 2008 was when the economy crashed in the United States. Unless the timing was off, or if the effect was less prominent in the United Kingdom, I would assume that it would affect career characteristics. Perhaps another survey question for another time.**

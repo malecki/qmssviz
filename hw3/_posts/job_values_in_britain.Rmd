@@ -74,7 +74,7 @@ job08$c3 <- c("good pay", "pleasant co-workers", "less pressure",
 colnames(job08) <- c("proportion", "date", "characteristic")
 ```
 
-*We can see that money is still a pretty big motivating factor for the importance of a job, followed by pleasant co-workers. The job itself also had to be interesting and have good security as well. Let's visualize this to get a better idea of what we're looking at. 
+We can see that money is still a pretty big motivating factor for the importance of a job, followed by pleasant co-workers. The job itself also had to be interesting and have good security as well. Let's visualize this to get a better idea of what we're looking at. 
 
 ```{r}
 jobJoin <- rbind(job99, job08)

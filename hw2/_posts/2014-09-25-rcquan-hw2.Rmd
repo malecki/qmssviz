@@ -1,6 +1,6 @@
 ---
-title: "Homework 2"
-author: "Ryan Quan"
+title: "Ryan Quan HW 2"
+author: "rcquan"
 date: "September 25, 2014"
 output: html_document
 ---
@@ -64,7 +64,4 @@ lgasSouth %>%
               num_doctors = sum(num_doctors_fulltime),
               population = sum(pop_2006)) %>%
     arrange(desc(population))
-```
-
-
 ```

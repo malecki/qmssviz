@@ -1,0 +1,35 @@
+---
+title: "Untitled"
+author: "JunyuanYi"
+date: "September 25, 2014"
+output: html_document
+---
+
+---
+title: "hw2"
+author: "JunyuanYi"
+date: "September 25, 2014"
+output: html_document
+---
+```{r}
+#Read files 
+data1 <- read.csv("~/Documents/qmssvizz/labs/tutorial/lgas.csv", header = T, stringsAsFactor = F)
+data2 <- read.csv("~/Documents/qmssvizz/labs/tutorial/sample_health_facilities.csv", header = T, stringsAsFactor = F)
+
+
+#Select all facilities located in the Southern zones of Nigeria
+data3 <- subset(data2, zone %in% c("South-South", "Southeast","Southwest"))
+
+#Incorporate the pop2006 column from the lgas.csv file into the new data frame 
+data4 <- subset(data1, select = c(lga_id, pop_2006))
+newdata <- merge(data3, data4, by = "lga_id")
+
+#Calculate the total number of full time nurses and doctors for all health facilities in each state
+tapply(newdata$num_nurses_fulltime, newdata$state, sum)
+tapply(newdata$num_doctors_fulltime, newdata$state, sum)
+
+
+#Sort the final data set by state population, in descending order
+newdata[ order(-newdata$pop_2006), ]
+
+```

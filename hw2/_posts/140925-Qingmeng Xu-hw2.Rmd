@@ -1,0 +1,33 @@
+---
+title: "0140925-Qingmeng Xu-hw2"
+output: html_document
+---
+
+##Loading Data
+
+```{r}
+setwd("/Users/ningmeng/Desktop")
+file <-"lgas.csv"
+lgas_data <- read.csv(file)
+nigeria_data <- read.csv("sample_health_facilities.csv")
+```
+
+##Mergering Data by ID
+
+```{r}
+south <- subset(nigeria_data, nigeria_data$zone == "South-South" | nigeria_data$zone == "Southeast" | nigeria_data$zone == "Southwest")
+lgas_pop <- lgas_data[,c(1,3)]
+merge_data <- merge(south, lgas_pop, by="lga_id")
+```
+
+##Calculation and Ranging
+
+```{r}
+doctor <- by(merge_data$num_doctors_fulltime, merge_data$state, sum, na.rm=TRUE)
+nurses <- by(merge_data$num_nurses_fulltime, merge_data$state, sum, na.rm=TRUE)
+total <- doctor + nurses
+total
+
+newdata <- merge_data[order(-merge_data$pop_2006),]
+newdata
+```

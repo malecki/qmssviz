@@ -1,0 +1,31 @@
+---
+title: "Homework 1 assignment"
+author: "QueenieXU"
+date: "2014年9月16日"
+output: html_document
+published: false
+tags: hw1
+---
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+load dataset "iris"   
+using ggplot2 to illustrate the database with respect to length and width of three plants
+
+
+```{r}
+attach(iris)
+library(ggplot2)
+library(plyr)
+
+```
+
+
+```{r, echo=FALSE}
+p <- ggplot(iris, aes(Sepal.Length, Sepal.Width))
+p + geom_point() + facet_grid(. ~ Species)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
